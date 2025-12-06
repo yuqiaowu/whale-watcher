@@ -10,7 +10,9 @@ def run_job():
     
     # 1. Run the analysis
     try:
+        print(f"[{datetime.now()}] Running whale_watcher.main()...")
         whale_watcher.main()
+        print(f"[{datetime.now()}] whale_watcher.main() completed.")
     except Exception as e:
         print(f"Error running whale_watcher: {e}")
         return

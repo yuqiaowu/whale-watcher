@@ -539,6 +539,8 @@ def merge_and_filter_txs(new_txs, old_txs):
     return filtered_txs
 
 def main():
+    print("DEBUG: Entering whale_watcher.main()...")
+    load_dotenv()
     # 1. Load History (for EMA Smoothing)
     output_file = "../frontend/data/whale_analysis.json"
     history_data = {}
