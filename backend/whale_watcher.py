@@ -542,7 +542,10 @@ def main():
     print("DEBUG: Entering whale_watcher.main()...")
     load_dotenv()
     # 1. Load History (for EMA Smoothing)
-    output_file = "../frontend/data/whale_analysis.json"
+    # Use absolute path relative to this script to ensure it works in Docker
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    output_file = os.path.join(base_dir, "../frontend/data/whale_analysis.json")
+    
     history_data = {}
     if os.path.exists(output_file):
         try:
@@ -552,7 +555,7 @@ def main():
             print(f"Error loading history: {e}")
 
     # 2. Fetch Data
-    output_dir = "../frontend/data"
+    output_dir = os.path.join(base_dir, "../frontend/data")
     os.makedirs(output_dir, exist_ok=True)
 
     print("Fetching data from Moralis (ETH)...")
