@@ -42,7 +42,7 @@ def run_job():
         auth_repo_url = f"https://{github_token}@{clean_repo_url}"
         
         print(f"Cloning repo to {temp_dir}...")
-        subprocess.run(["git", "clone", auth_repo_url, temp_dir], check=True)
+        subprocess.run(["git", "clone", "-q", auth_repo_url, temp_dir], check=True)
         
         # Configure Git in temp dir
         subprocess.run(["git", "config", "user.name", "Whale Watcher Bot"], cwd=temp_dir, check=True)
