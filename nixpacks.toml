@@ -1,8 +1,0 @@
-[phases.setup]
-nixPkgs = ["git", "python3", "openssl"]
-
-[phases.install]
-cmds = ["pip install -r requirements.txt"]
-
-[start]
-cmd = "python backend/scheduler.py"
