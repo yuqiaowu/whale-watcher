@@ -63,7 +63,7 @@ def start_scheduler():
     schedule.every().day.at("16:00").do(run_job)
     
     # Also run once on startup to verify
-    # run_job() 
+    run_job() 
 
     while True:
         schedule.run_pending()
