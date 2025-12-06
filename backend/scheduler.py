@@ -91,6 +91,25 @@ def start_scheduler():
     schedule.every().day.at("14:00").do(run_job)
     schedule.every().day.at("16:00").do(run_job)
     
+    # Start a dummy web server to satisfy Railway's port binding requirement
+    import threading
+    from http.server import HTTPServer, BaseHTTPRequestHandler
+
+    class HealthCheckHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"OK")
+
+    def start_web_server():
+        port = int(os.getenv("PORT", 8080))
+        server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
+        print(f"Starting dummy web server on port {port}")
+        server.serve_forever()
+
+    # Start web server in background thread
+    threading.Thread(target=start_web_server, daemon=True).start()
+
     # Also run once on startup to verify
     run_job() 
 
