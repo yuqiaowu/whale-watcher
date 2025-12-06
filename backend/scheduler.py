@@ -38,8 +38,8 @@ def run_job():
             print("No changes to commit.")
             return
 
-        # Commit with [skip ci] to avoid infinite loop
-        commit_msg = f"data: update whale analysis {datetime.now().strftime('%Y-%m-%d %H:%M')} [skip ci]"
+        # Commit (No [skip ci] so Vercel triggers)
+        commit_msg = f"data: update whale analysis {datetime.now().strftime('%Y-%m-%d %H:%M')}"
         subprocess.run(["git", "commit", "-m", commit_msg], check=True)
         
         # Push
