@@ -87,13 +87,22 @@ def run_job():
 
 def start_scheduler():
     print("Whale Watcher Scheduler Started...")
-    print("Schedule: 08:00, 12:00, 14:00, 16:00 (Server Time)")
+    print("Schedule: 00:00, 04:00, 08:00, 12:00, 16:00, 20:00 (UTC)")
     
     # Schedule jobs
+    # Schedule jobs (UTC Time)
+    # 00:00 UTC = 08:00 CST
+    # 04:00 UTC = 12:00 CST
+    # 08:00 UTC = 16:00 CST
+    # 12:00 UTC = 20:00 CST
+    # 16:00 UTC = 00:00 CST
+    # 20:00 UTC = 04:00 CST
+    schedule.every().day.at("00:00").do(run_job)
+    schedule.every().day.at("04:00").do(run_job)
     schedule.every().day.at("08:00").do(run_job)
     schedule.every().day.at("12:00").do(run_job)
-    schedule.every().day.at("14:00").do(run_job)
     schedule.every().day.at("16:00").do(run_job)
+    schedule.every().day.at("20:00").do(run_job)
     
     # Start a dummy web server to satisfy Railway's port binding requirement
     import threading
