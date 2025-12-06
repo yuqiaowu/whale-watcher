@@ -5,6 +5,8 @@ import subprocess
 from datetime import datetime
 import whale_watcher
 
+print("DEBUG: scheduler.py loaded...", flush=True)
+
 def run_job():
     print(f"[{datetime.now()}] Starting scheduled job...")
     
