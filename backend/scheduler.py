@@ -75,7 +75,7 @@ def run_job():
         
         # Push
         print("Pushing updates...")
-        subprocess.run(["git", "push", "origin", "main"], cwd=temp_dir, check=True)
+        subprocess.run(["git", "push", "-q", "origin", "main"], cwd=temp_dir, check=True)
         
         print("Successfully pushed data updates.")
         
