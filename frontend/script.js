@@ -36,7 +36,8 @@ const TRANSLATIONS = {
             "Extreme Greed": "Extreme Greed"
         },
         lbl_bullish: "Bullish",
-        lbl_bearish: "Bearish"
+        lbl_bearish: "Bearish",
+        updated_at: "Updated at"
     },
     zh: {
         ai_title: "AI 市场洞察",
@@ -97,7 +98,7 @@ function renderDashboard(data) {
     updateStaticText();
 
     // 1. Render AI Summary
-    renderSummary(data.ai_summary);
+    renderSummary(data.ai_summary, data.updated_at);
 
     // 2. Render Fear & Greed Index
     if (data.fear_greed) {
@@ -113,10 +114,20 @@ function renderDashboard(data) {
     renderChainColumn('sol', data.sol);
 }
 
-function renderSummary(summaryData) {
+function renderSummary(summaryData, updatedAt) {
     const container = document.getElementById('ai-summary');
     const text = summaryData[currentLang] || summaryData['en'] || "Summary unavailable.";
-    container.innerHTML = text.replace(/\n/g, '<br>');
+
+    let timeStr = "";
+    if (updatedAt) {
+        const date = new Date(updatedAt);
+        // Format: YYYY-MM-DD HH:MM
+        timeStr = `<div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-secondary); text-align: right;">
+            ${TRANSLATIONS[currentLang].updated_at || "Updated at"}: ${date.toLocaleString()}
+        </div>`;
+    }
+
+    container.innerHTML = text.replace(/\n/g, '<br>') + timeStr;
 }
 
 function renderFearGreed(fgData) {
