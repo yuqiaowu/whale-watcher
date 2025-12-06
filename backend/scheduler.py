@@ -25,29 +25,58 @@ def run_job():
         return
 
     try:
-        # Configure Git
-        subprocess.run(["git", "config", "--global", "user.name", "Whale Watcher Bot"], check=True)
-        subprocess.run(["git", "config", "--global", "user.email", "bot@whalewatcher.com"], check=True)
+        # Strategy: Clone -> Copy -> Commit -> Push
+        # This avoids issues where the container doesn't have .git folder
         
-        # Add changes
-        subprocess.run(["git", "add", "../frontend/data/whale_analysis.json"], check=True)
+        import shutil
         
-        # Check if there are changes
-        status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
+        temp_dir = "/tmp/whale-watcher-deploy"
+        
+        # Clean up previous temp dir if exists
+        if os.path.exists(temp_dir):
+            shutil.rmtree(temp_dir)
+            
+        # Construct auth URL: https://TOKEN@github.com/user/repo.git
+        # Remove https:// if present to avoid double protocol
+        clean_repo_url = repo_url.replace("https://", "")
+        auth_repo_url = f"https://{github_token}@{clean_repo_url}"
+        
+        print(f"Cloning repo to {temp_dir}...")
+        subprocess.run(["git", "clone", auth_repo_url, temp_dir], check=True)
+        
+        # Configure Git in temp dir
+        subprocess.run(["git", "config", "user.name", "Whale Watcher Bot"], cwd=temp_dir, check=True)
+        subprocess.run(["git", "config", "user.email", "bot@whalewatcher.com"], cwd=temp_dir, check=True)
+        
+        # Copy updated data file to temp repo
+        # Source: ../frontend/data/whale_analysis.json (relative to backend/scheduler.py) -> /app/frontend/data/whale_analysis.json
+        # Dest: temp_dir/frontend/data/whale_analysis.json
+        
+        source_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "../frontend/data/whale_analysis.json"))
+        dest_file = os.path.join(temp_dir, "frontend/data/whale_analysis.json")
+        
+        print(f"Copying data from {source_file} to {dest_file}...")
+        shutil.copy2(source_file, dest_file)
+        
+        # Check for changes
+        status = subprocess.run(["git", "status", "--porcelain"], cwd=temp_dir, capture_output=True, text=True)
         if not status.stdout.strip():
             print("No changes to commit.")
             return
 
         # Commit (No [skip ci] so Vercel triggers)
         commit_msg = f"data: update whale analysis {datetime.now().strftime('%Y-%m-%d %H:%M')}"
-        subprocess.run(["git", "commit", "-m", commit_msg], check=True)
+        subprocess.run(["git", "add", "."], cwd=temp_dir, check=True)
+        subprocess.run(["git", "commit", "-m", commit_msg], cwd=temp_dir, check=True)
         
         # Push
-        # Construct auth URL: https://TOKEN@github.com/user/repo.git
-        auth_repo_url = f"https://{github_token}@{repo_url.replace('https://', '')}"
-        subprocess.run(["git", "push", auth_repo_url, "main"], check=True)
+        print("Pushing updates...")
+        subprocess.run(["git", "push", "origin", "main"], cwd=temp_dir, check=True)
         
         print("Successfully pushed data updates.")
+        
+        # Cleanup
+        shutil.rmtree(temp_dir)
         
     except Exception as e:
         print(f"Error during git operation: {e}")
