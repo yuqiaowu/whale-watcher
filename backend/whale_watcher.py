@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import requests
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -104,9 +105,9 @@ def fetch_large_transfers():
             if price == 0: continue
             
             # 2. Get Transfers
-            # Fetch up to 5 pages (500 txs) to dig deeper into history
+            # Fetch up to 2 pages (~200 txs) to save API credits (Free Tier limit 40k CU/day)
             cursor = None
-            for page in range(5):
+            for page in range(2):
                 try:
                     params = {
                         "address": address, 
@@ -177,6 +178,9 @@ def fetch_large_transfers():
             
         except Exception as e:
             print(f"Error processing {symbol}: {e}")
+            
+        # Rate limiting: Sleep 1s between tokens 
+        time.sleep(1)
     # Deduplication and Loop Detection
     cleaned_transfers = []
     seen_txs = {} # Map (hash, symbol, amount) -> index in cleaned_transfers
@@ -246,8 +250,8 @@ def fetch_solana_swaps():
                 "limit": 100, 
             }
             
-            # Fetch 5 pages (500 txs) to cover more time
-            for _ in range(5):
+            # Fetch 2 pages (~200 txs) to save API credits (Free Tier limit 40k CU/day)
+            for _ in range(2):
                 response = requests.get(url, headers=headers, params=params)
                 data = response.json()
                 
@@ -320,6 +324,9 @@ def fetch_solana_swaps():
                     
         except Exception as e:
             print(f"Error fetching Solana {symbol}: {e}")
+        
+        # Rate limiting: Sleep 1s between tokens 
+        time.sleep(1)
             
     # Sort by time desc
     all_swaps.sort(key=lambda x: x["timestamp"], reverse=True)
