@@ -111,8 +111,6 @@ def fetch_large_transfers():
                     params = {
                         "address": address, 
                         "chain": CHAIN,
-                        "from_date": from_date,
-                        "to_date": to_date,
                         "limit": 100, 
                         "order": "DESC"
                     }
@@ -526,11 +524,12 @@ def merge_and_filter_txs(new_txs, old_txs):
     cutoff_time = datetime.utcnow() - timedelta(hours=24)
     filtered_txs = []
     
-    for tx in all_txs:
+    for i, tx in enumerate(all_txs):
         try:
             # Handle timestamp format (Moralis returns ISO string usually)
             # If it's already a string, parse it.
             ts_str = tx['timestamp']
+            
             # Simple ISO parser if needed, or dateutil
             # Assuming standard ISO format like "2023-10-27T10:00:00.000Z"
             # Python 3.7+ has fromisoformat but might struggle with 'Z'.
