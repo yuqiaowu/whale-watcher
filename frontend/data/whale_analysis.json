@@ -1,7 +1,7 @@
 {
   "eth": {
     "stats": {
-      "sentiment_score": -0.02,
+      "sentiment_score": -0.01,
       "stablecoin_net_flow": 0,
       "token_net_flow": 0,
       "whale_count": 0,
@@ -17,12 +17,12 @@
   },
   "sol": {
     "stats": {
-      "sentiment_score": 0.17,
-      "stablecoin_net_flow": -62299.51885404483,
+      "sentiment_score": 0.14,
+      "stablecoin_net_flow": -61197.14656551961,
       "token_net_flow": 7260.875355814796,
-      "whale_count": 16,
-      "avg_tx_size": 9322.241444278467,
-      "total_volume": 335600.6919940248,
+      "whale_count": 18,
+      "avg_tx_size": 9196.881385407882,
+      "total_volume": 349481.49264549953,
       "top_whale": {
         "address": "3n7fQVEeSVoKUgArBt3xMwrMej8Koe4rRekb19SeUjwj",
         "volume": 79782.87987650918,
@@ -30,6 +30,32 @@
       }
     },
     "top_txs": [
+      {
+        "hash": "6SZzvZ6LAmXJTeym3QFxUk4pBiB569auMnvCxZ2vUDwbCY61DyWeyzfUTWQjZYSEsps3kdVWhkT1ns3bur4YdZC",
+        "timestamp": "2025-12-13T16:00:08.000Z",
+        "symbol": "USDC",
+        "amount": 6396.389677,
+        "amount_usd": 6389.214181474783,
+        "from": "GKcVeDkz1GTU695VR5t1t1MSzvMRPpxKso3qKdFuVf9h",
+        "to": "3ucNos4NbumPLZNWztqGHNFFgkHeRMBQAVemeeomsUxv",
+        "from_label": "GKcVeD...",
+        "to_label": "Raydium CLMM",
+        "signal": "BEARISH_OUTFLOW",
+        "chain": "SOL"
+      },
+      {
+        "hash": "rcoRuhdYhFnL8HF47snodVaHDgPfQ42h3dadR5J56jZ3BycciVxiGRED3Q3vJy1o8RZPppiVC3WNXSdS8LX26hR",
+        "timestamp": "2025-12-13T15:59:45.000Z",
+        "symbol": "USDC",
+        "amount": 7500.0,
+        "amount_usd": 7491.58647,
+        "from": "6wiZCM1HXkjXVyCkgDEtLMXC1dLwDUsUqWAVEf2UFDDQ",
+        "to": "9ToMYnmEeYKc1AWYAFo8yjPKM1bt3vPhgw1U6qh9RxBd",
+        "from_label": "6wiZCM...",
+        "to_label": "Meteora DLMM",
+        "signal": "BULLISH_INFLOW",
+        "chain": "SOL"
+      },
       {
         "hash": "3wpmgwxJg5kQ1UpRQfmYDLTQHSMvVRWuJJuDecMepjbq26zAojaNoZPEArQRJcLAvkAVcn8N5d6wqv3sJoVMgmcK",
         "timestamp": "2025-12-13T12:00:05.000Z",
@@ -504,9 +530,9 @@
     "value": 23,
     "value_classification": "Extreme Fear"
   },
-  "updated_at": "2025-12-13T20:00:24.939495",
+  "updated_at": "2025-12-14T00:00:53.236507",
   "ai_summary": {
-    "en": "The crypto market is entrenched in \"Extreme Fear\" with BTC's Fear & Greed Index at 23. Institutional whales on ETH show zero activity and neutral sentiment, indicating extreme caution or complete disengagement. In contrast, SOL's speculative participants register a slightly positive sentiment but exhibit a significant stablecoin net outflow. This suggests that despite some retail interest, overall capital is withdrawing, pointing to a continued cautious or bearish short-term outlook.",
-    "zh": "\u52a0\u5bc6\u5e02\u573a\u6b63\u5904\u4e8e\u201c\u6781\u5ea6\u6050\u60e7\u201d\u4e4b\u4e2d\uff0cBTC\u6050\u60e7\u4e0e\u8d2a\u5a6a\u6307\u6570\u4e3a23\u3002\u4ee5\u592a\u574a\u94fe\u4e0a\u7684\u673a\u6784\u9cb8\u9c7c\u6d3b\u52a8\u4e3a\u96f6\uff0c\u60c5\u7eea\u4e2d\u6027\uff0c\u8868\u660e\u6781\u5ea6\u8c28\u614e\u6216\u5b8c\u5168\u9000\u51fa\u3002\u76f8\u6bd4\u4e4b\u4e0b\uff0cSOL\u94fe\u4e0a\u7684\u6295\u673a\u53c2\u4e0e\u8005\u60c5\u7eea\u7565\u663e\u4e50\u89c2\uff0c\u4f46\u7a33\u5b9a\u5e01\u51c0\u6d41\u51fa\u663e\u8457\u3002\u8fd9\u8868\u660e\u5c3d\u7ba1\u5b58\u5728\u4e00\u4e9b\u6563\u6237\u5174\u8da3\uff0c\u4f46\u6574\u4f53\u8d44\u91d1\u6b63\u5728\u64a4\u79bb\uff0c\u77ed\u671f\u524d\u666f\u4f9d\u7136\u8c28\u614e\u6216\u770b\u8dcc\u3002"
+    "en": "The crypto market is currently entrenched in \"Extreme Fear,\" as indicated by BTC's Fear & Greed Index at 23. In this environment, institutional \"smart money\" on ETH shows zero activity and dormant sentiment, reflecting extreme caution. Conversely, retail sentiment on SOL exhibits a slight positive bias, yet a significant net outflow of stablecoins suggests cautious profit-taking. This divergence points to continued short-term uncertainty, with smart money likely awaiting clearer bullish catalysts.",
+    "zh": "\u52a0\u5bc6\u5e02\u573a\u76ee\u524d\u9677\u5165\u201c\u6781\u5ea6\u6050\u60e7\u201d\uff0c\u6bd4\u7279\u5e01\u6050\u60e7\u4e0e\u8d2a\u5a6a\u6307\u6570\u4e3a23\u3002\u5728\u6b64\u73af\u5883\u4e0b\uff0c\u4ee5\u592a\u574a\u4e0a\u7684\u673a\u6784\u201c\u806a\u660e\u94b1\u201d\u663e\u793a\u96f6\u6d3b\u8dc3\u5ea6\u548c\u4f11\u7720\u60c5\u7eea\uff0c\u53cd\u6620\u51fa\u6781\u5ea6\u8c28\u614e\u3002\u4e0e\u6b64\u76f8\u53cd\uff0cSolana\u4e0a\u7684\u6563\u6237\u60c5\u7eea\u7565\u663e\u4e50\u89c2\uff0c\u4f46\u663e\u8457\u7684\u7a33\u5b9a\u5e01\u51c0\u6d41\u51fa\u8868\u660e\u5b58\u5728\u8c28\u614e\u7684\u83b7\u5229\u4e86\u7ed3\u3002\u8fd9\u79cd\u5206\u6b67\u9884\u793a\u7740\u77ed\u671f\u5185\u5e02\u573a\u5c06\u6301\u7eed\u4e0d\u786e\u5b9a\u6027\uff0c\u806a\u660e\u94b1\u53ef\u80fd\u6b63\u5728\u7b49\u5f85\u66f4\u660e\u786e\u7684\u770b\u6da8\u50ac\u5316\u5242\u3002"
   }
 }
