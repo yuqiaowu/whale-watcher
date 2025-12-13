@@ -7,7 +7,10 @@ from moralis import evm_api
 import google.generativeai as genai
 
 # Load environment variables
-load_dotenv(dotenv_path="../.env")
+# Load environment variables
+# Use absolute path relative to this script to ensure proper loading regardless of CWD
+env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
+load_dotenv(dotenv_path=env_path)
 
 MORALIS_API_KEY = os.getenv("MORALIS_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -89,8 +92,9 @@ def fetch_large_transfers():
     print("Fetching data from Moralis...")
     
     # Time window (last 24h)
-    to_date = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-    from_date = (datetime.now() - timedelta(hours=24)).strftime("%Y-%m-%dT%H:%M:%S")
+    # Use UTC explicitly to avoid timezone issues with API
+    to_date = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    from_date = (datetime.utcnow() - timedelta(hours=24)).strftime("%Y-%m-%dT%H:%M:%SZ")
     
     for symbol, address in TOKENS.items():
         print(f"Scanning {symbol}...")
@@ -100,66 +104,81 @@ def fetch_large_transfers():
             if price == 0: continue
             
             # 2. Get Transfers
-            # Fetch more (limit=100) to ensure we find whales even if retail is busy
-            transfers = evm_api.token.get_token_transfers(
-                api_key=MORALIS_API_KEY,
-                params={
-                    "address": address, 
-                    "chain": CHAIN,
-                    "from_date": from_date,
-                    "to_date": to_date,
-                    "limit": 100, 
-                    "order": "DESC"
-                }
-            )
-            
-            if "result" in transfers:
-                for tx in transfers["result"]:
-                    # Use hardcoded decimals if available, otherwise default to 18
-                    decimals = TOKEN_DECIMALS.get(symbol, 18)
-                    amount = float(tx["value"]) / (10 ** decimals)
-                    amount_usd = amount * price
-                    
-                    if amount_usd >= MIN_VALUE_USD:
-                        # Determine flow type
-                        from_addr = tx["from_address"]
-                        to_addr = tx["to_address"]
-                        
-                        from_label = EXCHANGES.get(from_addr, from_addr[:6] + "...")
-                        to_label = EXCHANGES.get(to_addr, to_addr[:6] + "...")
-                        
-                        is_exchange_in = to_addr in EXCHANGES
-                        is_exchange_out = from_addr in EXCHANGES
-                        
-                        # Logic for Signal
-                        # Stablecoins: In = Buy Power (Bullish), Out = Cash Out (Bearish/Neutral)
-                        # Volatile: In = Sell Pressure (Bearish), Out = HODL (Bullish)
-                        
-                        signal = "NEUTRAL"
-                        if symbol in STABLECOINS:
-                            if is_exchange_in: signal = "BULLISH_INFLOW" # Money entering exchange
-                            if is_exchange_out: signal = "BEARISH_OUTFLOW" # Money leaving exchange
-                        else:
-                            if is_exchange_in: signal = "BEARISH_INFLOW" # Token entering exchange (to sell)
-                            if is_exchange_out: signal = "BULLISH_OUTFLOW" # Token leaving exchange (to hold)
+            # Fetch up to 5 pages (500 txs) to dig deeper into history
+            cursor = None
+            for page in range(5):
+                try:
+                    params = {
+                        "address": address, 
+                        "chain": CHAIN,
+                        "from_date": from_date,
+                        "to_date": to_date,
+                        "limit": 100, 
+                        "order": "DESC"
+                    }
+                    if cursor:
+                        params["cursor"] = cursor
 
-                        all_transfers.append({
-                            "hash": tx["transaction_hash"],
-                            "timestamp": tx["block_timestamp"],
-                            "symbol": symbol,
-                            "amount": amount,
-                            "amount_usd": amount_usd,
-                            "from": from_addr,
-                            "to": to_addr,
-                            "from_label": from_label,
-                            "to_label": to_label,
-                            "signal": signal,
-                            "chain": "ETH"
-                        })
+                    transfers = evm_api.token.get_token_transfers(
+                        api_key=MORALIS_API_KEY,
+                        params=params
+                    )
                     
-        except Exception as e:
-            print(f"Error fetching transfers for {symbol}: {e}")
+                    if "result" in transfers:
+                        for tx in transfers["result"]:
+                            # Use hardcoded decimals if available, otherwise default to 18
+                            decimals = TOKEN_DECIMALS.get(symbol, 18)
+                            amount = float(tx["value"]) / (10 ** decimals)
+                            amount_usd = amount * price
+                            
+                            if amount_usd >= MIN_VALUE_USD:
+                                # Determine flow type
+                                from_addr = tx["from_address"]
+                                to_addr = tx["to_address"]
+                                
+                                from_label = EXCHANGES.get(from_addr, from_addr[:6] + "...")
+                                to_label = EXCHANGES.get(to_addr, to_addr[:6] + "...")
+                                
+                                is_exchange_in = to_addr in EXCHANGES
+                                is_exchange_out = from_addr in EXCHANGES
+                                
+                                # Logic for Signal
+                                # Stablecoins: In = Buy Power (Bullish), Out = Cash Out (Bearish/Neutral)
+                                # Volatile: In = Sell Pressure (Bearish), Out = HODL (Bullish)
+                                
+                                signal = "NEUTRAL"
+                                if symbol in STABLECOINS:
+                                    if is_exchange_in: signal = "BULLISH_INFLOW" # Money entering exchange
+                                    if is_exchange_out: signal = "BEARISH_OUTFLOW" # Money leaving exchange
+                                else:
+                                    if is_exchange_in: signal = "BEARISH_INFLOW" # Token entering exchange (to sell)
+                                    if is_exchange_out: signal = "BULLISH_OUTFLOW" # Token leaving exchange (to hold)
+
+                                all_transfers.append({
+                                    "hash": tx["transaction_hash"],
+                                    "timestamp": tx["block_timestamp"],
+                                    "symbol": symbol,
+                                    "amount": amount,
+                                    "amount_usd": amount_usd,
+                                    "from": from_addr,
+                                    "to": to_addr,
+                                    "from_label": from_label,
+                                    "to_label": to_label,
+                                    "signal": signal,
+                                    "chain": "ETH"
+                                })
+                    
+                    # Prepare for next page
+                    cursor = transfers.get("cursor")
+                    if not cursor:
+                        break
+                        
+                except Exception as e:
+                    print(f"Error fetching page {page} for {symbol}: {e}")
+                    break
             
+        except Exception as e:
+            print(f"Error processing {symbol}: {e}")
     # Deduplication and Loop Detection
     cleaned_transfers = []
     seen_txs = {} # Map (hash, symbol, amount) -> index in cleaned_transfers
@@ -503,7 +522,8 @@ def merge_and_filter_txs(new_txs, old_txs):
     all_txs = list(merged_map.values())
     
     # 2. Filter last 24h
-    cutoff_time = datetime.now() - timedelta(hours=24)
+    # Use UTC to match API timestamps
+    cutoff_time = datetime.utcnow() - timedelta(hours=24)
     filtered_txs = []
     
     for tx in all_txs:
