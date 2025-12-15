@@ -14,6 +14,22 @@ env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
 load_dotenv(dotenv_path=env_path)
 
 MORALIS_API_KEY = os.getenv("MORALIS_API_KEY")
+MORSLID_API_KEY_2 = os.getenv("MORSLID_API_KEY_2") # Handle user typo
+ETHERSCAN_API_KEY = os.getenv("ETHERSCAN_API_KEY")
+
+# Key Rotation Logic
+API_KEYS = [k for k in [MORALIS_API_KEY, MORSLID_API_KEY_2] if k]
+CURRENT_KEY_IDX = 0
+
+def get_current_key():
+    if not API_KEYS: return None
+    return API_KEYS[CURRENT_KEY_IDX % len(API_KEYS)]
+
+def rotate_key():
+    global CURRENT_KEY_IDX
+    print(f"DEBUG: Switching API Key from index {CURRENT_KEY_IDX}...")
+    CURRENT_KEY_IDX = (CURRENT_KEY_IDX + 1) % len(API_KEYS)
+    print(f"DEBUG: New API Key index: {CURRENT_KEY_IDX}")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Configure Gemini
@@ -90,50 +106,55 @@ def fetch_large_transfers():
     """Fetch recent large transfers for tracked tokens (ETH)."""
     all_transfers = []
     
-    print("Fetching data from Moralis...")
+    print("Fetching data from Etherscan (Transfer Events)...")
     
-    # Time window (last 24h)
-    # Use UTC explicitly to avoid timezone issues with API
-    to_date = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    from_date = (datetime.utcnow() - timedelta(hours=24)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    # Use Etherscan V2 API
+    etherscan_url = "https://api.etherscan.io/v2/api"
     
     for symbol, address in TOKENS.items():
-        print(f"Scanning {symbol}...")
+        print(f"Scanning {symbol} via Etherscan...")
         try:
-            # 1. Get Token Price
+            # 1. Get Token Price (Still use Moralis for Price)
             price = get_token_price(address)
-            if price == 0: continue
+            if price == 0: 
+                print(f"Skipping {symbol} due to missing price.")
+                continue
             
-            # 2. Get Transfers
-            # Fetch up to 2 pages (~200 txs) to save API credits (Free Tier limit 40k CU/day)
-            cursor = None
-            for page in range(2):
-                try:
-                    params = {
-                        "address": address, 
-                        "chain": CHAIN,
-                        "limit": 100, 
-                        "order": "DESC"
-                    }
-                    if cursor:
-                        params["cursor"] = cursor
+            # 2. Get Transfers via Etherscan
+            # Use 'tokentx' endpoint: https://docs.etherscan.io/api-endpoints/accounts#get-a-list-of-erc20-token-transfer-events-by-address-on-ethereum
+            # Although docs say it filters by 'address', testing showed it works for contractaddress only if address is omitted or same.
+            # Actually, standard way for Contract Events is getLogs, but tokentx is parsed.
+            # My test 'debug_etherscan.py' confirmed tokentx works for the contract.
 
-                    transfers = evm_api.token.get_token_transfers(
-                        api_key=MORALIS_API_KEY,
-                        params=params
-                    )
-                    
-                    if "result" in transfers:
-                        for tx in transfers["result"]:
-                            # Use hardcoded decimals if available, otherwise default to 18
-                            decimals = TOKEN_DECIMALS.get(symbol, 18)
+            params = {
+                "chainid": "1",
+                "module": "account",
+                "action": "tokentx",
+                "contractaddress": address,
+                "page": 1,
+                "offset": 100, # Fetch last 100 txs (should cover > 10 mins usually)
+                "sort": "desc",
+                "apikey": ETHERSCAN_API_KEY
+            }
+
+            try:
+                response = requests.get(etherscan_url, params=params)
+                data = response.json()
+                
+                if data["status"] == "1" and isinstance(data["result"], list):
+                    for tx in data["result"]:
+                        # Etherscan result fields: 
+                        # timeStamp, hash, from, to, value, tokenDecimal
+                        
+                        try:
+                            decimals = int(tx.get("tokenDecimal", TOKEN_DECIMALS.get(symbol, 18)))
                             amount = float(tx["value"]) / (10 ** decimals)
                             amount_usd = amount * price
                             
+                            # Filter Whales
                             if amount_usd >= MIN_VALUE_USD:
-                                # Determine flow type
-                                from_addr = tx["from_address"]
-                                to_addr = tx["to_address"]
+                                from_addr = tx["from"]
+                                to_addr = tx["to"]
                                 
                                 from_label = EXCHANGES.get(from_addr, from_addr[:6] + "...")
                                 to_label = EXCHANGES.get(to_addr, to_addr[:6] + "...")
@@ -141,21 +162,21 @@ def fetch_large_transfers():
                                 is_exchange_in = to_addr in EXCHANGES
                                 is_exchange_out = from_addr in EXCHANGES
                                 
-                                # Logic for Signal
-                                # Stablecoins: In = Buy Power (Bullish), Out = Cash Out (Bearish/Neutral)
-                                # Volatile: In = Sell Pressure (Bearish), Out = HODL (Bullish)
-                                
                                 signal = "NEUTRAL"
                                 if symbol in STABLECOINS:
-                                    if is_exchange_in: signal = "BULLISH_INFLOW" # Money entering exchange
-                                    if is_exchange_out: signal = "BEARISH_OUTFLOW" # Money leaving exchange
+                                    if is_exchange_in: signal = "BULLISH_INFLOW"
+                                    if is_exchange_out: signal = "BEARISH_OUTFLOW"
                                 else:
-                                    if is_exchange_in: signal = "BEARISH_INFLOW" # Token entering exchange (to sell)
-                                    if is_exchange_out: signal = "BULLISH_OUTFLOW" # Token leaving exchange (to hold)
+                                    if is_exchange_in: signal = "BEARISH_INFLOW"
+                                    if is_exchange_out: signal = "BULLISH_OUTFLOW"
+
+                                # Convert Etherscan timestamp (epoch str) to ISO
+                                ts_epoch = int(tx["timeStamp"])
+                                ts_iso = datetime.utcfromtimestamp(ts_epoch).strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
                                 all_transfers.append({
-                                    "hash": tx["transaction_hash"],
-                                    "timestamp": tx["block_timestamp"],
+                                    "hash": tx["hash"],
+                                    "timestamp": ts_iso,
                                     "symbol": symbol,
                                     "amount": amount,
                                     "amount_usd": amount_usd,
@@ -166,21 +187,21 @@ def fetch_large_transfers():
                                     "signal": signal,
                                     "chain": "ETH"
                                 })
+                        except Exception as e:
+                            print(f"Error parsing tx {tx.get('hash')}: {e}")
+                            continue
+                            
+                else:
+                    print(f"Etherscan error/empty for {symbol}: {data.get('message')}")
                     
-                    # Prepare for next page
-                    cursor = transfers.get("cursor")
-                    if not cursor:
-                        break
-                        
-                except Exception as e:
-                    print(f"Error fetching page {page} for {symbol}: {e}")
-                    break
-            
+            except Exception as e:
+                print(f"Error fetching Etherscan for {symbol}: {e}")
+
         except Exception as e:
             print(f"Error processing {symbol}: {e}")
             
-        # Rate limiting: Sleep 1s between tokens 
-        time.sleep(1)
+        # Rate limiting: Etherscan free tier is 5 calls/sec, so strict sleep not needed but good for safety
+        time.sleep(0.2)
     # Deduplication and Loop Detection
     cleaned_transfers = []
     seen_txs = {} # Map (hash, symbol, amount) -> index in cleaned_transfers
@@ -219,8 +240,9 @@ def get_solana_price(address):
     """Fetch Solana token price in USD."""
     try:
         # Use Moralis Token API for price
+        # Use Moralis Token API for price
         url = f"https://solana-gateway.moralis.io/token/mainnet/{address}/price"
-        headers = {"X-API-Key": MORALIS_API_KEY}
+        headers = {"X-API-Key": get_current_key()}
         response = requests.get(url, headers=headers)
         data = response.json()
         return data.get("usdPrice", 0)
@@ -233,7 +255,7 @@ def fetch_solana_swaps():
     all_swaps = []
     
     headers = {
-        "X-API-Key": MORALIS_API_KEY
+        "X-API-Key": get_current_key()
     }
     
     # Pre-fetch prices
@@ -252,7 +274,23 @@ def fetch_solana_swaps():
             
             # Fetch 2 pages (~200 txs) to save API credits (Free Tier limit 40k CU/day)
             for _ in range(2):
-                response = requests.get(url, headers=headers, params=params)
+                # Retry loop for SOL requests
+                max_retries = len(API_KEYS) + 1
+                response = None
+                for attempt in range(max_retries):
+                    # Update header with potentially new key
+                    headers["X-API-Key"] = get_current_key()
+                    response = requests.get(url, headers=headers, params=params)
+                    
+                    if response.status_code in [401, 429]:
+                         print(f"SOL API Quota hit. Rotating...")
+                         rotate_key()
+                         continue
+                    else:
+                        break
+                
+                if not response: break
+                
                 data = response.json()
                 
                 if "result" in data:
