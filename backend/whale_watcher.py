@@ -117,6 +117,10 @@ def get_token_price(address):
 
 def fetch_large_transfers():
     """Fetch recent large transfers for tracked tokens (ETH)."""
+    # Ensure global EXCHANGES keys are lowercase for matching
+    global EXCHANGES
+    EXCHANGES = {k.lower(): v for k, v in EXCHANGES.items()}
+    
     all_transfers = []
     
     print("Fetching data from Etherscan (Transfer Events)...")
@@ -166,9 +170,10 @@ def fetch_large_transfers():
                             
                             # Filter Whales
                             if amount_usd >= MIN_VALUE_USD:
-                                from_addr = tx["from"]
-                                to_addr = tx["to"]
+                                from_addr = tx["from"].lower()
+                                to_addr = tx["to"].lower()
                                 
+                                # Use lower() for lookup just in case, though keys should be lower
                                 from_label = EXCHANGES.get(from_addr, from_addr[:6] + "...")
                                 to_label = EXCHANGES.get(to_addr, to_addr[:6] + "...")
                                 
@@ -613,7 +618,50 @@ def merge_and_filter_txs(new_txs, old_txs):
     # 3. Sort by timestamp descending
     filtered_txs.sort(key=lambda x: x['timestamp'], reverse=True)
     
+    
     return filtered_txs
+
+def recalculate_signals(transfers):
+    """Re-evaluate signals for all transfers using updated EXCHANGES."""
+    # EXCHANGES is global and should be normalized by now
+    count_updated = 0
+    for tx in transfers:
+        symbol = tx["symbol"]
+        
+        # Addresses might be mixed case in history
+        from_addr = tx["from"].lower()
+        to_addr = tx["to"].lower()
+        
+        # Normalize in tx object too for consistency
+        tx["from"] = from_addr
+        tx["to"] = to_addr
+        
+        is_exchange_in = to_addr in EXCHANGES
+        is_exchange_out = from_addr in EXCHANGES
+        
+        # Update labels (in case new exchanges added or fixed)
+        tx["from_label"] = EXCHANGES.get(from_addr, from_addr[:6] + "...")
+        tx["to_label"] = EXCHANGES.get(to_addr, to_addr[:6] + "...")
+        
+        signal = "NEUTRAL"
+        if symbol in STABLECOINS:
+            if is_exchange_in: signal = "BULLISH_INFLOW"
+            if is_exchange_out: signal = "BEARISH_OUTFLOW"
+        else:
+            if is_exchange_in: signal = "BEARISH_INFLOW"
+            if is_exchange_out: signal = "BULLISH_OUTFLOW"
+            
+        # Preserve Loop Logic
+        if tx.get("pattern") == "INTERNAL_LOOP":
+            signal = "NEUTRAL"
+            
+        if tx["signal"] != signal:
+            tx["signal"] = signal
+            count_updated += 1
+            
+    if count_updated > 0:
+        print(f"Recalculated signals for {count_updated} transfers.")
+    return transfers
 
 def main():
     print("DEBUG: Entering whale_watcher.main()...")
@@ -655,6 +703,9 @@ def main():
         old_sol_txs = history_data["sol"]["top_txs"]
         
     eth_transfers = merge_and_filter_txs(new_eth_transfers, old_eth_txs)
+    # Recalculate signals to fix historical data with new/corrected logic
+    eth_transfers = recalculate_signals(eth_transfers)
+    
     sol_transfers = merge_and_filter_txs(new_sol_transfers, old_sol_txs)
     
     print(f"Merged ETH Txs: {len(new_eth_transfers)} new + {len(old_eth_txs)} old -> {len(eth_transfers)} total (24h)")
