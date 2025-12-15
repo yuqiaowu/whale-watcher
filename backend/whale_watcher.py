@@ -63,6 +63,7 @@ EXCHANGES = {
     "0x47ac0fb4f2d84898e4d9e7b4dab3c24507a6d503": "Binance 16",
     "0xdfd5293d8e347dfe59e90efd55b2956a1343963d": "Binance 17",
     "0x6cc5f688a315f3dc28a7781717a9a798a59fda7b": "OKX 3",
+    "0x559432e18b281731c054cd703d4b49872be4ed53": "OKX 5",
     "0x5041ed759dd4afc3a72b8192c143f72f4724081a": "Kraken 4",
     "0x71660c4005ba85c37ccec55d0c4493e66fe775d3": "Coinbase 10",
     "0x503828976d22510aad0201ac7ec88293211d23da": "Coinbase 2",
