@@ -74,7 +74,8 @@ EXCHANGES = {
     "0x75e89d5979e4f6fba9f97c104c2f0afb3f1dcb88": "MEXC",
     "0x6262998ced04146fa42253a5c0af90ca02dfd2a3": "Crypto.com",
     "0x99c9fc46f92e8a1c0dqc1b9742442e525704533": "Optimism Gateway",
-    "0x8315177ab297ba92a06054ce80a67ed4dbd7ed3a": "Arbitrum Bridge"
+    "0x8315177ab297ba92a06054ce80a67ed4dbd7ed3a": "Arbitrum Bridge",
+    "0x2df1c51e09aecf9cacb7bc98cb1742757f163df7": "Hyperliquid Bridge"
 }
 
 # Token Contracts to Watch
