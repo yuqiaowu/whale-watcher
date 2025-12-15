@@ -63,7 +63,18 @@ EXCHANGES = {
     "0x47ac0fb4f2d84898e4d9e7b4dab3c24507a6d503": "Binance 16",
     "0xdfd5293d8e347dfe59e90efd55b2956a1343963d": "Binance 17",
     "0x6cc5f688a315f3dc28a7781717a9a798a59fda7b": "OKX 3",
-    "0x5041ed759dd4afc3a72b8192c143f72f4724081a": "Kraken 4"
+    "0x5041ed759dd4afc3a72b8192c143f72f4724081a": "Kraken 4",
+    "0x71660c4005ba85c37ccec55d0c4493e66fe775d3": "Coinbase 10",
+    "0x503828976d22510aad0201ac7ec88293211d23da": "Coinbase 2",
+    "0xf977814e90da44bfa03b6295a0616a897441acec": "Bybit",
+    "0xa7efae728d2936e78bda97dc267687568dd593f3": "KuCoin 6",
+    "0x0d0707963952f2fba59dd06f2b425ace40b492fe": "Gate.io",
+    "0x61edcdf5bb737adffe5043706e7c5bb1f1a56eea": "Huobi 10",
+    "0x876eabf441b2ee5b5b0554fd502a8e0600950cfa": "Bitfinex 3",
+    "0x75e89d5979e4f6fba9f97c104c2f0afb3f1dcb88": "MEXC",
+    "0x6262998ced04146fa42253a5c0af90ca02dfd2a3": "Crypto.com",
+    "0x99c9fc46f92e8a1c0dqc1b9742442e525704533": "Optimism Gateway",
+    "0x8315177ab297ba92a06054ce80a67ed4dbd7ed3a": "Arbitrum Bridge"
 }
 
 # Token Contracts to Watch
