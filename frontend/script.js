@@ -116,18 +116,26 @@ function renderDashboard(data) {
 
 function renderSummary(summaryData, updatedAt) {
     const container = document.getElementById('ai-summary');
-    const text = summaryData[currentLang] || summaryData['en'] || "Summary unavailable.";
+    const rawText = summaryData[currentLang] || summaryData['en'] || "Summary unavailable.";
+
+    // Simple Markdown Parser
+    let html = rawText
+        // Bold: **text** -> <strong>text</strong>
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        // Bullet points: * text -> <li>text</li> (wrapped in logic below)
+        .replace(/\n\s*\*\s+(.*)/g, '<br>• $1')
+        // New lines -> <br>
+        .replace(/\n/g, '<br>');
 
     let timeStr = "";
     if (updatedAt) {
         const date = new Date(updatedAt);
-        // Format: YYYY-MM-DD HH:MM
-        timeStr = `<div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-secondary); text-align: right;">
+        timeStr = `<div style="margin-top: 15px; font-size: 0.8rem; color: var(--text-secondary); text-align: right; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">
             ${TRANSLATIONS[currentLang].updated_at || "Updated at"}: ${date.toLocaleString()}
         </div>`;
     }
 
-    container.innerHTML = text.replace(/\n/g, '<br>') + timeStr;
+    container.innerHTML = `<div style="line-height: 1.6;">${html}</div>` + timeStr;
 }
 
 function renderFearGreed(fgData) {
