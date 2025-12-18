@@ -37,7 +37,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 # Configuration
 MIN_VALUE_USD = 50000  # ETH Threshold
-MIN_VALUE_USD_SOL = 2000 # SOL Threshold (Lowered to capture more activity)
+MIN_VALUE_USD_SOL = 5000 # SOL Threshold (Reverted to filter noise)
 CHAIN = "eth"
 
 # Solana Configuration
