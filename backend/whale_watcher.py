@@ -406,8 +406,10 @@ def fetch_fear_greed_index():
     return {"value": 50, "value_classification": "Neutral"} # Fallback
 
 def analyze_transfers(transfers):
-    """Calculate sentiment score, aggregate metrics, and top whale."""
-    if not transfers:
+    """Calculate sentiment score, aggregate metrics, and top whale for both 7d and 24h."""
+    
+    # Initialize helpers for empty stats
+    def init_stats():
         return {
             "sentiment_score": 0,
             "stablecoin_net_flow": 0,
@@ -418,25 +420,35 @@ def analyze_transfers(transfers):
             "top_whale": {"address": "N/A", "volume": 0, "label": "N/A"}
         }
 
-    total_score_weight = 0
-    weighted_score_sum = 0
+    stats_7d = init_stats()
+    stats_24h = init_stats()
+
+    if not transfers:
+        return {"stats_7d": stats_7d, "stats_24h": stats_24h}
+
+    # Helpers for 24h calculation
+    import datetime
+    cutoff_24h = datetime.datetime.utcnow() - datetime.timedelta(hours=24)
+
+    # Accumulators
+    acc_7d = {
+        "total_score_weight": 0, "weighted_score_sum": 0,
+        "stable_flow": 0, "token_flow": 0,
+        "whales": set(), "volumes": {}, "total_vol": 0, "count": 0
+    }
     
-    stablecoin_net_flow = 0
-    token_net_flow = 0
-    
-    unique_whales = set()
-    whale_volumes = {} # Map address -> total volume
-    total_volume = 0
-    
-    score_map = {
-        "BULLISH_INFLOW": 2,
-        "BULLISH_OUTFLOW": 1,
-        "BEARISH_INFLOW": -2,
-        "BEARISH_OUTFLOW": -1,
-        "NEUTRAL": 0,
-        "INTERNAL_LOOP": 0
+    acc_24h = {
+        "total_score_weight": 0, "weighted_score_sum": 0,
+        "stable_flow": 0, "token_flow": 0,
+        "whales": set(), "volumes": {}, "total_vol": 0, "count": 0
     }
 
+    score_map = {
+        "BULLISH_INFLOW": 2, "BULLISH_OUTFLOW": 1,
+        "BEARISH_INFLOW": -2, "BEARISH_OUTFLOW": -1,
+        "NEUTRAL": 0, "INTERNAL_LOOP": 0
+    }
+    
     import math
 
     for tx in transfers:
@@ -445,87 +457,94 @@ def analyze_transfers(transfers):
         symbol = tx["symbol"]
         address = tx["from"]
         
-        total_volume += amount_usd
-        unique_whales.add(address)
-        
-        # Track Whale Volume
-        whale_volumes[address] = whale_volumes.get(address, 0) + amount_usd
-        
-        # 1. Sentiment Score
+        # Determine if this tx is within 24h
+        # Assuming tx['timestamp'] is ISO string, specific to Moralis/Script
+        # But here tx is from our internal list which might already have logic
+        # We did parsing in merge_and_filter_txs but just kept string.
+        # Let's re-parse or rely on string compare if format is consistent ISO
+        is_24h = False
+        try:
+            # Quick hack: Compare ISO strings directly works for YYYY-MM-DD
+            # But better to be safe
+            ts_str = tx["timestamp"].replace("Z", "")
+            tx_time = datetime.datetime.fromisoformat(ts_str)
+            if tx_time > cutoff_24h:
+                is_24h = True
+        except:
+            pass # Ignore time parse error, count as old
+
+        # --- Process Logic (Apply to both if 24h, else only 7d) ---
         weight = math.log10(amount_usd) if amount_usd > 1 else 0
         score = score_map.get(signal, 0)
-        
-        weighted_score_sum += score * weight
-        total_score_weight += weight
-        
-        # 2. Net Flows (Chain Level)
-        if symbol in ["USDT", "USDC", "DAI"]:
-            if signal == "BULLISH_INFLOW":
-                stablecoin_net_flow += amount_usd
-            elif signal == "BEARISH_OUTFLOW":
-                stablecoin_net_flow -= amount_usd
-        else:
-            if signal == "BEARISH_INFLOW":
-                token_net_flow += amount_usd
-            elif signal == "BULLISH_OUTFLOW":
-                token_net_flow -= amount_usd
 
-    sentiment_score = weighted_score_sum / total_score_weight if total_score_weight > 0 else 0
-    
-    # Identify Top Whale
-    top_whale_addr = "N/A"
-    top_whale_vol = 0
-    if whale_volumes:
-        top_whale_addr = max(whale_volumes, key=whale_volumes.get)
-        top_whale_vol = whale_volumes[top_whale_addr]
+        # Update Accumulator Function
+        def update_acc(acc):
+            acc["count"] += 1
+            acc["total_vol"] += amount_usd
+            acc["whales"].add(address)
+            acc["volumes"][address] = acc["volumes"].get(address, 0) + amount_usd
+            
+            acc["weighted_score_sum"] += score * weight
+            acc["total_score_weight"] += weight
+            
+            if symbol in ["USDT", "USDC", "DAI"]:
+                if signal == "BULLISH_INFLOW": acc["stable_flow"] += amount_usd
+                elif signal == "BEARISH_OUTFLOW": acc["stable_flow"] -= amount_usd
+            else:
+                if signal == "BEARISH_INFLOW": acc["token_flow"] += amount_usd
+                elif signal == "BULLISH_OUTFLOW": acc["token_flow"] -= amount_usd
+
+        # Always update 7d
+        update_acc(acc_7d)
         
-    # Mask Address
-    top_whale_label = top_whale_addr[:6] + "..." + top_whale_addr[-4:] if len(top_whale_addr) > 10 else top_whale_addr
+        # Conditionally update 24h
+        if is_24h:
+            update_acc(acc_24h)
+
+    # Finalize Stats Function
+    def finalize(acc, stats):
+        stats["sentiment_score"] = acc["weighted_score_sum"] / acc["total_score_weight"] if acc["total_score_weight"] > 0 else 0
+        stats["stablecoin_net_flow"] = acc["stable_flow"]
+        stats["token_net_flow"] = acc["token_flow"]
+        stats["whale_count"] = len(acc["whales"])
+        stats["total_volume"] = acc["total_vol"]
+        stats["avg_tx_size"] = acc["total_vol"] / acc["count"] if acc["count"] > 0 else 0
+        
+        # Top Whale
+        if acc["volumes"]:
+            top = max(acc["volumes"], key=acc["volumes"].get)
+            label = top[:6] + "..." + top[-4:] # Simple truncate
+            # Try to find label in txs? 
+            # We don't have label map handy here easily, but we can reuse the logic
+            # Or just store it. For now simple truncate is safe fallback
+            stats["top_whale"] = {"address": top, "volume": acc["volumes"][top], "label": label}
+
+    finalize(acc_7d, stats_7d)
+    finalize(acc_24h, stats_24h)
     
-    return {
-        "sentiment_score": round(sentiment_score, 2),
-        "stablecoin_net_flow": stablecoin_net_flow,
-        "token_net_flow": token_net_flow,
-        "whale_count": len(unique_whales),
-        "avg_tx_size": total_volume / len(transfers) if transfers else 0,
-        "total_volume": total_volume,
-        "top_whale": {
-            "address": top_whale_addr,
-            "volume": top_whale_vol,
-            "label": top_whale_label
-        }
-    }
+    return {"stats_7d": stats_7d, "stats_24h": stats_24h}
 
 def generate_comparative_summary(eth_data, sol_data, fear_greed):
     """Generate a bilingual market story comparing ETH and SOL, including Fear & Greed."""
     
     # Prepare data for prompt
     prompt_data = {
+        "Timeframe_Context": "Dual Timeframe Analysis (Short-term 24h vs Mid-term 7d)",
         "Macro_Sentiment": {
             "BTC_Fear_Greed_Index": f"{fear_greed['value']} ({fear_greed['value_classification']})"
         },
-        "ETH_Chain (Institutional/Market)": {
-            "sentiment_score": eth_data["stats"]["sentiment_score"],
-            "total_volume_usd": eth_data["stats"]["total_volume"],
-            "stablecoin_net_flow": eth_data["stats"]["stablecoin_net_flow"],
-            "top_transfers": [
-                f"{tx['amount_usd']:.0f} {tx['symbol']} ({tx['signal']})" 
-                for tx in eth_data["top_txs"][:5]
-            ]
+        "ETH_Chain": {
+            "Short_Term_24h": eth_data["stats_24h"],
+            "Mid_Term_7d": eth_data["stats_7d"]
         },
-        "SOL_Chain (Retail/Speculative)": {
-            "sentiment_score": sol_data["stats"]["sentiment_score"],
-            "total_volume_usd": sol_data["stats"]["total_volume"],
-            "stablecoin_net_flow": sol_data["stats"]["stablecoin_net_flow"],
-            "top_transfers": [
-                f"{tx['amount_usd']:.0f} {tx['symbol']} ({tx['signal']})" 
-                for tx in sol_data["top_txs"][:5]
-            ]
+        "SOL_Chain": {
+            "Short_Term_24h": sol_data["stats_24h"],
+            "Mid_Term_7d": sol_data["stats_7d"]
         }
     }
     
     prompt = f"""
-    You are a crypto market analyst. Compare the whale sentiment on ETH vs SOL chains, considering the macro BTC Fear & Greed Index.
+    You are a crypto market analyst. Compare the whale sentiment on ETH vs SOL chains, identifying trends between 24h (short-term) and 7d (mid-term).
     
     Data:
     {json.dumps(prompt_data, indent=2)}
@@ -536,10 +555,6 @@ def generate_comparative_summary(eth_data, sol_data, fear_greed):
     - SOL: Retail/Speculative/Hot Money sentiment.
     - Sentiment Score: -2 (Strong Bearish) to +2 (Strong Bullish).
     
-    Task:
-    Write a short market story (max 4 sentences) comparing the two.
-    1. Start with the macro mood (Fear & Greed).
-    2. Contrast ETH vs SOL behavior.
     3. Give a short-term outlook.
     
     Output Format:
@@ -584,7 +599,7 @@ def merge_and_filter_txs(new_txs, old_txs):
     
     # 2. Filter last 24h
     # Use UTC to match API timestamps
-    cutoff_time = datetime.utcnow() - timedelta(hours=24)
+    cutoff_time = datetime.utcnow() - timedelta(hours=168) # Keep 7 days history
     filtered_txs = []
     
     for i, tx in enumerate(all_txs):
@@ -708,57 +723,75 @@ def main():
     
     sol_transfers = merge_and_filter_txs(new_sol_transfers, old_sol_txs)
     
-    print(f"Merged ETH Txs: {len(new_eth_transfers)} new + {len(old_eth_txs)} old -> {len(eth_transfers)} total (24h)")
-    print(f"Merged SOL Txs: {len(new_sol_transfers)} new + {len(old_sol_txs)} old -> {len(sol_transfers)} total (24h)")
+    print(f"Merged ETH Txs: {len(new_eth_transfers)} new + {len(old_eth_txs)} old -> {len(eth_transfers)} total (7d)")
+    print(f"Merged SOL Txs: {len(new_sol_transfers)} new + {len(old_sol_txs)} old -> {len(sol_transfers)} total (7d)")
     
-    # 4. Analyze Data (Raw Scores)
+    # 4. Analyze Data (Dual Timeframes)
     print("Analyzing sentiment...")
-    eth_stats = analyze_transfers(eth_transfers)
-    sol_stats = analyze_transfers(sol_transfers)
+    eth_analysis = analyze_transfers(eth_transfers)
+    sol_analysis = analyze_transfers(sol_transfers)
     
     # 5. Apply EMA Smoothing (Sentiment Stabilization)
     # Formula: New = (Current * 0.3) + (Old * 0.7)
     ALPHA = 0.3
     
-    # ETH Smoothing
-    old_eth_score = 0
-    if "eth" in history_data and "stats" in history_data["eth"]:
-        old_eth_score = history_data["eth"]["stats"].get("sentiment_score", 0)
-    
-    # If history exists, smooth it. If not (first run), use current raw score.
-    if history_data:
-        eth_stats["sentiment_score"] = round((eth_stats["sentiment_score"] * ALPHA) + (old_eth_score * (1 - ALPHA)), 2)
-        print(f"ETH Sentiment Smoothed: {old_eth_score} -> {eth_stats['sentiment_score']} (Raw: {analyze_transfers(eth_transfers)['sentiment_score']})")
-
-    # SOL Smoothing
-    old_sol_score = 0
-    if "sol" in history_data and "stats" in history_data["sol"]:
-        old_sol_score = history_data["sol"]["stats"].get("sentiment_score", 0)
+    def smooth_score(chain_key, timeframe_key, current_analysis, history):
+        old_score = 0
+        # Access old stats. Warning: Old structure might be flat, new is nested.
+        # We need to handle migration or just use 0 if structure mismatch.
+        try:
+            if chain_key in history and "stats" in history[chain_key]:
+                # Legacy check: if old data has 'sentiment_score', it was the single timeframe version
+                old_stats = history[chain_key]["stats"]
+                old_score = old_stats.get("sentiment_score", 0)
+        except:
+            pass
+            
+        raw_score = current_analysis[timeframe_key]["sentiment_score"]
         
-    if history_data:
-        sol_stats["sentiment_score"] = round((sol_stats["sentiment_score"] * ALPHA) + (old_sol_score * (1 - ALPHA)), 2)
-        print(f"SOL Sentiment Smoothed: {old_sol_score} -> {sol_stats['sentiment_score']} (Raw: {analyze_transfers(sol_transfers)['sentiment_score']})")
+        # If we have history, smooth it
+        if history:
+            smoothed = round((raw_score * ALPHA) + (old_score * (1 - ALPHA)), 2)
+            # print(f"{chain_key} {timeframe_key} Smoothed: {old_score} -> {smoothed} (Raw: {raw_score})")
+            return smoothed
+        else:
+            return raw_score
 
-    # 6. Prepare Data Structure
-    analysis_data = {
+    # Apply smoothing to 7d (Primary Display)
+    # Note: For now we only smooth 7d because that's what we compare with history (which was conceptually "current status").
+    # We could properly store 24h history too, but for complexity let's just smooth 7d for dashboard stability.
+    
+    eth_analysis["stats_7d"]["sentiment_score"] = smooth_score("eth", "stats_7d", eth_analysis, history_data)
+    sol_analysis["stats_7d"]["sentiment_score"] = smooth_score("sol", "stats_7d", sol_analysis, history_data)
+
+    # 6. Generate AI Narrative (Cognitive Engine) with Dual Context
+    ai_summary = {"en": "AI disabled or failed.", "zh": "AI 分析暂时不可用。"}
+    try:
+        print("Generating AI market story...")
+        ai_summary = generate_comparative_summary(eth_analysis, sol_analysis, fear_greed)
+    except Exception as e:
+        print(f"AI Generation Error: {e}")
+
+    # 7. Final Structure for Frontend
+    # Frontend expects: data.eth.stats (flat). We map stats_7d to this default slot.
+    final_output = {
         "eth": {
-            "stats": eth_stats,
-            "top_txs": eth_transfers # Keep all valid 24h txs
+            "stats": eth_analysis["stats_7d"], # Default View
+            "stats_24h": eth_analysis["stats_24h"], # Hidden but available
+            "top_txs": eth_transfers[:50] # Return top 50 txs
         },
         "sol": {
-            "stats": sol_stats,
-            "top_txs": sol_transfers
+            "stats": sol_analysis["stats_7d"], # Default View
+            "stats_24h": sol_analysis["stats_24h"], # Hidden but available
+            "top_txs": sol_transfers[:50]
         },
         "fear_greed": fear_greed,
-        "updated_at": datetime.now().isoformat()
+        "updated_at": datetime.now().isoformat(),
+        "ai_summary": ai_summary
     }
-    
-    # 6. Generate AI Summary (Using Smoothed Scores + Fear Greed)
-    analysis_data["ai_summary"] = generate_comparative_summary(analysis_data["eth"], analysis_data["sol"], fear_greed)
-
     # 7. Save Single JSON File
     with open(output_file, "w") as f:
-        json.dump(analysis_data, f, indent=2)
+        json.dump(final_output, f, indent=2)
         
     print("Done! Saved analysis to whale_analysis.json")
 
