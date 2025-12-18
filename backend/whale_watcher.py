@@ -37,7 +37,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 # Configuration
 MIN_VALUE_USD = 50000  # ETH Threshold
-MIN_VALUE_USD_SOL = 5000 # SOL Threshold (Increased to filter noise)
+MIN_VALUE_USD_SOL = 2000 # SOL Threshold (Lowered to capture more activity)
 CHAIN = "eth"
 
 # Solana Configuration
@@ -290,8 +290,9 @@ def fetch_solana_swaps():
                 "limit": 100, 
             }
             
-            # Fetch 2 pages (~200 txs) to save API credits (Free Tier limit 40k CU/day)
-            for _ in range(2):
+            # Fetch 10 pages (~1000 txs) to capture more history given Solana's high throughput
+            # This is a trade-off: more API calls vs better data coverage
+            for _ in range(10):
                 # Retry loop for SOL requests
                 max_retries = len(API_KEYS) + 1
                 response = None
