@@ -782,12 +782,12 @@ def main():
         "eth": {
             "stats": eth_analysis["stats_7d"], # Default View
             "stats_24h": eth_analysis["stats_24h"], # Hidden but available
-            "top_txs": eth_transfers[:100] # Return top 100 txs (increased for 7d view)
+            "top_txs": eth_transfers[:1000] # Return top 1000 txs (scrollable view)
         },
         "sol": {
             "stats": sol_analysis["stats_7d"], # Default View
             "stats_24h": sol_analysis["stats_24h"], # Hidden but available
-            "top_txs": sol_transfers[:100]
+            "top_txs": sol_transfers[:1000]
         },
         "fear_greed": fear_greed,
         "updated_at": datetime.now().isoformat(),
