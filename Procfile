@@ -1,1 +1,1 @@
-worker: python backend/scheduler.py
+web: python run_monitor.py
