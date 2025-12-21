@@ -464,15 +464,21 @@ def analyze_transfers(transfers):
         # We did parsing in merge_and_filter_txs but just kept string.
         # Let's re-parse or rely on string compare if format is consistent ISO
         is_24h = False
+        # Specific format expected: YYYY-MM-DDTHH:MM:SS.000Z
         try:
-            # Quick hack: Compare ISO strings directly works for YYYY-MM-DD
-            # But better to be safe
+            # Remove Z and parse naive
             ts_str = tx["timestamp"].replace("Z", "")
-            tx_time = datetime.datetime.fromisoformat(ts_str)
+            # Handle potential millisecond differences
+            if "." in ts_str:
+                 tx_time = datetime.datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S.%f")
+            else:
+                 tx_time = datetime.datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
+                 
             if tx_time > cutoff_24h:
                 is_24h = True
-        except:
-            pass # Ignore time parse error, count as old
+        except Exception as e:
+            # print(f"Time parse error: {e}") 
+            pass
 
         # --- Process Logic (Apply to both if 24h, else only 7d) ---
         weight = math.log10(amount_usd) if amount_usd > 1 else 0
@@ -488,7 +494,7 @@ def analyze_transfers(transfers):
             acc["weighted_score_sum"] += score * weight
             acc["total_score_weight"] += weight
             
-            if symbol in ["USDT", "USDC", "DAI"]:
+            if symbol in STABLECOINS:
                 if signal == "BULLISH_INFLOW": acc["stable_flow"] += amount_usd
                 elif signal == "BEARISH_OUTFLOW": acc["stable_flow"] -= amount_usd
             else:
@@ -575,9 +581,11 @@ def generate_comparative_summary(eth_data, sol_data, fear_greed):
         model = genai.GenerativeModel('gemini-2.5-flash')
         response = model.generate_content(prompt)
         text = response.text.strip()
-        # Clean up json markdown
-        if text.startswith("```json"):
-            text = text[7:-3]
+        # Clean up json markdown using regex to find the first JSON object
+        import re
+        match = re.search(r'\{.*\}', text, re.DOTALL)
+        if match:
+            text = match.group(0)
         return json.loads(text)
     except Exception as e:
         print(f"AI Error: {e}")
