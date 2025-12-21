@@ -116,7 +116,17 @@ function renderDashboard(data) {
 
 function renderSummary(summaryData, updatedAt) {
     const container = document.getElementById('ai-summary');
-    const rawText = summaryData[currentLang] || summaryData['en'] || "Summary unavailable.";
+    if (!summaryData || typeof summaryData !== 'object') {
+        summaryData = { en: "Summary not available.", zh: "摘要暂时不可用。" };
+    }
+
+    let rawText = summaryData[currentLang] || summaryData['en'] || "Summary unavailable.";
+
+    // Ensure rawText is a string
+    if (typeof rawText !== 'string') {
+        console.warn("AI Summary is not a string:", rawText);
+        rawText = String(JSON.stringify(rawText)); // Fallback for objects
+    }
 
     // Simple Markdown Parser
     let html = rawText
