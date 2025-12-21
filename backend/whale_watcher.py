@@ -729,7 +729,7 @@ def main():
     unique_new_eth = [tx for tx in new_eth_transfers if tx['hash'] not in old_eth_hashes]
     
     old_sol_hashes = {tx['hash'] for tx in old_sol_txs}
-    unique_new_sol = [tx for tx in new_sol_swaps if tx['hash'] not in old_sol_hashes]
+    unique_new_sol = [tx for tx in new_sol_transfers if tx['hash'] not in old_sol_hashes]
     
     print(f"New Unique Tx Found: ETH={len(unique_new_eth)}, SOL={len(unique_new_sol)}")
 
