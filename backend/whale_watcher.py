@@ -796,10 +796,18 @@ def main():
         "ai_summary": ai_summary
     }
     # 7. Save Single JSON File
-    with open(output_file, "w") as f:
+    with open(output_file, 'w') as f:
         json.dump(final_output, f, indent=2)
-        
-    print("Done! Saved analysis to whale_analysis.json")
+
+    print(f"Done! Saved analysis to {output_file}")
+    
+    # Send Telegram Notification
+    try:
+        from telegram_bot import send_daily_report
+        print("Sending Telegram report...")
+        send_daily_report(output_file)
+    except Exception as e:
+        print(f"Warning: Failed to send Telegram report: {e}")
 
 if __name__ == "__main__":
     main()
