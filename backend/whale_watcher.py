@@ -723,6 +723,16 @@ def main():
     if "sol" in history_data and "top_txs" in history_data["sol"]:
         old_sol_txs = history_data["sol"]["top_txs"]
         
+    # 4. Merge & Filter (Deduplication)
+    # Calculate unique new transactions for logging/notification triggers
+    old_eth_hashes = {tx['hash'] for tx in old_eth_txs}
+    unique_new_eth = [tx for tx in new_eth_transfers if tx['hash'] not in old_eth_hashes]
+    
+    old_sol_hashes = {tx['hash'] for tx in old_sol_txs}
+    unique_new_sol = [tx for tx in new_sol_swaps if tx['hash'] not in old_sol_hashes]
+    
+    print(f"New Unique Tx Found: ETH={len(unique_new_eth)}, SOL={len(unique_new_sol)}")
+
     eth_transfers = merge_and_filter_txs(new_eth_transfers, old_eth_txs)
     # Recalculate signals to fix historical data with new/corrected logic
     eth_transfers = recalculate_signals(eth_transfers)
@@ -801,13 +811,17 @@ def main():
 
     print(f"Done! Saved analysis to {output_file}")
     
-    # Send Telegram Notification
-    try:
-        from telegram_bot import send_daily_report
-        print("Sending Telegram report...")
-        send_daily_report(output_file)
-    except Exception as e:
-        print(f"Warning: Failed to send Telegram report: {e}")
+    # Send Telegram Notification (Conditional)
+    new_tx_count = len(unique_new_eth) + len(unique_new_sol)
+    if new_tx_count > 0:
+        try:
+            from telegram_bot import send_daily_report
+            print(f"Sending Telegram report ({new_tx_count} new transactions detected)...")
+            send_daily_report(output_file)
+        except Exception as e:
+            print(f"Warning: Failed to send Telegram report: {e}")
+    else:
+        print("No new transactions detected. Skipping Telegram notification.")
 
 if __name__ == "__main__":
     main()
