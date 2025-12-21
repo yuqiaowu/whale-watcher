@@ -560,12 +560,14 @@ def generate_comparative_summary(eth_data, sol_data, fear_greed):
     1. Highlight key trends in BOLD (e.g., **Accumulation**, **Panic Selling**).
     2. Use bullet points for readability.
     3. Explicitly look for contradictions between 24h and 7d signals (e.g., "Short-term Panic vs Mid-term Hold").
-    4. Provide the output as a strictly valid JSON object with two keys: "en" (English summary) and "zh" (Chinese summary).
+    4. Provide the output as a strictly valid JSON object with two keys: "en" and "zh".
+    IMPORTANT: The value of "en" and "zh" MUST be a SINGLE string containing Markdown formatting. 
+    DO NOT use nested JSON objects or lists within the values.
     
     Output Format Example:
     {{
-      "en": "**Market Insight:** ...",
-      "zh": "**市场洞察:** ..."
+      "en": "**Market Insight:** ... \\n\\n* **ETH:** ...",
+      "zh": "**市场洞察:** ... \\n\\n* **ETH:** ..."
     }}
     """
     
