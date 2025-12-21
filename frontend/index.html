@@ -14,9 +14,51 @@
         <header>
             <h1>🐋 Whale Watcher <span class="badge">Live</span></h1>
             <div class="controls">
+                <button id="subscribe-btn" class="btn-gold">👑 VIP 订阅 (0.08 SOL)</button>
                 <button id="lang-toggle" class="btn-secondary">EN / 中文</button>
             </div>
         </header>
+
+        <!-- Subscription Modal -->
+        <div id="sub-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-header">
+                    <h2>👑 解锁鲸鱼监控 Pro</h2>
+                    <p>加入 VIP 社群，获取 7x24 小时实时链上异动推送</p>
+                </div>
+                <div class="modal-body">
+                    <div class="price-tag">
+                        <span class="currency">SOL</span>
+                        <span class="amount">0.08</span>
+                        <span class="usd">≈ $10.00 / 月</span>
+                    </div>
+
+                    <div class="payment-info">
+                        <p>请转账至官方钱包地址：</p>
+                        <div class="address-box" id="wallet-address">
+                            <!-- Placeholder - User will replace this -->
+                            YOUR_SOLANA_WALLET_ADDRESS_HERE
+                        </div>
+                        <button id="copy-btn" class="btn-copy">复制地址</button>
+                    </div>
+
+                    <div class="qr-placeholder">
+                        <!-- We can use a dynamic QR API later or user uploads image -->
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YOUR_SOLANA_WALLET_ADDRESS_HERE"
+                            alt="QR Code" id="qr-code">
+                    </div>
+
+                    <div class="steps-info">
+                        <ol>
+                            <li>扫码或复制地址支付 <strong>0.08 SOL</strong></li>
+                            <li>截图支付凭证</li>
+                            <li>联系管理员 <strong>@YuqiaoWu</strong> 入群</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- 1. Sentiment Dashboard (Top) -->
         <section class="dashboard-top">

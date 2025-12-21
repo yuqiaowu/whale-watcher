@@ -1,6 +1,61 @@
 // Language State
 let currentLang = localStorage.getItem('whale_lang') || 'en';
 
+// --- Subscription Modal Logic ---
+const modal = document.getElementById("sub-modal");
+const btn = document.getElementById("subscribe-btn");
+const span = document.getElementsByClassName("close-modal")[0];
+const copyBtn = document.getElementById("copy-btn");
+const walletAddress = document.getElementById("wallet-address");
+
+// Open Modal
+if (btn) {
+    btn.onclick = function () {
+        modal.classList.remove("hidden");
+        setTimeout(() => {
+            modal.classList.add("show");
+        }, 10);
+    }
+}
+
+// Close Modal
+if (span) {
+    span.onclick = function () {
+        modal.classList.remove("show");
+        setTimeout(() => {
+            modal.classList.add("hidden");
+        }, 300);
+    }
+}
+
+// Close on outside click
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.classList.remove("show");
+        setTimeout(() => {
+            modal.classList.add("hidden");
+        }, 300);
+    }
+}
+
+// Copy Address
+if (copyBtn) {
+    copyBtn.onclick = function () {
+        const textToCopy = walletAddress.innerText.trim();
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalText = copyBtn.innerText;
+            copyBtn.innerText = "已复制! ✅";
+            copyBtn.style.background = "#10b981";
+            setTimeout(() => {
+                copyBtn.innerText = originalText;
+                copyBtn.style.background = "#334155";
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
+}
+
 const TRANSLATIONS = {
     en: {
         ai_title: "AI Market Insight",

@@ -79,7 +79,176 @@ h1 {
     background: #475569;
 }
 
-/* Dashboard Top: AI & Gauges */
+/* Gold Button - Premium */
+.btn-gold {
+    background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+    color: #0f172a;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 800;
+    margin-right: 10px;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    /* Flex to center */
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+}
+
+.modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal.hidden {
+    display: none;
+    /* Hard hide for logic if needed, but opacity handles visual */
+}
+
+.modal-content {
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    border: 1px solid #334155;
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    color: #f8fafc;
+}
+
+.close-modal {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #94a3b8;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: #f8fafc;
+}
+
+.modal-header h2 {
+    margin-top: 0;
+    color: #ffd700;
+    /* Gold */
+    font-size: 1.5rem;
+}
+
+.modal-header p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.price-tag {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.price-tag .amount {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #fff;
+    display: block;
+    line-height: 1;
+}
+
+.price-tag .currency {
+    color: #ffd700;
+    font-weight: bold;
+}
+
+.price-tag .usd {
+    display: block;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin-top: 5px;
+}
+
+.address-box {
+    background: #0f172a;
+    border: 1px dashed #334155;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    word-break: break-all;
+    margin-bottom: 10px;
+    color: #cbd5e1;
+    user-select: all;
+}
+
+.btn-copy {
+    background: #334155;
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+}
+
+.btn-copy:active {
+    background: #10b981;
+}
+
+.qr-placeholder img {
+    border-radius: 8px;
+    border: 4px solid white;
+    margin-bottom: 20px;
+}
+
+.steps-info {
+    text-align: left;
+    background: rgba(255, 215, 0, 0.05);
+    /* Slight gold tint */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.steps-info ol {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 0.9rem;
+    color: #e2e8f0;
+}
+
+.steps-info li {
+    margin-bottom: 5px;
+}
+
 .dashboard-top {
     display: flex;
     flex-direction: column;
