@@ -819,17 +819,43 @@ def main():
 
     print(f"Done! Saved analysis to {output_file}")
     
-    # Send Telegram Notification (Conditional)
+    
+    # 8. Send Notifications (Telegram & Discord)
     new_tx_count = len(unique_new_eth) + len(unique_new_sol)
     if new_tx_count > 0:
+        # Telegram
         try:
             from telegram_bot import send_daily_report
             print(f"Sending Telegram report ({new_tx_count} new transactions detected)...")
             send_daily_report(output_file)
         except Exception as e:
             print(f"Warning: Failed to send Telegram report: {e}")
+            
+        # Discord
+        try:
+            discord_url = os.getenv("DISCORD_WEBHOOK_URL")
+            if discord_url:
+                print("Sending Discord alert...")
+                # Format a simpler message for Discord
+                discord_msg = {
+                    "content": f"🚨 **Whale Alert** 🚨\nFound **{new_tx_count}** new whale transactions!\n\nCheck the dashboard: https://whale.sparkvalues.com"
+                }
+                # If AI summary exists, add it
+                if "en" in ai_summary:
+                   discord_msg["embeds"] = [{
+                       "title": "🧠 AI Market Insight",
+                       "description": ai_summary["en"][:4096],
+                       "color": 0xFFD700 # Gold
+                   }]
+                
+                requests.post(discord_url, json=discord_msg)
+            else:
+                print("Skipping Discord: No DISCORD_WEBHOOK_URL found.")
+        except Exception as e:
+             print(f"Warning: Failed to send Discord report: {e}")
+
     else:
-        print("No new transactions detected. Skipping Telegram notification.")
+        print("No new transactions detected. Skipping notifications.")
 
 if __name__ == "__main__":
     main()
