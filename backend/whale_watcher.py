@@ -836,19 +836,63 @@ def main():
             discord_url = os.getenv("DISCORD_WEBHOOK_URL")
             if discord_url:
                 print("Sending Discord alert...")
-                # Format a simpler message for Discord
-                discord_msg = {
-                    "content": f"🚨 **Whale Alert** 🚨\nFound **{new_tx_count}** new whale transactions!\n\nCheck the dashboard: https://whale.sparkvalues.com"
-                }
-                # If AI summary exists, add it
-                if "en" in ai_summary:
-                   discord_msg["embeds"] = [{
-                       "title": "🧠 AI Market Insight",
-                       "description": ai_summary["en"][:4096],
-                       "color": 0xFFD700 # Gold
-                   }]
                 
-                requests.post(discord_url, json=discord_msg)
+                # Helper for formatting
+                def fmt(val):
+                    if abs(val) >= 1_000_000: return f"${val/1_000_000:.2f}M"
+                    elif abs(val) >= 1_000: return f"${val/1_000:.1f}k"
+                    else: return f"${val:.2f}"
+
+                # Prepare Stats
+                eth_24 = eth_analysis["stats_24h"]
+                eth_7d = eth_analysis["stats_7d"]
+                sol_24 = sol_analysis["stats_24h"]
+                sol_7d = sol_analysis["stats_7d"]
+                
+                # Prepare AI Text (Prefer Chinese for Discord if available, else EN)
+                ai_text = ai_summary.get("zh", ai_summary.get("en", "AI Analysis Unavailable"))
+                
+                discord_payload = {
+                    "content": f"🚨 **Whale Watcher Report** | {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+                    "embeds": [{
+                        "title": "🧠 AI Market Insight",
+                        "description": ai_text[:4000], # Discord limit is 4096
+                        "color": 0xFFD700, # Gold
+                        "fields": [
+                            {
+                                "name": "🔷 ETH Chain (Smart Money)",
+                                "value": (
+                                    f"**24h Flow:**\n"
+                                    f"• Net Token: `{fmt(eth_24.get('token_net_flow', 0))}`\n"
+                                    f"• Net Stable: `{fmt(eth_24.get('stablecoin_net_flow', 0))}`\n"
+                                    f"• Sentiment: `{eth_24.get('sentiment_score', 0):.2f}`\n\n"
+                                    f"**7d Trend:**\n"
+                                    f"• Net Token: `{fmt(eth_7d.get('token_net_flow', 0))}`\n"
+                                    f"• Net Stable: `{fmt(eth_7d.get('stablecoin_net_flow', 0))}`"
+                                ),
+                                "inline": True
+                            },
+                            {
+                                "name": "🟣 SOL Chain (Speculative)",
+                                "value": (
+                                    f"**24h Flow:**\n"
+                                    f"• Net Token: `{fmt(sol_24.get('token_net_flow', 0))}`\n"
+                                    f"• Net Stable: `{fmt(sol_24.get('stablecoin_net_flow', 0))}`\n"
+                                    f"• Sentiment: `{sol_24.get('sentiment_score', 0):.2f}`\n\n"
+                                    f"**7d Trend:**\n"
+                                    f"• Net Token: `{fmt(sol_7d.get('token_net_flow', 0))}`\n"
+                                    f"• Net Stable: `{fmt(sol_7d.get('stablecoin_net_flow', 0))}`"
+                                ),
+                                "inline": True
+                            }
+                        ],
+                        "footer": {
+                            "text": f"Fear & Greed Index: {fear_greed.get('value', 'N/A')} • whale.sparkvalues.com"
+                        }
+                    }]
+                }
+                
+                requests.post(discord_url, json=discord_payload)
             else:
                 print("Skipping Discord: No DISCORD_WEBHOOK_URL found.")
         except Exception as e:
