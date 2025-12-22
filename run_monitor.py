@@ -21,6 +21,16 @@ def start_web_server():
 
 def run_analysis():
     print(f"\n[Monitor] Starting analysis job at {datetime.datetime.now()}...")
+    
+    # Write initial "Running" status so the file exists immediately
+    try:
+        with open("frontend/debug.txt", "w") as f:
+            f.write(f"LAST RUN: {datetime.datetime.now()}\n")
+            f.write("STATUS: RUNNING...\n")
+            f.write("Please wait for the job to complete (approx 1-2 mins).\n")
+    except Exception as e:
+        print(f"Failed to write initial debug log: {e}")
+
     try:
         # Run the main analysis script using the current python interpreter
         # Capture output to write to log file
