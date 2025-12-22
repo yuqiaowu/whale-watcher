@@ -23,12 +23,41 @@ def run_analysis():
     print(f"\n[Monitor] Starting analysis job at {datetime.datetime.now()}...")
     try:
         # Run the main analysis script using the current python interpreter
-        result = subprocess.run([sys.executable, "backend/whale_watcher.py"], check=True)
+        # Capture output to write to log file
+        result = subprocess.run(
+            [sys.executable, "backend/whale_watcher.py"], 
+            check=True,
+            capture_output=True,
+            text=True
+        )
         print(f"[Monitor] Job completed successfully at {datetime.datetime.now()}")
+        
+        # Write success log
+        with open("frontend/debug.txt", "w") as f:
+            f.write(f"LAST RUN: {datetime.datetime.now()}\n")
+            f.write("STATUS: SUCCESS\n")
+            f.write("-" * 20 + "\n")
+            f.write(result.stdout)
+            f.write("\n" + "-" * 20 + "\n")
+            f.write(result.stderr)
+
     except subprocess.CalledProcessError as e:
         print(f"[Monitor] Job failed with error: {e}")
+        # Write error log
+        with open("frontend/debug.txt", "w") as f:
+            f.write(f"LAST RUN: {datetime.datetime.now()}\n")
+            f.write("STATUS: FAILED\n")
+            f.write(f"Return Code: {e.returncode}\n")
+            f.write("-" * 20 + "\n")
+            f.write(e.stdout or "No stdout")
+            f.write("\n" + "-" * 20 + "\n")
+            f.write(e.stderr or "No stderr")
+
     except Exception as e:
         print(f"[Monitor] Unexpected error: {e}")
+        with open("frontend/debug.txt", "w") as f:
+            f.write(f"LAST RUN: {datetime.datetime.now()}\n")
+            f.write(f"CRITICAL ERROR: {str(e)}\n")
 
 def main():
     print("🚀 Whale Watcher Monitor Started!")
