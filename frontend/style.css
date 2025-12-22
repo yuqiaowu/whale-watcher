@@ -31,7 +31,20 @@ header {
     align-items: center;
     margin-bottom: 15px;
     padding-bottom: 0;
+}
 
+.controlsheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 0;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 h1 {
@@ -79,6 +92,23 @@ h1 {
     background: #475569;
 }
 
+.btn-discord {
+    background: #5865F2;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-discord:hover {
+    background: #4752C4;
+}
+
 /* Gold Button - Premium */
 .btn-gold {
     background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
@@ -89,7 +119,6 @@ h1 {
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 800;
-    margin-right: 10px;
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
     transition: transform 0.2s, box-shadow 0.2s;
 }
