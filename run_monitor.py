@@ -4,22 +4,19 @@ import subprocess
 import datetime
 import sys
 import threading
-from http.server import HTTPServer, BaseHTTPRequestHandler
+import functools
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 # Configuration: Run every 1 hour (3600 seconds)
 INTERVAL_SECONDS = 3600 
 
-# Dummy Web Server for Railway Port Binding
-class HealthCheckHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b"OK")
-
 def start_web_server():
     port = int(os.getenv("PORT", 8080))
-    server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
-    print(f"Starting dummy web server on port {port}")
+    # Serve files from 'frontend' directory so that index.html and data/ are accessible
+    # Python 3.7+ supports directory argument
+    handler = functools.partial(SimpleHTTPRequestHandler, directory="frontend")
+    server = HTTPServer(('0.0.0.0', port), handler)
+    print(f"Starting static web server on port {port} serving 'frontend/'")
     server.serve_forever()
 
 def run_analysis():
