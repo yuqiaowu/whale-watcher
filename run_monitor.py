@@ -43,8 +43,29 @@ def main():
 
     while True:
         try:
-            print(f"[Monitor] Sleeping for {INTERVAL_SECONDS} seconds...")
-            time.sleep(INTERVAL_SECONDS)
+            # Calculate time until next fixed 4-hour mark (00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC)
+            now = datetime.datetime.utcnow()
+            # fixed blocks: 0, 4, 8, 12, 16, 20
+            # find next block
+            next_hour = (now.hour // 4 + 1) * 4
+            
+            # handle overflow to next day
+            if next_hour >= 24:
+                next_hour = 0
+                tomorrow = now + datetime.timedelta(days=1)
+                next_run = tomorrow.replace(hour=next_hour, minute=0, second=0, microsecond=0)
+            else:
+                next_run = now.replace(hour=next_hour, minute=0, second=0, microsecond=0)
+            
+            # Calculate seconds to sleep
+            sleep_seconds = (next_run - now).total_seconds()
+            
+            # Add a small buffer (e.g. 10s) to ensure we don't wake up slightly before and double run or drift
+            sleep_seconds += 10 
+            
+            print(f"[Monitor] Next scheduled run at {next_run} UTC (in {sleep_seconds/3600:.2f} hours)")
+            time.sleep(sleep_seconds)
+            
             run_analysis()
         except KeyboardInterrupt:
             print("\n[Monitor] Stopped by user.")
