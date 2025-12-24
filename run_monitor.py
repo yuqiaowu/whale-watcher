@@ -38,7 +38,8 @@ def run_analysis():
             [sys.executable, "backend/whale_watcher.py"], 
             check=True,
             capture_output=True,
-            text=True
+            text=True,
+            timeout=600 # 10 minutes timeout
         )
         print(f"[Monitor] Job completed successfully at {datetime.datetime.now()}")
         
@@ -50,6 +51,16 @@ def run_analysis():
             f.write(result.stdout)
             f.write("\n" + "-" * 20 + "\n")
             f.write(result.stderr)
+
+    except subprocess.TimeoutExpired as e:
+        print(f"[Monitor] Job timed out after 10 minutes.")
+        with open("frontend/debug.txt", "w") as f:
+            f.write(f"LAST RUN: {datetime.datetime.now()}\n")
+            f.write("STATUS: FAILED (TIMEOUT)\n")
+            f.write("-" * 20 + "\n")
+            f.write(e.stdout.decode() if e.stdout else "No stdout")
+            f.write("\n" + "-" * 20 + "\n")
+            f.write(e.stderr.decode() if e.stderr else "No stderr")
 
     except subprocess.CalledProcessError as e:
         print(f"[Monitor] Job failed with error: {e}")

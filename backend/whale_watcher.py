@@ -109,6 +109,9 @@ def get_token_price(address):
         result = evm_api.token.get_token_price(
             api_key=MORALIS_API_KEY,
             params={"address": address, "chain": CHAIN}
+            # Moralis SDK doesn't easily expose timeout param in this method wrapper?
+            # It seems evm_api uses requests under the hood but might not pass kwargs.
+            # Let's check generic requests usages first.
         )
         return result["usdPrice"]
     except Exception as e:
@@ -155,7 +158,7 @@ def fetch_large_transfers():
             }
 
             try:
-                response = requests.get(etherscan_url, params=params)
+                response = requests.get(etherscan_url, params=params, timeout=30)
                 data = response.json()
                 
                 if data["status"] == "1" and isinstance(data["result"], list):
@@ -261,7 +264,7 @@ def get_solana_price(address):
         # Use Moralis Token API for price
         url = f"https://solana-gateway.moralis.io/token/mainnet/{address}/price"
         headers = {"X-API-Key": get_current_key()}
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=30)
         data = response.json()
         return data.get("usdPrice", 0)
     except Exception as e:
@@ -299,7 +302,7 @@ def fetch_solana_swaps():
                 for attempt in range(max_retries):
                     # Update header with potentially new key
                     headers["X-API-Key"] = get_current_key()
-                    response = requests.get(url, headers=headers, params=params)
+                    response = requests.get(url, headers=headers, params=params, timeout=30)
                     
                     if response.status_code in [401, 429]:
                          print(f"SOL API Quota hit. Rotating...")
