@@ -51,6 +51,13 @@ def run_analysis():
             f.write(result.stdout)
             f.write("\n" + "-" * 20 + "\n")
             f.write(result.stderr)
+        
+        # ALSO Print to console for Railway Logs
+        print("-" * 20 + " [Child Process STDOUT] " + "-" * 20)
+        print(result.stdout)
+        print("-" * 20 + " [Child Process STDERR] " + "-" * 20)
+        print(result.stderr)
+        print("-" * 50)
 
     except subprocess.TimeoutExpired as e:
         print(f"[Monitor] Job timed out after 10 minutes.")
