@@ -213,6 +213,58 @@ class OKXDataClient:
                     
         return metrics
 
+    def fetch_liquidation_data(self, uly="ETH-USDT", inst_type="SWAP"):
+        """
+        Fetch recent liquidation orders to gauge market pain.
+        Returns: {'long_vol_usd': float, 'short_vol_usd': float} (Last 24h approx)
+        """
+        try:
+            # OKX Public Liquidation Orders
+            # We fetch last 100 orders and sum them up to get a snapshot of "Recent Pain"
+            params = {
+                "instType": inst_type,
+                "uly": uly,
+                "state": "filled",
+                "limit": "100"
+            }
+            data = self._request("GET", "/api/v5/public/liquidation-orders", params)
+            if not data:
+                return {"long_vol_usd": 0, "short_vol_usd": 0}
+            
+            # Data structure: data is list of objects with 'details'
+            long_liq = 0.0
+            short_liq = 0.0
+            
+            for entry in data:
+                # 'details' is a list of orders in that second
+                if "details" in entry:
+                    for order in entry["details"]:
+                        side = order.get("side") or order.get("posSide") # 'buy' or 'sell' usually, or look at docs
+                        # Docs: side 'buy' means liquidated shorts? No.
+                        # Actually 'posSide' -> 'long' or 'short' is clearer in V5 API if available.
+                        # Re-checking API docs: V5 returns 'posSide' ('long', 'short').
+                        # Also 'sz' (size) and 'bkPx' (bankruptcy price)
+                        
+                        pos_side = order.get("posSide")
+                        sz = float(order.get("sz", 0))
+                        price = float(order.get("bkPx", 0))
+                        vol_usd = sz * price # Approx value
+                        
+                        if pos_side == "long":
+                            long_liq += vol_usd
+                        elif pos_side == "short":
+                            short_liq += vol_usd
+                            
+            return {
+                "long_vol_usd": long_liq,
+                "short_vol_usd": short_liq,
+                "status": "High Pain" if (long_liq + short_liq) > 1000000 else "Normal"
+            }
+            
+        except Exception as e:
+            print(f"Error fetching liquidations: {e}")
+            return {"long_vol_usd": 0, "short_vol_usd": 0}
+
 # Singleton instance
 client = OKXDataClient()
 

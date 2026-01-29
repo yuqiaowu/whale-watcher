@@ -839,7 +839,8 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
        - **Bearish Verification**: News says "Sell" AND Whales are Selling + OI Drop.
        - **TRAP WARNING**: News is Bullish BUT Whales are Selling (Exit Liquidity) -> Call this out!
        - **TRAP WARNING**: News is Bearish BUT Whales are Buying (Accumulation) -> Call this out!
-    
+       - **Retail Pain (Liquidations)**: Are retail traders bleeding? If Long Liqs are high, is the bottom near? If Short Liqs are high, is the top near?
+
     OUTPUT INSTRUCTIONS:
 
     - Return a JSON object with "en" and "zh" keys.
@@ -852,12 +853,12 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
     
     **🔷 ETH Strategy**:
     * **Signal**: [Action Signal]
-    * **Reality Check**: [Compare News Sentiment vs Whale Flow. **CRITICAL: Compare 7-Day Trend (Structural) vs 24H (Immediate). Are they aligning or diverging?**]
+    * **Reality Check**: [Compare News Sentiment vs Whale Flow. **CRITICAL: Compare 7-Day Trend (Structural) vs 24H (Immediate). Are they aligning or diverging? Check Liquidation Pain**: Are retail traders bleeding? If Long Liqs are high, is the bottom near?]
     * **Key Metric**: [Mention the most critical metric]
     
     **🟣 SOL Strategy**:
     * **Signal**: [Action Signal]
-    * **Reality Check**: [Compare News Sentiment vs Whale Flow. **CRITICAL: Compare 7-Day Trend (Structural) vs 24H (Immediate).**]
+    * **Reality Check**: [Compare News Sentiment vs Whale Flow. **CRITICAL: Compare 7-Day Trend (Structural) vs 24H (Immediate). Check Liquidation Pain**: Are retail traders bleeding? If Long Liqs are high, is the bottom near?]
     * **Key Metric**: [Mention crucial metric]
     """
 
@@ -987,6 +988,12 @@ def main():
     eth_market = market_data.get_strategy_metrics("ETH")
     sol_market = market_data.get_strategy_metrics("SOL")
     
+    # NEW: Fetch Liquidation Data (The "Pain" Index)
+    print("Fetching Liquidation Data (Market Pain)...")
+    eth_liquidation = market_data.client.fetch_liquidation_data("ETH-USDT")
+    sol_liquidation = market_data.client.fetch_liquidation_data("SOL-USDT")
+    print(f"ETH Liq: Long ${eth_liquidation.get('long_vol_usd',0):.0f} / Short ${eth_liquidation.get('short_vol_usd',0):.0f}")
+
     print("Calculating Strategy V1 Metrics...")
     eth_analysis = analyze_transfers_v1(eth_transfers, eth_market)
     sol_analysis = analyze_transfers_v1(sol_transfers, sol_market)
