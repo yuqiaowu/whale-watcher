@@ -759,8 +759,14 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
         },
         "ETH_V1_Analysis": {
             "Sentiment_7d": eth_data["stats_7d"]["sentiment_score"],
+            "Sentiment_24h": eth_data["stats_24h"]["sentiment_score"],
             "Confidence_Score": eth_data["stats_7d"]["confidence_score"],
             "Action_Signal": eth_data["stats_7d"]["action_signal"],
+            "Whale_Activity": {
+                "Stablecoin_Flow_7d": f"${eth_data['stats_7d']['stablecoin_net_flow']:,.0f}",
+                "Token_Flow_7d": f"{eth_data['stats_7d']['token_net_flow']:,.0f} ETH",
+                "Whale_Count_7d": eth_data["stats_7d"]["whale_count"]
+            },
             "Market_Context": {
                 "OI_Delta_24h": f"{eth_market.get('delta_oi_24h_percent',0):.2f}%",
                 "Volume_Ratio": f"{eth_market.get('volume_ratio',1):.2f}x (vs 30d avg)",
@@ -769,8 +775,14 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
         },
         "SOL_V1_Analysis": {
             "Sentiment_7d": sol_data["stats_7d"]["sentiment_score"],
+            "Sentiment_24h": sol_data["stats_24h"]["sentiment_score"],
             "Confidence_Score": sol_data["stats_7d"]["confidence_score"],
             "Action_Signal": sol_data["stats_7d"]["action_signal"],
+             "Whale_Activity": {
+                "Stablecoin_Flow_7d": f"${sol_data['stats_7d']['stablecoin_net_flow']:,.0f}",
+                "Token_Flow_7d": f"{sol_data['stats_7d']['token_net_flow']:,.0f} SOL",
+                "Whale_Count_7d": sol_data["stats_7d"]["whale_count"]
+            },
              "Market_Context": {
                 "OI_Delta_24h": f"{sol_market.get('delta_oi_24h_percent',0):.2f}%",
                 "Volume_Ratio": f"{sol_market.get('volume_ratio',1):.2f}x (vs 30d avg)",
@@ -788,28 +800,35 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
     
     STRATEGY LOGIC:
     1. **Sentiment**: Derived from whale transfers (-2 Bearish to +2 Bullish).
+       - Compare Sentiment_24h vs Sentiment_7d to detect *Momentum Shifts*.
+       - Example: 7d Bullish but 24h Bearish = "Warning: Short-term Pullback".
     2. **Confidence**: 0-100 score combining Sentiment + OI + Volume + Funding.
        - High Confidence (>75) requires OI alignment (e.g. Price Up + OI Up) and Volume Support (>1.5x).
        - Low Confidence means divergence (e.g. Whales buying but OI dropping = Deleveraging).
-    3. **Funding**: High positive funding limits Longs; High negative limits Shorts.
+    3. **Net Flow Analysis** (CRITICAL):
+       - Positive Stablecoin Flow = Buying Power Accumulating (Bullish).
+       - Negative Stablecoin Flow = Capital Flight (Bearish).
+       - Token Flow: Inflow to Exchange usually means Selling Pressure.
     
     OUTPUT INSTRUCTIONS:
     - Return a JSON object with "en" and "zh" keys.
     - Content must be Markdown.
     - **Focus on the Signal Quality**: Explain WHY the confidence is high or low.
-    - Example: "ETH Whale Sentiment is Bullish (+1.2), but Confidence is Low (45) because OI is dropping (-2%), suggesting whales are just covering shorts rather than opening new longs."
+    - **Explicitly Mention Flows**: "Whales are accumulating stablecoins..." or "Tokens are flooding exchanges..."
     - Highlight the **Action Signal** (EXECUTE / PROBE / OBSERVE / WAIT).
     
     Use this structure:
-    **Market V1 Overview**: [1 sentence macro]
+    **Market V1 Overview**: [1 sentence macro + BTC context]
     
     **🔷 ETH Strategy**:
     * **Signal**: [Action Signal] (Conf: [Score])
-    * **Analysis**: [Reasoning based on OI/Vol/Funding]
+    * **Flows & Sentiment**: [Compare 7d/24h sentiment + Net Flow analysis]
+    * **Execution**: [Reasoning based on OI/Vol/Funding]
     
     **🟣 SOL Strategy**:
     * **Signal**: [Action Signal] (Conf: [Score])
-    * **Analysis**: [Reasoning]
+    * **Flows & Sentiment**: [Compare 7d/24h sentiment + Net Flow analysis]
+    * **Execution**: [Reasoning based on OI/Vol/Funding]
     """
     
 
