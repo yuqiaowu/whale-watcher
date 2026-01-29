@@ -7,8 +7,7 @@ import threading
 import functools
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
-# Configuration: Run every 1 hour (3600 seconds)
-INTERVAL_SECONDS = 3600 
+# Configuration: Run every 4 hours (aligned to UTC clock) 
 
 def start_web_server():
     port = int(os.getenv("PORT", 8080))
@@ -93,7 +92,7 @@ def main():
     # Start web server in background thread
     threading.Thread(target=start_web_server, daemon=True).start()
     
-    print(f"⏱️  Schedule: Running every {INTERVAL_SECONDS/60:.0f} minutes.")
+    print(f"⏱️  Schedule: Running every 4 hours (at fixed UTC intervals: 00:00, 04:00, etc).")
     
     # Run immediately on startup
     run_analysis()
