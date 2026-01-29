@@ -140,7 +140,7 @@ if (!['en', 'zh'].includes(currentLang)) {
 
 async function loadData() {
     try {
-        const res = await fetch('data/whale_analysis.json');
+        const res = await fetch('data/whale_analysis.json?t=' + new Date().getTime());
         const data = await res.json();
         renderDashboard(data);
     } catch (error) {
