@@ -831,12 +831,12 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
     
     **🔷 ETH Strategy**:
     * **Signal**: [Action Signal]
-    * **Reality Check**: [Compare News Sentiment vs Whale Flow. Is it confirmed or divergent?]
-    * **Key Metric**: [Mention the most critical confirming/contradicting metric, e.g. "Stablecoin Outflows"]
+    * **Reality Check**: [Compare News Sentiment vs Whale Flow. **CRITICAL: Compare 7-Day Trend (Structural) vs 24H (Immediate). Are they aligning or diverging?**]
+    * **Key Metric**: [Mention the most critical metric]
     
     **🟣 SOL Strategy**:
     * **Signal**: [Action Signal]
-    * **Reality Check**: [Compare News Sentiment vs Whale Flow]
+    * **Reality Check**: [Compare News Sentiment vs Whale Flow. **CRITICAL: Compare 7-Day Trend (Structural) vs 24H (Immediate).**]
     * **Key Metric**: [Mention crucial metric]
     """
 
