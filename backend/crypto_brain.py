@@ -554,27 +554,48 @@ def merge_and_filter_txs(new_txs, old_txs):
     all_txs = list(merged_map.values())
     
     # 2. Filter last 7 days (168 hours)
-    # Use UTC to match API timestamps
-    cutoff_time = datetime.utcnow() - timedelta(hours=168) 
+    # Use timezone-aware UTC for everything
+    from datetime import timezone
+    now_utc = datetime.now(timezone.utc)
+    cutoff_time = now_utc - timedelta(hours=168)
+    
     filtered_txs = []
     
     for tx in all_txs:
         try:
             # Handle timestamp parsing
             ts_str = tx['timestamp']
+            
+            # Robust ISO parsing
             if ts_str.endswith('Z'):
                 ts_str = ts_str[:-1]
-            
-            # Use simple parsing
-            if "." in ts_str:
-                 tx_time = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S.%f")
+                # If Z was present, it's UTC.
+                if "." in ts_str:
+                     tx_time = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S.%f")
+                else:
+                     tx_time = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
+                # Make it aware
+                tx_time = tx_time.replace(tzinfo=timezone.utc)
             else:
-                 tx_time = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
+                 # Assume it's UTC if missing Z (common in our script), but let's be safe
+                 # If using .fromisoformat() in py3.7+, better, but manual is safer here
+                 if "." in ts_str:
+                     tx_time = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S.%f")
+                 else:
+                     tx_time = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
+                 
+                 # Force UTC if naive
+                 if tx_time.tzinfo is None:
+                     tx_time = tx_time.replace(tzinfo=timezone.utc)
 
             if tx_time > cutoff_time:
                 filtered_txs.append(tx)
         except Exception as e:
-            # Fallback for errors
+            # print(f"Date error: {e}")
+            # Ensure we don't drop data on parser error, default to keep or check manually?
+            # Safer to keep if unsure? Or drop? 
+            # If we drop, we lose history. If we keep, we might have effective duplicates if parser fails.
+            # Let's try to keep recent-ish looking strings or just fail safe.
             filtered_txs.append(tx) 
 
     # 3. Sort by timestamp descending
