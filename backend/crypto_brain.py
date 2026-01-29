@@ -991,12 +991,22 @@ def main():
     ai_summary = {"en": "AI disabled or failed.", "zh": "AI 分析暂时不可用。"}
     try:
         print("\n=== GENERATING AI TRI-LAYER ANALYSIS ===")
-        ai_summary = generate_comparative_summary(
+        raw_ai_summary = generate_comparative_summary(
             eth_analysis, sol_analysis, 
             eth_market, sol_market, 
             fear_greed, 
             news_data, macro_data # Pass the new layers
         )
+        
+        # Sanitize AI Summary (Ensure values are strings, not dicts)
+        ai_summary = {}
+        for key, val in raw_ai_summary.items():
+            if isinstance(val, dict):
+                # If LLM returns a dict (e.g. nested JSON), try to extract text or dump it
+                ai_summary[key] = val.get("content", val.get("text", str(val)))
+            else:
+                ai_summary[key] = str(val)
+                
     except Exception as e:
         print(f"AI Generation Error: {e}")
         import traceback

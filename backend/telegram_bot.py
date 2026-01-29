@@ -43,7 +43,14 @@ def send_daily_report(data_path="frontend/data/whale_analysis.json"):
         if isinstance(ai_summary_obj, str):
              ai_text = ai_summary_obj
         else:
-             ai_text = ai_summary_obj.get("zh", ai_summary_obj.get("en", "No summary."))
+             # robustly get zh or en
+             val = ai_summary_obj.get("zh") or ai_summary_obj.get("en")
+             if isinstance(val, dict):
+                 ai_text = val.get("content", val.get("text", str(val)))
+             elif val:
+                 ai_text = str(val)
+             else:
+                 ai_text = "No summary."
 
         # Clean AI text using regex for safe HTML replacement
         import re
