@@ -9,6 +9,7 @@ import hashlib
 import datetime
 import statistics
 from dotenv import load_dotenv
+import numpy as np
 
 # Load env
 env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
@@ -79,6 +80,41 @@ class OKXDataClient:
             print(f"Exception during request: {e}")
             return None
 
+    def calculate_rsi(self, prices, period=14):
+        """Calculate RSI from a list of prices."""
+        prices = np.array(prices)
+        if len(prices) < period + 1:
+            return 50.0
+        
+        deltas = np.diff(prices)
+        seed = deltas[:period+1]
+        up = seed[seed >= 0].sum()/period
+        down = -seed[seed < 0].sum()/period
+        
+        if down == 0: return 100.0
+        rs = up/down
+        rsi = np.zeros_like(prices)
+        rsi[:period] = 100. - 100./(1. + rs)
+
+        for i in range(period, len(prices)):
+            delta = deltas[i-1]
+            if delta > 0:
+                upval = delta
+                downval = 0.
+            else:
+                upval = 0.
+                downval = -delta
+
+            up = (up * (period - 1) + upval) / period
+            down = (down * (period - 1) + downval) / period
+            
+            if down == 0: rs = 100.0
+            else: rs = up/down
+            
+            rsi[i] = 100. - 100./(1. + rs)
+            
+        return float(rsi[-1])
+
     def get_market_metrics(self, symbol):
         """
         Fetches all necessary market metrics for the new strategy.
@@ -88,6 +124,7 @@ class OKXDataClient:
         metrics = {
             "symbol": symbol,
             "price": 0,
+            "rsi_4h": 50.0, # Default Neutral
             "volume_24h": 0,
             "volume_avg_30d": 0,
             "volume_ratio": 0,
@@ -105,7 +142,17 @@ class OKXDataClient:
             metrics["price"] = float(ticker["last"])
             metrics["volume_24h"] = float(ticker["volCcy24h"]) # Volume in USDT
         
-        # 2. Funding Rate
+        # 2. RSI (4H Candles)
+        # Fetch 100 candles to ensure enough data for 14-period RSI smoothing
+        data = self._request("GET", "/api/v5/market/candles", {"instId": inst_id, "bar": "4H", "limit": "100"})
+        if data:
+            # OKX returns [ts, o, h, l, c, ...] newest first
+            # We need oldest first for calculation
+            closes = [float(candle[4]) for candle in data]
+            closes.reverse()
+            metrics["rsi_4h"] = self.calculate_rsi(closes)
+
+        # 3. Funding Rate
         data = self._request("GET", "/api/v5/public/funding-rate", {"instId": inst_id})
         if data:
             val = float(data[0]["fundingRate"])
@@ -115,8 +162,8 @@ class OKXDataClient:
             elif val < -0.0003: metrics["funding_rate_status"] = "EXTREME_BEARISH_CROWDED"
             else: metrics["funding_rate_status"] = "NORMAL"
 
-        # 3. Open Interest (Current)
-        # 4. Open Interest History (30 Days) -> Calculate Delta & Avg
+        # 4. Open Interest (Current)
+        # 5. Open Interest History (30 Days) -> Calculate Delta & Avg
         data = self._request("GET", "/api/v5/rubik/stat/contracts/open-interest-history", {"instId": inst_id, "period": "1D", "limit": "30"})
         if data:
             # Data is [ts, oi, oiCcy]. Sorted latest first.
@@ -148,7 +195,7 @@ class OKXDataClient:
             except Exception as e:
                 print(f"Error calcing OI: {e}")
 
-        # 5. Volume History (30 Days) -> Calculate Volume Ratio
+        # 6. Volume History (30 Days) -> Calculate Volume Ratio
         data = self._request("GET", "/api/v5/market/history-candles", {"instId": inst_id, "bar": "1D", "limit": "30"})
         if data:
             # [ts, o, h, l, c, vol, volCcy, ...]

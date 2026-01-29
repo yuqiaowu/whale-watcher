@@ -746,91 +746,99 @@ def analyze_transfers_v1(transfers, market_metrics):
     
     return {"stats_7d": stats_7d, "stats_24h": stats_24h}
 
-def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fear_greed):
+
+import news_fetcher
+
+# ... (keep existing imports)
+
+def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fear_greed, news_data, macro_data):
     """
-    Generate the V1 Strategy Narrative.
-    eth_market / sol_market are the raw metrics from OKX.
-    eth_data / sol_data contains the calculated Confidence Scores.
+    Generate the V2 Strategy Narrative (Tri-Layer Analysis).
+    Combines:
+    1. Macro Liquidity (Fed/DXY/VIX)
+    2. News Narrative (Headlines)
+    3. Whale/Market Reality (On-Chain + OI/Funding)
     """
     
+    # helper to format news
+    def fmt_news(items):
+        return "\n".join([f"- {i.get('title')}" for i in items[:3]])
+
     prompt_data = {
-        "Macro": {
-            "BTC_Fear_Greed": f"{fear_greed['value']} ({fear_greed['value_classification']})"
+        "Layer1_Macro_Liquidity": {
+            "BTC_Fear_Greed": f"{fear_greed['value']} ({fear_greed['value_classification']})",
+            "Fed_Futures": macro_data.get('fed_futures'),
+            "Japan_Carrier_Trade": macro_data.get('japan_macro'),
+            "Global_Liquidity": macro_data.get('liquidity_monitor')
         },
-        "ETH_V1_Analysis": {
-            "Sentiment_7d": eth_data["stats_7d"]["sentiment_score"],
-            "Sentiment_24h": eth_data["stats_24h"]["sentiment_score"],
-            "Confidence_Score": eth_data["stats_7d"]["confidence_score"],
-            "Action_Signal": eth_data["stats_7d"]["action_signal"],
-            "Whale_Activity": {
-                "Stablecoin_Flow_7d": f"${eth_data['stats_7d']['stablecoin_net_flow']:,.0f}",
-                "Token_Flow_7d": f"{eth_data['stats_7d']['token_net_flow']:,.0f} ETH",
-                "Whale_Count_7d": eth_data["stats_7d"]["whale_count"]
-            },
-            "Market_Context": {
-                "OI_Delta_24h": f"{eth_market.get('delta_oi_24h_percent',0):.2f}%",
-                "Volume_Ratio": f"{eth_market.get('volume_ratio',1):.2f}x (vs 30d avg)",
-                "Funding": f"{eth_market.get('funding_rate',0):.6f}"
-            }
+        "Layer2_News_Narrative": {
+            "Top_Macro_News": fmt_news(news_data.get('macro', {}).get('items', [])),
+            "Top_Crypto_News": fmt_news(news_data.get('general', {}).get('items', [])),
+            "ETH_News": fmt_news(news_data.get('ethereum', {}).get('items', [])),
+            "SOL_News": fmt_news(news_data.get('general', {}).get('items', [])) # Fallback if no SOL specific
         },
-        "SOL_V1_Analysis": {
-            "Sentiment_7d": sol_data["stats_7d"]["sentiment_score"],
-            "Sentiment_24h": sol_data["stats_24h"]["sentiment_score"],
-            "Confidence_Score": sol_data["stats_7d"]["confidence_score"],
-            "Action_Signal": sol_data["stats_7d"]["action_signal"],
-             "Whale_Activity": {
-                "Stablecoin_Flow_7d": f"${sol_data['stats_7d']['stablecoin_net_flow']:,.0f}",
-                "Token_Flow_7d": f"{sol_data['stats_7d']['token_net_flow']:,.0f} SOL",
-                "Whale_Count_7d": sol_data["stats_7d"]["whale_count"]
+        "Layer3_Whale_Reality": {
+            "ETH_Chain": {
+                "Sentiment_7d": eth_data["stats_7d"]["sentiment_score"],
+                "Sentiment_24h": eth_data["stats_24h"]["sentiment_score"],
+                "Confidence_Score": eth_data["stats_7d"]["confidence_score"],
+                "Net_Flow_Stablecoin": f"${eth_data['stats_7d']['stablecoin_net_flow']:,.0f}",
+                "Net_Flow_Token": f"{eth_data['stats_7d']['token_net_flow']:,.0f}",
+                "Market_OI_Delta": f"{eth_market.get('delta_oi_24h_percent',0):.2f}%",
+                "Funding": f"{eth_market.get('funding_rate',0):.6f}",
+                "RSI_4H": f"{eth_market.get('rsi_4h', 50):.1f}"
             },
-             "Market_Context": {
-                "OI_Delta_24h": f"{sol_market.get('delta_oi_24h_percent',0):.2f}%",
-                "Volume_Ratio": f"{sol_market.get('volume_ratio',1):.2f}x (vs 30d avg)",
-                "Funding": f"{sol_market.get('funding_rate',0):.6f}"
+            "SOL_Chain": {
+                "Sentiment_7d": sol_data["stats_7d"]["sentiment_score"],
+                "Sentiment_24h": sol_data["stats_24h"]["sentiment_score"],
+                "Confidence_Score": sol_data["stats_7d"]["confidence_score"],
+                "Net_Flow_Stablecoin": f"${sol_data['stats_7d']['stablecoin_net_flow']:,.0f}",
+                "Net_Flow_Token": f"{sol_data['stats_7d']['token_net_flow']:,.0f}",
+                "Market_OI_Delta": f"{sol_market.get('delta_oi_24h_percent',0):.2f}%",
+                "Funding": f"{sol_market.get('funding_rate',0):.6f}",
+                "RSI_4H": f"{sol_market.get('rsi_4h', 50):.1f}"
             }
         }
     }
     
     prompt = f"""
-    Act as a professional crypto quant trader using the 'Whale Watcher V1 Strategy'.
-    Generate a market summary based on On-Chain Whale Data + Derivatives Market Data.
+    Act as a simplified "Crypto Hedge Fund AI". Perform a **Tri-Layer Market Analysis** to validate signals.
     
     DATA JSON:
     {json.dumps(prompt_data, indent=2)}
     
-    STRATEGY LOGIC:
-    1. **Sentiment**: Derived from whale transfers (-2 Bearish to +2 Bullish).
-       - Compare Sentiment_24h vs Sentiment_7d to detect *Momentum Shifts*.
-       - Example: 7d Bullish but 24h Bearish = "Warning: Short-term Pullback".
-    2. **Confidence**: 0-100 score combining Sentiment + OI + Volume + Funding.
-       - High Confidence (>75) requires OI alignment (e.g. Price Up + OI Up) and Volume Support (>1.5x).
-       - Low Confidence means divergence (e.g. Whales buying but OI dropping = Deleveraging).
-    3. **Net Flow Analysis** (CRITICAL):
-       - Positive Stablecoin Flow = Buying Power Accumulating (Bullish).
-       - Negative Stablecoin Flow = Capital Flight (Bearish).
-       - Token Flow: Inflow to Exchange usually means Selling Pressure.
+    ANALYSIS FRAMEWORK:
+    1. **Layer 1 (Macro Liquidity)**: Is the global tap opening (Risk On) or closing (Risk Off)? 
+       - Check DXY (Dollar), US10Y (Yields), VIX (Fear).
+       - Check Fed Expectations (Dovish/Hawkish).
+    2. **Layer 2 (Narrative)**: What is the media saying? Are headlines bullish or bearish?
+    3. **Layer 3 (Reality Check)**: Do Whales & Money Flow agree with the Narrative?
+       - **Technical Check**: RSI > 70 (Overbought), RSI < 30 (Oversold).
+       - **Bullish Verification**: News says "Buy" AND Whales are Buying (Positive Flow) + OI Rising.
+       - **Bearish Verification**: News says "Sell" AND Whales are Selling + OI Drop.
+       - **TRAP WARNING**: News is Bullish BUT Whales are Selling (Exit Liquidity) -> Call this out!
+       - **TRAP WARNING**: News is Bearish BUT Whales are Buying (Accumulation) -> Call this out!
     
     OUTPUT INSTRUCTIONS:
+
     - Return a JSON object with "en" and "zh" keys.
     - Content must be Markdown.
-    - **Focus on the Signal Quality**: Explain WHY the confidence is high or low.
-    - **Explicitly Mention Flows**: "Whales are accumulating stablecoins..." or "Tokens are flooding exchanges..."
-    - Highlight the **Action Signal** (EXECUTE / PROBE / OBSERVE / WAIT).
+    - **Synthesize** the layers. Don't just list data.
+    - **Verdict**: For ETH and SOL, give a final signal (EXECUTE / PROBE / OBSERVE / WAIT) based on the *confluence* of all 3 layers.
     
-    Use this structure:
-    **Market V1 Overview**: [1 sentence macro + BTC context]
+    Structure:
+    **🌍 Global Macro & Liquidity**: [Summary of Layer 1 & 2 combined]
     
     **🔷 ETH Strategy**:
-    * **Signal**: [Action Signal] (Conf: [Score])
-    * **Flows & Sentiment**: [Compare 7d/24h sentiment + Net Flow analysis]
-    * **Execution**: [Reasoning based on OI/Vol/Funding]
+    * **Signal**: [Action Signal]
+    * **Reality Check**: [Compare News Sentiment vs Whale Flow. Is it confirmed or divergent?]
+    * **Key Metric**: [Mention the most critical confirming/contradicting metric, e.g. "Stablecoin Outflows"]
     
     **🟣 SOL Strategy**:
-    * **Signal**: [Action Signal] (Conf: [Score])
-    * **Flows & Sentiment**: [Compare 7d/24h sentiment + Net Flow analysis]
-    * **Execution**: [Reasoning based on OI/Vol/Funding]
+    * **Signal**: [Action Signal]
+    * **Reality Check**: [Compare News Sentiment vs Whale Flow]
+    * **Key Metric**: [Mention crucial metric]
     """
-    
 
     # Attempt 1: Gemini
     try:
@@ -851,8 +859,6 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
             if not deepseek_key:
                 raise ValueError("No DEEPSEEK_API_KEY found in env")
                 
-            # DeepSeek uses OpenAI-compatible API
-            # URL: https://api.deepseek.com/chat/completions
             ds_url = "https://api.deepseek.com/chat/completions"
             ds_headers = {
                 "Content-Type": "application/json",
@@ -861,7 +867,7 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
             ds_payload = {
                 "model": "deepseek-chat",
                 "messages": [
-                    {"role": "system", "content": "You are a professional crypto quant trader. Return ONLY valid JSON."},
+                    {"role": "system", "content": "You are a hedge fund AI. Return ONLY valid JSON."},
                     {"role": "user", "content": prompt}
                 ],
                 "stream": False
@@ -875,7 +881,6 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
             ds_data = ds_res.json()
             ds_text = ds_data["choices"][0]["message"]["content"].strip()
             
-            # Clean up JSON markdowns if DeepSeek adds them
             import re
             match = re.search(r'\{.*\}', ds_text, re.DOTALL)
             if match: ds_text = match.group(0)
@@ -884,55 +889,14 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
             
         except Exception as e_ds:
             print(f"❌ DeepSeek AI Error: {e_ds}")
-            return {"en": "AI analysis unavailable (Both Gemini & DeepSeek failed).", "zh": "AI 分析暂时不可用（双模型均失败）。"}
+            return {"en": "AI analysis unavailable.", "zh": "AI 分析暂时不可用。"}
 
-def recalculate_signals(transfers):
-    """Re-evaluate signals for all transfers using updated EXCHANGES."""
-    # EXCHANGES is global and should be normalized by now
-    count_updated = 0
-    for tx in transfers:
-        symbol = tx["symbol"]
-        
-        # Addresses might be mixed case in history
-        from_addr = tx["from"].lower()
-        to_addr = tx["to"].lower()
-        
-        # Normalize in tx object too for consistency
-        tx["from"] = from_addr
-        tx["to"] = to_addr
-        
-        is_exchange_in = to_addr in EXCHANGES
-        is_exchange_out = from_addr in EXCHANGES
-        
-        # Update labels (in case new exchanges added or fixed)
-        tx["from_label"] = EXCHANGES.get(from_addr, from_addr[:6] + "...")
-        tx["to_label"] = EXCHANGES.get(to_addr, to_addr[:6] + "...")
-        
-        signal = "NEUTRAL"
-        if symbol in STABLECOINS:
-            if is_exchange_in: signal = "BULLISH_INFLOW"
-            if is_exchange_out: signal = "BEARISH_OUTFLOW"
-        else:
-            if is_exchange_in: signal = "BEARISH_INFLOW"
-            if is_exchange_out: signal = "BULLISH_OUTFLOW"
-            
-        # Preserve Loop Logic
-        if tx.get("pattern") == "INTERNAL_LOOP":
-            signal = "NEUTRAL"
-            
-        if tx["signal"] != signal:
-            tx["signal"] = signal
-            count_updated += 1
-            
-    if count_updated > 0:
-        print(f"Recalculated signals for {count_updated} transfers.")
-    return transfers
+# ... (rest of file)
 
 def main():
     print("DEBUG: Entering whale_watcher.main()...")
-    load_dotenv()
-    # 1. Load History (for EMA Smoothing)
-    # Use absolute path relative to this script to ensure it works in Docker
+    
+    # 1. Setup Directories
     base_dir = os.path.dirname(os.path.abspath(__file__))
     output_file = os.path.join(base_dir, "../frontend/data/whale_analysis.json")
     
@@ -944,10 +908,28 @@ def main():
         except Exception as e:
             print(f"Error loading history: {e}")
 
-    # 2. Fetch Data
-    output_dir = os.path.join(base_dir, "../frontend/data")
-    os.makedirs(output_dir, exist_ok=True)
+    # 2. Fetch News & Macro Data (Layer 1 & 2)
+    print("\n=== LAYER 1 & 2: GLOBAL MACRO & NEWS ===")
+    try:
+        print("Fetching Macro Data (Fed, Liquidity)...")
+        macro_data = {
+            "fed_futures": news_fetcher.fetch_fed_futures(),
+            "japan_macro": news_fetcher.fetch_japan_context(),
+            "liquidity_monitor": news_fetcher.fetch_liquidity_monitor()
+        }
+        print("Fetching Global News...")
+        news_data = news_fetcher.gather_news()
+        print("✅ Macro & News fetched successfully.")
+    except Exception as e:
+        print(f"⚠️ News/Macro fetch failed: {e}")
+        import traceback
+        traceback.print_exc()
+        macro_data = {}
+        news_data = {}
 
+    # 3. Fetch Whale Data (Layer 3)
+    print("\n=== LAYER 3: WHALE & MARKET REALITY ===")
+    
     print("Fetching data from Moralis (ETH)...")
     new_eth_transfers = fetch_large_transfers()
     
@@ -958,7 +940,7 @@ def main():
     fear_greed = fetch_fear_greed_index()
     print(f"Fear & Greed: {fear_greed['value']} ({fear_greed['value_classification']})")
     
-    # 3. Merge with History (Keep last 24h)
+    # Merge with History (Keep last 24h/7d deduplicated)
     old_eth_txs = []
     if "eth" in history_data and "top_txs" in history_data["eth"]:
         old_eth_txs = history_data["eth"]["top_txs"]
@@ -967,8 +949,7 @@ def main():
     if "sol" in history_data and "top_txs" in history_data["sol"]:
         old_sol_txs = history_data["sol"]["top_txs"]
         
-    # 4. Merge & Filter (Deduplication)
-    # Calculate unique new transactions for logging/notification triggers
+    # Deduplicate logic
     old_eth_hashes = {tx['hash'] for tx in old_eth_txs}
     unique_new_eth = [tx for tx in new_eth_transfers if tx['hash'] not in old_eth_hashes]
     
@@ -978,169 +959,116 @@ def main():
     print(f"New Unique Tx Found: ETH={len(unique_new_eth)}, SOL={len(unique_new_sol)}")
 
     eth_transfers = merge_and_filter_txs(new_eth_transfers, old_eth_txs)
-    # Recalculate signals to fix historical data with new/corrected logic
-    eth_transfers = recalculate_signals(eth_transfers)
-    
     sol_transfers = merge_and_filter_txs(new_sol_transfers, old_sol_txs)
     
-    print(f"Merged ETH Txs: {len(new_eth_transfers)} new + {len(old_eth_txs)} old -> {len(eth_transfers)} total (7d)")
-    print(f"Merged SOL Txs: {len(new_sol_transfers)} new + {len(old_sol_txs)} old -> {len(sol_transfers)} total (7d)")
-    
-    # 4. Analyze Data (Dual Timeframes)
+    # 4. Fetch Market Data & Analyze
     print("Fetching Market Data (OKX)...")
     eth_market = market_data.get_strategy_metrics("ETH")
     sol_market = market_data.get_strategy_metrics("SOL")
     
-    print("Analyzing sentiment (V1 Strategy)...")
+    print("Calculating Strategy V1 Metrics...")
     eth_analysis = analyze_transfers_v1(eth_transfers, eth_market)
     sol_analysis = analyze_transfers_v1(sol_transfers, sol_market)
     
-    # 5. Apply EMA Smoothing (Sentiment Stabilization)
-    # Formula: New = (Current * 0.3) + (Old * 0.7)
+    # Apply EMA Smoothing
     ALPHA = 0.3
-    
     def smooth_score(chain_key, timeframe_key, current_analysis, history):
         old_score = 0
-        # Access old stats. Warning: Old structure might be flat, new is nested.
-        # We need to handle migration or just use 0 if structure mismatch.
         try:
             if chain_key in history and "stats" in history[chain_key]:
-                # Legacy check: if old data has 'sentiment_score', it was the single timeframe version
-                old_stats = history[chain_key]["stats"]
-                old_score = old_stats.get("sentiment_score", 0)
-        except:
-            pass
-            
+                old_score = history[chain_key]["stats"].get("sentiment_score", 0)
+        except: pass
         raw_score = current_analysis[timeframe_key]["sentiment_score"]
-        
-        # If we have history, smooth it
         if history:
-            smoothed = round((raw_score * ALPHA) + (old_score * (1 - ALPHA)), 2)
-            # print(f"{chain_key} {timeframe_key} Smoothed: {old_score} -> {smoothed} (Raw: {raw_score})")
-            return smoothed
+            return round((raw_score * ALPHA) + (old_score * (1 - ALPHA)), 2)
         else:
             return raw_score
 
-    # Apply smoothing to 7d (Primary Display)
-    # Note: For now we only smooth 7d because that's what we compare with history (which was conceptually "current status").
-    # We could properly store 24h history too, but for complexity let's just smooth 7d for dashboard stability.
-    
     eth_analysis["stats_7d"]["sentiment_score"] = smooth_score("eth", "stats_7d", eth_analysis, history_data)
     sol_analysis["stats_7d"]["sentiment_score"] = smooth_score("sol", "stats_7d", sol_analysis, history_data)
 
-    # 6. Generate AI Narrative (Cognitive Engine) with Dual Context
+    # 5. Generate AI Narrative (V2 Tri-Layer)
     ai_summary = {"en": "AI disabled or failed.", "zh": "AI 分析暂时不可用。"}
     try:
-        print("Generating AI market story (V1 Strategy)...")
-        # Pass the market metrics dictionaries to the AI
-        ai_summary = generate_comparative_summary(eth_analysis, sol_analysis, eth_market, sol_market, fear_greed)
+        print("\n=== GENERATING AI TRI-LAYER ANALYSIS ===")
+        ai_summary = generate_comparative_summary(
+            eth_analysis, sol_analysis, 
+            eth_market, sol_market, 
+            fear_greed, 
+            news_data, macro_data # Pass the new layers
+        )
     except Exception as e:
         print(f"AI Generation Error: {e}")
+        import traceback
+        traceback.print_exc()
 
-    # 7. Final Structure for Frontend
-    # Frontend expects: data.eth.stats (flat). We map stats_7d to this default slot.
+    # 6. Save Final JSON
     final_output = {
+        "updated_at": datetime.now().isoformat(),
+        "fear_greed": fear_greed,
+        "macro": macro_data, 
+        "news": { 
+             "macro": [x['title'] for x in news_data.get('macro', {}).get('items', [])[:5]],
+             "crypto": [x['title'] for x in news_data.get('general', {}).get('items', [])[:5]]
+        },
         "eth": {
-            "stats": eth_analysis["stats_7d"], # Default View
-            "stats_24h": eth_analysis["stats_24h"], # Hidden but available
-            "top_txs": eth_transfers[:1000] # Return top 1000 txs (scrollable view)
+            "stats": eth_analysis["stats_7d"], 
+            "stats_24h": eth_analysis["stats_24h"],
+            "top_txs": eth_transfers[:1000]
         },
         "sol": {
-            "stats": sol_analysis["stats_7d"], # Default View
-            "stats_24h": sol_analysis["stats_24h"], # Hidden but available
+            "stats": sol_analysis["stats_7d"],
+            "stats_24h": sol_analysis["stats_24h"],
             "top_txs": sol_transfers[:1000]
         },
-        "fear_greed": fear_greed,
-        "updated_at": datetime.now().isoformat(),
         "ai_summary": ai_summary
     }
-    # 7. Save Single JSON File
-    with open(output_file, 'w') as f:
-        json.dump(final_output, f, indent=2)
 
-    print(f"Done! Saved analysis to {output_file}")
+    try:
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+        with open(output_file, 'w') as f:
+            json.dump(final_output, f, indent=2)
+        print(f"✅ Analysis saved to {output_file}")
+    except Exception as e:
+        print(f"❌ Error saving output: {e}")
     
-    
-    # 8. Send Notifications (Telegram & Discord)
+    # 7. Notifications
     new_tx_count = len(unique_new_eth) + len(unique_new_sol)
     if new_tx_count > 0:
-        # Telegram
-        try:
-            from telegram_bot import send_daily_report
-            print(f"Sending Telegram report ({new_tx_count} new transactions detected)...")
-            send_daily_report(output_file)
-        except Exception as e:
-            print(f"Warning: Failed to send Telegram report: {e}")
+        if os.getenv("TELEGRAM_BOT_TOKEN"):
+            try:
+                from telegram_bot import send_daily_report
+                print(f"Sending Telegram report...")
+                send_daily_report(output_file)
+            except Exception as e:
+                print(f"Telegram fail: {e}")
             
-        # Discord
-        try:
-            discord_url = os.getenv("DISCORD_WEBHOOK_URL")
-            if discord_url:
-                print("Sending Discord alert...")
-                
+        discord_url = os.getenv("DISCORD_WEBHOOK_URL")
+        if discord_url:
+            print("Sending Discord alert...")
+            try:
                 # Helper for formatting
                 def fmt(val):
                     if abs(val) >= 1_000_000: return f"${val/1_000_000:.2f}M"
                     elif abs(val) >= 1_000: return f"${val/1_000:.1f}k"
                     else: return f"${val:.2f}"
-
-                # Prepare Stats
-                eth_24 = eth_analysis["stats_24h"]
-                eth_7d = eth_analysis["stats_7d"]
-                sol_24 = sol_analysis["stats_24h"]
-                sol_7d = sol_analysis["stats_7d"]
+                    
+                eth_stats = eth_analysis["stats_7d"]
+                sol_stats = sol_analysis["stats_7d"]
+                ai_text = ai_summary.get("zh", ai_summary.get("en", "N/A"))
                 
-                # Prepare AI Text (Prefer Chinese for Discord if available, else EN)
-                ai_text = ai_summary.get("zh", ai_summary.get("en", "AI Analysis Unavailable"))
-                
-                discord_payload = {
-                    "content": f"🚨 **Whale Watcher Report** | {datetime.now().strftime('%Y-%m-%d %H:%M')}",
-                    "embeds": [{
-                        "title": "🧠 AI Market Insight",
-                        "description": ai_text[:4000], # Discord limit is 4096
-                        "color": 0xFFD700, # Gold
-                        "fields": [
-                            {
-                                "name": "🔷 ETH Chain (Smart Money)",
-                                "value": (
-                                    f"**24h Flow:**\n"
-                                    f"• Net Token: `{fmt(eth_24.get('token_net_flow', 0))}`\n"
-                                    f"• Net Stable: `{fmt(eth_24.get('stablecoin_net_flow', 0))}`\n"
-                                    f"• Sentiment: `{eth_24.get('sentiment_score', 0):.2f}`\n\n"
-                                    f"**7d Trend:**\n"
-                                    f"• Net Token: `{fmt(eth_7d.get('token_net_flow', 0))}`\n"
-                                    f"• Net Stable: `{fmt(eth_7d.get('stablecoin_net_flow', 0))}`"
-                                ),
-                                "inline": True
-                            },
-                            {
-                                "name": "🟣 SOL Chain (Speculative)",
-                                "value": (
-                                    f"**24h Flow:**\n"
-                                    f"• Net Token: `{fmt(sol_24.get('token_net_flow', 0))}`\n"
-                                    f"• Net Stable: `{fmt(sol_24.get('stablecoin_net_flow', 0))}`\n"
-                                    f"• Sentiment: `{sol_24.get('sentiment_score', 0):.2f}`\n\n"
-                                    f"**7d Trend:**\n"
-                                    f"• Net Token: `{fmt(sol_7d.get('token_net_flow', 0))}`\n"
-                                    f"• Net Stable: `{fmt(sol_7d.get('stablecoin_net_flow', 0))}`"
-                                ),
-                                "inline": True
-                            }
-                        ],
-                        "footer": {
-                            "text": f"Fear & Greed Index: {fear_greed.get('value', 'N/A')} • whale.sparkvalues.com"
-                        }
-                    }]
+                # Brief Discord Msg
+                msg = {
+                    "content": f"🚨 **Whale Watcher V2** | {datetime.now().strftime('%H:%M')}\n\n"
+                               f"**AI Verdict**:\n{ai_text[:1000]}\n\n"
+                               f"**ETH**: Signal `{eth_stats['action_signal']}` | Conf `{eth_stats['confidence_score']}` | Flow `{fmt(eth_stats['stablecoin_net_flow'])}`\n"
+                               f"**SOL**: Signal `{sol_stats['action_signal']}` | Conf `{sol_stats['confidence_score']}` | Flow `{fmt(sol_stats['stablecoin_net_flow'])}`"
                 }
-                
-                requests.post(discord_url, json=discord_payload)
-            else:
-                print("Skipping Discord: No DISCORD_WEBHOOK_URL found.")
-        except Exception as e:
-             print(f"Warning: Failed to send Discord report: {e}")
-
+                requests.post(discord_url, json=msg)
+            except Exception as e:
+                print(f"Discord fail: {e}")
     else:
-        print("No new transactions detected. Skipping notifications.")
+        print("No new transactions. Skipping alerts.")
 
 if __name__ == "__main__":
     main()

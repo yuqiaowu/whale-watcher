@@ -34,7 +34,7 @@ def run_analysis():
         # Run the main analysis script using the current python interpreter
         # Capture output to write to log file
         result = subprocess.run(
-            [sys.executable, "backend/whale_watcher.py"], 
+            [sys.executable, "backend/crypto_brain.py"], 
             check=True,
             capture_output=True,
             text=True,
