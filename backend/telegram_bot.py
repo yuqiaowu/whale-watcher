@@ -43,10 +43,30 @@ def send_daily_report(data_path="frontend/data/whale_analysis.json"):
         if isinstance(ai_summary_obj, str):
              ai_text = ai_summary_obj
         else:
+             # Helper to flatten dict to string
+             def flatten_dict(d, indent=0):
+                 lines = []
+                 for k, v in d.items():
+                     prefix = "  " * indent
+                     if isinstance(v, dict):
+                         lines.append(f"{prefix}**{k}**:")
+                         lines.append(flatten_dict(v, indent + 1))
+                     else:
+                         lines.append(f"{prefix}- {k}: {v}")
+                 return "\n".join(lines)
+
              # robustly get zh or en
-             val = ai_summary_obj.get("zh") or ai_summary_obj.get("en")
+             if "zh" in ai_summary_obj:
+                 val = ai_summary_obj["zh"]
+             elif "en" in ai_summary_obj:
+                 val = ai_summary_obj["en"]
+             else:
+                 # No zh/en keys, treat the whole object as the content
+                 val = ai_summary_obj
+
              if isinstance(val, dict):
-                 ai_text = val.get("content", val.get("text", str(val)))
+                 # It's a dict (nested structure), flatten it
+                 ai_text = flatten_dict(val)
              elif val:
                  ai_text = str(val)
              else:
