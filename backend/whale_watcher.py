@@ -534,72 +534,11 @@ def analyze_transfers(transfers):
     
     return {"stats_7d": stats_7d, "stats_24h": stats_24h}
 
-def generate_comparative_summary(eth_data, sol_data, fear_greed):
-    """Generate a bilingual market story comparing ETH and SOL, including Fear & Greed."""
-    
-    # Prepare data for prompt
-    prompt_data = {
-        "Timeframe_Context": "Dual Timeframe Analysis (Short-term 24h vs Mid-term 7d)",
-        "Macro_Sentiment": {
-            "BTC_Fear_Greed_Index": f"{fear_greed['value']} ({fear_greed['value_classification']})"
-        },
-        "ETH_Chain": {
-            "Short_Term_24h": eth_data["stats_24h"],
-            "Mid_Term_7d": eth_data["stats_7d"]
-        },
-        "SOL_Chain": {
-            "Short_Term_24h": sol_data["stats_24h"],
-            "Mid_Term_7d": sol_data["stats_7d"]
-        }
-    }
-    
-    prompt = f"""
-    You are a crypto market analyst. Compare the whale sentiment on ETH vs SOL chains, identifying trends between 24h (short-term) and 7d (mid-term).
-    
-    Data:
-    {json.dumps(prompt_data, indent=2)}
-    
-    Context:
-    - BTC Fear & Greed: Macro market sentiment.
-    - ETH: Institutional/Smart Money sentiment.
-    - SOL: Retail/Speculative/Hot Money sentiment.
-    - Sentiment Score: -2 (Strong Bearish) to +2 (Strong Bullish).
-    
-    Instructions:
-    1. Highlight key trends in BOLD (e.g., **Accumulation**, **Panic Selling**).
-    2. Use bullet points for readability.
-    3. Explicitly look for contradictions between 24h and 7d signals (e.g., "Short-term Panic vs Mid-term Hold").
-    4. Provide the output as a strictly valid JSON object with two keys: "en" and "zh".
-    IMPORTANT: The value of "en" and "zh" MUST be a SINGLE string containing Markdown formatting. 
-    DO NOT use nested JSON objects or lists within the values.
-    
-    Output Format Example:
-    {{
-      "en": "**Market Insight:** ... \\n\\n* **ETH:** ...",
-      "zh": "**市场洞察:** ... \\n\\n* **ETH:** ..."
-    }}
-    """
-    
-    try:
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        response = model.generate_content(prompt)
-        text = response.text.strip()
-        # Clean up json markdown using regex to find the first JSON object
-        import re
-        match = re.search(r'\{.*\}', text, re.DOTALL)
-        if match:
-            text = match.group(0)
-        return json.loads(text)
-    except Exception as e:
-        print(f"AI Error: {e}")
-        return {
-            "en": "AI analysis unavailable.",
-            "zh": "AI 分析暂时不可用。"
-        }
+import market_data
 
 def merge_and_filter_txs(new_txs, old_txs):
     """
-    Merge new and old transactions, remove duplicates, and keep only those from the last 24 hours.
+    Merge new and old transactions, remove duplicates, and keep only those from the last 7 days.
     """
     # 1. Deduplicate using hash as key
     merged_map = {}
@@ -608,50 +547,325 @@ def merge_and_filter_txs(new_txs, old_txs):
     for tx in old_txs:
         merged_map[tx['hash']] = tx
         
-    # Add new (overwrite if exists, though should be same)
+    # Add new (overwrite if exists)
     for tx in new_txs:
         merged_map[tx['hash']] = tx
         
     all_txs = list(merged_map.values())
     
-    # 2. Filter last 24h
+    # 2. Filter last 7 days (168 hours)
     # Use UTC to match API timestamps
-    cutoff_time = datetime.utcnow() - timedelta(hours=168) # Keep 7 days history
+    cutoff_time = datetime.utcnow() - timedelta(hours=168) 
     filtered_txs = []
     
-    for i, tx in enumerate(all_txs):
+    for tx in all_txs:
         try:
-            # Handle timestamp format (Moralis returns ISO string usually)
-            # If it's already a string, parse it.
+            # Handle timestamp parsing
             ts_str = tx['timestamp']
-            
-            # Simple ISO parser if needed, or dateutil
-            # Assuming standard ISO format like "2023-10-27T10:00:00.000Z"
-            # Python 3.7+ has fromisoformat but might struggle with 'Z'.
-            # Let's use a robust way or just string comparison if format is consistent?
-            # String comparison works for ISO format!
-            
-            # But we need to compare with cutoff_time which is a datetime object.
-            # Let's convert cutoff_time to string for comparison? No, that's risky with timezones.
-            # Let's try to parse.
             if ts_str.endswith('Z'):
-                ts_str = ts_str[:-1] # Remove Z for fromisoformat
+                ts_str = ts_str[:-1]
             
-            tx_time = datetime.fromisoformat(ts_str)
-            
+            # Use simple parsing
+            if "." in ts_str:
+                 tx_time = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S.%f")
+            else:
+                 tx_time = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
+
             if tx_time > cutoff_time:
                 filtered_txs.append(tx)
         except Exception as e:
-            # If parsing fails, keep it to be safe? Or drop? 
-            # Let's print error and keep if it looks recent (fallback)
-            # print(f"Time parse error: {e}")
+            # Fallback for errors
             filtered_txs.append(tx) 
 
     # 3. Sort by timestamp descending
     filtered_txs.sort(key=lambda x: x['timestamp'], reverse=True)
-    
-    
     return filtered_txs
+
+
+def analyze_transfers_v1(transfers, market_metrics):
+    """
+    Strategy V1 Analysis:
+    Combines Chain Transfers (Intent) + Market Data (Confirmation).
+    Calculates Sentiment Score and Confidence Score.
+    """
+    
+    # Initialize Stats Structure
+    def init_stats():
+        return {
+            "sentiment_score": 0,
+            "confidence_score": 0, # New V1 Metric
+            "action_signal": "WAIT", # New V1 Metric
+            "stablecoin_net_flow": 0,
+            "token_net_flow": 0,
+            "whale_count": 0,
+            "avg_tx_size": 0,
+            "total_volume": 0,
+            "top_whale": {"address": "N/A", "volume": 0, "label": "N/A"}
+        }
+
+    stats_7d = init_stats()
+    stats_24h = init_stats()
+
+    if not transfers:
+        return {"stats_7d": stats_7d, "stats_24h": stats_24h}
+
+    cutoff_24h = datetime.utcnow() - timedelta(hours=24)
+
+    # Accumulators
+    acc_7d = {"w_score": 0, "total_w": 0, "stable": 0, "token": 0, "whales": set(), "vols": {}, "sum_vol": 0, "cnt": 0}
+    acc_24h = {"w_score": 0, "total_w": 0, "stable": 0, "token": 0, "whales": set(), "vols": {}, "sum_vol": 0, "cnt": 0}
+
+    import math
+    
+    # Market Context for Scoring Adjustments (Patch 1 & Confirmation)
+    # We use market_metrics from OKX
+    # If market data is missing, we use neutral defaults
+    if not market_metrics:
+        market_metrics = {"volume_ratio": 1.0, "delta_oi_24h_percent": 0, "funding_rate": 0, "oi_trend": "FLAT"}
+
+    vol_ratio = market_metrics.get("volume_ratio", 1.0)
+    oi_delta = market_metrics.get("delta_oi_24h_percent", 0)
+    funding = market_metrics.get("funding_rate", 0)
+
+    # --- Transfer Scoring Logic ---
+    for tx in transfers:
+        amount_usd = tx["amount_usd"]
+        signal = tx["signal"]
+        symbol = tx["symbol"]
+        
+        # 1. Base Score
+        score = 0
+        if signal == "BULLISH_INFLOW": score = 2
+        elif signal == "BULLISH_OUTFLOW": score = 1
+        elif signal == "BEARISH_OUTFLOW": score = -1
+        elif signal == "BEARISH_INFLOW":
+            # Patch 1: BEARISH_INFLOW Separation
+            # If Volume is high or OI is up, it's real selling (-2)
+            # Otherwise it might be hedging (-1)
+            is_real_dump = (vol_ratio >= 1.5) or (oi_delta > 2.0)
+            score = -2 if is_real_dump else -1
+            
+        weight = math.log10(amount_usd) if amount_usd > 1 else 0
+
+        # Update Helper
+        def update(acc):
+            acc["cnt"] += 1
+            acc["sum_vol"] += amount_usd
+            acc["whales"].add(tx["from"])
+            acc["vols"][tx["from"]] = acc["vols"].get(tx["from"], 0) + amount_usd
+            
+            acc["w_score"] += score * weight
+            acc["total_w"] += weight
+            
+            if symbol in STABLECOINS:
+                if signal == "BULLISH_INFLOW": acc["stable"] += amount_usd
+                elif signal == "BEARISH_OUTFLOW": acc["stable"] -= amount_usd
+            else:
+                if signal == "BEARISH_INFLOW": acc["token"] += amount_usd
+                elif signal == "BULLISH_OUTFLOW": acc["token"] -= amount_usd
+
+        # 7d Update
+        update(acc_7d)
+        
+        # 24h Update
+        # Parse text time
+        try:
+            ts_str = tx["timestamp"].replace("Z", "")
+            if "." in ts_str: t = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S.%f")
+            else: t = datetime.strptime(ts_str, "%Y-%m-%dT%H:%M:%S")
+            if t > cutoff_24h:
+                update(acc_24h)
+        except: pass
+
+    # --- Confidence Score Logic (Fusion) ---
+    def calc_confidence(sentiment_score):
+        # 1. Transfer Sentiment Contribution (30%)
+        # Normalize score (-2 to 2) to 0-100
+        # 0 -> 50, +2 -> 100, -2 -> 0
+        sent_conf = ((sentiment_score + 2) / 4) * 100
+        
+        # 2. OI Alignment (25%)
+        # Bullish & OI Up = Good
+        # Bearish & OI Up = Good (Shorting)
+        # Divergence = Bad
+        oi_conf = 50
+        if sentiment_score > 0.3: # Bullish
+            if oi_delta > 1.0: oi_conf = 100 # New Longs
+            elif oi_delta < -1.0: oi_conf = 20 # Deleveraging (Weak base)
+        elif sentiment_score < -0.3: # Bearish
+            if oi_delta > 1.0: oi_conf = 100 # New Shorts
+            elif oi_delta < -1.0: oi_conf = 20 # Short Covering (Weak base)
+            
+        # 3. Volume Confirmation (20%)
+        vol_conf = min(100, (vol_ratio / 1.5) * 75) # 1.5 ratio -> 75 score, 2.0 -> 100
+        if vol_ratio < 1.0: vol_conf = 20 # Low interest
+        
+        # 4. Funding Safety (15%)
+        fund_conf = 100
+        if sentiment_score > 0 and funding > 0.0005: fund_conf = 10 # Don't long crowded top
+        if sentiment_score < 0 and funding < -0.0005: fund_conf = 10 # Don't short crowded bottom
+        
+        # 5. Price Reaction (10%) - Simplified placeholder as we don't have detailed price candles here yet
+        price_conf = 50 
+        
+        # Final Weighted Sum
+        final_conf = (
+            0.30 * sent_conf + 
+            0.25 * oi_conf + 
+            0.20 * vol_conf + 
+            0.15 * fund_conf + 
+            0.10 * price_conf
+        )
+        return round(final_conf, 1)
+
+    # Finalize
+    def finalize(acc, stats):
+        if acc["total_w"] > 0:
+            stats["sentiment_score"] = acc["w_score"] / acc["total_w"]
+        
+        stats["confidence_score"] = calc_confidence(stats["sentiment_score"])
+        
+        # Action Signal
+        if stats["confidence_score"] >= 75: stats["action_signal"] = "EXECUTE"
+        elif stats["confidence_score"] >= 60: stats["action_signal"] = "PROBE"
+        elif stats["confidence_score"] >= 40: stats["action_signal"] = "OBSERVE"
+        else: stats["action_signal"] = "NO_TRADE"
+        
+        stats["stablecoin_net_flow"] = acc["stable"]
+        stats["token_net_flow"] = acc["token"]
+        stats["whale_count"] = len(acc["whales"])
+        stats["total_volume"] = acc["sum_vol"]
+        if acc["cnt"] > 0: stats["avg_tx_size"] = acc["sum_vol"] / acc["cnt"]
+        
+        if acc["vols"]:
+            top = max(acc["vols"], key=acc["vols"].get)
+            stats["top_whale"] = {"address": top, "volume": acc["vols"][top], "label": top[:6]+"..."}
+
+    finalize(acc_7d, stats_7d)
+    finalize(acc_24h, stats_24h)
+    
+    return {"stats_7d": stats_7d, "stats_24h": stats_24h}
+
+def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fear_greed):
+    """
+    Generate the V1 Strategy Narrative.
+    eth_market / sol_market are the raw metrics from OKX.
+    eth_data / sol_data contains the calculated Confidence Scores.
+    """
+    
+    prompt_data = {
+        "Macro": {
+            "BTC_Fear_Greed": f"{fear_greed['value']} ({fear_greed['value_classification']})"
+        },
+        "ETH_V1_Analysis": {
+            "Sentiment_7d": eth_data["stats_7d"]["sentiment_score"],
+            "Confidence_Score": eth_data["stats_7d"]["confidence_score"],
+            "Action_Signal": eth_data["stats_7d"]["action_signal"],
+            "Market_Context": {
+                "OI_Delta_24h": f"{eth_market.get('delta_oi_24h_percent',0):.2f}%",
+                "Volume_Ratio": f"{eth_market.get('volume_ratio',1):.2f}x (vs 30d avg)",
+                "Funding": f"{eth_market.get('funding_rate',0):.6f}"
+            }
+        },
+        "SOL_V1_Analysis": {
+            "Sentiment_7d": sol_data["stats_7d"]["sentiment_score"],
+            "Confidence_Score": sol_data["stats_7d"]["confidence_score"],
+            "Action_Signal": sol_data["stats_7d"]["action_signal"],
+             "Market_Context": {
+                "OI_Delta_24h": f"{sol_market.get('delta_oi_24h_percent',0):.2f}%",
+                "Volume_Ratio": f"{sol_market.get('volume_ratio',1):.2f}x (vs 30d avg)",
+                "Funding": f"{sol_market.get('funding_rate',0):.6f}"
+            }
+        }
+    }
+    
+    prompt = f"""
+    Act as a professional crypto quant trader using the 'Whale Watcher V1 Strategy'.
+    Generate a market summary based on On-Chain Whale Data + Derivatives Market Data.
+    
+    DATA JSON:
+    {json.dumps(prompt_data, indent=2)}
+    
+    STRATEGY LOGIC:
+    1. **Sentiment**: Derived from whale transfers (-2 Bearish to +2 Bullish).
+    2. **Confidence**: 0-100 score combining Sentiment + OI + Volume + Funding.
+       - High Confidence (>75) requires OI alignment (e.g. Price Up + OI Up) and Volume Support (>1.5x).
+       - Low Confidence means divergence (e.g. Whales buying but OI dropping = Deleveraging).
+    3. **Funding**: High positive funding limits Longs; High negative limits Shorts.
+    
+    OUTPUT INSTRUCTIONS:
+    - Return a JSON object with "en" and "zh" keys.
+    - Content must be Markdown.
+    - **Focus on the Signal Quality**: Explain WHY the confidence is high or low.
+    - Example: "ETH Whale Sentiment is Bullish (+1.2), but Confidence is Low (45) because OI is dropping (-2%), suggesting whales are just covering shorts rather than opening new longs."
+    - Highlight the **Action Signal** (EXECUTE / PROBE / OBSERVE / WAIT).
+    
+    Use this structure:
+    **Market V1 Overview**: [1 sentence macro]
+    
+    **🔷 ETH Strategy**:
+    * **Signal**: [Action Signal] (Conf: [Score])
+    * **Analysis**: [Reasoning based on OI/Vol/Funding]
+    
+    **🟣 SOL Strategy**:
+    * **Signal**: [Action Signal] (Conf: [Score])
+    * **Analysis**: [Reasoning]
+    """
+    
+
+    # Attempt 1: Gemini
+    try:
+        model = genai.GenerativeModel('gemini-2.5-flash')
+        response = model.generate_content(prompt)
+        text = response.text.strip()
+        import re
+        match = re.search(r'\{.*\}', text, re.DOTALL)
+        if match: text = match.group(0)
+        return json.loads(text)
+    except Exception as e_gemini:
+        print(f"⚠️ Gemini AI Error: {e_gemini}")
+        print("🔄 Switching to DeepSeek V3 (Fallback)...")
+        
+        # Attempt 2: DeepSeek
+        try:
+            deepseek_key = os.getenv("DEEPSEEK_API_KEY")
+            if not deepseek_key:
+                raise ValueError("No DEEPSEEK_API_KEY found in env")
+                
+            # DeepSeek uses OpenAI-compatible API
+            # URL: https://api.deepseek.com/chat/completions
+            ds_url = "https://api.deepseek.com/chat/completions"
+            ds_headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {deepseek_key}"
+            }
+            ds_payload = {
+                "model": "deepseek-chat",
+                "messages": [
+                    {"role": "system", "content": "You are a professional crypto quant trader. Return ONLY valid JSON."},
+                    {"role": "user", "content": prompt}
+                ],
+                "stream": False
+            }
+            
+            ds_res = requests.post(ds_url, headers=ds_headers, json=ds_payload, timeout=60)
+            
+            if ds_res.status_code != 200:
+                raise Exception(f"DeepSeek Status {ds_res.status_code}: {ds_res.text}")
+                
+            ds_data = ds_res.json()
+            ds_text = ds_data["choices"][0]["message"]["content"].strip()
+            
+            # Clean up JSON markdowns if DeepSeek adds them
+            import re
+            match = re.search(r'\{.*\}', ds_text, re.DOTALL)
+            if match: ds_text = match.group(0)
+            
+            return json.loads(ds_text)
+            
+        except Exception as e_ds:
+            print(f"❌ DeepSeek AI Error: {e_ds}")
+            return {"en": "AI analysis unavailable (Both Gemini & DeepSeek failed).", "zh": "AI 分析暂时不可用（双模型均失败）。"}
 
 def recalculate_signals(transfers):
     """Re-evaluate signals for all transfers using updated EXCHANGES."""
@@ -754,9 +968,13 @@ def main():
     print(f"Merged SOL Txs: {len(new_sol_transfers)} new + {len(old_sol_txs)} old -> {len(sol_transfers)} total (7d)")
     
     # 4. Analyze Data (Dual Timeframes)
-    print("Analyzing sentiment...")
-    eth_analysis = analyze_transfers(eth_transfers)
-    sol_analysis = analyze_transfers(sol_transfers)
+    print("Fetching Market Data (OKX)...")
+    eth_market = market_data.get_strategy_metrics("ETH")
+    sol_market = market_data.get_strategy_metrics("SOL")
+    
+    print("Analyzing sentiment (V1 Strategy)...")
+    eth_analysis = analyze_transfers_v1(eth_transfers, eth_market)
+    sol_analysis = analyze_transfers_v1(sol_transfers, sol_market)
     
     # 5. Apply EMA Smoothing (Sentiment Stabilization)
     # Formula: New = (Current * 0.3) + (Old * 0.7)
@@ -794,8 +1012,9 @@ def main():
     # 6. Generate AI Narrative (Cognitive Engine) with Dual Context
     ai_summary = {"en": "AI disabled or failed.", "zh": "AI 分析暂时不可用。"}
     try:
-        print("Generating AI market story...")
-        ai_summary = generate_comparative_summary(eth_analysis, sol_analysis, fear_greed)
+        print("Generating AI market story (V1 Strategy)...")
+        # Pass the market metrics dictionaries to the AI
+        ai_summary = generate_comparative_summary(eth_analysis, sol_analysis, eth_market, sol_market, fear_greed)
     except Exception as e:
         print(f"AI Generation Error: {e}")
 
