@@ -36,6 +36,24 @@
 
 ---
 
+## 🌟 最佳实践与实时演示 (Live Demo)
+
+看看机器人的实际运行效果！我们维护了一个实时看板和一个全自动运行此代码的 Telegram 信号群。
+
+### 📊 实时看板 (Web Dashboard)
+**[👉 whale.sparkvalues.com](https://whale.sparkvalues.com)**
+*可视化查看 AI 的实时分析结果和资产追踪。*
+
+### 📢 Telegram 信号群
+**[👉 加入群组](https://t.me/+u-P4xaw0ZptlOGZl)**
+*24/7 接收自动交易信号和鲸鱼预警。*
+
+<div align="center">
+  <img src="assets/telegram_qr.jpg" width="200" alt="加入 Telegram" />
+</div>
+
+---
+
 ## 🚀 快速开始
 
 ### 前置要求

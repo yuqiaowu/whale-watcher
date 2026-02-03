@@ -36,6 +36,24 @@
 
 ---
 
+## 🌟 ベストプラクティス & ライブデモ (Live Demo)
+
+ボットの実際の動作をご覧ください！このコードを実行しているリアルタイムダッシュボードとTelegramシグナルグループを公開しています。
+
+### 📊 ライブダッシュボード (Web Dashboard)
+**[👉 whale.sparkvalues.com](https://whale.sparkvalues.com)**
+*AI分析結果と資産追跡をリアルタイムで可視化。*
+
+### 📢 Telegram シグナルグループ
+**[👉 グループに参加](https://t.me/+u-P4xaw0ZptlOGZl)**
+*自動取引シグナルとホエールアラートを24時間365日受信。*
+
+<div align="center">
+  <img src="assets/telegram_qr.jpg" width="200" alt="Telegramに参加" />
+</div>
+
+---
+
 ## 🚀 クイックスタート
 
 ### 前提条件

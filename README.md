@@ -36,6 +36,24 @@ Every 4 hours (configurable), the AI digests this massive dataset, "thinks" abou
 
 ---
 
+## 🌟 Best Practices & Live Demo
+
+See the bot in action! We maintain a live dashboard and a Telegram signal group running this exact code.
+
+### 📊 Live Dashboard
+**[👉 whale.sparkvalues.com](https://whale.sparkvalues.com)**
+*Real-time AI analysis visualization and asset tracking.*
+
+### 📢 Telegram Signal Group
+**[👉 Join Group](https://t.me/+u-P4xaw0ZptlOGZl)**
+*Receive automated trade signals and whale alerts 24/7.*
+
+<div align="center">
+  <img src="assets/telegram_qr.jpg" width="200" alt="Join Telegram" />
+</div>
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
