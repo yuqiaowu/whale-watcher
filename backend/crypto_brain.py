@@ -14,11 +14,11 @@ env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
 load_dotenv(dotenv_path=env_path)
 
 MORALIS_API_KEY = os.getenv("MORALIS_API_KEY")
-MORSLID_API_KEY_2 = os.getenv("MORSLID_API_KEY_2") # Handle user typo
+MORALIS_API_KEY_2 = os.getenv("MORALIS_API_KEY_2") 
 ETHERSCAN_API_KEY = os.getenv("ETHERSCAN_API_KEY")
 
 # Key Rotation Logic
-API_KEYS = [k for k in [MORALIS_API_KEY, MORSLID_API_KEY_2] if k]
+API_KEYS = [k for k in [MORALIS_API_KEY_2, MORALIS_API_KEY] if k]
 CURRENT_KEY_IDX = 0
 
 def get_current_key():
@@ -772,7 +772,10 @@ import news_fetcher
 
 # ... (keep existing imports)
 
-def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fear_greed, news_data, macro_data):
+def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fear_greed, news_data, macro_data, btc_market=None, btc_analysis=None):
+    # Default dicts if None
+    if btc_market is None: btc_market = {}
+    if btc_analysis is None: btc_analysis = {"stats_24h": {}}
     """
     Generate the V2 Strategy Narrative (Tri-Layer Analysis).
     Combines:
@@ -817,7 +820,15 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
                 "Net_Flow_Token": f"{sol_data['stats_7d']['token_net_flow']:,.0f}",
                 "Market_OI_Delta": f"{sol_market.get('delta_oi_24h_percent',0):.2f}%",
                 "Funding": f"{sol_market.get('funding_rate',0):.6f}",
-                "RSI_4H": f"{sol_market.get('rsi_4h', 50):.1f}"
+                "RSI_4H": f"{sol_market.get('rsi_4h', 50):.1f}",
+                "Liquidation": sol_market.get("liquidation_context", "N/A")
+            },
+            "BTC_Contract": {
+                "Sentiment": "N/A (Contract Only)",
+                "Market_OI_Delta": f"{btc_market.get('delta_oi_24h_percent',0):.2f}%",
+                "Funding": f"{btc_market.get('funding_rate',0):.6f}",
+                "RSI_4H": f"{btc_market.get('rsi_4h', 50):.1f}",
+                "Liquidation": btc_market.get("liquidation_context", "N/A")
             }
         }
     }
@@ -840,16 +851,21 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
        - **TRAP WARNING**: News is Bullish BUT Whales are Selling (Exit Liquidity) -> Call this out!
        - **TRAP WARNING**: News is Bearish BUT Whales are Buying (Accumulation) -> Call this out!
        - **Retail Pain (Liquidations)**: Are retail traders bleeding? If Long Liqs are high, is the bottom near? If Short Liqs are high, is the top near?
+       - **For BTC**: Since we lack Whale Flow, focus purely on **Pain/Squeeze** logic (Negative Funding + High Short Liqs = Squeeze).
 
     OUTPUT INSTRUCTIONS:
 
     - Return a JSON object with "en" and "zh" keys.
     - Content must be Markdown.
     - **Synthesize** the layers. Don't just list data.
-    - **Verdict**: For ETH and SOL, give a final signal (EXECUTE / PROBE / OBSERVE / WAIT) based on the *confluence* of all 3 layers.
+    - **Verdict**: For ETH, SOL, and BTC, give a final signal (EXECUTE / PROBE / OBSERVE / WAIT) based on the *confluence* of layers.
     
     Structure:
     **🌍 Global Macro & Liquidity**: [Summary of Layer 1 & 2 combined]
+    
+    **🟠 BTC Strategy (Contract Only)**:
+    * **Signal**: [Action Signal based on Squeeze/RSI]
+    * **Reality Check**: [Analyze Funding Rates & Liquidation Pain. Are shorts trapped? Is it oversold?]
     
     **🔷 ETH Strategy**:
     * **Signal**: [Action Signal]
@@ -987,16 +1003,61 @@ def main():
     print("Fetching Market Data (OKX)...")
     eth_market = market_data.get_strategy_metrics("ETH")
     sol_market = market_data.get_strategy_metrics("SOL")
+    btc_market = market_data.get_strategy_metrics("BTC")
+    bnb_market = market_data.get_strategy_metrics("BNB")   # NEW
+    doge_market = market_data.get_strategy_metrics("DOGE") # NEW
     
     # NEW: Fetch Liquidation Data (The "Pain" Index)
     print("Fetching Liquidation Data (Market Pain)...")
     eth_liquidation = market_data.client.fetch_liquidation_data("ETH-USDT")
     sol_liquidation = market_data.client.fetch_liquidation_data("SOL-USDT")
+    btc_liquidation = market_data.client.fetch_liquidation_data("BTC-USDT")
+    bnb_liquidation = market_data.client.fetch_liquidation_data("BNB-USDT")   # NEW
+    doge_liquidation = market_data.client.fetch_liquidation_data("DOGE-USDT") # NEW
+    
     print(f"ETH Liq: Long ${eth_liquidation.get('long_vol_usd',0):.0f} / Short ${eth_liquidation.get('short_vol_usd',0):.0f}")
+    print(f"SOL Liq: Long ${sol_liquidation.get('long_vol_usd',0):.0f} / Short ${sol_liquidation.get('short_vol_usd',0):.0f}")
+    print(f"BTC Liq: Long ${btc_liquidation.get('long_vol_usd',0):.0f} / Short ${btc_liquidation.get('short_vol_usd',0):.0f}")
 
     print("Calculating Strategy V1 Metrics...")
     eth_analysis = analyze_transfers_v1(eth_transfers, eth_market)
     sol_analysis = analyze_transfers_v1(sol_transfers, sol_market)
+    
+    # Helper to create dummy analysis for chains without whale data
+    def create_dummy_analysis(liq_data):
+        return {
+            "timeframe": "4h",
+            "action_signal": "NEUTRAL",
+            "stats_24h": {
+                "sentiment_score": 0,
+                "token_net_flow": 0,
+                "stablecoin_net_flow": 0,
+                "liquidation_long_usd": liq_data.get("long_vol_usd", 0),
+                "liquidation_short_usd": liq_data.get("short_vol_usd", 0)
+            }
+        }
+
+    btc_analysis = create_dummy_analysis(btc_liquidation)
+    bnb_analysis = create_dummy_analysis(bnb_liquidation)   # NEW
+    doge_analysis = create_dummy_analysis(doge_liquidation) # NEW
+    
+    # Inject Liquidation Data into Stats (for JSON Output) - Already done in helper for new ones
+    # But need to patch ETH/SOL
+    eth_analysis["stats_24h"]["liquidation_long_usd"] = eth_liquidation.get("long_vol_usd", 0)
+    eth_analysis["stats_24h"]["liquidation_short_usd"] = eth_liquidation.get("short_vol_usd", 0)
+    
+    sol_analysis["stats_24h"]["liquidation_long_usd"] = sol_liquidation.get("long_vol_usd", 0)
+    sol_analysis["stats_24h"]["liquidation_short_usd"] = sol_liquidation.get("short_vol_usd", 0)
+    
+    # Inject Liquidation Data into Market Dicts (for AI Prompt)
+    def fmt_liq(d):
+        return f"Long Liquidation: ${d.get('long_vol_usd',0):,.0f}, Short Liquidation: ${d.get('short_vol_usd',0):,.0f}"
+        
+    eth_market["liquidation_context"] = fmt_liq(eth_liquidation)
+    sol_market["liquidation_context"] = fmt_liq(sol_liquidation)
+    btc_market["liquidation_context"] = fmt_liq(btc_liquidation)
+    bnb_market["liquidation_context"] = fmt_liq(bnb_liquidation)   # NEW
+    doge_market["liquidation_context"] = fmt_liq(doge_liquidation) # NEW
     
     # Apply EMA Smoothing
     ALPHA = 0.3
@@ -1019,11 +1080,16 @@ def main():
     ai_summary = {"en": "AI disabled or failed.", "zh": "AI 分析暂时不可用。"}
     try:
         print("\n=== GENERATING AI TRI-LAYER ANALYSIS ===")
+        # Note: Updated function signature. We pass btc_market but others are just implicit in the data struct if we wanted
+        # Ideally we should pass all, but let's stick to core 3 for "Narrative" to avoid token overflow
+        # AI Trader (Dolores) will read the FULL JSON anyway, so we don't strictly need them here in the summary generator.
         raw_ai_summary = generate_comparative_summary(
             eth_analysis, sol_analysis, 
             eth_market, sol_market, 
             fear_greed, 
-            news_data, macro_data # Pass the new layers
+            news_data, macro_data,
+            btc_market=btc_market,
+            btc_analysis=btc_analysis
         )
         
         # Sanitize AI Summary (Ensure values are strings, not dicts)
@@ -1059,6 +1125,13 @@ def main():
             "stats_24h": sol_analysis["stats_24h"],
             "top_txs": sol_transfers[:1000]
         },
+        "btc": {
+            "stats": btc_analysis["stats_24h"],
+            "stats_24h": btc_analysis["stats_24h"],
+            "market": btc_market
+        },
+        "bnb": { "stats_24h": bnb_analysis["stats_24h"], "market": bnb_market },     # NEW
+        "doge": { "stats_24h": doge_analysis["stats_24h"], "market": doge_market }, # NEW
         "ai_summary": ai_summary
     }
 

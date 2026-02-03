@@ -1,0 +1,488 @@
+[
+  {
+    "analysis_summary": {
+      "zh": "市场分析显示：1. 鲸鱼与散户行为出现明显背离——ETH和SOL的Token Net Flow均为负值（鲸鱼卖出），但价格下跌伴随大量多头爆仓（散户恐慌抛售），形成典型的鲸鱼出货陷阱。2. 爆仓数据显示ETH和SOL的Longs Dropped远高于Shorts Dropped，表明散户多头正在被清洗，但鲸鱼并未抄底，而是继续流出，暗示下跌可能持续。3. AI分析结论为鲸鱼正在利用散户恐惧进行Distribution（出货），市场处于熊市结构，应优先做空或观望。",
+      "en": "Market analysis reveals: 1. Clear divergence between whale and retail behavior—ETH and SOL show negative Token Net Flow (whales selling) while price drops with heavy long liquidations (retail panic), forming a classic whale distribution trap. 2. Liquidation data shows Longs Dropped significantly exceed Shorts Dropped for ETH and SOL, indicating retail longs are being flushed out, but whales are not accumulating, suggesting further downside. 3. AI conclusion is whales are distributing into fear, with a bear market regime, favoring shorts or staying sidelined."
+    },
+    "actions": [
+      {
+        "symbol": "ETH",
+        "action": "open_short",
+        "leverage": 3,
+        "position_size_usd": 600,
+        "entry_reason": {
+          "zh": "鲸鱼Token Net Flow为-3,463,853.70 ETH（大量卖出），而散户多头爆仓$77,205,621显示恐慌，价格低于SMA50（$2990.50）且处于熊市，形成出货陷阱。",
+          "en": "Whale Token Net Flow is -3,463,853.70 ETH (heavy selling), with retail long liquidations of $77,205,621 indicating panic, price below SMA50 ($2990.50) in bear market, forming a distribution trap."
+        },
+        "exit_plan": {
+          "take_profit": 2200,
+          "stop_loss": 2450,
+          "invalidation": {
+            "zh": "如果ETH价格突破$2450（SMA50附近）或Token Net Flow转正（鲸鱼买入），则止损。",
+            "en": "Invalidate if ETH price breaks above $2450 (near SMA50) or Token Net Flow turns positive (whale buying)."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-03 11:56:44"
+  },
+  {
+    "analysis_summary": {
+      "zh": "市场分析显示：1. 鲸鱼与散户对赌明显 - ETH和SOL的Token Net Flow均为负值（鲸鱼卖出），而价格下跌伴随大量多头爆仓（散户恐慌抛售），形成典型的熊市出货模式。2. 爆仓数据显示底部未到 - BTC、ETH、SOL等主要币种24小时多头爆仓远高于空头（如BTC多头爆仓9.24亿美元 vs 空头5.29亿美元），表明散户杠杆多头仍在清算中，市场未现恐慌性底部。3. AI分析结论为出货(Distribution) - 鲸鱼在价格下跌时持续卖出（ETH流出346万枚，SOL流出2.79万枚），稳定币流入有限（仅ETH有51.9万美元净流入），结合全球熊市环境（所有币种价格低于SMA200），智能资金正在利用反弹出货。",
+      "en": "Market analysis reveals: 1. Clear whale vs retail divergence - ETH and SOL show negative Token Net Flow (whales selling) while price drops with heavy long liquidations (retail panic), forming a classic bearish distribution pattern. 2. Liquidation data suggests no bottom yet - Major coins like BTC, ETH, SOL show 24h long liquidations significantly exceeding shorts (e.g., BTC longs $924M vs shorts $529M), indicating retail leveraged longs are still unwinding. 3. AI conclusion is Distribution - Whales are selling into price declines (ETH outflow 3.46M, SOL outflow 27.9K) with minimal stablecoin inflows (only $519K for ETH), combined with global bear market (all coins below SMA200), smart money is distributing on rallies."
+    },
+    "actions": [
+      {
+        "symbol": "ETH",
+        "action": "open_short",
+        "leverage": 3,
+        "position_size_usd": 600,
+        "entry_reason": {
+          "zh": "鲸鱼出货信号强烈 - Token Net Flow为-346万ETH（大量卖出），价格低于SMA200（$2325 vs $3648）且趋势看跌，24小时多头爆仓$7720万显示散户仍在接盘。资金费率未提供但熊市环境下反弹即做空机会。",
+          "en": "Strong whale distribution signal - Token Net Flow -3.46M ETH (heavy selling), price below SMA200 ($2325 vs $3648) with bearish trend, $77.2M long liquidations show retail still buying. Funding rate not provided but rallies are short opportunities in bear market."
+        },
+        "exit_plan": {
+          "take_profit": 2100,
+          "stop_loss": 2500,
+          "invalidation": {
+            "zh": "若Token Net Flow转为正值+价格突破SMA50（$2990）且稳定币大量流入，则假设失效（鲸鱼转为吸筹）。",
+            "en": "Invalidated if Token Net Flow turns positive + price breaks above SMA50 ($2990) with substantial stablecoin inflows (whale accumulation)."
+          }
+        }
+      },
+      {
+        "symbol": "SOL",
+        "action": "open_short",
+        "leverage": 3,
+        "position_size_usd": 600,
+        "entry_reason": {
+          "zh": "鲸鱼与散户双重看跌 - Token Net Flow为-2.79万SOL（卖出），稳定币净流出$33.7万（资金撤离），价格低于SMA200（$104 vs $169）且24小时空头爆仓仅$238万（多头爆仓$82万），表明下跌压力持续。",
+          "en": "Dual bearish whale-retail signal - Token Net Flow -27.9K SOL (selling), stablecoin outflow -$336K (capital exit), price below SMA200 ($104 vs $169) with only $2.38M short liquidations vs $822K longs, indicating sustained downward pressure."
+        },
+        "exit_plan": {
+          "take_profit": 90,
+          "stop_loss": 120,
+          "invalidation": {
+            "zh": "若SOL Token Net Flow转为正值+价格突破SMA50（$128）伴随资金费率转负（轧空风险），则假设失效。",
+            "en": "Invalidated if SOL Token Net Flow turns positive + price breaks above SMA50 ($128) with funding rate turning negative (short squeeze risk)."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-03 11:49:45"
+  },
+  {
+    "analysis_summary": {
+      "zh": "市场分析：当前处于熊市（所有主要币种价格低于SMA200），但出现关键背离信号。1. 鲸鱼与散户对赌：ETH显示强烈看涨背离 - 价格下跌但鲸鱼净流入519,015美元稳定币（买入），同时散户多头爆仓8,678万美元（恐慌抛售），这是典型的鲸鱼吸筹陷阱。SOL则相反 - 价格下跌且鲸鱼净流出374,998美元稳定币（卖出），散户空头爆仓236万美元多于多头，显示鲸鱼可能在派发。2. 爆仓数据显示ETH可能接近短期底部（散户多头大量爆仓后卖压减弱），而SOL的爆仓结构更均衡。3. AI分析结论：ETH呈现鲸鱼吸筹信号（Accumulation），SOL呈现鲸鱼派发信号（Distribution），BTC因缺乏鲸鱼流数据需谨慎。",
+      "en": "Market Analysis: Currently in a bear market (all major coins below SMA200), but key divergence signals emerge. 1. Whales vs Retail: ETH shows strong bullish divergence - price dropping but whales net inflow $519,015 stablecoins (buying) while retail long liquidations $86.78M (panic selling), a classic whale accumulation trap. SOL shows the opposite - price dropping with whale net outflow $374,998 stablecoins (selling), and retail short liquidations $2.36M exceeding longs, suggesting distribution. 2. Liquidation data indicates ETH may be near a short-term bottom (retail selling pressure easing after massive long liquidations), while SOL's liquidation structure is more balanced. 3. AI Conclusion: ETH shows whale accumulation, SOL shows whale distribution, BTC requires caution due to lack of whale flow data."
+    },
+    "actions": [
+      {
+        "symbol": "ETH",
+        "action": "open_long",
+        "leverage": 2,
+        "position_size_usd": 2000,
+        "entry_reason": {
+          "zh": "发现鲸鱼在价格下跌时净流入519,015美元稳定币（买入信号），同时散户多头爆仓8,678万美元显示恐慌抛售，形成强烈看涨背离。资金费率数据未提供，但熊市背景下鲸鱼吸筹+散户爆仓通常预示短期反弹。",
+          "en": "Detected whale net inflow of $519,015 stablecoins during price decline (buying signal), coupled with retail long liquidations of $86.78M indicating panic selling, creating strong bullish divergence. Funding rate data not provided, but whale accumulation + retail liquidation in a bear market often signals short-term bounce."
+        },
+        "exit_plan": {
+          "take_profit": 2500,
+          "stop_loss": 2200,
+          "invalidation": {
+            "zh": "如果价格跌破2200且鲸鱼稳定币流向转为负值（卖出），则退出。",
+            "en": "Exit if price breaks below 2200 and whale stablecoin flow turns negative (selling)."
+          }
+        }
+      },
+      {
+        "symbol": "SOL",
+        "action": "open_short",
+        "leverage": 2,
+        "position_size_usd": 1500,
+        "entry_reason": {
+          "zh": "鲸鱼净流出374,998美元稳定币（卖出信号），价格下跌但散户空头爆仓236万美元多于多头，显示鲸鱼可能在派发。熊市背景下，鲸鱼卖出+价格低于SMA50（128.25美元）支持做空。",
+          "en": "Whale net outflow of $374,998 stablecoins (selling signal), price dropping with retail short liquidations $2.36M exceeding longs, suggesting distribution. In a bear market, whale selling + price below SMA50 ($128.25) supports shorting."
+        },
+        "exit_plan": {
+          "take_profit": 90,
+          "stop_loss": 110,
+          "invalidation": {
+            "zh": "如果价格突破110且鲸鱼稳定币流向转为正值（买入），则退出。",
+            "en": "Exit if price breaks above 110 and whale stablecoin flow turns positive (buying)."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-03 11:26:01"
+  },
+  {
+    "analysis_summary": {
+      "zh": "市场处于熊市状态，所有主要币种价格均低于SMA200。鲸鱼数据显示：ETH出现显著看跌信号，鲸鱼净流出346万ETH，稳定币流入仅51.9万美元，表明鲸鱼正在抛售ETH并撤离资金。SOL情况类似但稍好，鲸鱼净流出2.79万SOL，稳定币净流出23.4万美元，显示资金外流。BTC清算数据显示空头清算（10.7亿美元）远高于多头清算（4.2亿美元），结合负资金费率，存在短期轧空风险。整体来看，鲸鱼正在撤离ETH和SOL，而散户可能因恐慌抛售，但BTC的极端空头清算暗示可能即将出现轧空反弹。AI分析结论：ETH和SOL为出货（Distribution），BTC可能出现轧空（Short Squeeze）。",
+      "en": "The market is in a bear state, with all major coins below SMA200. Whale data shows: ETH exhibits significant bearish signals with whale net outflow of 3.46M ETH and minimal stablecoin inflow ($519K), indicating whale selling and capital withdrawal. SOL shows similar but milder outflows (27.9K SOL net outflow, $234K stablecoin outflow). BTC liquidation data reveals short liquidations ($1.07B) far exceed long liquidations ($421.6M), combined with negative funding rates, suggesting a potential short squeeze. Overall, whales are exiting ETH and SOL while retail may panic sell, but extreme short liquidations in BTC hint at an imminent squeeze rebound. AI conclusion: Distribution for ETH and SOL, potential Short Squeeze for BTC."
+    },
+    "actions": [
+      {
+        "symbol": "BTC",
+        "action": "open_long",
+        "leverage": 3,
+        "position_size_usd": 2000,
+        "entry_reason": {
+          "zh": "BTC空头清算高达10.7亿美元，远多于多头清算，资金费率为负，显示散户过度做空。鲸鱼虽无直接数据，但极端空头清算和负资金费率表明轧空风险高，符合熊市中仅允许在鲸鱼吸筹或清算信号时做多的规则。",
+          "en": "BTC short liquidations are extremely high at $1.07B vs. long liquidations of $421.6M, with negative funding rates, indicating retail over-shorting. Although no direct whale data, extreme short liquidations and negative funding suggest high squeeze risk, aligning with bear market rules allowing longs only on liquidation signals."
+        },
+        "exit_plan": {
+          "take_profit": 85000,
+          "stop_loss": 75000,
+          "invalidation": {
+            "zh": "如果价格跌破75000美元或空头清算减少且资金费率转正，则轧空假设失效。",
+            "en": "Invalidate if price breaks below $75,000 or short liquidations decrease with funding turning positive."
+          }
+        }
+      },
+      {
+        "symbol": "ETH",
+        "action": "open_short",
+        "leverage": 2,
+        "position_size_usd": 1500,
+        "entry_reason": {
+          "zh": "ETH鲸鱼净流出346万ETH，稳定币流入微弱，显示鲸鱼在抛售。价格低于SMA50和SMA200，处于熊市，符合熊市主做空策略。散户可能因恐慌持有，但鲸鱼出货信号强烈。",
+          "en": "ETH whale net outflow of 3.46M ETH with minimal stablecoin inflow indicates whale selling. Price is below SMA50 and SMA200 in a bear market, aligning with primary short bias. Retail may hold out of fear, but whale distribution signal is strong."
+        },
+        "exit_plan": {
+          "take_profit": 2200,
+          "stop_loss": 2500,
+          "invalidation": {
+            "zh": "如果价格突破2500美元或鲸鱼转为净流入且稳定币大幅增加，则看跌假设失效。",
+            "en": "Invalidate if price breaks above $2,500 or whales switch to net inflow with significant stablecoin increase."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-03 03:19:25"
+  },
+  {
+    "analysis_summary": {
+      "zh": "市场分析：当前处于熊市（所有主要币种价格低于SMA200）。鲸鱼数据显示：ETH出现显著看跌信号，24小时内鲸鱼净流出346万ETH，稳定币流入仅51.9万美元，同时多头爆仓4,738万美元、空头爆仓5,887万美元，表明鲸鱼正在抛售且市场波动剧烈。SOL情况类似但更微妙，鲸鱼净流出601 SOL，稳定币净流出19.6万美元，但空头爆仓（253万美元）低于多头（533万美元），可能暗示局部支撑。BTC无鲸鱼流数据，但爆仓数据显示空头爆仓10.7亿美元远高于多头4.2亿美元，结合资金费率可能为负（需从市场数据确认），存在轧空风险。整体上，鲸鱼在ETH和SOL上呈现出货行为（Distribution），与价格下跌一致，但BTC的高空头爆仓可能预示短期反弹陷阱。AI结论：ETH和SOL为熊市出货，BTC可能酝酿轧空。",
+      "en": "Market analysis: Currently in a bear market (all major coins below SMA200). Whale data shows: ETH exhibits significant bearish signals with a net outflow of 3.46M ETH by whales, minimal stablecoin inflow of $519K, and long liquidations of $47.4M vs short liquidations of $58.9M, indicating whale selling and high volatility. SOL shows a similar but more nuanced pattern with a net outflow of 601 SOL, stablecoin outflow of $196K, but short liquidations ($2.53M) are lower than longs ($5.33M), suggesting potential local support. BTC lacks whale flow data, but liquidation data shows short liquidations of $1.07B far exceeding longs ($421.6M), combined with potentially negative funding rates (to confirm from market data), indicating a short squeeze risk. Overall, whales are distributing in ETH and SOL, aligning with price declines, but BTC's high short liquidations may signal a short-term rebound trap. AI conclusion: Bearish distribution for ETH and SOL, potential short squeeze brewing in BTC."
+    },
+    "actions": [
+      {
+        "symbol": "BTC",
+        "action": "open_long",
+        "leverage": 2,
+        "position_size_usd": 500,
+        "entry_reason": {
+          "zh": "检测到轧空机会：BTC空头爆仓10.7亿美元远高于多头4.2亿美元，表明大量空头头寸被清算，可能触发轧空。结合熊市背景（价格低于SMA200），仅允许低杠杆做多，遵循鲸鱼陷阱规则（散户看空时鲸鱼可能反向操作）。",
+          "en": "Short squeeze opportunity detected: BTC short liquidations of $1.07B significantly exceed longs ($421.6M), indicating heavy short positions being liquidated, potentially triggering a squeeze. Given the bear market context (price below SMA200), only low-leverage longs are allowed, following whale trap rules (whales may act contrarian when retail is bearish)."
+        },
+        "exit_plan": {
+          "take_profit": 85000,
+          "stop_loss": 75000,
+          "invalidation": {
+            "zh": "如果价格跌破75000美元或鲸鱼数据显示大量抛售（如出现正Token Net Flow），则无效。",
+            "en": "Invalidated if price drops below $75,000 or whale data shows heavy selling (e.g., positive Token Net Flow emerges)."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-03 03:11:16"
+  },
+  {
+    "analysis_summary": {
+      "zh": "当前市场处于熊市状态（所有主要币种价格低于SMA200），但鲸鱼行为与散户情绪出现关键背离。ETH显示强烈看涨信号：价格下跌至$2345.79，但鲸鱼净流出-2,708,572.05 ETH（大规模抛售），同时稳定币净流入$519,015.17（资金入场），且24小时多头爆仓$47.38M远低于空头爆仓$58.87M（空头挤压更严重）。这表明鲸鱼可能在价格下跌中抛售ETH换取稳定币，但稳定币流入和空头爆仓优势暗示潜在底部支撑。SOL情况类似但较弱：价格$104.77，鲸鱼净流出-601.18 SOL，稳定币净流出$-87,775.93，多头爆仓$5.33M高于空头$2.53M（多头痛苦更重）。BTC无鲸鱼数据，但空头爆仓$1.07B远高于多头$421.58M，结合负资金费率（如存在），显示空头过度拥挤，轧空风险高。整体AI分析结论：ETH和BTC出现吸筹迹象（鲸鱼/机构可能在下跌中布局），而SOL和BNB（多头爆仓更高）可能面临进一步下跌压力。关键陷阱：散户因熊市恐慌而做空ETH/BTC，但鲸鱼和爆仓数据暗示反转可能。",
+      "en": "The market is in a bear regime (all major coins below SMA200), but whale behavior diverges from retail sentiment. ETH shows strong bullish signals: price dropped to $2345.79, but whale net outflow is -2,708,572.05 ETH (large selling), while stablecoin net inflow is $519,015.17 (capital entering), and 24h long liquidations at $47.38M are significantly lower than short liquidations at $58.87M (more short squeeze pressure). This suggests whales may be selling ETH for stablecoins during the drop, but stablecoin inflow and higher short liquidations indicate potential bottom support. SOL shows a similar but weaker pattern: price $104.77, whale net outflow -601.18 SOL, stablecoin net outflow $-87,775.93, and long liquidations $5.33M exceed shorts $2.53M (more long pain). BTC has no whale data, but short liquidations at $1.07B far surpass longs $421.58M, combined with negative funding rates (if present), indicating overcrowded shorts and high squeeze risk. Overall AI conclusion: ETH and BTC show accumulation signs (whales/institutions may be positioning during declines), while SOL and BNB (higher long liquidations) may face further downside. Key trap: retail is shorting ETH/BTC due to bearish fear, but whale and liquidation data hint at a reversal."
+    },
+    "actions": [
+      {
+        "symbol": "ETH",
+        "action": "open_long",
+        "leverage": 2,
+        "position_size_usd": 2000,
+        "entry_reason": {
+          "zh": "鲸鱼在价格下跌中大量抛售ETH但稳定币流入，且空头爆仓高于多头，显示空头过度拥挤和潜在轧空。结合熊市规则（仅允许鲸鱼吸筹信号时做多），这符合高置信度买入机会。",
+          "en": "Whales are selling ETH heavily during the price drop but stablecoin inflow and higher short liquidations indicate overcrowded shorts and potential squeeze. Under bear market rules (longs only allowed on whale accumulation signals), this is a high-conviction buy opportunity."
+        },
+        "exit_plan": {
+          "take_profit": 2600,
+          "stop_loss": 2200,
+          "invalidation": {
+            "zh": "如果价格跌破$2200且稳定币流出加速，或空头爆仓减少，则信号失效。",
+            "en": "Invalidate if price breaks below $2200 with accelerating stablecoin outflow or reduced short liquidations."
+          }
+        }
+      },
+      {
+        "symbol": "BTC",
+        "action": "open_long",
+        "leverage": 2,
+        "position_size_usd": 1500,
+        "entry_reason": {
+          "zh": "BTC空头爆仓$1.07B远高于多头$421.58M，显示极端空头拥挤，结合负资金费率（推测），轧空风险高。在熊市中，这符合鲸鱼陷阱（散户做空但机构可能吸筹）。",
+          "en": "BTC short liquidations at $1.07B vastly exceed longs $421.58M, indicating extreme short crowding, combined with negative funding rates (inferred), high squeeze risk. In a bear market, this aligns with a whale trap (retail shorting but institutions may accumulate)."
+        },
+        "exit_plan": {
+          "take_profit": 85000,
+          "stop_loss": 75000,
+          "invalidation": {
+            "zh": "如果价格跌破$75000且空头爆仓大幅减少，或资金费率转正，则信号失效。",
+            "en": "Invalidate if price breaks below $75000 with significant reduction in short liquidations or funding rates turn positive."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-03 02:56:38"
+  },
+  {
+    "analysis_summary": {
+      "zh": "市场处于熊市状态，所有主要币种价格均低于SMA200。鲸鱼数据显示：ETH出现显著流出（-2,483,988.47 ETH），表明鲸鱼在抛售，而散户可能因价格下跌被爆仓（多头爆仓$44,268,816）。SOL的鲸鱼数据中性，但稳定币净流出（$-75,848.15）暗示资金外流。BTC和BNB的爆仓数据显示空头爆仓远高于多头（BTC空头爆仓$1,138,589,718 vs 多头$305,101,707；BNB空头爆仓$11,111,172 vs 多头$32,212,089），这可能引发轧空风险。整体上，鲸鱼在ETH上出货，而散户在多个币种上被爆仓，市场存在陷阱：新闻叙事可能偏悲观，但爆仓数据暗示潜在反转机会。",
+      "en": "The market is in a bear state, with all major coins below SMA200. Whale data shows: ETH has significant outflows (-2,483,988.47 ETH), indicating whale selling, while retail may be liquidated due to price drops (long liquidations $44,268,816). SOL whale data is neutral, but stablecoin net outflow ($-75,848.15) suggests capital flight. BTC and BNB liquidation data show short liquidations much higher than longs (BTC shorts $1,138,589,718 vs longs $305,101,707; BNB shorts $11,111,172 vs longs $32,212,089), which could trigger short squeezes. Overall, whales are distributing in ETH, while retail is being liquidated across coins, creating traps: news narrative may be bearish, but liquidation data hints at potential reversal opportunities."
+    },
+    "actions": [
+      {
+        "symbol": "BTC",
+        "action": "open_long",
+        "leverage": 2,
+        "position_size_usd": 200,
+        "entry_reason": {
+          "zh": "BTC空头爆仓极高（$1,138,589,718），远高于多头爆仓，结合熊市背景和负资金费率（如果存在），存在轧空机会。鲸鱼数据缺失，但爆仓信号强烈，适合低杠杆做多捕捉反弹。",
+          "en": "BTC has extremely high short liquidations ($1,138,589,718), far exceeding long liquidations, combined with bear market context and potential negative funding rates, indicating a short squeeze opportunity. Whale data is missing, but liquidation signal is strong, suitable for low-leverage long to catch a bounce."
+        },
+        "exit_plan": {
+          "take_profit": 85000,
+          "stop_loss": 75000,
+          "invalidation": {
+            "zh": "如果价格跌破$75000或空头爆仓减少，表明轧空失败，应平仓。",
+            "en": "If price breaks below $75000 or short liquidations decrease, indicating squeeze failure, close position."
+          }
+        }
+      },
+      {
+        "symbol": "BNB",
+        "action": "open_long",
+        "leverage": 2,
+        "position_size_usd": 200,
+        "entry_reason": {
+          "zh": "BNB空头爆仓（$11,111,172）显著高于多头（$32,212,089），在熊市中可能引发轧空。价格低于SMA200，但爆仓数据提供反转信号，适合谨慎做多。",
+          "en": "BNB short liquidations ($11,111,172) are notably higher than longs ($32,212,089), potentially triggering a short squeeze in a bear market. Price is below SMA200, but liquidation data offers a reversal signal, suitable for cautious long."
+        },
+        "exit_plan": {
+          "take_profit": 850,
+          "stop_loss": 700,
+          "invalidation": {
+            "zh": "如果价格跌破$700或空头爆仓缓解，表明信号失效，应退出。",
+            "en": "If price breaks below $700 or short liquidations ease, indicating signal failure, exit."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-03 01:55:41"
+  },
+  {
+    "analysis_summary": {
+      "zh": "市场分析：当前处于熊市（所有主要币种价格低于SMA200），全球宏观风险偏好下降（恐惧与贪婪指数14）。鲸鱼行为显示关键分歧：ETH出现明显出货信号（价格下跌中鲸鱼净流出78,753 ETH，稳定币流入$519K，但24小时多头爆仓$41M > 空头$74M，显示散户恐慌抛售），符合熊市中的“反弹出货”陷阱。SOL则呈现中性（鲸鱼净流量为0，稳定币流出$18K，但24小时多头爆仓$5.3M > 空头$2.6M，且情绪得分0.92较高），暗示可能超卖但无明确鲸鱼积累。BTC爆仓数据显示极端空头爆仓（$1.14B）远超多头（$305M），结合负资金费率（来自上游分析），存在短期轧空风险。整体上，鲸鱼在ETH上利用散户恐惧出货，而在BTC上可能制造轧空陷阱。AI结论：ETH为出货（Distribution），BTC为潜在轧空（Short Squeeze），SOL需等待更明确信号。",
+      "en": "Market analysis: Currently in a bear market (all major coins below SMA200), with global macro risk-off sentiment (Fear & Greed Index at 14). Whale behavior shows key divergences: ETH exhibits clear distribution signals (price dropping with whale net outflow of 78,753 ETH, stablecoin inflow of $519K, but 24h long liquidations $41M > short $74M, indicating retail panic selling), fitting a 'sell the rip' trap in a bear market. SOL appears neutral (whale net flow at 0, stablecoin outflow $18K, but 24h long liquidations $5.3M > short $2.6M, and sentiment score 0.92 high), suggesting possible oversold conditions but no clear whale accumulation. BTC liquidation data shows extreme short liquidations ($1.14B) far exceeding longs ($305M), combined with negative funding rates (from upstream analysis), indicating a short squeeze risk. Overall, whales are distributing on ETH using retail fear, while potentially setting up a squeeze trap on BTC. AI conclusion: ETH is distribution, BTC is potential short squeeze, SOL needs clearer signals."
+    },
+    "actions": [
+      {
+        "symbol": "BTC",
+        "action": "open_long",
+        "leverage": 2,
+        "position_size_usd": 500,
+        "entry_reason": {
+          "zh": "检测到轧空机会：BTC在熊市中，24小时空头爆仓$1.14B远超多头$305M，结合负资金费率（来自上游分析），显示散户过度做空。鲸鱼虽无直接流量数据，但爆仓痛点和资金费率暗示可能触发轧空反弹。符合熊市规则：仅允许在极端爆仓信号下做多，杠杆限制2x。",
+          "en": "Short squeeze opportunity detected: BTC in bear market, 24h short liquidations $1.14B far exceed longs $305M, combined with negative funding rates (from upstream analysis), indicating retail over-shorting. No direct whale flow data, but liquidation pain and funding suggest a potential squeeze rebound. Fits bear market rule: longs only allowed with extreme liquidation signals, leverage capped at 2x."
+        },
+        "exit_plan": {
+          "take_profit": 85000,
+          "stop_loss": 75000,
+          "invalidation": {
+            "zh": "如果价格跌破$75,000（关键支撑），或资金费率转正超过0.03%，则轧空假设失效，应止损。",
+            "en": "Invalidation if price breaks below $75,000 (key support) or funding rate turns positive above 0.03%, indicating squeeze hypothesis fails, stop loss triggered."
+          }
+        }
+      },
+      {
+        "symbol": "ETH",
+        "action": "open_short",
+        "leverage": 3,
+        "position_size_usd": 600,
+        "entry_reason": {
+          "zh": "检测到出货陷阱：ETH价格下跌中，鲸鱼净流出78,753 ETH（出货），稳定币流入$519K（可能准备抄底但未行动），而24小时多头爆仓$41M > 空头$74M显示散户恐慌。这符合熊市中的“反弹出货”模式，鲸鱼利用恐惧分布筹码。做空以捕捉进一步下跌。",
+          "en": "Distribution trap detected: ETH price dropping with whale net outflow of 78,753 ETH (distribution), stablecoin inflow $519K (possibly preparing but not acting), and 24h long liquidations $41M > short $74M showing retail panic. This fits a 'sell the rip' pattern in a bear market, with whales distributing on fear. Short to capture further downside."
+        },
+        "exit_plan": {
+          "take_profit": 2200,
+          "stop_loss": 2500,
+          "invalidation": {
+            "zh": "如果价格突破$2,500（阻力位），或鲸鱼流量转正（开始吸筹），则出货假设失效，应止损。",
+            "en": "Invalidation if price breaks above $2,500 (resistance) or whale flow turns positive (accumulation starts), indicating distribution hypothesis fails, stop loss triggered."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-03 01:20:06"
+  },
+  {
+    "analysis_summary": {
+      "zh": "市场呈现明显的熊市格局（所有主要币种价格均低于SMA200），但鲸鱼行为与散户情绪出现关键背离。1. 鲸鱼与散户对赌：ETH价格下跌但鲸鱼净流出12万枚（抛售），而SOL价格下跌但鲸鱼净流入8.8万枚（吸筹），显示鲸鱼在SOL上逆势买入。2. 爆仓数据显示：BTC、ETH、SOL均出现大规模多头爆仓（散户恐慌抛售），其中BTC多头爆仓7.16亿美元最为严重，这可能意味着短期卖压已过度释放。3. AI分析结论：SOL出现鲸鱼吸筹信号（价格下跌+Token净流入+稳定币流入），而ETH为鲸鱼出货信号（价格下跌+Token净流出）。整体市场处于极端恐惧中，但SOL的鲸鱼行为暗示潜在底部形成。",
+      "en": "The market shows a clear bearish structure (all major coins below SMA200), but whale behavior diverges from retail sentiment. 1. Whales vs Retail: ETH price drops with whale net outflow of 120K ETH (distribution), while SOL price drops with whale net inflow of 88K SOL (accumulation), indicating whales are buying SOL against the trend. 2. Liquidation data shows massive long liquidations across BTC, ETH, and SOL (retail capitulation), with BTC longs liquidated $716M most severe, suggesting short-term selling pressure may be overextended. 3. AI conclusion: SOL shows whale accumulation signals (price down + token inflow + stablecoin inflow), while ETH shows whale distribution. Overall market is in extreme fear, but SOL whale activity hints at potential bottom formation."
+    },
+    "actions": [
+      {
+        "symbol": "SOL",
+        "action": "open_long",
+        "leverage": 2,
+        "position_size_usd": 600,
+        "entry_reason": {
+          "zh": "发现鲸鱼在价格下跌时大量吸筹（净流入88,841 SOL），同时稳定币净流入$183K，而散户多头爆仓$6.1M显示恐慌抛售。资金费率Z-score为负（-0.13），存在轧空潜力。这是典型的'鲸鱼陷阱'：散户恐惧卖出时鲸鱼买入。",
+          "en": "Detected whale accumulation during price decline (net inflow 88,841 SOL) with stablecoin inflow $183K, while retail long liquidations $6.1M show panic selling. Funding Z-score negative (-0.13) indicates short squeeze potential. This is a classic 'whale trap': whales buying when retail fears."
+        },
+        "exit_plan": {
+          "take_profit": 115,
+          "stop_loss": 95,
+          "invalidation": {
+            "zh": "如果SOL跌破$95（关键支撑）或鲸鱼转为净流出，则退出。",
+            "en": "Exit if SOL breaks below $95 (key support) or whale flow turns negative."
+          }
+        }
+      },
+      {
+        "symbol": "ETH",
+        "action": "open_short",
+        "leverage": 3,
+        "position_size_usd": 800,
+        "entry_reason": {
+          "zh": "鲸鱼在价格下跌时净流出120,090 ETH（出货），稳定币净流出$95K，而散户多头爆仓$66M显示弱势。资金费率Z-score为负（-0.12）但无吸筹支撑，反弹可能受限。这是'出货陷阱'：鲸鱼利用反弹抛售。",
+          "en": "Whales distributing during price decline (net outflow 120,090 ETH) with stablecoin outflow $95K, while retail long liquidations $66M show weakness. Funding Z-score negative (-0.12) but no accumulation support, limiting rebound potential. This is a 'distribution trap': whales selling into rallies."
+        },
+        "exit_plan": {
+          "take_profit": 2100,
+          "stop_loss": 2450,
+          "invalidation": {
+            "zh": "如果ETH突破$2450（阻力位）或鲸鱼转为净流入，则退出。",
+            "en": "Exit if ETH breaks above $2450 (resistance) or whale flow turns positive."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-02 19:07:22"
+  },
+  {
+    "analysis_summary": {
+      "zh": "市场呈现明显的鲸鱼与散户对赌格局。ETH方面：价格下跌但鲸鱼大量流出（-120,090 ETH），稳定币净流出，同时多头爆仓高达$6642万，显示鲸鱼正在抛售而散户多头被迫平仓，这是典型的出货信号（Bearish Divergence）。SOL方面：价格下跌但鲸鱼大量流入（+88,841 SOL），稳定币净流入$18.3万，且空头爆仓仅$103万（远低于多头$617万），表明鲸鱼在散户恐慌时逆势吸筹，形成看涨背离（Bullish Divergence）。BTC合约数据显示多空爆仓接近平衡（多头$7.16亿/空头$6.31亿），结合宏观风险规避环境（美元走强、恐慌指数上升），市场整体处于极端恐惧但SOL出现底部积累迹象。AI分析结论：ETH为出货阶段，SOL为吸筹阶段，BTC等待方向确认。",
+      "en": "The market shows a clear whale vs retail divergence. For ETH: Price is dropping with heavy whale outflow (-120,090 ETH), stablecoin outflow, and massive long liquidations ($66.4M), indicating distribution (Bearish Divergence). For SOL: Price is dropping with significant whale inflow (+88,841 SOL), stablecoin inflow ($183K), and relatively low short liquidations ($1.03M vs $6.17M longs), suggesting accumulation during retail panic (Bullish Divergence). BTC shows balanced long/short liquidations ($716M/$631M) amid a risk-off macro environment. Conclusion: ETH is in distribution, SOL in accumulation, BTC neutral."
+    },
+    "actions": [
+      {
+        "symbol": "SOL",
+        "action": "open_long",
+        "leverage": 4,
+        "position_size_usd": 2000,
+        "entry_reason": {
+          "zh": "发现鲸鱼在价格下跌时逆势买入88,841 SOL（Token Net Flow为正），稳定币净流入$183,554，且空头爆仓仅$103万（显示散户空头仓位较轻），形成典型的吸筹信号。资金费率可能为负（未提供但常见于下跌），存在轧空潜力。这是'鲸鱼陷阱'：散户恐慌抛售时鲸鱼积累。",
+          "en": "Whale accumulation detected with +88,841 SOL inflow during price decline, stablecoin inflow of $183,554, and low short liquidations ($1.03M indicating light retail short positions). Classic accumulation signal with potential short squeeze (funding likely negative). This is a 'whale trap' where whales buy into retail fear."
+        },
+        "exit_plan": {
+          "take_profit": "Dynamic: 15% above entry or resistance at $150",
+          "stop_loss": "5% below entry or support at $130",
+          "invalidation": {
+            "zh": "如果SOL Token Net Flow转为负值（鲸鱼停止买入）或价格跌破关键支撑$130，则假设失效。",
+            "en": "Invalidate if SOL Token Net Flow turns negative (whales stop buying) or price breaks below key support at $130."
+          }
+        }
+      },
+      {
+        "symbol": "ETH",
+        "action": "open_short",
+        "leverage": 3,
+        "position_size_usd": 1500,
+        "entry_reason": {
+          "zh": "ETH价格下跌伴随鲸鱼大量流出（-120,090 ETH），稳定币净流出，且多头爆仓$6642万（零售多头被迫平仓），显示鲸鱼在抛售而散户被困。这是出货信号（Bearish Divergence），预期价格进一步下跌。",
+          "en": "ETH shows distribution with whale outflow of -120,090 ETH, stablecoin outflow, and high long liquidations ($66.4M indicating retail capitulation). Bearish Divergence where whales are selling into retail longs, expecting further decline."
+        },
+        "exit_plan": {
+          "take_profit": "Dynamic: 10% below entry or next support level",
+          "stop_loss": "3% above entry or resistance level",
+          "invalidation": {
+            "zh": "如果ETH Token Net Flow转为正值（鲸鱼开始买入）或价格突破关键阻力，则假设失效。",
+            "en": "Invalidate if ETH Token Net Flow turns positive (whales start buying) or price breaks above key resistance."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-02 16:31:39"
+  },
+  {
+    "analysis_summary": {
+      "zh": "市场分析显示：1. 鲸鱼与散户行为出现明显背离。以太坊（ETH）价格下跌时，鲸鱼正在大量卖出（Token Net Flow为-348,237.35 ETH），而散户可能因恐慌抛售或爆仓（Longs Dropped $65.7M），形成熊市陷阱（Bear Trap），暗示鲸鱼可能在利用零售恐慌出货。相反，Solana（SOL）价格稳定或上涨时，鲸鱼未卖出（Token Net Flow为0.00 SOL）且稳定币净流入（$28,736.35），同时空头爆仓较高（Shorts Dropped $1.0M），表明鲸鱼可能在看涨支撑，存在轧空（Short Squeeze）机会。2. 爆仓数据显示ETH多头爆仓$65.7M，空头爆仓$82.4M，空头痛苦更大，但鲸鱼卖出暗示这不是底部；SOL空头爆仓$1.0M远高于多头$6.2M，显示散户空头受压，可能推动价格上涨。3. AI分析结论：ETH为出货（Distribution），SOL为吸筹（Accumulation），但需谨慎因全球宏观风险（Risk Off环境、DXY走强）可能压制整体市场。",
+      "en": "Market analysis reveals: 1. A clear divergence between whale and retail behavior. For Ethereum (ETH), whales are selling heavily (Token Net Flow -348,237.35 ETH) amid price drops, while retail may be capitulating via panic selling or liquidations (Longs Dropped $65.7M), forming a bear trap where whales could be distributing into retail fear. In contrast, for Solana (SOL), whales are not selling (Token Net Flow 0.00 SOL) with stablecoin inflows ($28,736.35) and higher short liquidations (Shorts Dropped $1.0M), indicating whale support and a potential short squeeze opportunity. 2. Liquidation data shows ETH with Longs Dropped $65.7M and Shorts Dropped $82.4M, greater short pain but whale selling suggests it's not a bottom; SOL has Shorts Dropped $1.0M vs. Longs Dropped $6.2M, highlighting retail short pressure that could fuel price rises. 3. AI conclusion: ETH is in Distribution, SOL in Accumulation, but caution is advised due to global macro risks (Risk Off environment, DXY strength) potentially capping overall market gains."
+    },
+    "actions": [
+      {
+        "symbol": "SOL",
+        "action": "open_long",
+        "leverage": 3,
+        "position_size_usd": 1000,
+        "entry_reason": {
+          "zh": "发现鲸鱼在SOL未卖出（Token Net Flow为0.00 SOL）且稳定币净流入$28,736.35，同时空头爆仓$1.0M高于多头$6.2M，显示散户空头受压，存在轧空（Short Squeeze）机会。结合全球宏观风险，采用低杠杆以管理风险。",
+          "en": "Detected whale support in SOL with no selling (Token Net Flow 0.00 SOL), stablecoin inflows of $28,736.35, and higher short liquidations ($1.0M vs. Longs Dropped $6.2M), indicating retail short pressure and a potential short squeeze opportunity. Given global macro risks, using low leverage to manage risk."
+        },
+        "exit_plan": {
+          "take_profit": 150,
+          "stop_loss": 130,
+          "invalidation": {
+            "zh": "如果SOL价格跌破130美元（关键支撑），或鲸鱼开始大量卖出（Token Net Flow转负），则退出头寸，因为这可能表示吸筹失败或市场转向。",
+            "en": "Exit position if SOL price breaks below $130 (key support) or if whales start selling heavily (Token Net Flow turns negative), as this could indicate accumulation failure or a market shift."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-02 15:53:04"
+  },
+  {
+    "analysis_summary": {
+      "zh": "市场分析显示：1. 鲸鱼与散户行为出现明显分歧。以太坊（ETH）价格下跌时，鲸鱼大量卖出（-418,128.19 ETH净流出），而散户可能因恐慌抛售，形成看跌陷阱；相反，Solana（SOL）价格稳定，鲸鱼通过稳定币流入（$62,332.11）悄悄吸筹，但散户情绪过热（Sentiment Score 1.70），暗示潜在出货风险。2. 爆仓数据（ETH和SOL均为$0）表明市场未出现大规模清算，底部支撑较强，但缺乏明确反转信号。3. AI分析结论：ETH处于出货阶段（Distribution），SOL可能为吸筹（Accumulation），但需警惕散户追高导致的短期回调。",
+      "en": "Market analysis reveals: 1. A clear divergence between whale and retail behavior. For Ethereum (ETH), whales are selling heavily (-418,128.19 ETH net outflow) amid price declines, potentially trapping retail panic sellers in a bearish trap. In contrast, for Solana (SOL), whales are accumulating via stablecoin inflows ($62,332.11) while prices hold steady, but overheated retail sentiment (Sentiment Score 1.70) suggests a risk of distribution. 2. Liquidation data (both ETH and SOL at $0) indicates no major liquidations, supporting a strong bottom but lacking clear reversal signals. 3. AI conclusion: ETH is in a distribution phase, while SOL shows accumulation signs, though caution is needed due to potential retail-driven short-term pullbacks."
+    },
+    "actions": [
+      {
+        "symbol": "SOL",
+        "action": "open_long",
+        "leverage": 3,
+        "position_size_usd": 1000,
+        "entry_reason": {
+          "zh": "发现鲸鱼在价格稳定时通过稳定币流入（$62,332.11）悄悄吸筹，且爆仓数据为$0显示底部支撑强，但散户情绪过热（Sentiment Score 1.70）可能引发短期回调，提供低风险入场机会。",
+          "en": "Whale accumulation detected via stablecoin inflows ($62,332.11) with prices holding steady, and liquidation data at $0 indicates strong bottom support. However, overheated retail sentiment (Sentiment Score 1.70) may cause short-term pullbacks, offering a low-risk entry opportunity."
+        },
+        "exit_plan": {
+          "take_profit": 150,
+          "stop_loss": 130,
+          "invalidation": {
+            "zh": "如果价格跌破$130或鲸鱼稳定币流出转为负值，则退出头寸。",
+            "en": "Exit position if price drops below $130 or whale stablecoin flow turns negative."
+          }
+        }
+      },
+      {
+        "symbol": "ETH",
+        "action": "monitor",
+        "leverage": 0,
+        "position_size_usd": 0,
+        "entry_reason": {
+          "zh": "鲸鱼大量卖出（-418,128.19 ETH净流出）表明出货阶段，价格下跌可能形成看跌陷阱，但爆仓数据为$0暗示底部支撑，等待更明确的吸筹信号或价格反转再行动。",
+          "en": "Heavy whale selling (-418,128.19 ETH net outflow) indicates a distribution phase, with price declines potentially forming a bearish trap. However, liquidation data at $0 suggests bottom support; wait for clearer accumulation signals or price reversal before acting."
+        },
+        "exit_plan": {
+          "take_profit": null,
+          "stop_loss": null,
+          "invalidation": {
+            "zh": "如果鲸鱼转为净买入或价格突破关键阻力位，则重新评估。",
+            "en": "Re-evaluate if whales switch to net buying or price breaks key resistance levels."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-02-02 15:05:32"
+  }
+]

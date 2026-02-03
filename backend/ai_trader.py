@@ -1,0 +1,579 @@
+"""
+DeepSeek Trading Agent (Dolores) - Whale Enhanced Edition
+Integrates Qlib Multi-Coin Model, MARKET REALITY (Whale Flow + Liquidation), and LLM Reasoning.
+"""
+import os
+import json
+from pathlib import Path
+from dotenv import load_dotenv
+import pandas as pd
+from datetime import datetime
+from openai import OpenAI
+import time
+from okx_executor import OKXExecutor
+
+# Load environment variables
+load_dotenv()
+
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+BASE_URL = "https://api.deepseek.com"
+
+# Initialize Client
+client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url=BASE_URL)
+
+# Paths
+BASE_DIR = Path(__file__).resolve().parent
+QLIB_DATA_DIR = BASE_DIR / "qlib_data"
+PAYLOAD_PATH = QLIB_DATA_DIR / "deepseek_payload.json"
+PORTFOLIO_PATH = BASE_DIR / "portfolio_state.json" # Mock portfolio for now
+WHALE_DATA_PATH = BASE_DIR.parent / "frontend/data/whale_analysis.json" # [NEW]
+
+# ------------------------------------------------------------------------
+# 1. System Prompt (Optimized for Whale Integration)
+# ------------------------------------------------------------------------
+SYSTEM_PROMPT = """
+🟩 0. YOU ARE “AI TRADING AGENT – DOLORES”
+
+Role: Professional Crypto Trading AI.
+Capabilities:
+- Analyze Multi-Coin Market Structure (Price, Volume, Trend).
+- Interpret Sentiment Data (Funding Rate, Open Interest, Z-Scores).
+- **INTEGRATE WHALE INSIGHTS**: Process Token Flow, Stablecoin Flow, and Liquidation Pain.
+- Detect Pain Trades (Squeezes, Crowded Trades) using On-Chain evidence.
+- Manage Risk (Position Sizing, Stop Loss, Portfolio Heat).
+
+Goal: Achieve stable risk-adjusted returns. Avoid ruin. Catch "Whale Traps".
+
+🟧 1. CURRENT TIME
+Current Timestamp: {{CURRENT_TIMESTAMP}}
+
+🟦 2. MARKET INPUTS (QLIB + SENTIMENT)
+You will receive a JSON payload containing:
+- `qlib_score`: Relative strength prediction (Higher = Stronger).
+- `rank`: 1 (Best) to 5 (Worst).
+- `market_data`: 
+    - **Technical**: RSI (14), MACD Hist, ATR, Bollinger Width, Momentum.
+    - **Sentiment**: Funding Rate, Funding Z-Score, OI Change, OI RSI.
+    - **Correlation**: BTC Correlation (btc_corr_24h).
+    - **Volatility**: Normalized ATR (natr_14).
+
+{{QLIB_JSON_PAYLOAD}}
+
+🟪 2.2 WHALE & LIQUIDATION REALITY (THE TRUTH LAYER)
+This data comes from direct on-chain monitoring and exchange liquidation feeds.
+**IT OVERRIDES PURE TECHNICALS.**
+
+{{WHALE_CONTEXT}}
+
+**INTERPRETATION RULES:**
+1. **Accumulation Signal**: If Prices are dropping, but Token Net Flow is POSITIVE (Whales buying) + High Long Liquidations (Retail capitulating) -> **BULLISH DIVERGENCE (Buy the dip)**.
+2. **Distribution Signal**: If Prices are rising, but Token Net Flow is NEGATIVE (Whales selling) + High Short Liquidations -> **BEARISH DIVERGENCE (Sell the rip)**.
+3. **Squeeze Warning**: Negative Funding + High "Retail Pain" (Oversold RSI) -> **SHORT SQUEEZE IMMINENT**.
+
+🟦 2.1 MACRO TREND (1D TIMEFRAME)
+Use this daily context to filter 4H signals.
+- **Trend**: Price vs SMA50 (Bullish if Price > SMA50).
+- **Structure**: Recent Highs/Lows.
+
+{{DAILY_CONTEXT}}
+
+🟪 2.3 MARKET REGIME (THE LAW)
+Pay close attention to **GLOBAL MARKET STATE** in the Daily Context above.
+1. **BEAR MARKET (Price < SMA200)**:
+   - **Primary Bias**: SHORT.
+   - **Longs**: Only allowed if "Whale Accumulation" is Extreme AND "Liquidation Signal" is present. Max Leverage 2x.
+   - **Shorts**: Aggressive shorts allowed on pumps (Distribution).
+2. **BULL MARKET (Price > SMA200)**:
+   - **Primary Bias**: LONG.
+   - **Shorts**: Only allowed if "Whale Distribution" is Extreme. Max Leverage 2x.
+   - **Longs**: Aggressive longs allowed on dips (Accumulation).
+
+🟨 3. NEWS & ON-CHAIN CONTEXT (OPTIONAL)
+{{NEWS_CONTEXT}}
+
+🟥 4. ANALYSIS LOGIC (The "Dolores" Method)
+
+A. NARRATIVE VS REALITY CHECK (Crucial Step)
+Compare the "News Narrative" (Retail view) vs "Whale Reality" (Smart Money view).
+- If News says "Dead" but Whales are "Buying" -> **TRAP (Buy)**.
+- If News says "Moon" but Whales are "Dumping" -> **TRAP (Sell)**.
+
+B. THE PAIN TRADE (Liquidity Hunting)
+Identify where the crowd is trapped:
+- **Long Squeeze Risk**: Funding > 0.03% + Price Stalling.
+- **Short Squeeze Opportunity**: Funding < -0.01% + Price Holding Support + Whale Buying.
+
+C. HYPOTHESIS MENU (Generate 3 Scenarios)
+1.  **Trend Following**: Models Align + Whales Align.
+2.  **Mean Reversion**: Extreme RSI + Liquidation Spike (Reversal).
+3.  **Whale Front-Run**: Whales buying heavily into fear.
+
+🟧 5. PORTFOLIO & RISK MANAGEMENT
+Current State:
+{{PORTFOLIO_STATE_JSON}}
+
+Constraints:
+- Max Open Positions: 3.
+- Max Risk Per Trade: 2% of NAV.
+- Max Leverage: 5x (Normal), 10x (High Conviction Whale Signal).
+
+🟫 6. OUTPUT FORMAT (JSON ONLY)
+Structure:
+{
+  "analysis_summary": {
+    "zh": "中文分析。重点指出：1. 鲸鱼是否在与散户对赌？(Token Flow vs Price)。2. 爆仓数据是否显示这是底部？3. AI分析结论是吸筹(Accumulation)还是出货(Distribution)？",
+    "en": "English summary."
+  },
+  "actions": [
+    {
+      "symbol": "SOL",
+      "action": "open_long",
+      "leverage": 3,
+      "position_size_usd": 1000,
+      "entry_reason": {
+        "zh": "发现鲸鱼在$135大量吸筹，且资金费率为负，存在轧空可能...",
+        "en": "Whale accumulation detected at $135 with negative funding..."
+      },
+      "exit_plan": {
+        "take_profit": 150,
+        "stop_loss": 130,
+        "invalidation": { "zh": "...", "en": "..." }
+      }
+    }
+  ]
+}
+"""
+
+# ------------------------------------------------------------------------
+# 2. Helper Functions
+# ------------------------------------------------------------------------
+
+def get_portfolio_state():
+    """Load or create mock portfolio state"""
+    if PORTFOLIO_PATH.exists():
+        with open(PORTFOLIO_PATH, "r") as f:
+            return f.read()
+    else:
+        # Default mock state
+        mock_state = {
+            "nav": 10000.0,
+            "cash": 10000.0,
+            "positions": []
+        }
+        return json.dumps(mock_state, indent=2)
+
+def get_whale_data():
+    """Reads the latest whale_analysis.json generated by crypto_brain.py"""
+    if not WHALE_DATA_PATH.exists():
+        return "No Whale Data Available."
+    
+    try:
+        with open(WHALE_DATA_PATH, "r") as f:
+            data = json.load(f)
+            
+        eth_stat = data.get("eth", {}).get("stats_24h", {})
+        sol_stat = data.get("sol", {}).get("stats_24h", {})
+        btc_stat = data.get("btc", {}).get("stats_24h", {})
+        bnb_stat = data.get("bnb", {}).get("stats_24h", {}) # NEW
+        doge_stat = data.get("doge", {}).get("stats_24h", {}) # NEW
+        
+        # Extract Liquidation Data (if available)
+        eth_liq_long = eth_stat.get("liquidation_long_usd", 0)
+        eth_liq_short = eth_stat.get("liquidation_short_usd", 0)
+        sol_liq_long = sol_stat.get("liquidation_long_usd", 0)
+        sol_liq_short = sol_stat.get("liquidation_short_usd", 0)
+        btc_liq_long = btc_stat.get("liquidation_long_usd", 0)
+        btc_liq_short = btc_stat.get("liquidation_short_usd", 0)
+        bnb_liq_long = bnb_stat.get("liquidation_long_usd", 0)
+        bnb_liq_short = bnb_stat.get("liquidation_short_usd", 0)
+        doge_liq_long = doge_stat.get("liquidation_long_usd", 0)
+        doge_liq_short = doge_stat.get("liquidation_short_usd", 0)
+        
+        # Build Context String
+        ctx = "=== ETHEREUM (ETH) WHALE DATA ===\n"
+        ctx += f"- Sentiment Score (24h): {eth_stat.get('sentiment_score', 0):.2f}\n"
+        ctx += f"- Token Net Flow (Whale): {eth_stat.get('token_net_flow', 0):,.2f} ETH\n"
+        ctx += f"- Stablecoin Net Flow: ${eth_stat.get('stablecoin_net_flow', 0):,.2f}\n"
+        ctx += f"- Liquidation Pain (24h): Longs Dropped ${eth_liq_long:,.0f} / Shorts Dropped ${eth_liq_short:,.0f}\n"
+        
+        ctx += "\n=== SOLANA (SOL) WHALE DATA ===\n"
+        ctx += f"- Sentiment Score (24h): {sol_stat.get('sentiment_score', 0):.2f}\n"
+        ctx += f"- Token Net Flow (Whale): {sol_stat.get('token_net_flow', 0):,.2f} SOL\n"
+        ctx += f"- Stablecoin Net Flow: ${sol_stat.get('stablecoin_net_flow', 0):,.2f}\n"
+        ctx += f"- Liquidation Pain (24h): Longs Dropped ${sol_liq_long:,.0f} / Shorts Dropped ${sol_liq_short:,.0f}\n"
+        
+        ctx += "\n=== BITCOIN (BTC) CONTRACT DATA ===\n"
+        ctx += f"- Liquidation Pain (24h): Longs Dropped ${btc_liq_long:,.0f} / Shorts Dropped ${btc_liq_short:,.0f}\n"
+        ctx += f"- Note: No Whale Flow for BTC. Use Liquidation Pain + Funding Rates to detect Squeezes.\n"
+        
+        ctx += "\n=== BNB CHAIN (BNB) CONTRACT DATA ===\n"
+        ctx += f"- Liquidation Pain (24h): Longs Dropped ${bnb_liq_long:,.0f} / Shorts Dropped ${bnb_liq_short:,.0f}\n"
+        
+        ctx += "\n=== DOGECOIN (DOGE) CONTRACT DATA ===\n"
+        ctx += f"- Liquidation Pain (24h): Longs Dropped ${doge_liq_long:,.0f} / Shorts Dropped ${doge_liq_short:,.0f}\n"
+        
+        # Add AI Narrative from Crypto Brain
+        ai_narrative = data.get("ai_summary", {}).get("en", "")
+        if ai_narrative:
+            ctx += f"\n=== UPSTREAM AI ANALYSIS ===\n{ai_narrative[:500]}...\n"
+            
+        return ctx
+        
+    except Exception as e:
+        return f"Error reading whale data: {e}"
+
+def get_news_context():
+    """
+    Fetch news and on-chain context from the global snapshot.
+    """
+    snapshot_path = BASE_DIR / "global_onchain_news_snapshot.json"
+    if not snapshot_path.exists():
+        return "No news data available."
+        
+    try:
+        with open(snapshot_path, "r") as f:
+            data = json.load(f)
+            
+        # 1. News - Collect from all available sources
+        news_dict = data.get("news", {})
+        all_news = []
+        
+        # Calendar (Economic Data) - High Priority
+        calendar_news = news_dict.get("calendar", {}).get("items", [])
+        calendar_str = ""
+        if calendar_news:
+            calendar_str = "Economic Calendar (This Week):\n"
+            for item in calendar_news[:5]:
+                calendar_str += f"- {item.get('title')} [{item.get('published')}]\n"
+        
+        # General News
+        for source_key in ["macro", "bitcoin", "ethereum", "general"]:
+            source_news = news_dict.get(source_key, {}).get("items", [])
+            all_news.extend(source_news[:3])  # Take top 3 from each source
+        
+        news_str = "Latest News:\n"
+        if all_news:
+            for item in all_news[:8]:  # Show max 8 total general news
+                news_str += f"- {item.get('title')} ({item.get('published', 'N/A')})\n"
+        else:
+            news_str += "No recent news available.\n"
+            
+        # Combine Calendar + News
+        final_news_context = f"{calendar_str}\n{news_str}" if calendar_str else news_str
+            
+        # 3. Fear & Greed
+        fng = data.get("fear_greed", {}).get("latest") or {}
+        fng_str = f"\nFear & Greed Index: {fng.get('value')} ({fng.get('classification')})\n"
+        
+        return final_news_context + fng_str
+        
+    except Exception as e:
+        return f"Error reading news data: {e}"
+
+def get_daily_context_summary():
+    """
+    Fetch 1D candles directly from OKX to calculate SMA200 and determine Market Regime.
+    """
+    import requests
+    summary = "=== 1D MACRO TREND & REGIME ===\n"
+    coins = ["BTC", "ETH", "SOL", "BNB", "DOGE"]
+    
+    for symbol in coins:
+        try:
+            instId = f"{symbol}-USDT-SWAP"
+            # Fetch 300 candles for SMA200
+            url = f"https://www.okx.com/api/v5/market/candles?instId={instId}&bar=1D&limit=300"
+            res = requests.get(url, timeout=5).json()
+            
+            if res["code"] != "0" or not res["data"]:
+                continue
+                
+            # Data is Newest -> Oldest
+            # We need Oldest -> Newest for pandas rolling, but we can do it manually or simply list logic
+            candles = res["data"]
+            closes = [float(c[4]) for c in candles] # index 4 is close
+            closes.reverse() # Now Oldest -> Newest
+            
+            current_price = closes[-1]
+            
+            # Metric 1: SMA 50
+            if len(closes) >= 50:
+                sma50 = sum(closes[-50:]) / 50
+            else:
+                sma50 = current_price
+                
+            # Metric 2: SMA 200 (The King of Trend)
+            if len(closes) >= 200:
+                sma200 = sum(closes[-200:]) / 200
+            else:
+                sma200 = 0 # Not enough data
+            
+            # Determine Regime
+            regime = "NEUTRAL"
+            if sma200 > 0:
+                if current_price > sma200:
+                    regime = "BULL"
+                else:
+                    regime = "BEAR"
+            
+            summary += f"- **{symbol}**: REGIME={regime} (Price ${current_price:.2f} vs SMA200 ${sma200:.2f})\n"
+            summary += f"  - Trend: {'BULLISH' if current_price > sma50 else 'BEARISH'} (vs SMA50 ${sma50:.2f})\n"
+            
+            if symbol == "BTC":
+                # Inject Global Regime Marker
+                summary += f"  - **GLOBAL MARKET STATE**: {regime} MARKET\n"
+
+        except Exception as e:
+            print(f"Error fetching 1D context for {symbol}: {e}")
+            
+    return summary
+
+def validate_and_enforce_decision(decision, market_summary, daily_context, fear_index, executor):
+    """
+    Risk Management Layer (The "Supervisor").
+    Sanitizes and overrides AI decisions based on hard rules.
+    """
+    if not decision or "actions" not in decision:
+        return decision
+
+    validated_actions = []
+    
+    # --- 1. GATHER INTEL ---
+    # A. Position Count
+    current_positions = executor.get_open_position_count()
+    MAX_POSITIONS = 3
+    
+    # B. Financials (Equity & Exposure)
+    equity = executor.get_account_equity()
+    exposure = executor.get_total_exposure()
+    current_long_exposure = exposure['long']
+    current_short_exposure = exposure['short']
+    
+    # C. Market Regime (Parse from Context string)
+    # Default to NEUTRAL if not found
+    regime = "NEUTRAL"
+    if "GLOBAL MARKET STATE: BULL" in daily_context:
+        regime = "BULL"
+    elif "GLOBAL MARKET STATE: BEAR" in daily_context:
+        regime = "BEAR"
+        
+    print(f"🛡️ RISK: State={regime} | Pos={current_positions} | Equity=${equity:.0f} | LongExp=${current_long_exposure:.0f} | ShortExp=${current_short_exposure:.0f}")
+
+    # --- 2. DEFINE LIMITS ---
+    # Exposure Caps (% of Equity) - Reduced by 2% for Fees/Buffer
+    if regime == "BULL":
+        MAX_LONG_CAP = 0.98   # 98%
+        MAX_SHORT_CAP = 0.30  # 30%
+    elif regime == "BEAR":
+        MAX_LONG_CAP = 0.40   # 40%
+        MAX_SHORT_CAP = 0.78  # 78%
+    else: # NEUTRAL
+        MAX_LONG_CAP = 0.48
+        MAX_SHORT_CAP = 0.48
+        
+    # Leverage Cap (Volatility Guard)
+    is_extreme_market = (fear_index < 20) or (fear_index > 80)
+    MAX_LEVERAGE = 2 if is_extreme_market else 5 # Lowered base limit to 5x as agreed
+    
+    # --- 3. PROCESS ACTIONS ---
+    for action in decision["actions"]:
+        symbol = action.get("symbol")
+        act_type = action.get("action")
+        size_usd = float(action.get("position_size_usd", 0))
+        
+        # Skip 'hold' actions
+        if act_type == "hold":
+            continue
+            
+        # TRACKING: Close actions reduce exposure
+        if act_type == "close":
+            current_positions = max(0, current_positions - 1)
+            # We don't know exact size to reduce without tracking, so we just allow it.
+            # Closing reduces risk, so it's always allowed.
+            validated_actions.append(action)
+            continue
+            
+        # CHECK: Open Actions
+        if act_type.startswith("open_"):
+            # A. Position Count Limit
+            if current_positions >= MAX_POSITIONS:
+                print(f"🛡️ RISK: Max positions ({MAX_POSITIONS}) reached. Skipping {symbol}.")
+                continue
+            
+            # B. Exposure Cap Limit
+            if "long" in act_type:
+                projected_long = current_long_exposure + size_usd
+                limit_usd = equity * MAX_LONG_CAP
+                if projected_long > limit_usd:
+                    print(f"🛡️ RISK: Long Cap Exceeded for {symbol}. Projected ${projected_long:.0f} > Limit ${limit_usd:.0f} ({MAX_LONG_CAP*100}%). Skipping.")
+                    continue
+                # Approved -> Update sim tracker
+                current_long_exposure += size_usd
+                
+            elif "short" in act_type:
+                projected_short = current_short_exposure + size_usd
+                limit_usd = equity * MAX_SHORT_CAP
+                if projected_short > limit_usd:
+                    print(f"🛡️ RISK: Short Cap Exceeded for {symbol}. Projected ${projected_short:.0f} > Limit ${limit_usd:.0f} ({MAX_SHORT_CAP*100}%). Skipping.")
+                    continue
+                # Approved -> Update sim tracker
+                current_short_exposure += size_usd
+
+            # C. Leverage Cap
+            raw_lev = action.get("leverage", 1)
+            if raw_lev > MAX_LEVERAGE:
+                print(f"🛡️ RISK: Capping leverage for {symbol} from {raw_lev}x to {MAX_LEVERAGE}x")
+                action["leverage"] = MAX_LEVERAGE
+            
+            # D. Mandatory Stop Loss
+            exit_plan = action.get("exit_plan", {})
+            sl = exit_plan.get("stop_loss")
+            if not sl or sl == "None":
+                action["exit_plan"]["stop_loss"] = "Dynamic: 5% from entry (Auto-Enforced)"
+                print(f"🛡️ RISK: Enforced mandatory Stop Loss for {symbol}")
+                
+            validated_actions.append(action)
+            current_positions += 1
+    
+    decision["actions"] = validated_actions
+    return decision
+
+def run_agent():
+    print("🤖 Activating Agent Dolores (Whale Edition)...")
+    
+    # Initialize Executor (Shadow Mode by default)
+    # TODO: Set shadow_mode=False via env var for REAL TRADING later
+    executor = OKXExecutor()
+    
+    # 1. Load Qlib Payload (Optional now, if missing we proceed with partial data)
+    qlib_payload = "{}"
+    if PAYLOAD_PATH.exists():
+        with open(PAYLOAD_PATH, "r") as f:
+            qlib_payload = f.read()
+
+    # Load Fear & Greed Index for Validation
+    fear_index = 50 # Default Neutral
+    try:
+        snapshot_path = BASE_DIR / "global_onchain_news_snapshot.json"
+        if snapshot_path.exists():
+            with open(snapshot_path, "r") as f:
+                snap_data = json.load(f)
+                fng_val = snap_data.get("fear_greed", {}).get("latest", {}).get("value")
+                if fng_val is not None:
+                    fear_index = float(fng_val)
+    except Exception as e:
+        print(f"⚠️ Failed to load Fear Index: {e}")
+        
+    # 2. Prepare Prompt
+    portfolio_state = get_portfolio_state()
+    news_context = get_news_context()
+    
+    # NEW: Get Whale Data
+    whale_context = get_whale_data()
+    print(f"🐋 Whale Data Loaded:\n{whale_context[:200]}...") # Debug print
+    
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    final_prompt = SYSTEM_PROMPT.replace("{{CURRENT_TIMESTAMP}}", current_time)
+    final_prompt = final_prompt.replace("{{QLIB_JSON_PAYLOAD}}", qlib_payload)
+    final_prompt = final_prompt.replace("{{WHALE_CONTEXT}}", whale_context)
+    
+    # Add Daily Context
+    daily_context = get_daily_context_summary()
+    final_prompt = final_prompt.replace("{{DAILY_CONTEXT}}", daily_context)
+    
+    final_prompt = final_prompt.replace("{{PORTFOLIO_STATE_JSON}}", portfolio_state)
+    final_prompt = final_prompt.replace("{{NEWS_CONTEXT}}", news_context)
+    
+    # 3. Call DeepSeek API with OpenAI SDK (with manual retry loop)
+    try:
+        MAX_RETRIES = 5
+        RETRY_DELAY = 5 # base seconds
+        
+        decision = None
+        content = None
+        
+        for attempt in range(MAX_RETRIES):
+            try:
+                print(f"🤔 Dolores is thinking... (Attempt {attempt+1}/{MAX_RETRIES}, Timeout: 120s)")
+                
+                response = client.chat.completions.create(
+                    model="deepseek-chat",
+                    messages=[
+                        {"role": "system", "content": final_prompt},
+                        {"role": "user", "content": "Analyze the market reality (Whales vs Retail). Detect traps. Generate trading actions."}
+                    ],
+                    temperature=0.1,
+                    response_format={"type": "json_object"},
+                    timeout=120
+                )
+                
+                content = response.choices[0].message.content
+                # Parse JSON
+                decision = json.loads(content)
+                break # Success!
+                
+            except Exception as e:
+                wait_time = RETRY_DELAY * (2 ** attempt) # Exponential backoff
+                print(f"⚠️ Attempt {attempt+1} failed: {e}")
+                if attempt < MAX_RETRIES - 1:
+                    print(f"🔄 Retrying in {wait_time}s...")
+                    time.sleep(wait_time)
+                else:
+                    raise e # Final attempt failed
+        
+        # Validate & Enforce
+        decision = validate_and_enforce_decision(decision, {}, daily_context, fear_index, executor)
+            
+        print("\n💡 Dolores' Decision:")
+        print(json.dumps(decision, indent=2, ensure_ascii=False))
+        
+        # === NEW: EXECUTION LAYER ===
+        actions = decision.get("actions", [])
+        for act in actions:
+            symbol = act.get("symbol")
+            action_type = act.get("action")
+            amount = act.get("position_size_usd", 0)
+            leverage = act.get("leverage", 1)
+            
+            exit_plan = act.get("exit_plan", {})
+            sl = exit_plan.get("stop_loss")
+            tp = exit_plan.get("take_profit")
+            
+            if action_type in ["open_long", "open_short"]:
+                print(f"\n🚀 Triggering Executor for {symbol}...")
+                executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp)
+        
+        # Save decision log
+        log_path = BASE_DIR / "agent_decision_log.json"
+        
+        # Load History
+        history = []
+        if log_path.exists():
+            try:
+                with open(log_path, "r") as f:
+                    content_json = json.load(f)
+                    if isinstance(content_json, list):
+                        history = content_json
+                    else:
+                        history = [content_json]
+            except:
+                history = []
+        
+        # Add timestamp (Force overwrite with local time UTC+8)
+        import datetime as dt
+        utc_now = dt.datetime.utcnow()
+        beijing_time = utc_now + dt.timedelta(hours=8)
+        decision["timestamp"] = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
+            
+        history.insert(0, decision)
+        history = history[:50]
+        
+        with open(log_path, "w") as f:
+            json.dump(history, f, indent=2, ensure_ascii=False)
+                
+    except Exception as e:
+        print(f"❌ Error calling DeepSeek (OpenAI SDK): {e}")
+
+if __name__ == "__main__":
+    run_agent()
