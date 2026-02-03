@@ -52,6 +52,10 @@ See the bot in action! We maintain a live dashboard and a Telegram signal group 
   <img src="assets/telegram_qr.jpg" width="200" alt="Join Telegram" />
 </div>
 
+### 💬 Discord Community
+**[👉 Join Discord](https://discord.gg/WBQNCHst)**
+*Discuss strategies and feature requests with the community.*
+
 ---
 
 ## 🚀 Quick Start

@@ -52,6 +52,10 @@
   <img src="assets/telegram_qr.jpg" width="200" alt="Telegramに参加" />
 </div>
 
+### 💬 Discord コミュニティ
+**[👉 Discordに参加](https://discord.gg/WBQNCHst)**
+*トレーディング戦略の議論や機能リクエストはこちら。*
+
 ---
 
 ## 🚀 クイックスタート

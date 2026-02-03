@@ -52,6 +52,10 @@
   <img src="assets/telegram_qr.jpg" width="200" alt="加入 Telegram" />
 </div>
 
+### 💬 Discord 社区
+**[👉 加入 Discord](https://discord.gg/WBQNCHst)**
+*与社区成员讨论交易策略和反馈需求。*
+
 ---
 
 ## 🚀 快速开始
@@ -107,7 +111,7 @@ docker-compose logs -f
 
 ## ☕ 请我喝杯咖啡
 
-如果这个机器人帮您赚到了钱，欢迎打赏支持后续开发！
+如果这个机器人对您有帮助，感谢打赏支持后续开发！
 
 <div align="center">
   <img src="assets/payment_code.jpg" width="200" alt="Alipay" style="margin-right: 20px;" />
