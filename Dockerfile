@@ -16,4 +16,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Run the scheduler
-CMD ["python", "run_monitor.py"]
+CMD ["python", "backend/run_loop.py"]
