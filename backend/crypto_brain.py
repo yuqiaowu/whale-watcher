@@ -800,31 +800,47 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
         },
         "Layer3_Whale_Reality": {
             "ETH_Chain": {
-                "Sentiment_7d": eth_data["stats_7d"]["sentiment_score"],
-                "Sentiment_24h": eth_data["stats_24h"]["sentiment_score"],
-                "Confidence_Score": eth_data["stats_7d"]["confidence_score"],
-                "Net_Flow_Stablecoin": f"${eth_data['stats_7d']['stablecoin_net_flow']:,.0f}",
-                "Net_Flow_Token": f"{eth_data['stats_7d']['token_net_flow']:,.0f}",
-                "Market_OI_Delta": f"{eth_market.get('delta_oi_24h_percent',0):.2f}%",
-                "Funding": f"{eth_market.get('funding_rate',0):.6f}",
-                "RSI_4H": f"{eth_market.get('rsi_4h', 50):.1f}"
+                "Whale_Flow": {
+                    "Sentiment_Score": eth_data["stats_7d"]["sentiment_score"],
+                    "Confidence": eth_data["stats_7d"]["confidence_score"],
+                    "Net_Flow_Tokens": f"{eth_data['stats_7d']['token_net_flow']:,.0f}",
+                    "Net_Flow_Stablecoin": f"${eth_data['stats_7d']['stablecoin_net_flow']:,.0f}",
+                },
+                "Market_Technicals": {
+                    "Price": eth_market.get('price_close'),
+                    "RSI_14": f"{eth_market.get('rsi_14', 50):.1f}",
+                    "MACD_Hist": f"{eth_market.get('macd_hist', 0):.4f} (Pos=Bull, Neg=Bear)",
+                    "ADX": f"{eth_market.get('adx_14', 0):.1f} (>25=Trend)",
+                    "Bollinger_Width": f"{eth_market.get('bb_width', 0):.3f}",
+                    "ATR_Percent": f"{eth_market.get('natr_percent', 0):.2f}%",
+                    "Funding": f"{eth_market.get('funding_rate',0):.6f}",
+                    "OI_Delta": f"{eth_market.get('delta_oi_24h_percent',0):.2f}%"
+                },
+                "Liquidation": eth_market.get("liquidation_context", "N/A")
             },
             "SOL_Chain": {
-                "Sentiment_7d": sol_data["stats_7d"]["sentiment_score"],
-                "Sentiment_24h": sol_data["stats_24h"]["sentiment_score"],
-                "Confidence_Score": sol_data["stats_7d"]["confidence_score"],
-                "Net_Flow_Stablecoin": f"${sol_data['stats_7d']['stablecoin_net_flow']:,.0f}",
-                "Net_Flow_Token": f"{sol_data['stats_7d']['token_net_flow']:,.0f}",
-                "Market_OI_Delta": f"{sol_market.get('delta_oi_24h_percent',0):.2f}%",
-                "Funding": f"{sol_market.get('funding_rate',0):.6f}",
-                "RSI_4H": f"{sol_market.get('rsi_4h', 50):.1f}",
+                 "Whale_Flow": {
+                    "Sentiment_Score": sol_data["stats_7d"]["sentiment_score"],
+                    "Confidence": sol_data["stats_7d"]["confidence_score"],
+                    "Net_Flow_Tokens": f"{sol_data['stats_7d']['token_net_flow']:,.0f}",
+                    "Net_Flow_Stablecoin": f"${sol_data['stats_7d']['stablecoin_net_flow']:,.0f}",
+                },
+                "Market_Technicals": {
+                    "Price": sol_market.get('price_close'),
+                    "RSI_14": f"{sol_market.get('rsi_14', 50):.1f}",
+                    "MACD_Hist": f"{sol_market.get('macd_hist', 0):.4f}",
+                    "ADX": f"{sol_market.get('adx_14', 0):.1f}",
+                    "Bollinger_Width": f"{sol_market.get('bb_width', 0):.3f}",
+                    "ATR_Percent": f"{sol_market.get('natr_percent', 0):.2f}%",
+                    "Funding": f"{sol_market.get('funding_rate',0):.6f}",
+                    "OI_Delta": f"{sol_market.get('delta_oi_24h_percent',0):.2f}%"
+                },
                 "Liquidation": sol_market.get("liquidation_context", "N/A")
             },
-            "BTC_Contract": {
-                "Sentiment": "N/A (Contract Only)",
-                "Market_OI_Delta": f"{btc_market.get('delta_oi_24h_percent',0):.2f}%",
-                "Funding": f"{btc_market.get('funding_rate',0):.6f}",
-                "RSI_4H": f"{btc_market.get('rsi_4h', 50):.1f}",
+            "BTC_Context": {
+                "RSI": f"{btc_market.get('rsi_14', 50):.1f}",
+                "MACD": f"{btc_market.get('macd_hist', 0):.4f}",
+                "ADX": f"{btc_market.get('adx_14', 0):.1f}",
                 "Liquidation": btc_market.get("liquidation_context", "N/A")
             }
         }
@@ -842,9 +858,12 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
        - Check Fed Expectations (Dovish/Hawkish).
     2. **Layer 2 (Narrative)**: What is the media saying? Are headlines bullish or bearish?
     3. **Layer 3 (Reality Check)**: Do Whales & Money Flow agree with the Narrative?
-       - **Technical Check**: RSI > 70 (Overbought), RSI < 30 (Oversold).
-       - **Bullish Verification**: News says "Buy" AND Whales are Buying (Positive Flow) + OI Rising.
-       - **Bearish Verification**: News says "Sell" AND Whales are Selling + OI Drop.
+       - **Technical Confirmation**:
+         - **Trend (ADX)**: If ADX > 25, the trend is STRONG (Don't fade it). If ADX < 20, market is CHOPPING (Mean Reversion).
+         - **Momentum (MACD)**: Check for Divergences. Price Lower Low + MACD Higher Low = Bullish Divergence.
+         - **Volatility (BB/ATR)**: If Bollinger Width is compressing (Low), expect a BREAKOUT. Use ATR % to gauge stop-loss width.
+       - **Bullish Verification**: News says "Buy" AND Whales are Buying (Positive Flow) + ADX Rising.
+       - **Bearish Verification**: News says "Sell" AND Whales are Selling + MACD Death Cross.
        - **TRAP WARNING**: News is Bullish BUT Whales are Selling (Exit Liquidity) -> Call this out!
        - **TRAP WARNING**: News is Bearish BUT Whales are Buying (Accumulation) -> Call this out!
        - **Retail Pain (Liquidations)**: Are retail traders bleeding? If Long Liqs are high, is the bottom near? If Short Liqs are high, is the top near?

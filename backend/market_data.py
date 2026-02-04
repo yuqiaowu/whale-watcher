@@ -10,6 +10,8 @@ import datetime
 import statistics
 from dotenv import load_dotenv
 import numpy as np
+import pandas as pd
+from technical_analysis import add_all_indicators
 
 # Load env
 env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
@@ -142,15 +144,38 @@ class OKXDataClient:
             metrics["price"] = float(ticker["last"])
             metrics["volume_24h"] = float(ticker["volCcy24h"]) # Volume in USDT
         
-        # 2. RSI (4H Candles)
-        # Fetch 100 candles to ensure enough data for 14-period RSI smoothing
-        data = self._request("GET", "/api/v5/market/candles", {"instId": inst_id, "bar": "4H", "limit": "100"})
+        # 2. Advanced Technicals (4H Candles)
+        # Fetch 200 candles to ensure enough data for SMA200 and accurate smoothing
+        data = self._request("GET", "/api/v5/market/candles", {"instId": inst_id, "bar": "4H", "limit": "200"})
         if data:
-            # OKX returns [ts, o, h, l, c, ...] newest first
-            # We need oldest first for calculation
-            closes = [float(candle[4]) for candle in data]
-            closes.reverse()
-            metrics["rsi_4h"] = self.calculate_rsi(closes)
+            try:
+                # OKX returns [ts, o, h, l, c, vol, volCcy, valCcyQuote, confirm]
+                # Convert to DataFrame
+                df = pd.DataFrame(data, columns=['ts', 'open', 'high', 'low', 'close', 'vol', 'volCcy', 'volCcyQuote', 'confirm'])
+                
+                # Sort ascending (oldest first) for calc
+                df = df.iloc[::-1].reset_index(drop=True)
+                
+                # Prepare input DF
+                df_input = pd.DataFrame()
+                df_input['ts'] = df['ts']
+                df_input['open'] = df['open']
+                df_input['high'] = df['high']
+                df_input['low'] = df['low']
+                df_input['close'] = df['close']
+                df_input['volume'] = df['volCcy'] # Volume in USDT
+                
+                # Calculate All Indicators
+                tech_values = add_all_indicators(df_input)
+                
+                # Merge into metrics dict
+                metrics.update(tech_values)
+                
+                # Backward compatibility
+                metrics["rsi_4h"] = tech_values.get("rsi_14", 50)
+                
+            except Exception as e:
+                print(f"⚠️ Tech Calc Failed for {symbol}: {e}")
 
         # 3. Funding Rate
         data = self._request("GET", "/api/v5/public/funding-rate", {"instId": inst_id})
