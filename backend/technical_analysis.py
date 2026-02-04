@@ -147,47 +147,57 @@ def add_all_indicators(df: pd.DataFrame) -> dict:
     )
 
     # --- Extract Latest Values ---
+    if df.empty:
+        raise ValueError("Cannot extract technicals: DataFrame is empty.")
+        
     latest = df.iloc[-1]
     
-    # Helper to safely get value from Series
-    def get_val(series, key, default=0.0):
-        try:
-            val = series[key]
-            if pd.isna(val): return default
-            return float(val)
-        except KeyError:
-            return default
+    # STRICT VALIDATION: Check for Critical Columns
+    # We do NOT want to return fake 0.0 values.
+    required_cols = ['rsi_14', 'adx_14', 'bb_width', 'price_percentile_20', 'vol_ratio_20']
+    for col in required_cols:
+        if col not in df.columns:
+             # Try to debug why: maybe not enough data?
+             raise KeyError(f"Missing critical indicator '{col}'. Input DF length: {len(df)}. "
+                            "Likely insufficient history for calculation.")
+    
+    def get_strict(key):
+        val = latest[key]
+        if pd.isna(val):
+             # If the latest value itself is NaN (e.g. calculation didn't propagate to the end), that's also bad.
+             raise ValueError(f"Indicator '{key}' is NaN in the latest candle. Calculation incomplete.")
+        return float(val)
 
     results = {
         # Trend
-        "price_close": get_val(latest, 'close'),
-        "sma_50": get_val(latest, 'sma_50'),
-        "sma_200": get_val(latest, 'sma_200'),
-        "macd_line": get_val(latest, 'macd_line'),
-        "signal_line": get_val(latest, 'signal_line'),
-        "macd_hist": get_val(latest, 'macd_hist'),
-        "adx_14": get_val(latest, 'adx_14'),
-        "p_di": get_val(latest, 'p_di'), 
-        "n_di": get_val(latest, 'n_di'),
+        "price_close": float(latest['close']),
+        "sma_50": get_strict('sma_50'),
+        "sma_200": get_strict('sma_200'),
+        "macd_line": get_strict('macd_line'),
+        "signal_line": get_strict('signal_line'),
+        "macd_hist": get_strict('macd_hist'),
+        "adx_14": get_strict('adx_14'),
+        "p_di": get_strict('p_di'), 
+        "n_di": get_strict('n_di'),
         
         # Momentum / Osc
-        "rsi_14": get_val(latest, 'rsi_14', 50.0), # Default 50
+        "rsi_14": get_strict('rsi_14'),
         
         # Volatility / Bands
-        "bb_pct_b": get_val(latest, 'bb_pct_b'),
-        "bb_width": get_val(latest, 'bb_width'),
-        "atr_14": get_val(latest, 'atr_14'),
-        "natr_percent": get_val(latest, 'natr'),
+        "bb_pct_b": get_strict('bb_pct_b'),
+        "bb_width": get_strict('bb_width'),
+        "atr_14": get_strict('atr_14'),
+        "natr_percent": get_strict('natr'),
         
         # Context / Rank / Signals
-        "price_rank_20": get_val(latest, 'price_percentile_20', 0.5) * 100, 
-        "vol_ratio_20": get_val(latest, 'vol_ratio_20', 1.0),
+        "price_rank_20": get_strict('price_percentile_20') * 100, 
+        "vol_ratio_20": get_strict('vol_ratio_20'),
         
         # Star Signals
-        "signal_low_high_vol": bool(get_val(latest, 'price_percentile_20', 0.5) < 0.10 and get_val(latest, 'vol_ratio_20', 1.0) > 2.0),
-        "signal_high_high_vol": bool(get_val(latest, 'price_percentile_20', 0.5) > 0.90 and get_val(latest, 'vol_ratio_20', 1.0) > 2.0),
-        "buy_stars": int(get_val(latest, 'buy_stars')),
-        "sell_stars": int(get_val(latest, 'sell_stars'))
+        "signal_low_high_vol": bool(latest['price_percentile_20'] < 0.10 and latest['vol_ratio_20'] > 2.0),
+        "signal_high_high_vol": bool(latest['price_percentile_20'] > 0.90 and latest['vol_ratio_20'] > 2.0),
+        "buy_stars": int(latest['buy_stars']),
+        "sell_stars": int(latest['sell_stars'])
     }
 
     

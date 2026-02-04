@@ -164,10 +164,13 @@ class OKXDataClient:
             data2 = self._request("GET", "/api/v5/market/candles", {"instId": inst_id, "bar": "4H", "after": last_ts, "limit": "200"})
             if data2:
                 all_candles.extend(data2)
+        else:
+            # If data1 failed, we have nothing.
+            print(f"⚠️ Warning: First batch of candles for {inst_id} was empty/failed.")
                 
         data = all_candles
-        if data:
-
+        # Ensure we have enough data for technicals (at least 50 for SMA50/EMAs to warmup)
+        if data and len(data) > 50:
             try:
                 # OKX returns [ts, o, h, l, c, vol, volCcy, valCcyQuote, confirm]
                 # Convert to DataFrame
