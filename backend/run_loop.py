@@ -101,13 +101,34 @@ def main():
             print("⚠️ Skipping AI step because data update failed.")
             write_status("ERROR", "Data update (crypto_brain) failed.")
             
-        # 3. Wait for next cycle
-        elapsed = (datetime.now() - cycle_start).total_seconds()
-        sleep_time = max(0, INTERVAL_SECONDS - elapsed)
+        # 3. Calculate sleep time to align with next 4-hour mark (plus 5 min offset)
+        # Target hours: 0, 4, 8, 12, 16, 20
+        now = datetime.now()
+        current_hour = now.hour
         
-        next_run = datetime.now() + timedelta(seconds=sleep_time)
-        print(f"\n💤 Cycle complete. System sleeping.")
-        print(f"⏰ Next Run: {next_run.strftime('%Y-%m-%d %H:%M:%S')}")
+        # Find next 4-hour block
+        # e.g. if hour is 18, next is 20. If 21, next is 0 (tomorrow).
+        # We use (h // 4 + 1) * 4 to find next slot
+        next_slot_hour = ((current_hour // 4) + 1) * 4
+        
+        # Calculate target time
+        # If next_slot_hour is 24, it means 00:00 tomorrow
+        days_ahead = 0
+        if next_slot_hour >= 24:
+            next_slot_hour = 0
+            days_ahead = 1
+            
+        target_time = now.replace(hour=next_slot_hour, minute=5, second=0, microsecond=0) + timedelta(days=days_ahead)
+        
+        # If we are already past the target (e.g. current is 04:06, target computed as 04:05 today), 
+        # we need to jump to the NEXT block (08:05)
+        if target_time <= now:
+            target_time += timedelta(hours=4)
+            
+        sleep_time = (target_time - now).total_seconds()
+        
+        print(f"\n💤 Cycle complete. System sleeping to align with candle close.")
+        print(f"⏰ Next Run: {target_time.strftime('%Y-%m-%d %H:%M:%S')} (Aligned 4H + 5m)")
         
         try:
             time.sleep(sleep_time)
