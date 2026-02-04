@@ -149,36 +149,45 @@ def add_all_indicators(df: pd.DataFrame) -> dict:
     # --- Extract Latest Values ---
     latest = df.iloc[-1]
     
+    # Helper to safely get value from Series
+    def get_val(series, key, default=0.0):
+        try:
+            val = series[key]
+            if pd.isna(val): return default
+            return float(val)
+        except KeyError:
+            return default
+
     results = {
         # Trend
-        "price_close": float(latest['close']),
-        "sma_50": float(latest['sma_50']) if not pd.isna(latest['sma_50']) else 0,
-        "sma_200": float(latest['sma_200']) if not pd.isna(latest['sma_200']) else 0,
-        "macd_line": float(latest['macd_line']),
-        "signal_line": float(latest['signal_line']),
-        "macd_hist": float(latest['macd_hist']),
-        "adx_14": float(latest['adx_14']),
-        "p_di": float(latest['p_di']), 
-        "n_di": float(latest['n_di']),
+        "price_close": get_val(latest, 'close'),
+        "sma_50": get_val(latest, 'sma_50'),
+        "sma_200": get_val(latest, 'sma_200'),
+        "macd_line": get_val(latest, 'macd_line'),
+        "signal_line": get_val(latest, 'signal_line'),
+        "macd_hist": get_val(latest, 'macd_hist'),
+        "adx_14": get_val(latest, 'adx_14'),
+        "p_di": get_val(latest, 'p_di'), 
+        "n_di": get_val(latest, 'n_di'),
         
         # Momentum / Osc
-        "rsi_14": float(latest['rsi_14']),
+        "rsi_14": get_val(latest, 'rsi_14', 50.0), # Default 50
         
         # Volatility / Bands
-        "bb_pct_b": float(latest['bb_pct_b']),
-        "bb_width": float(latest['bb_width']),
-        "atr_14": float(latest['atr_14']),
-        "natr_percent": float(latest['natr']),
+        "bb_pct_b": get_val(latest, 'bb_pct_b'),
+        "bb_width": get_val(latest, 'bb_width'),
+        "atr_14": get_val(latest, 'atr_14'),
+        "natr_percent": get_val(latest, 'natr'),
         
         # Context / Rank / Signals
-        "price_rank_20": float(latest['price_percentile_20']) * 100, # Convert to 0-100
-        "vol_ratio_20": float(latest['vol_ratio_20']) if not pd.isna(latest['vol_ratio_20']) else 1.0,
+        "price_rank_20": get_val(latest, 'price_percentile_20', 0.5) * 100, 
+        "vol_ratio_20": get_val(latest, 'vol_ratio_20', 1.0),
         
-        # Star Signals (Crucial for AI context)
-        "signal_low_high_vol": bool(latest['price_percentile_20'] < 0.10 and latest['vol_ratio_20'] > 2.0),
-        "signal_high_high_vol": bool(latest['price_percentile_20'] > 0.90 and latest['vol_ratio_20'] > 2.0),
-        "buy_stars": int(latest['buy_stars']),
-        "sell_stars": int(latest['sell_stars'])
+        # Star Signals
+        "signal_low_high_vol": bool(get_val(latest, 'price_percentile_20', 0.5) < 0.10 and get_val(latest, 'vol_ratio_20', 1.0) > 2.0),
+        "signal_high_high_vol": bool(get_val(latest, 'price_percentile_20', 0.5) > 0.90 and get_val(latest, 'vol_ratio_20', 1.0) > 2.0),
+        "buy_stars": int(get_val(latest, 'buy_stars')),
+        "sell_stars": int(get_val(latest, 'sell_stars'))
     }
 
     
