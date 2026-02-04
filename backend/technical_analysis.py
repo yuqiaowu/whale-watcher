@@ -88,8 +88,13 @@ def add_all_indicators(df: pd.DataFrame) -> dict:
     df['ndm_ema'] = df['ndm'].ewm(alpha=1/14, adjust=False).mean()
     df['tr_ema'] = df['tr'].ewm(alpha=1/14, adjust=False).mean()
     
-    df['p_di'] = 100 * (df['pdm_ema'] / df['tr_ema'])
-    df['n_di'] = 100 * (df['ndm_ema'] / df['tr_ema'])
+    df['p_di'] = 100 * (df['pdm_ema'] / df['tr_ema'].replace(0, 1e-9))
+    df['n_di'] = 100 * (df['ndm_ema'] / df['tr_ema'].replace(0, 1e-9))
+    
+    # Restore ADX Calculation
+    di_sum = (df['p_di'] + df['n_di']).replace(0, 1e-9)
+    df['dx'] = 100 * abs(df['p_di'] - df['n_di']) / di_sum
+    df['adx_14'] = df['dx'].ewm(alpha=1/14, adjust=False).mean()
     
     # 7. Price Percentile (Window 20 - Matching Reference Repo)
     # 0 = Lowest Low in last 20 bars, 1 = Highest High

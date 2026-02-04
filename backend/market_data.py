@@ -201,7 +201,10 @@ class OKXDataClient:
                 metrics["history_60d"] = get_signal_history(df_input, limit=60)
                 
             except Exception as e:
+                import traceback
                 print(f"⚠️ Tech Calc Failed for {symbol}: {e}")
+                print(f"DEBUG: DF Shape: {df_input.shape if 'df_input' in locals() else 'No DF'}")
+                traceback.print_exc()
 
         # 3. Funding Rate
         data = self._request("GET", "/api/v5/public/funding-rate", {"instId": inst_id})
