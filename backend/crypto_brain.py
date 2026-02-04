@@ -5,7 +5,7 @@ import requests
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from moralis import evm_api
-import google.generativeai as genai
+
 
 # Load environment variables
 # Load environment variables
@@ -30,10 +30,7 @@ def rotate_key():
     print(f"DEBUG: Switching API Key from index {CURRENT_KEY_IDX}...")
     CURRENT_KEY_IDX = (CURRENT_KEY_IDX + 1) % len(API_KEYS)
     print(f"DEBUG: New API Key index: {CURRENT_KEY_IDX}")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# Configure Gemini
-genai.configure(api_key=GEMINI_API_KEY)
 
 # Configuration
 MIN_VALUE_USD = 50000  # ETH Threshold
@@ -878,56 +875,45 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
     * **Key Metric**: [Mention crucial metric]
     """
 
-    # Attempt 1: Gemini
+    # Use DeepSeek V3 exclusively
+    print("🔄 Generating Analysis via DeepSeek V3...")
+    
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        response = model.generate_content(prompt)
-        text = response.text.strip()
-        import re
-        match = re.search(r'\{.*\}', text, re.DOTALL)
-        if match: text = match.group(0)
-        return json.loads(text)
-    except Exception as e_gemini:
-        print(f"⚠️ Gemini AI Error: {e_gemini}")
-        print("🔄 Switching to DeepSeek V3 (Fallback)...")
+        deepseek_key = os.getenv("DEEPSEEK_API_KEY")
+        if not deepseek_key:
+            raise ValueError("No DEEPSEEK_API_KEY found in env")
+            
+        ds_url = "https://api.deepseek.com/chat/completions"
+        ds_headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {deepseek_key}"
+        }
+        ds_payload = {
+            "model": "deepseek-chat",
+            "messages": [
+                {"role": "system", "content": "You are a hedge fund AI. Return ONLY valid JSON."},
+                {"role": "user", "content": prompt}
+            ],
+            "stream": False
+        }
         
-        # Attempt 2: DeepSeek
-        try:
-            deepseek_key = os.getenv("DEEPSEEK_API_KEY")
-            if not deepseek_key:
-                raise ValueError("No DEEPSEEK_API_KEY found in env")
-                
-            ds_url = "https://api.deepseek.com/chat/completions"
-            ds_headers = {
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {deepseek_key}"
-            }
-            ds_payload = {
-                "model": "deepseek-chat",
-                "messages": [
-                    {"role": "system", "content": "You are a hedge fund AI. Return ONLY valid JSON."},
-                    {"role": "user", "content": prompt}
-                ],
-                "stream": False
-            }
+        ds_res = requests.post(ds_url, headers=ds_headers, json=ds_payload, timeout=60)
             
-            ds_res = requests.post(ds_url, headers=ds_headers, json=ds_payload, timeout=60)
+        if ds_res.status_code != 200:
+            raise Exception(f"DeepSeek Status {ds_res.status_code}: {ds_res.text}")
             
-            if ds_res.status_code != 200:
-                raise Exception(f"DeepSeek Status {ds_res.status_code}: {ds_res.text}")
-                
-            ds_data = ds_res.json()
-            ds_text = ds_data["choices"][0]["message"]["content"].strip()
-            
-            import re
-            match = re.search(r'\{.*\}', ds_text, re.DOTALL)
-            if match: ds_text = match.group(0)
-            
-            return json.loads(ds_text)
-            
-        except Exception as e_ds:
-            print(f"❌ DeepSeek AI Error: {e_ds}")
-            return {"en": "AI analysis unavailable.", "zh": "AI 分析暂时不可用。"}
+        ds_data = ds_res.json()
+        ds_text = ds_data["choices"][0]["message"]["content"].strip()
+        
+        import re
+        match = re.search(r'\{.*\}', ds_text, re.DOTALL)
+        if match: ds_text = match.group(0)
+        
+        return json.loads(ds_text)
+        
+    except Exception as e_ds:
+        print(f"❌ DeepSeek AI Error: {e_ds}")
+        return {"en": "AI analysis unavailable.", "zh": "AI 分析暂时不可用。"}
 
 # ... (rest of file)
 
