@@ -808,9 +808,15 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
                 },
                 "Market_Technicals": {
                     "Price": eth_market.get('price_close'),
+                    "Price_Rank": f"{eth_market.get('price_rank_20', 50):.1f}/100",
+                    "Vol_Ratio": f"{eth_market.get('vol_ratio_20', 1):.2f}x",
+                    "Buy_Stars": f"{eth_market.get('buy_stars', 0)}/3",
+                    "Sell_Stars": f"{eth_market.get('sell_stars', 0)}/3",
+                    "Signal_Bottom_Vol": eth_market.get('signal_low_high_vol', False),
+                    "Signal_Top_Vol": eth_market.get('signal_high_high_vol', False),
                     "RSI_14": f"{eth_market.get('rsi_14', 50):.1f}",
-                    "MACD_Hist": f"{eth_market.get('macd_hist', 0):.4f} (Pos=Bull, Neg=Bear)",
-                    "ADX": f"{eth_market.get('adx_14', 0):.1f} (>25=Trend)",
+                    "MACD_Hist": f"{eth_market.get('macd_hist', 0):.4f}",
+                    "ADX": f"{eth_market.get('adx_14', 0):.1f}",
                     "Bollinger_Width": f"{eth_market.get('bb_width', 0):.3f}",
                     "ATR_Percent": f"{eth_market.get('natr_percent', 0):.2f}%",
                     "Funding": f"{eth_market.get('funding_rate',0):.6f}",
@@ -827,6 +833,12 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
                 },
                 "Market_Technicals": {
                     "Price": sol_market.get('price_close'),
+                    "Price_Rank": f"{sol_market.get('price_rank_20', 50):.1f}/100",
+                    "Vol_Ratio": f"{sol_market.get('vol_ratio_20', 1):.2f}x",
+                    "Buy_Stars": f"{sol_market.get('buy_stars', 0)}/3",
+                    "Sell_Stars": f"{sol_market.get('sell_stars', 0)}/3",
+                    "Signal_Bottom_Vol": sol_market.get('signal_low_high_vol', False),
+                    "Signal_Top_Vol": sol_market.get('signal_high_high_vol', False),
                     "RSI_14": f"{sol_market.get('rsi_14', 50):.1f}",
                     "MACD_Hist": f"{sol_market.get('macd_hist', 0):.4f}",
                     "ADX": f"{sol_market.get('adx_14', 0):.1f}",
@@ -862,8 +874,12 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
          - **Trend (ADX)**: If ADX > 25, the trend is STRONG (Don't fade it). If ADX < 20, market is CHOPPING (Mean Reversion).
          - **Momentum (MACD)**: Check for Divergences. Price Lower Low + MACD Higher Low = Bullish Divergence.
          - **Volatility (BB/ATR)**: If Bollinger Width is compressing (Low), expect a BREAKOUT. Use ATR % to gauge stop-loss width.
-       - **Bullish Verification**: News says "Buy" AND Whales are Buying (Positive Flow) + ADX Rising.
-       - **Bearish Verification**: News says "Sell" AND Whales are Selling + MACD Death Cross.
+         - **Volume Anomaly (CRITICAL)**:
+             - **Signal_Bottom_Vol**: Low Price + High Volume = PANIC SELLING / WHALE ACCUMULATION -> BULLISH.
+             - **Signal_Top_Vol**: High Price + High Volume = CLIMAX BUYING / WHALE DISTRIBUTION -> BEARISH.
+             - **Star Rating**: 3/3 Stars means strong technical confluence.
+       - **Bullish Verification**: News says "Buy" AND Whales are Buying (Positive Flow) + ADX Rising + Signal_Bottom_Vol.
+       - **Bearish Verification**: News says "Sell" AND Whales are Selling + MACD Death Cross + Signal_Top_Vol.
        - **TRAP WARNING**: News is Bullish BUT Whales are Selling (Exit Liquidity) -> Call this out!
        - **TRAP WARNING**: News is Bearish BUT Whales are Buying (Accumulation) -> Call this out!
        - **Retail Pain (Liquidations)**: Are retail traders bleeding? If Long Liqs are high, is the bottom near? If Short Liqs are high, is the top near?
@@ -1123,11 +1139,13 @@ def main():
         "eth": {
             "stats": eth_analysis["stats_7d"], 
             "stats_24h": eth_analysis["stats_24h"],
+            "market": eth_market,
             "top_txs": eth_transfers[:1000]
         },
         "sol": {
             "stats": sol_analysis["stats_7d"],
             "stats_24h": sol_analysis["stats_24h"],
+            "market": sol_market,
             "top_txs": sol_transfers[:1000]
         },
         "btc": {

@@ -11,7 +11,7 @@ import statistics
 from dotenv import load_dotenv
 import numpy as np
 import pandas as pd
-from technical_analysis import add_all_indicators
+from technical_analysis import add_all_indicators, get_signal_history
 
 # Load env
 env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
@@ -145,9 +145,29 @@ class OKXDataClient:
             metrics["volume_24h"] = float(ticker["volCcy24h"]) # Volume in USDT
         
         # 2. Advanced Technicals (4H Candles)
-        # Fetch 200 candles to ensure enough data for SMA200 and accurate smoothing
-        data = self._request("GET", "/api/v5/market/candles", {"instId": inst_id, "bar": "4H", "limit": "200"})
+        # Fetch 500 candles (approx 83 days) to cover >60 days context + SMA200
+        # OKX limits usually 100-300. We fetch twice.
+        limit_per_req = 300
+        all_candles = []
+        
+        # First Batch (Latest)
+        data1 = self._request("GET", "/api/v5/market/candles", {"instId": inst_id, "bar": "4H", "limit": str(limit_per_req)})
+        if data1:
+            all_candles.extend(data1)
+            # Last candle timestamp
+            last_ts = data1[-1][0]
+            
+            # Rate Limit Safety: Sleep briefly strictly to handle OKX limits (20 req/2s)
+            time.sleep(0.1)
+            
+            # Second Batch (Older)
+            data2 = self._request("GET", "/api/v5/market/candles", {"instId": inst_id, "bar": "4H", "after": last_ts, "limit": "200"})
+            if data2:
+                all_candles.extend(data2)
+                
+        data = all_candles
         if data:
+
             try:
                 # OKX returns [ts, o, h, l, c, vol, volCcy, valCcyQuote, confirm]
                 # Convert to DataFrame
@@ -165,7 +185,7 @@ class OKXDataClient:
                 df_input['close'] = df['close']
                 df_input['volume'] = df['volCcy'] # Volume in USDT
                 
-                # Calculate All Indicators
+                # Calculate All Indicators (modifies df_input in place)
                 tech_values = add_all_indicators(df_input)
                 
                 # Merge into metrics dict
@@ -173,6 +193,9 @@ class OKXDataClient:
                 
                 # Backward compatibility
                 metrics["rsi_4h"] = tech_values.get("rsi_14", 50)
+                
+                # GET HISTORY (60 periods)
+                metrics["history_60d"] = get_signal_history(df_input, limit=60)
                 
             except Exception as e:
                 print(f"⚠️ Tech Calc Failed for {symbol}: {e}")
