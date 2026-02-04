@@ -25,7 +25,84 @@ client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url=BASE_URL)
 BASE_DIR = Path(__file__).resolve().parent
 QLIB_DATA_DIR = BASE_DIR / "qlib_data"
 PAYLOAD_PATH = QLIB_DATA_DIR / "deepseek_payload.json"
-PORTFOLIO_PATH = BASE_DIR / "portfolio_state.json" # Mock portfolio for now
+PORTFOLIO_PATH = BASE_DIR / "portfolio_state.json"
+TRADE_HISTORY_PATH = BASE_DIR / "trade_history.json"
+
+class TradeMemory:
+    """
+    Manages the recording of trade rationale and outcomes for AI reflection.
+    """
+    def __init__(self):
+        if not TRADE_HISTORY_PATH.exists():
+            with open(TRADE_HISTORY_PATH, "w") as f:
+                json.dump([], f)
+    
+    def log_trade(self, symbol, action, size, reason, market_snapshot):
+        """
+        Log a new trade with full context.
+        market_snapshot: dict containing current price, rsi, adx, whale_flow etc.
+        """
+        try:
+            with open(TRADE_HISTORY_PATH, "r") as f:
+                history = json.load(f)
+            
+            entry = {
+                "id": f"{symbol}_{int(datetime.now().timestamp())}",
+                "timestamp": datetime.now().isoformat(),
+                "symbol": symbol,
+                "action": action,
+                "size": size,
+                "entry_price": market_snapshot.get('price', 0),
+                "reason": reason,
+                "context": {
+                    "rsi": market_snapshot.get('rsi_14'),
+                    "adx": market_snapshot.get('adx_14'),
+                    "funding": market_snapshot.get('funding_rate'),
+                    "whale_flow": market_snapshot.get('whale_flow'),
+                    "bb_trend": market_snapshot.get('bb_trend')
+                },
+                "outcome": None # To be filled later
+            }
+            
+            history.append(entry)
+            # Keep last 50 trades
+            if len(history) > 50: history = history[-50:]
+                
+            with open(TRADE_HISTORY_PATH, "w") as f:
+                json.dump(history, f, indent=2)
+            print(f"🧠 Logged trade memory for {symbol}")
+            
+        except Exception as e:
+            print(f"⚠️ Failed to log trade memory: {e}")
+
+    def get_recent_performance(self):
+        """
+        Returns a summary of recent trades to inject into AI prompt.
+        """
+        if not TRADE_HISTORY_PATH.exists():
+            return "No trading history yet."
+            
+        try:
+            with open(TRADE_HISTORY_PATH, "r") as f:
+                history = json.load(f)
+            if not history: return "No trading history yet."
+            
+            # Simple summarization of last 5 trades
+            recent = history[-5:]
+            summary = "=== 📜 RECENT TRADE MEMORY (LEARN FROM THIS) ===\n"
+            for t in recent:
+                summary += f"- {t['timestamp'][:16]} {t['action']} {t['symbol']} @ {t['entry_price']}\n"
+                summary += f"  Context: RSI={t['context'].get('rsi',0):.1f}, ADX={t['context'].get('adx',0):.1f}, Whale={t['context'].get('whale_flow')}\n"
+                summary += f"  Rationale: {t['reason'].get('en', '')[:100]}...\n"
+                if t['outcome']:
+                    summary += f"  RESULT: {t['outcome']}\n"
+                else:
+                    summary += f"  STATUS: Open\n"
+            return summary
+        except Exception as e:
+            return f"Error reading history: {e}"
+
+memory = TradeMemory()
 WHALE_DATA_PATH = BASE_DIR.parent / "frontend/data/whale_analysis.json" # [NEW]
 
 # ------------------------------------------------------------------------
@@ -236,10 +313,10 @@ def get_whale_data():
         if ai_narrative:
             ctx += f"\n=== UPSTREAM AI ANALYSIS ===\n{ai_narrative[:500]}...\n"
             
-        return ctx
+        return ctx, data
         
     except Exception as e:
-        return f"Error reading whale data: {e}"
+        return f"Error reading whale data: {e}", {}
 
 def get_news_context():
     """
@@ -488,7 +565,7 @@ def run_agent():
     news_context = get_news_context()
     
     # NEW: Get Whale Data
-    whale_context = get_whale_data()
+    whale_context, whale_data_obj = get_whale_data()
     print(f"🐋 Whale Data Loaded:\n{whale_context[:200]}...") # Debug print
     
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -497,9 +574,13 @@ def run_agent():
     final_prompt = final_prompt.replace("{{QLIB_JSON_PAYLOAD}}", qlib_payload)
     final_prompt = final_prompt.replace("{{WHALE_CONTEXT}}", whale_context)
     
-    # Add Daily Context
+    # Add Daily Context + MEMORY INJECTION
+    memory_context = memory.get_recent_performance()
     daily_context = get_daily_context_summary()
-    final_prompt = final_prompt.replace("{{DAILY_CONTEXT}}", daily_context)
+    
+    # Combined Context
+    combined_context = f"{daily_context}\n\n{memory_context}"
+    final_prompt = final_prompt.replace("{{DAILY_CONTEXT}}", combined_context)
     
     final_prompt = final_prompt.replace("{{PORTFOLIO_STATE_JSON}}", portfolio_state)
     final_prompt = final_prompt.replace("{{NEWS_CONTEXT}}", news_context)
@@ -562,6 +643,15 @@ def run_agent():
             if action_type in ["open_long", "open_short"]:
                 print(f"\n🚀 Triggering Executor for {symbol}...")
                 executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp)
+                
+                # LOG TO MEMORY
+                try:
+                    sym_lower = symbol.lower()
+                    market_snapshot = whale_data_obj.get(sym_lower, {}).get('market', {})
+                    entry_reason = act.get('entry_reason', {})
+                    memory.log_trade(symbol, action_type, amount, entry_reason, market_snapshot)
+                except Exception as log_err:
+                    print(f"⚠️ Memory Log Error: {log_err}")
         
         # Save decision log
         log_path = BASE_DIR / "agent_decision_log.json"
