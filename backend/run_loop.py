@@ -94,6 +94,8 @@ def main():
             print(">> Step 2: AI Thinking & Execution (ai_trader)...")
             success_trade = run_script("ai_trader.py")
             if success_trade:
+                print(">> Step 3: Syncing Data to GitHub (data-history)...")
+                run_script("data_sync.py")
                 write_status("SLEEPING", f"Cycle completed successfully.\nNext Run: {(datetime.now() + timedelta(seconds=INTERVAL_SECONDS)).strftime('%H:%M:%S')}")
             else:
                 write_status("ERROR", "AI Trader failed to execute.")

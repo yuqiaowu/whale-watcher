@@ -189,27 +189,45 @@ def get_whale_data():
         doge_liq_long = doge_stat.get("liquidation_long_usd", 0)
         doge_liq_short = doge_stat.get("liquidation_short_usd", 0)
         
+        eth_market = data.get("eth", {}).get("market", {})
+        sol_market = data.get("sol", {}).get("market", {})
+        btc_market = data.get("btc", {}).get("market", {})
+        bnb_market = data.get("bnb", {}).get("market", {}) 
+        doge_market = data.get("doge", {}).get("market", {})
+        
+        # Helper to format tech
+        def fmt_tech(m):
+            if not m: return "No Tech Data"
+            return (f"RSI={m.get('rsi_14', 50):.1f} | ADX={m.get('adx_14', 0):.1f} | "
+                    f"VolRatio={m.get('vol_ratio', 1):.1f}x | Rank={m.get('price_percentile_20', 0.5)*100:.0f}% | "
+                    f"Stars: Buy={m.get('buy_stars',0)}/Sell={m.get('sell_stars',0)}")
+
         # Build Context String
         ctx = "=== ETHEREUM (ETH) WHALE DATA ===\n"
         ctx += f"- Sentiment Score (24h): {eth_stat.get('sentiment_score', 0):.2f}\n"
         ctx += f"- Token Net Flow (Whale): {eth_stat.get('token_net_flow', 0):,.2f} ETH\n"
         ctx += f"- Stablecoin Net Flow: ${eth_stat.get('stablecoin_net_flow', 0):,.2f}\n"
+        ctx += f"- Technicals: {fmt_tech(eth_market)}\n"
         ctx += f"- Liquidation Pain (24h): Longs Dropped ${eth_liq_long:,.0f} / Shorts Dropped ${eth_liq_short:,.0f}\n"
         
         ctx += "\n=== SOLANA (SOL) WHALE DATA ===\n"
         ctx += f"- Sentiment Score (24h): {sol_stat.get('sentiment_score', 0):.2f}\n"
         ctx += f"- Token Net Flow (Whale): {sol_stat.get('token_net_flow', 0):,.2f} SOL\n"
         ctx += f"- Stablecoin Net Flow: ${sol_stat.get('stablecoin_net_flow', 0):,.2f}\n"
+        ctx += f"- Technicals: {fmt_tech(sol_market)}\n"
         ctx += f"- Liquidation Pain (24h): Longs Dropped ${sol_liq_long:,.0f} / Shorts Dropped ${sol_liq_short:,.0f}\n"
         
         ctx += "\n=== BITCOIN (BTC) CONTRACT DATA ===\n"
+        ctx += f"- Technicals: {fmt_tech(btc_market)}\n"
         ctx += f"- Liquidation Pain (24h): Longs Dropped ${btc_liq_long:,.0f} / Shorts Dropped ${btc_liq_short:,.0f}\n"
         ctx += f"- Note: No Whale Flow for BTC. Use Liquidation Pain + Funding Rates to detect Squeezes.\n"
         
         ctx += "\n=== BNB CHAIN (BNB) CONTRACT DATA ===\n"
+        ctx += f"- Technicals: {fmt_tech(bnb_market)}\n"
         ctx += f"- Liquidation Pain (24h): Longs Dropped ${bnb_liq_long:,.0f} / Shorts Dropped ${bnb_liq_short:,.0f}\n"
         
         ctx += "\n=== DOGECOIN (DOGE) CONTRACT DATA ===\n"
+        ctx += f"- Technicals: {fmt_tech(doge_market)}\n"
         ctx += f"- Liquidation Pain (24h): Longs Dropped ${doge_liq_long:,.0f} / Shorts Dropped ${doge_liq_short:,.0f}\n"
         
         # Add AI Narrative from Crypto Brain
