@@ -200,6 +200,7 @@ def get_whale_data():
             if not m: return "No Tech Data"
             return (f"RSI={m.get('rsi_14', 50):.1f} | ADX={m.get('adx_14', 0):.1f} | "
                     f"VolRatio={m.get('vol_ratio', 1):.1f}x | Rank={m.get('price_percentile_20', 0.5)*100:.0f}% | "
+                    f"Funding={m.get('funding_rate', 0)*100:.4f}% | "
                     f"Stars: Buy={m.get('buy_stars',0)}/Sell={m.get('sell_stars',0)}")
 
         # Build Context String
