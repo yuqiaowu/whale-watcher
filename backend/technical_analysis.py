@@ -65,6 +65,12 @@ def add_all_indicators(df: pd.DataFrame) -> dict:
     df['bb_pct_b'] = (df['close'] - df['bb_lower']) / (df['bb_upper'] - df['bb_lower'])
     # Bandwidth = (Upper - Lower) / Mid
     df['bb_width'] = (df['bb_upper'] - df['bb_lower']) / df['bb_mid']
+    
+    # BB Trend (Slope of Mid Band over last 3 bars)
+    # If mid band is rising -> Bullish Trend Context
+    df['bb_mid_delta'] = df['bb_mid'].diff(3)
+    df['bb_trend'] = np.where(df['bb_mid_delta'] > 0, 1, -1) # 1=Up, -1=Down
+
 
     # 5. ATR (14) - Average True Range
     # TR = Max(H-L, |H-Cp|, |L-Cp|)
@@ -191,6 +197,7 @@ def add_all_indicators(df: pd.DataFrame) -> dict:
         # Volatility / Bands
         "bb_pct_b": get_strict('bb_pct_b'),
         "bb_width": get_strict('bb_width'),
+        "bb_trend": "UP" if latest.get('bb_trend', 0) > 0 else "DOWN",
         "atr_14": get_strict('atr_14'),
         "natr_percent": get_strict('natr'),
         
