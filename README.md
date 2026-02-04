@@ -1,126 +1,87 @@
-# 🐋 Whale Monitor AI
+# 🐋 AI Whale Watcher & Auto-Trader (Dolores V1.4)
 
-![Project Banner](assets/banner.png)
+An advanced, autonomous crypto trading system that combines **On-Chain Whale Analysis**, **Technical Indicators**, **Global Macro Sentiment**, and **Reinforcement Learning-style AI Decision Making**.
 
-<div align="center">
-
-[🇺🇸 English](README.md) | [🇨🇳 中文](README_CN.md) | [🇯🇵 日本語](README_JP.md)
-
-</div>
-
-> **Autonomous Crypto Quant Agent powered by DeepSeek R1, On-Chain Data, and Real-Time Market Analysis.**
+Dolores (the AI Agent) monitors the market 24/7, identifies anomalies (e.g., retail capitulation vs. whale accumulation), and executes trades on OKX (or paper trading) while synchronizing all data to a serverless frontend backend.
 
 ---
 
-## 📖 Introduction
+## 🌟 Key Features
 
-**Whale Monitor AI** is not just a trading bot; it's a sophisticated market analyst that lives on your server. It combines three layers of data to make high-conviction trading decisions:
+### 1. Multi-Dimensional Perception (六维感知)
+The AI does not just look at price. It perceives the market through 6 dimensions:
+*   **🐋 On-Chain Flow**: Tracks Whale Net Inflow/Outflow and Stablecoin movements (ETH & SOL).
+*   **📊 Technicals**: Advanced indicators including RSI, ADX (Trend Strength), MACD, and **Bollinger Band Width/Trend**.
+*   **⭐ Star Ratings**: Automated signal scoring (0-3 Stars) based on Price Rank, Volume Anomalies, and RSI extremes.
+*   **💸 Market Pain**: Monitors **Liquidation Data** (Longs vs Shorts blown out) to find reversals.
+*   **📉 Funding Rates**: Detects crowded trades and Short Squeeze potential (Negative Funding).
+*   **🌍 Macro**: Integrates Fed Rates, VIX, DXY, and Global News Sentiment.
 
-1.  **Macro Layer**: Monitors Fed rates, liquidity trends, and global news sentiment.
-2.  **Whale Layer**: Tracks real-time large transfers (Whale Alerts) on Ethereum & Solana chains.
-3.  **Market Layer**: Analyzes Order Book depth, Liquidation Heatmaps, and Price Action.
+### 2. "Honest & Robust" Architecture
+*   **Fail-Loudly**: The system strictly validates data sufficiency (>50 candles) before calculating indicators. If critical data (like ADX) is missing, it raises an error rather than using fake default values.
+*   **Arithmetic Safety**: Protected against division-by-zero errors in complex calculations.
 
-Every 4 hours (configurable), the AI digests this massive dataset, "thinks" about the market regime (Bull/Bear/Crab), and executes trades on **OKX** with institutional-grade risk management.
+### 3. AI Self-Reflection Loop (V2.0 Alpha) 🧠
+*   **Rolling Memory**: The AI maintains a "Journal" of its last 5 trades, including the exact market context (RSI, ADX, Whale Flow) at the moment of entry.
+*   **Continuous Learning**: Before making any new decision, the AI reviews this journal to identify patterns of success or failure (e.g., "Last time I bought when ADX > 50, I lost money"). This allows the strategy to adapt dynamically to changing market regimes.
 
----
-
-## ✨ Key Features
-
-*   **🧠 Large Model Decision**: Uses `DeepSeek-V3/R1` to perform human-like reasoning, detecting market traps (e.g., "Short Squeeze" or "Whale Distribution").
-*   **🛡️ Institutional Risk Control**:
-    *   **Isolated Margin**: Protects account balance from single-position failures.
-    *   **Hard TP/SL**: Automatically attaches Algo Orders to every trade. Your funds are safe even if the bot goes offline.
-    *   **Smart Sizing**: Dynamically adjusts position size based on volatility and conviction.
-*   **🔗 Multi-Chain Monitoring**: Supports ETH and SOL whale tracking.
-*   **📱 Real-Time Alerts**: Sends detailed analysis reports to **Telegram** & **Discord**.
-
----
-
-## 🌟 Best Practices & Live Demo
-
-See the bot in action! We maintain a live dashboard and a Telegram signal group running this exact code.
-
-### 📊 Live Dashboard
-**[👉 whale.sparkvalues.com](https://whale.sparkvalues.com)**
-*Real-time AI analysis visualization and asset tracking.*
-
-### 📢 Telegram Signal Group
-**[👉 Join Group](https://t.me/+u-P4xaw0ZptlOGZl)**
-*Receive automated trade signals and whale alerts 24/7.*
-
-<div align="center">
-  <img src="assets/telegram_qr.jpg" width="200" alt="Join Telegram" />
-</div>
-
-### 💬 Discord Community
-**[👉 Join Discord](https://discord.gg/WBQNCHst)**
-*Discuss strategies and feature requests with the community.*
+### 4. Serverless Data Sync
+*   **No Git Required**: Uses GitHub REST API to push analysis results to a dedicated `data-history` branch.
+*   **Zero-Maintenance**: Works perfectly in stateless container environments (Railway, Vercel).
 
 ---
 
-## 🚀 Quick Start
+## 🛠️ System Architecture
 
-### Prerequisites
-*   [Docker](https://www.docker.com/) & Docker Compose
-*   An OKX Account (API Key with Trade permissions)
-*   DeepSeek API Key
-*   Moralis / Etherscan API Keys (for on-chain data)
-
-### 1. Clone & Setup
-```bash
-git clone https://github.com/your-repo/whale-monitor-ai.git
-cd whale-monitor-ai
-
-# Create data directories
-mkdir -p assets
-# Put your banner.png and payment_code.jpg in assets/ if you want customization
-```
-
-### 2. Configure Environment
-Copy the template and fill in your keys:
-```bash
-cp .env.example .env
-nano .env
-```
-**Critical Configs**:
-*   `OKX_API_KEY`, `OKX_SECRET_KEY`, `OKX_PASSPHRASE`: Your trading credentials.
-*   `TRADING_MODE`: Set to `REAL` for real money, `DEMO` for paper trading.
-*   `DEEPSEEK_API_KEY`: The brain of the operation.
-
-### 3. Run with Docker
-One command to rule them all:
-```bash
-docker-compose up -d --build
-```
-The bot will start in the background. You can view logs via:
-```bash
-docker-compose logs -f
-```
+*   **`backend/crypto_brain.py`**: The Intelligence Officer. Fetches on-chain data (Moralis), News, and Macro data.
+*   **`backend/market_data.py`**: The Miner. Fetches OHLCV market data (500 candles with pagination) from OKX. 
+*   **`backend/technical_analysis.py`**: The Analyst. Computes RSI, ADX, Bollinger Bands, and Star Ratings.
+*   **`backend/ai_trader.py`**: The Fund Manager. Aggregates all context and makes final trading decisions via DeepSeek LLM.
+*   **`backend/data_sync.py`**: The Archivist. Uploads JSON data to GitHub `data-history` branch.
+*   **`backend/run_loop.py`**: The Scheduler. Runs the cycle every 4 hours.
 
 ---
 
-## 🛠️ Configuration
+## 🚀 Deployment Guide (Railway)
 
-| Variable | Description | Default |
+### 1. Environment Variables
+Set these in your Railway project settings:
+
+| Variable | Description | Example |
 | :--- | :--- | :--- |
-| `TRADING_MODE` | `REAL` or `DEMO`. Always test in DEMO first! | `DEMO` |
-| `MAX_LEVERAGE` | Maximum leverage allowed for AI to use. | `3` |
-| `TIMEFRAME` | Execution interval (e.g., 4h, 1h). Configured in code `run_loop.py`. | `4 hours` |
+| `OKX_API_KEY` | OKX API Key | `...` |
+| `OKX_SECRET_KEY` | OKX Secret | `...` |
+| `OKX_PASSPHRASE` | OKX Passphrase | `...` |
+| `DEEPSEEK_API_KEY`| DeepSeek AI Key | `sk-...` |
+| `MORALIS_API_KEY` | Moralis Key (On-Chain) | `...` |
+| `ETHERSCAN_API_KEY` | Etherscan Key | `...` |
+| `GITHUB_TOKEN` | **Critical for Data Sync**. Repo scope required. | `ghp_...` |
+| `REPO_URL` | Your GitHub Repo URL | `github.com/yourname/whale-watcher` |
+| `IS_PAPER_TRADING`| `true` for Demo, `false` for Real Money | `true` |
+
+### 2. Frontend Integration
+The backend pushes data to the `data-history` branch. Your frontend should fetch raw data from:
+```
+https://raw.githubusercontent.com/username/repo/data-history/frontend/data/whale_analysis.json
+```
+This ensures your frontend always shows the latest analysis without needing a rebuild.
 
 ---
 
-## ☕ Buy Me a Coffee
+## 📊 Data Structure (whale_analysis.json)
 
-If this bot helps you make profit, feel free to support the development!
-
-<div align="center">
-  <img src="assets/payment_code.jpg" width="200" alt="Alipay" style="margin-right: 20px;" />
-  <img src="assets/sol_card.png" width="200" alt="Solana" />
-  <p>Alipay (支付宝) | Solana (SOL)</p>
-  <code>3bdnJtKwN1jWPXQZfzKKFb62HZwAYGQiCShCbG5suBRm</code>
-</div>
+The generated JSON contains:
+*   **`eth`, `sol`, `btc`**: Individual asset sections.
+    *   `market`: Real-time price, technicals (RSI, ADX, BBW, Funding).
+    *   `stats_24h`: Whale flow, liquidation data.
+    *   `history_60d`: Array of last 60 periods for charting.
+*   **`ai_summary`**: The AI's written rationale for the current market state.
+*   **`actions`**: List of executed trade decisions (Open Long, Short, etc.).
 
 ---
 
-## ⚠️ Disclaimer
-Cryptocurrency trading involves high risk. This software is provided "AS IS" without warranty of any kind. The AI's decisions are based on probability, not certainty. **Use at your own risk.**
+## 🛡️ Risk Disclosure
+This is an experimental AI Agent. While it uses sophisticated logic, crypto markets are highly volatile. Use "Paper Trading" mode for testing.
+
+---
+*Built with ❤️ by Deepmind Advanced Coding Agent.*

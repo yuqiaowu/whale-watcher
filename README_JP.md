@@ -1,126 +1,87 @@
-# 🐋 Whale Monitor AI (ホエール・モニター AI)
+# 🐋 AI クジラ監視＆自動取引システム (Dolores V1.4)
 
-![Project Banner](assets/banner.png)
+本システムは、**オンチェーンのクジラ分析**、**テクニカル指標**、**グローバルマクロセンチメント**、そして**強化学習スタイルのAI意思決定**を融合させた、高度な自律型暗号資産取引システムです。
 
-<div align="center">
-
-[🇺🇸 English](README.md) | [🇨🇳 中文](README_CN.md) | [🇯🇵 日本語](README_JP.md)
-
-</div>
-
-> **DeepSeek R1、オンチェーンデータ、リアルタイム市場分析を搭載した自律型暗号資産クオンツエージェント。**
+AIエージェント「Dolores」は24時間365日市場を監視し、異常（例：個人投資家のパニック売り vs クジラの底値買い）を検知します。OKXでの自動取引（実盤・デモトレード対応）を実行すると同時に、すべての分析データをサーバーレスでフロントエンドに同期します。
 
 ---
 
-## 📖 はじめに
+## 🌟 主な機能 (Key Features)
 
-**Whale Monitor AI** は単なる取引ボットではありません。あなたのサーバーに常駐する高度な市場アナリストです。以下の3層のデータを組み合わせて、確信度の高い取引判断を下します：
+### 1. 六次元の知覚 (Multi-Dimensional Perception)
+AIは価格だけでなく、6つの次元を通じて市場を認識します：
+*   **🐋 オンチェーン・フロー (Flow)**: イーサリアム (ETH) とソラナ (SOL) におけるクジラの純流入/流出およびステーブルコインの動きを追跡。
+*   **📊 テクニカル分析 (Technicals)**: RSI、ADX（トレンド強度）、MACD、**ボリンジャーバンド幅/トレンド (BBW/Trend)** などの高度な指標を使用。
+*   **⭐ スター評価 (Star Ratings)**: 価格ランク、出来高の異常値、RSIの極値に基づく自動スコアリングシステム (0-3つ星)。
+*   **💸 市場の痛み (Pain)**: **清算データ (Liquidation)** (ロング vs ショートのどちらが焼かれているか) を監視し、反転やショートスクイズの機会を探知。
+*   **📉 資金調達率 (Rates)**: 取引の過熱感とスクイズの可能性を検知 (マイナス金利 = ショートの過密)。
+*   **🌍 マクロ環境 (Macro)**: 米金利先物、VIX恐怖指数、ドル指数 (DXY)、および世界的なニュースセンチメントを統合。
 
-1.  **マクロ層**: FRB金利、流動性トレンド、世界的なニュースセンチメントを監視します。
-2.  **ホエール層**: EthereumおよびSolanaチェーン上のリアルタイムの大口送金（ホエールアラート）を追跡します。
-3.  **市場層**: 板情報（オーダーブック）の厚み、清算ヒートマップ、プライスアクションを分析します。
+### 2. 「正直かつ堅牢」なアーキテクチャ (Honest & Robust)
+*   **Fail-Loudly**: 指標計算の前にデータセットの十分性 (>50本のローソク足) を厳格に検証します。重要なデータ (例: ADX) が欠落している場合、偽のデフォルト値でAIを誤解させるのではなく、明確にエラーを出力します。
+*   **算術的安全性**: 複雑な計算におけるゼロ除算エラーなどを完全に防止しています。
 
-4時間ごと（設定可能）に、AIはこの膨大なデータを消化し、現在の市場レジーム（強気/弱気/レンジ）について「思考」し、機関投資家レベルのリスク管理基準で **OKX** 上で取引を実行します。
+### 3. AI 自己反省ループ (V2.0 Alpha) 🧠
+*   **ローリングメモリ (Rolling Memory)**: AIは直近5回の取引の「日記」を保持し、エントリー瞬間の正確な市場コンテキスト (RSI, ADX, クジラフロー) を記録します。
+*   **継続的学習**: 新しい意思決定を行う前に、AIはこの日記をレビューし、成功や失敗のパターンを特定します（例：「前回 ADX > 50 の時に逆張りをして損失を出した」）。これにより、変化する市場環境に動的に適応可能となります。
 
----
-
-## ✨ 主な機能
-
-*   **🧠 大規模言語モデルによる意思決定**: `DeepSeek-V3/R1` を使用して人間のような推論を行い、市場の罠（例：「ショートスクイーズ」や「クジラの売り抜け」）を検知します。
-*   **🛡️ 機関投資家レベルのリスク管理**:
-    *   **分離マージン (Isolated Margin)**: 単一ポジションの損失から口座残高を保護します。
-    *   **ハード TP/SL (Hard TP/SL)**: すべての取引に自動的にアルゴリズム注文（損切り・利食い）を付与します。ボットがオフラインになっても資金は安全です。
-    *   **スマートサイジング**: ボラティリティと確信度に基づいてポジションサイズを動的に調整します。
-*   **🔗 マルチチェーン監視**: ETHおよびSOLのホエール追跡をサポートしています。
-*   **📱 リアルタイム通知**: 詳細な分析レポートを **Telegram** と **Discord** に送信します。
-
----
-
-## 🌟 ベストプラクティス & ライブデモ (Live Demo)
-
-ボットの実際の動作をご覧ください！このコードを実行しているリアルタイムダッシュボードとTelegramシグナルグループを公開しています。
-
-### 📊 ライブダッシュボード (Web Dashboard)
-**[👉 whale.sparkvalues.com](https://whale.sparkvalues.com)**
-*AI分析結果と資産追跡をリアルタイムで可視化。*
-
-### 📢 Telegram シグナルグループ
-**[👉 グループに参加](https://t.me/+u-P4xaw0ZptlOGZl)**
-*自動取引シグナルとホエールアラートを24時間365日受信。*
-
-<div align="center">
-  <img src="assets/telegram_qr.jpg" width="200" alt="Telegramに参加" />
-</div>
-
-### 💬 Discord コミュニティ
-**[👉 Discordに参加](https://discord.gg/WBQNCHst)**
-*トレーディング戦略の議論や機能リクエストはこちら。*
+### 4. サーバーレスデータ同期
+*   **Git不要**: GitHub REST APIを使用してデータを `data-history` ブランチに直接プッシュします。
+*   **ゼロメンテナンス**: RailwayやVercelなどのステートレス環境に最適です。
 
 ---
 
-## 🚀 クイックスタート
+## 🛠️ システムアーキテクチャ
 
-### 前提条件
-*   [Docker](https://www.docker.com/) & Docker Compose
-*   OKX アカウント (トレード権限のあるAPIキー)
-*   DeepSeek API キー
-*   Moralis / Etherscan API キー (オンチェーンデータ用)
-
-### 1. クローンとセットアップ
-```bash
-git clone https://github.com/your-repo/whale-monitor-ai.git
-cd whale-monitor-ai
-
-# データディレクトリの作成
-mkdir -p assets
-# カスタマイズしたい場合は assets/ に banner.png と payment_code.jpg を配置してください
-```
-
-### 2. 環境変数の設定
-テンプレートをコピーしてキーを入力します：
-```bash
-cp .env.example .env
-nano .env
-```
-**重要な設定**:
-*   `OKX_API_KEY`, `OKX_SECRET_KEY`, `OKX_PASSPHRASE`: 取引認証情報。
-*   `TRADING_MODE`: リアルマネーは `REAL`、ペーパートレーディングは `DEMO` に設定します。最初は必ず DEMO でテストしてください！
-*   `DEEPSEEK_API_KEY`: オペレーションの頭脳です。
-
-### 3. Docker で実行
-以下のコマンドだけで起動します：
-```bash
-docker-compose up -d --build
-```
-ボットがバックグラウンドで起動します。ログを確認するには：
-```bash
-docker-compose logs -f
-```
+*   **`backend/crypto_brain.py`**: **情報将校**。オンチェーンデータ (Moralis)、ニュース、マクロデータを収集。
+*   **`backend/market_data.py`**: **マイナー**。OKXからOHLCV市場データを取得 (ページネーションで500本のローソク足を取得)。
+*   **`backend/technical_analysis.py`**: **アナリスト**。RSI, ADX, ボリンジャーバンド, スター評価などの指標を計算。
+*   **`backend/ai_trader.py`**: **ファンドマネージャー**。すべてのコンテキストを集約し、DeepSeek LLMを通じて最終的な取引判断を下す。
+*   **`backend/data_sync.py`**: **記録係**。JSONデータをGitHubの `data-history` ブランチにアップロード。
+*   **`backend/run_loop.py`**: **スケジューラー**。4時間ごとにシステムを起動。
 
 ---
 
-## 🛠️ 設定詳細
+## 🚀 デプロイガイド (Railway)
 
-| 変数名 | 説明 | デフォルト値 |
+### 1. 環境変数の設定
+Railwayのプロジェクト設定で以下の変数を設定してください：
+
+| 変数名 | 説明 | 例 |
 | :--- | :--- | :--- |
-| `TRADING_MODE` | `REAL` または `DEMO`。必ず最初に DEMO でテストしてください！ | `DEMO` |
-| `MAX_LEVERAGE` | AI が使用できる最大レバレッジ。 | `3` |
-| `TIMEFRAME` | 実行間隔 (例: 4h, 1h)。コード `run_loop.py` で設定します。 | `4 hours` |
+| `OKX_API_KEY` | OKX APIキー | `...` |
+| `OKX_SECRET_KEY` | OKX シークレット | `...` |
+| `OKX_PASSPHRASE` | OKX パスフレーズ | `...` |
+| `DEEPSEEK_API_KEY`| DeepSeek AIキー | `sk-...` |
+| `MORALIS_API_KEY` | Moralisキー (オンチェーン) | `...` |
+| `ETHERSCAN_API_KEY` | Etherscanキー | `...` |
+| `GITHUB_TOKEN` | **データ同期に必須**。Repo権限が必要。 | `ghp_...` |
+| `REPO_URL` | GitHubリポジトリのURL | `github.com/yourname/whale-watcher` |
+| `IS_PAPER_TRADING`| `true`でデモ、`false`で実弾 | `true` |
+
+### 2. フロントエンド統合
+バックエンドはデータを自動的に `data-history` ブランチにプッシュします。フロントエンドはRaw URLから直接読み込むべきです：
+```
+https://raw.githubusercontent.com/username/repo/data-history/frontend/data/whale_analysis.json
+```
+これにより、フロントエンドを再ビルドすることなく、常に最新の分析を表示できます。
 
 ---
 
-## ☕ 開発者を支援する (Coffee)
+## 📊 データ構造 (whale_analysis.json)
 
-このボットが利益をもたらした場合は、開発の支援をご検討ください！
-
-<div align="center">
-  <img src="assets/payment_code.jpg" width="200" alt="Alipay" style="margin-right: 20px;" />
-  <img src="assets/sol_card.png" width="200" alt="Solana" />
-  <p>Alipay (支付宝) | Solana (SOL)</p>
-  <code>3bdnJtKwN1jWPXQZfzKKFb62HZwAYGQiCShCbG5suBRm</code>
-</div>
+生成されるJSONファイルには以下が含まれます：
+*   **`eth`, `sol`, `btc`**: 各資産のセクション。
+    *   `market`: リアルタイム価格、テクニカル指標 (RSI, ADX, BBW, Funding)。
+    *   `stats_24h`: クジラのフロー、清算データ。
+    *   `history_60d`: 過去60期間の履歴データ配列（チャート描画用）。
+*   **`ai_summary`**: 現在の市場状態に対するAIの分析コメント（日英対応）。
+*   **`actions`**: 実行された取引判断のリスト (Open Long, Shortなど)。
 
 ---
 
-## ⚠️ 免責事項
-暗号資産取引には高いリスクが伴います。本ソフトウェアは「現状有姿」で提供され、いかなる種類の保証もありません。AI の決定は確率に基づいており、確実性を保証するものではありません。**ご自身のリスクで使用してください。**
+## 🛡️ リスク開示
+本システムは実験的なAIエージェントです。高度なロジックと多次元データを使用していますが、暗号資産市場は非常にボラティリティが高いです。実資金を投入する前に、デモトレードモードで十分にテストすることを強く推奨します。
+
+---
+*Built with ❤️ by Deepmind Advanced Coding Agent.*
