@@ -15,7 +15,11 @@ else:
 
 API_BASE = f"https://api.github.com/repos/{REPO_slug}"
 BRANCH_NAME = "data-history"
-FILE_PATH = "frontend/data/whale_analysis.json"
+FILES_TO_SYNC = [
+    "frontend/data/whale_analysis.json",
+    "backend/trade_history.json",
+    "backend/portfolio_state.json"
+]
 
 def get_file_sha(path, branch):
     """Get the SHA of an existing file to update it."""
@@ -59,23 +63,14 @@ def create_branch_if_missing(branch, source_branch="main"):
         print(f"❌ Failed to create branch: {resp_create.text}")
         return False
 
-def sync_data_to_github():
-    print(f"🔄 Starting Data Sync (Serverless Mode) to '{BRANCH_NAME}'...")
-    
-    if not GITHUB_TOKEN:
-        print("⚠️ GITHUB_TOKEN not found. Skipping sync.")
-        return
-
-    # 1. Ensure Branch Exists
-    if not create_branch_if_missing(BRANCH_NAME):
-        return
-
-    # 2. Read Local File
+def sync_file(file_path):
+    """Sync a single file to GitHub."""
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    abs_path = os.path.join(base_dir, FILE_PATH)
+    # Handle paths relative to project root
+    abs_path = os.path.join(base_dir, file_path)
     
     if not os.path.exists(abs_path):
-        print(f"❌ File not found: {abs_path}")
+        print(f"⚠️ File not found (skipping): {abs_path}")
         return
 
     with open(abs_path, "rb") as f:
@@ -83,13 +78,13 @@ def sync_data_to_github():
     
     content_b64 = base64.b64encode(content).decode("utf-8")
     
-    # 3. Get existing SHA (if update)
-    sha = get_file_sha(FILE_PATH, BRANCH_NAME)
+    # Get SHA
+    sha = get_file_sha(file_path, BRANCH_NAME)
     
-    # 4. Push (PUT Request)
-    url = f"{API_BASE}/contents/{FILE_PATH}"
+    # Push
+    url = f"{API_BASE}/contents/{file_path}"
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-    message = f"Data Update: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}"
+    message = f"Data Update: {file_path} @ {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}"
     
     payload = {
         "message": message,
@@ -98,16 +93,29 @@ def sync_data_to_github():
     }
     if sha:
         payload["sha"] = sha
-        print(f"📝 Updating existing file (SHA: {sha[:7]})...")
+        print(f"📝 Updating {file_path}...")
     else:
-        print("Mw Creating new file...")
+        print(f"Mw Creating {file_path}...")
         
     resp = requests.put(url, headers=headers, json=payload)
     
     if resp.status_code in [200, 201]:
-        print(f"✅ Sync Successful! URL: {resp.json().get('content', {}).get('html_url')}")
+        print(f"✅ Synced: {file_path}")
     else:
-        print(f"❌ Sync Failed ({resp.status_code}): {resp.text}")
+        print(f"❌ Failed {file_path}: {resp.status_code} {resp.text}")
+
+def sync_data_to_github():
+    print(f"🔄 Starting Multi-File Sync to '{BRANCH_NAME}'...")
+    
+    if not GITHUB_TOKEN:
+        print("⚠️ GITHUB_TOKEN not found. Skipping sync.")
+        return
+
+    if not create_branch_if_missing(BRANCH_NAME):
+        return
+
+    for fpath in FILES_TO_SYNC:
+        sync_file(fpath)
 
 if __name__ == "__main__":
     sync_data_to_github()
