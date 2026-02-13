@@ -938,5 +938,45 @@
       "bb_trend": "DOWN"
     },
     "outcome": null
+  },
+  {
+    "id": "SOL_1770984449",
+    "timestamp": "2026-02-13T20:07:29.025934",
+    "symbol": "SOL",
+    "action": "open_long",
+    "size": 200,
+    "entry_price": 79.86,
+    "reason": {
+      "zh": "\u9cb8\u9c7c\u5438\u7b79\u9677\u9631\uff1a\u4ef7\u683c\u4e0b\u8dcc\u81f3$79.90\uff08\u718a\u5e02\uff09\uff0c\u4f46\u9cb8\u9c7c\u51c0\u6d41\u516546,078.62 SOL\uff0c\u540c\u65f6\u6563\u6237\u591a\u5934\u7206\u4ed3$3.47M\u663e\u793a\u6050\u614c\u6027\u629b\u552e\uff0c\u8d44\u91d1\u8d39\u7387-0.0033%\u4e3a\u8d1f\u589e\u52a0\u8f67\u7a7a\u53ef\u80fd\u3002\u7b26\u5408'Accumulation Signal'\u89c4\u5219\uff08\u4ef7\u683c\u8dcc\u3001Token Flow\u6b63\u3001\u9ad8\u591a\u5934\u7206\u4ed3\uff09\u3002",
+      "en": "Whale accumulation trap: Price dropped to $79.90 (bear market), but whale net inflow 46,078.62 SOL, coupled with high retail long liquidations ($3.47M) showing panic selling, and negative funding rate -0.0033% increasing squeeze potential. Matches 'Accumulation Signal' rule (price down, Token Flow positive, high long liquidations)."
+    },
+    "context": {
+      "rsi": 42.36554055795346,
+      "adx": 32.74547146329737,
+      "funding": -3.25601127965e-05,
+      "whale_flow": null,
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
+  },
+  {
+    "id": "ETH_1770984450",
+    "timestamp": "2026-02-13T20:07:30.021774",
+    "symbol": "ETH",
+    "action": "open_short",
+    "size": 200,
+    "entry_price": 1952.71,
+    "reason": {
+      "zh": "\u9cb8\u9c7c\u51fa\u8d27\u9677\u9631\uff1a\u4ef7\u683c\u5728$1953.26\uff08\u718a\u5e02\uff09\uff0c\u4f46\u9cb8\u9c7c\u51c0\u6d41\u51fa3,478,642.97 ETH\uff0c\u4e14\u7a7a\u5934\u7206\u4ed3$64.5M\u9ad8\u4e8e\u591a\u5934$32.9M\uff0c\u663e\u793a\u6563\u6237\u53ef\u80fd\u8fc7\u5ea6\u4e50\u89c2\u3002\u7b26\u5408'Distribution Signal'\u89c4\u5219\uff08\u4ef7\u683c\u76f8\u5bf9\u7a33\u3001Token Flow\u8d1f\u3001\u9ad8\u7a7a\u5934\u7206\u4ed3\uff09\u3002",
+      "en": "Whale distribution trap: Price at $1953.26 (bear market), but whale net outflow 3,478,642.97 ETH, with short liquidations $64.5M higher than longs $32.9M, indicating potential retail over-optimism. Matches 'Distribution Signal' rule (price stable, Token Flow negative, high short liquidations)."
+    },
+    "context": {
+      "rsi": 43.75058274935216,
+      "adx": 12.008346005200114,
+      "funding": 4.56099581628e-05,
+      "whale_flow": null,
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
   }
 ]
