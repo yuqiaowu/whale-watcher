@@ -1,45 +1,5 @@
 [
   {
-    "id": "SOL_1770336418",
-    "timestamp": "2026-02-06T08:06:58.964039",
-    "symbol": "SOL",
-    "action": "open_long",
-    "size": 200,
-    "entry_price": 76.79,
-    "reason": {
-      "zh": "\u68c0\u6d4b\u5230\u9cb8\u9c7c\u9677\u9631\uff1a\u4ef7\u683c\u4e0b\u8dcc\u81f3$76.81\uff08RSI=13.4\u8d85\u5356\uff09\uff0c\u4f46\u9cb8\u9c7c\u51c0\u6d41\u516537,061.45 SOL\uff0c\u540c\u65f6\u6563\u6237\u591a\u5934\u7206\u4ed3$4.97M\u663e\u793a\u6050\u614c\u6027\u629b\u552e\u3002\u8d44\u91d1\u8d39\u7387\u4e3a\u8d1f\uff08-0.0125%\uff09\uff0c\u5b58\u5728\u8f67\u7a7a\u6f5c\u529b\u3002\u8fd9\u662f\u5178\u578b\u7684\u9cb8\u9c7c\u5438\u7b79\u4e0e\u6563\u6237\u5272\u8089\u7684\u80cc\u79bb\u4fe1\u53f7\uff0c\u7b26\u5408\u718a\u5e02\u4e2d\u4ec5\u5141\u8bb8\u7684\u6781\u7aef\u9cb8\u9c7c\u79ef\u7d2f\u6761\u4ef6\u3002",
-      "en": "Whale trap detected: price dropped to $76.81 (RSI=13.4 oversold), but whale net inflow of 37,061.45 SOL with retail long liquidations of $4.97M shows panic selling. Negative funding rate (-0.0125%) indicates short squeeze potential. This is a classic divergence of whale accumulation vs. retail capitulation, meeting bear market criteria for extreme whale accumulation signals."
-    },
-    "context": {
-      "rsi": 13.407350333196518,
-      "adx": 70.48623279965739,
-      "funding": -0.0001246503404103,
-      "whale_flow": null,
-      "bb_trend": "DOWN"
-    },
-    "outcome": null
-  },
-  {
-    "id": "SOL_1770350827",
-    "timestamp": "2026-02-06T12:07:07.054566",
-    "symbol": "SOL",
-    "action": "open_long",
-    "size": 2000,
-    "entry_price": 76.33,
-    "reason": {
-      "zh": "\u53d1\u73b0\u9cb8\u9c7c\u9677\u9631\uff1a\u4ef7\u683c\u8dcc\u81f3$76.60\uff08RSI=13.2\u6781\u5ea6\u8d85\u5356\uff09\uff0c\u4f46\u9cb8\u9c7c\u51c0\u6d41\u516570,326.62 SOL\uff0c\u540c\u65f6\u8d44\u91d1\u8d39\u7387\u4e3a\u8d1f\uff08-0.0359%\uff09\uff0c\u663e\u793a\u6563\u6237\u8fc7\u5ea6\u505a\u7a7a\uff0c\u5b58\u5728\u8f67\u7a7a\u53ef\u80fd\u3002\u7ed3\u5408\u957f\u4ed3\u7206\u4ed3$570\u4e07\uff08\u8fdc\u9ad8\u4e8e\u77ed\u4ed3$155\u4e07\uff09\uff0c\u8868\u660e\u96f6\u552e\u6050\u614c\uff0c\u9cb8\u9c7c\u8d81\u673a\u5438\u7b79\u3002",
-      "en": "Whale trap detected: price dropped to $76.60 (RSI=13.2 extremely oversold), but whale net inflow of 70,326.62 SOL, coupled with negative funding rate (-0.0359%), indicates retail over-shorting and potential short squeeze. Long liquidations of $5.7M vs. short $1.5M show retail panic, with whales accumulating."
-    },
-    "context": {
-      "rsi": 13.206519604303097,
-      "adx": 71.97565918902096,
-      "funding": -0.0003585480563493,
-      "whale_flow": null,
-      "bb_trend": "DOWN"
-    },
-    "outcome": null
-  },
-  {
     "id": "SOL_1770365242",
     "timestamp": "2026-02-06T16:07:22.007537",
     "symbol": "SOL",
@@ -994,6 +954,46 @@
       "rsi": 54.819776306845476,
       "adx": 30.023887219750762,
       "funding": 3.42512279546e-05,
+      "whale_flow": null,
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
+  },
+  {
+    "id": "ETH_1771013232",
+    "timestamp": "2026-02-14T04:07:12.014765",
+    "symbol": "ETH",
+    "action": "open_short",
+    "size": 600,
+    "entry_price": 2057.4,
+    "reason": {
+      "zh": "\u718a\u5e02\u51fa\u8d27\u9677\u9631\uff1a\u4ef7\u683c\u5728$2057\u4e0a\u6da8\uff08\u8d8b\u52bfUP\uff09\uff0c\u4f46\u9cb8\u9c7c\u5927\u91cf\u6d41\u51fa422,870 ETH\uff08Sentiment -0.07\uff09\uff0c\u4e14\u7a7a\u5934\u7206\u4ed3$1.27\u4ebf\u663e\u793a\u6563\u6237\u8fc7\u5ea6\u505a\u7a7a\uff0c\u8fd9\u662f\u5178\u578b\u7684\u9cb8\u9c7c\u51fa\u8d27\u800c\u6563\u6237\u63a5\u76d8\u9677\u9631\u3002",
+      "en": "Bearish distribution trap: Price rising to $2057 (Trend UP) while whales dump 422,870 ETH (Sentiment -0.07), with $127M short liquidations showing retail over-shorting - classic whale distribution into retail buying."
+    },
+    "context": {
+      "rsi": 58.44063206373971,
+      "adx": 15.432602050109583,
+      "funding": -1.50687608817e-05,
+      "whale_flow": null,
+      "bb_trend": "UP"
+    },
+    "outcome": null
+  },
+  {
+    "id": "SOL_1771013233",
+    "timestamp": "2026-02-14T04:07:13.017024",
+    "symbol": "SOL",
+    "action": "open_long",
+    "size": 400,
+    "entry_price": 84.48,
+    "reason": {
+      "zh": "\u5fae\u5f31\u9cb8\u9c7c\u5438\u7b79\u4fe1\u53f7\uff1a\u4ef7\u683c\u8dcc\u81f3$84.44\uff08\u8d8b\u52bfDOWN\uff09\uff0c\u4f46\u9cb8\u9c7c\u6d41\u51655,009 SOL\uff08Sentiment +0.10\uff09\uff0c\u4e14\u7a7a\u5934\u7206\u4ed3$246\u4e07\u663e\u793a\u96f6\u552e\u75db\u82e6\uff0c\u5728\u718a\u5e02\u4e2d\u63d0\u4f9b\u8c28\u614e\u505a\u591a\u673a\u4f1a\u3002",
+      "en": "Weak whale accumulation signal: Price dropping to $84.44 (Trend DOWN) while whales accumulate 5,009 SOL (Sentiment +0.10), with $2.46M short liquidations showing retail pain - cautious long opportunity in bear market."
+    },
+    "context": {
+      "rsi": 56.80069947342385,
+      "adx": 29.391702500221214,
+      "funding": 9.4871500795e-05,
       "whale_flow": null,
       "bb_trend": "DOWN"
     },
