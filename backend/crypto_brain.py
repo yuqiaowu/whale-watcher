@@ -149,7 +149,8 @@ def fetch_large_transfers():
                 "action": "tokentx",
                 "contractaddress": address,
                 "page": 1,
-                "offset": 100, # Fetch last 100 txs (should cover > 10 mins usually)
+                # Dynamic Offset: Reverted to 300 as we use DefiLlama for main flow data now.
+                "offset": 300 if symbol in STABLECOINS else 100,
                 "sort": "desc",
                 "apikey": ETHERSCAN_API_KEY
             }
@@ -388,6 +389,39 @@ def fetch_solana_swaps():
     # Sort by time desc
     all_swaps.sort(key=lambda x: x["timestamp"], reverse=True)
     return all_swaps
+
+def fetch_defillama_global_flows():
+    """Fetch global stablecoin market cap change (24h) from DefiLlama."""
+    try:
+        url = "https://stablecoins.llama.fi/stablecoins?includePrices=true"
+        response = requests.get(url, timeout=10)
+        data = response.json()
+        
+        total_change = 0
+        count = 0
+        
+        # We focus on the Top 2: USDT, USDC which represent majority of flow
+        for coin in data.get("peggedAssets", []):
+             if coin.get("symbol") in ["USDT", "USDC"]:
+                 try:
+                     curr = coin.get("circulating", {}).get("peggedUSD", 0)
+                     prev = coin.get("circulatingPrevDay", {}).get("peggedUSD", 0)
+                     
+                     if curr and prev:
+                         change = curr - prev
+                         total_change += change
+                         count += 1
+                 except: pass
+        
+        if count > 0:
+            print(f"✅ DefiLlama Global Stablecoin Flow (24h): ${total_change:,.0f}")
+            return total_change
+            
+        print("⚠️ DefiLlama: No valid stablecoin data found.")
+        return 0
+    except Exception as e:
+        print(f"❌ DefiLlama Error: {e}")
+        return 0
 
 def fetch_fear_greed_index():
     """Fetch Bitcoin Fear & Greed Index from alternative.me."""
@@ -702,17 +736,34 @@ def analyze_transfers_v1(transfers, market_metrics):
         # 0 -> 50, +2 -> 100, -2 -> 0
         sent_conf = ((sentiment_score + 2) / 4) * 100
         
-        # 2. OI Alignment (25%)
-        # Bullish & OI Up = Good
-        # Bearish & OI Up = Good (Shorting)
-        # Divergence = Bad
-        oi_conf = 50
-        if sentiment_score > 0.3: # Bullish
-            if oi_delta > 1.0: oi_conf = 100 # New Longs
-            elif oi_delta < -1.0: oi_conf = 20 # Deleveraging (Weak base)
-        elif sentiment_score < -0.3: # Bearish
-            if oi_delta > 1.0: oi_conf = 100 # New Shorts
-            elif oi_delta < -1.0: oi_conf = 20 # Short Covering (Weak base)
+        # 2. OI Alignment (25%) - REFINED LOGIC (Trend vs Volatility)
+        # Old Logic was either blunt or contradictory.
+        # New Logic: Distinction between "Trend Strength" and "Volatility Risk".
+        
+        oi_conf = 50 # Default Neutral
+        
+        # A. Base Score from OI Change (Capital Flow)
+        if oi_delta > 5.0:    oi_conf = 80  # Big Interest (High Confidence something is happening)
+        elif oi_delta > 2.0:  oi_conf = 70  # Healthy Growing Interest
+        elif oi_delta < -5.0: oi_conf = 10  # Panic Capital Flight (Low Confidence)
+        elif oi_delta < -2.0: oi_conf = 30  # Funds Leaving (Weak)
+        
+        # B. Context Modifier (Sentiment Alignment) - The "Contradiction Resolver"
+        is_strong_sentiment = abs(sentiment_score) > 0.3
+        
+        if is_strong_sentiment:
+            # Trend Confirmation: If sentiment has direction, High OI is good.
+            if oi_delta > 1.0: 
+                oi_conf = 100 # Perfect: Direction + Fuel -> High Confidence
+            elif oi_delta < -1.0: 
+                oi_conf = 40  # Divergence: Trend exists but fuel is leaving -> Weak Confidence
+        else:
+            # Neutral Sentiment Logic: High OI without direction = DANGER (Volatility)
+            if oi_delta > 5.0:
+                oi_conf = 20  # PENALTY: Huge OI but no direction? That's a coin flip/gambling.
+            elif oi_delta > 2.0:
+                oi_conf = 60  # Slight Penalty: Interest growing but direction unclear.
+
             
         # 3. Volume Confirmation (20%)
         vol_conf = min(100, (vol_ratio / 1.5) * 75) # 1.5 ratio -> 75 score, 2.0 -> 100
@@ -1054,7 +1105,8 @@ def main():
                 "token_net_flow": 0,
                 "stablecoin_net_flow": 0,
                 "liquidation_long_usd": liq_data.get("long_vol_usd", 0),
-                "liquidation_short_usd": liq_data.get("short_vol_usd", 0)
+                "liquidation_short_usd": liq_data.get("short_vol_usd", 0),
+                "leverage_ratio": 0
             }
         }
 
@@ -1062,13 +1114,14 @@ def main():
     bnb_analysis = create_dummy_analysis(bnb_liquidation)   # NEW
     doge_analysis = create_dummy_analysis(doge_liquidation) # NEW
     
-    # Inject Liquidation Data into Stats (for JSON Output) - Already done in helper for new ones
-    # But need to patch ETH/SOL
+    # Inject Liquidation Data into Stats (for JSON Output)
     eth_analysis["stats_24h"]["liquidation_long_usd"] = eth_liquidation.get("long_vol_usd", 0)
     eth_analysis["stats_24h"]["liquidation_short_usd"] = eth_liquidation.get("short_vol_usd", 0)
+    eth_analysis["stats_24h"]["leverage_ratio"] = eth_market.get("oi_now", 0)
     
     sol_analysis["stats_24h"]["liquidation_long_usd"] = sol_liquidation.get("long_vol_usd", 0)
     sol_analysis["stats_24h"]["liquidation_short_usd"] = sol_liquidation.get("short_vol_usd", 0)
+    sol_analysis["stats_24h"]["leverage_ratio"] = sol_market.get("oi_now", 0)
     
     # Inject Liquidation Data into Market Dicts (for AI Prompt)
     def fmt_liq(d):
@@ -1096,6 +1149,12 @@ def main():
 
     eth_analysis["stats_7d"]["sentiment_score"] = smooth_score("eth", "stats_7d", eth_analysis, history_data)
     sol_analysis["stats_7d"]["sentiment_score"] = smooth_score("sol", "stats_7d", sol_analysis, history_data)
+
+    # [NEW] Inject DefiLlama Macro Flow Data (Global Liquidity)
+    print("Fetching DefiLlama Global Flows...")
+    global_stable_flow = fetch_defillama_global_flows()
+    if global_stable_flow != 0:
+        macro_data["global_stable_flow"] = global_stable_flow
 
     # 5. Generate AI Narrative (V2 Tri-Layer)
     ai_summary = {"en": "AI disabled or failed.", "zh": "AI 分析暂时不可用。"}
@@ -1128,6 +1187,79 @@ def main():
         traceback.print_exc()
 
     # 6. Save Final JSON
+    # [SYNC FIX] Update Global Snapshot for Frontend Consistency
+    SNAPSHOT_PATHS = [
+        os.path.join(os.path.dirname(__file__), "../ai_agent_repo/global_onchain_news_snapshot.json"),
+        os.path.join(os.path.dirname(__file__), "../frontend/data/global_onchain_news_snapshot.json")
+    ]
+    
+    for path in SNAPSHOT_PATHS:
+        try:
+            snapshot_data = {}
+            if os.path.exists(path):
+                with open(path, "r") as f:
+                    snapshot_data = json.load(f)
+            
+            # 1. Sync News
+            snapshot_data["news"] = {
+                "items": news_data,
+                "source": "Crypto_Brain_Realtime",
+                "updated_at": datetime.now().isoformat()
+            }
+
+            # 2. Sync Fear & Greed
+            if fear_greed:
+                 old_fg = snapshot_data.get("fear_greed", {})
+                 old_series = old_fg.get("series", [])
+                 snapshot_data["fear_greed"] = {
+                     "latest": fear_greed,
+                     "series": old_series,
+                     "paragraph": f"Fear & Greed: {fear_greed.get('value')} ({fear_greed.get('value_classification')})"
+                 }
+
+            # 3. Add Whale Data
+            snapshot_data["whale_scan_data"] = {
+                "eth_transfers": eth_transfers,
+                "sol_swaps": sol_transfers,
+                "updated_at": datetime.now().isoformat()
+            }
+
+            with open(path, "w") as f:
+                json.dump(snapshot_data, f, indent=2)
+            print(f"✅ Synced fresh data to {path}")
+
+        except Exception as e:
+            print(f"⚠️ Failed to sync snapshot to {path}: {e}")
+
+    # --- History Tracking (New Feature) ---
+    def update_history(chain_key, current_stats):
+        hist = []
+        try:
+            if chain_key in history_data:
+                hist = history_data[chain_key].get("stats_history", [])
+        except: pass
+        
+        # New Entry
+        entry = {
+            "timestamp": datetime.now().isoformat(),
+            "display_time": datetime.now().strftime("%H:%M"),
+            "whale_count": current_stats.get("whale_count", 0),
+            "total_volume": current_stats.get("total_volume", 0),
+            "stablecoin_net_flow": current_stats.get("stablecoin_net_flow", 0),
+            "token_net_flow": current_stats.get("token_net_flow", 0),
+            "avg_tx_size": current_stats.get("avg_tx_size", 0),
+            "liquidation_long_usd": current_stats.get("liquidation_long_usd", 0),
+            "liquidation_short_usd": current_stats.get("liquidation_short_usd", 0),
+            "leverage_ratio": current_stats.get("leverage_ratio", 0)
+        }
+        
+        hist.append(entry)
+        # Keep last 24 entries
+        return hist[-24:]
+
+    eth_history = update_history("eth", eth_analysis["stats_24h"])
+    sol_history = update_history("sol", sol_analysis["stats_24h"])
+
     final_output = {
         "updated_at": datetime.now().isoformat(),
         "fear_greed": fear_greed,
@@ -1139,12 +1271,14 @@ def main():
         "eth": {
             "stats": eth_analysis["stats_7d"], 
             "stats_24h": eth_analysis["stats_24h"],
+            "stats_history": eth_history,
             "market": eth_market,
             "top_txs": eth_transfers[:1000]
         },
         "sol": {
             "stats": sol_analysis["stats_7d"],
             "stats_24h": sol_analysis["stats_24h"],
+            "stats_history": sol_history,
             "market": sol_market,
             "top_txs": sol_transfers[:1000]
         },

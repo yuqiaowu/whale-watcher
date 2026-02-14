@@ -253,11 +253,14 @@ def get_signal_history(df: pd.DataFrame, limit: int = 60) -> list:
         
         entry = {
             "ts": row.get('ts'), # String or int from OKX
-            "date": pd.to_datetime(int(row.get('ts')), unit='ms').strftime('%Y-%m-%d %H:%M') if 'ts' in row else "",
+            # Add 8 hours for CST
+            "date": (pd.to_datetime(int(row.get('ts')), unit='ms') + pd.Timedelta(hours=8)).strftime('%Y-%m-%d %H:%M'),
             "close": safe_float(row.get('close')),
             "volume": safe_float(row.get('volume'), 0),
             "rsi_14": safe_float(row.get('rsi_14')),
             "adx_14": safe_float(row.get('adx_14')),
+            "natr": safe_float(row.get('natr')),
+            "atr_14": safe_float(row.get('atr_14')),
             "vol_ratio": safe_float(row.get('vol_ratio_20')),
             "price_rank": safe_float(row.get('price_percentile_20') * 100 if 'price_percentile_20' in row else 50, 1),
             "buy_stars": int(row.get('buy_stars', 0)),

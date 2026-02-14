@@ -143,6 +143,14 @@ class OKXDataClient:
             ticker = data[0]
             metrics["price"] = float(ticker["last"])
             metrics["volume_24h"] = float(ticker["volCcy24h"]) # Volume in USDT
+            try:
+                open_price = float(ticker.get("sodUtc0", ticker.get("open24h", metrics["price"])))
+                if open_price > 0:
+                    metrics["change_24h"] = ((metrics["price"] - open_price) / open_price) * 100
+                else:
+                    metrics["change_24h"] = 0.0
+            except:
+                metrics["change_24h"] = 0.0
         
         # 2. Advanced Technicals (4H Candles)
         # Fetch 500 candles (approx 83 days) to cover >60 days context + SMA200
@@ -186,7 +194,7 @@ class OKXDataClient:
                 df_input['high'] = df['high']
                 df_input['low'] = df['low']
                 df_input['close'] = df['close']
-                df_input['volume'] = df['volCcy'] # Volume in USDT
+                df_input['volume'] = df['volCcyQuote'] # Volume in USDT (Quote)
                 
                 # Calculate All Indicators (modifies df_input in place)
                 tech_values = add_all_indicators(df_input)
