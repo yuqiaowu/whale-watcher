@@ -22,11 +22,18 @@ BASE_URL = "https://api.deepseek.com"
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url=BASE_URL)
 
 # Paths
+# Paths
 BASE_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = BASE_DIR.parent
+DATA_DIR = PROJECT_ROOT / "frontend" / "data"
+
 QLIB_DATA_DIR = BASE_DIR / "qlib_data"
 PAYLOAD_PATH = QLIB_DATA_DIR / "deepseek_payload.json"
-PORTFOLIO_PATH = BASE_DIR / "portfolio_state.json"
-TRADE_HISTORY_PATH = BASE_DIR / "trade_history.json"
+
+# Centralized Data Paths (Frontend Accessible)
+PORTFOLIO_PATH = DATA_DIR / "portfolio_state.json"
+TRADE_HISTORY_PATH = DATA_DIR / "trade_history.json"
+AGENT_LOG_PATH = DATA_DIR / "agent_decision_log.json"
 
 class TradeMemory:
     """
@@ -658,9 +665,9 @@ def run_agent():
         
         # Load History
         history = []
-        if log_path.exists():
+        if AGENT_LOG_PATH.exists():
             try:
-                with open(log_path, "r") as f:
+                with open(AGENT_LOG_PATH, "r") as f:
                     content_json = json.load(f)
                     if isinstance(content_json, list):
                         history = content_json
@@ -678,7 +685,7 @@ def run_agent():
         history.insert(0, decision)
         history = history[:50]
         
-        with open(log_path, "w") as f:
+        with open(AGENT_LOG_PATH, "w") as f:
             json.dump(history, f, indent=2, ensure_ascii=False)
                 
     except Exception as e:

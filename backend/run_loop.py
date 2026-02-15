@@ -13,6 +13,62 @@ INTERVAL_HOURS = 4
 INTERVAL_SECONDS = INTERVAL_HOURS * 3600
 PORT = int(os.getenv("PORT", 8080))
 
+# --- DATA INITIALIZATION ---
+def init_data_files():
+    """Ensure data files exist on startup to prevent API 404s"""
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    data_dir = os.path.join(project_root, "frontend", "data")
+    
+    if not os.path.exists(data_dir):
+        try:
+            os.makedirs(data_dir, exist_ok=True)
+        except Exception as e:
+            print(f"⚠️ Failed to create data dir: {e}")
+            return
+
+    # 1. Portfolio State
+    port_path = os.path.join(data_dir, "portfolio_state.json")
+    if not os.path.exists(port_path):
+        default_state = {
+            "total_equity": 10000.0,
+            "cash": 10000.0,
+            "positions": [] # {symbol, size, entry_price, type, margin, timestamp}
+        }
+        with open(port_path, "w") as f:
+            json.dump(default_state, f, indent=2)
+        print("✅ Initialized portfolio_state.json")
+
+    # 2. Trade History
+    hist_path = os.path.join(data_dir, "trade_history.json")
+    if not os.path.exists(hist_path):
+        with open(hist_path, "w") as f:
+            json.dump([], f)
+        print("✅ Initialized trade_history.json")
+        
+    # 3. Agent Decision Log
+    log_path = os.path.join(data_dir, "agent_decision_log.json")
+    if not os.path.exists(log_path):
+        # Create a dummy initial log so UI isn't empty
+        dummy_log = [{
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "analysis_summary": {
+                "zh": "系统初始化完成。AI正在准备第一次市场扫描...",
+                "en": "System initialized. AI is preparing for the first market scan..."
+            },
+            "actions": [],
+            "context_analysis": {
+                "technical_signal": {"en": "Waiting for data..."},
+                "macro_onchain": {"en": "Waiting for data..."}, 
+                "portfolio_status": {"en": "Equity $10,000"},
+                "reflection": {"en": "Ready to trade."}
+            }
+        }]
+        with open(log_path, "w") as f:
+            json.dump(dummy_log, f, indent=2)
+        print("✅ Initialized agent_decision_log.json")
+
+
+
 app = Flask(__name__)
 CORS(app) # Enable CORS for Vercel
 
@@ -284,7 +340,10 @@ def main():
     print(f"🤖 Unified Whale Monitor & AI Trader Started.")
     print(f"⏱️  Interval: Every {INTERVAL_HOURS} hours.")
     
-    # 0. Start Web Server
+    # 0. Initialize Data Files
+    init_data_files()
+    
+    # 1. Start Web Server
     threading.Thread(target=start_web_server, daemon=True).start()
     
     print("==================================================")
