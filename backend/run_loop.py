@@ -2,9 +2,9 @@ import time
 import subprocess
 import os
 import sys
-import threading
-import functools
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+import json
+from flask import Flask, jsonify, send_from_directory
+from flask_cors import CORS
 from datetime import datetime, timedelta
 
 # Configuration
@@ -12,19 +12,40 @@ INTERVAL_HOURS = 4
 INTERVAL_SECONDS = INTERVAL_HOURS * 3600
 PORT = int(os.getenv("PORT", 8080))
 
-def start_web_server():
-    """Start a simple HTTP server to serve the frontend dashboard."""
-    # Serve files from 'frontend' directory (relative to project root)
-    # We assume run_loop.py is in backend/, so we go up one level then into frontend
+app = Flask(__name__)
+CORS(app) # Enable CORS for Vercel
+
+@app.route('/api/market-stats', methods=['GET'])
+def get_market_stats():
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    whale_path = os.path.join(project_root, "frontend", "data", "whale_analysis.json")
+    
+    if not os.path.exists(whale_path):
+        return jsonify({"error": "Data file not found"}), 404
+        
+    try:
+        with open(whale_path, 'r') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/<path:path>')
+def serve_static(path):
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     frontend_dir = os.path.join(project_root, "frontend")
-    
-    handler = functools.partial(SimpleHTTPRequestHandler, directory=frontend_dir)
-    # Allow address reuse to prevent "Address already in use" errors on restart
-    HTTPServer.allow_reuse_address = True
-    server = HTTPServer(('0.0.0.0', PORT), handler)
-    print(f"🌍 Web Server running at http://localhost:{PORT}")
-    server.serve_forever()
+    return send_from_directory(frontend_dir, path)
+
+@app.route('/')
+def serve_index():
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    frontend_dir = os.path.join(project_root, "frontend")
+    return send_from_directory(frontend_dir, 'index.html')
+
+def start_web_server():
+    """Start the Flask server to serve APIs and frontend files."""
+    print(f"🌍 Flask Server starting on port {PORT}...")
+    app.run(host='0.0.0.0', port=PORT, debug=False, use_reloader=False)
 
 def write_status(status, detail=""):
     """Write status to frontend/debug.txt for UI display"""
