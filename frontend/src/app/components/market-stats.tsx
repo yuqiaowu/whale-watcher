@@ -111,9 +111,10 @@ export function MarketStats() {
   }
 
   // Calculate logic for each
-  const indices = (marketData?.market_indices || {}) as any;
+  const indices = (marketData?.macro?.liquidity_monitor || {}) as any;
   const fearGreedData = (marketData?.fear_greed || {}) as any;
-  const fearGreedLatest = fearGreedData.latest || {};
+  // Handle both flat and nested structures for Fear & Greed
+  const fearGreedLatest = fearGreedData.latest ? fearGreedData.latest : fearGreedData;
   const fearGreedSeries = fearGreedData.series || [];
 
   let fgChange = 0;
@@ -125,35 +126,35 @@ export function MarketStats() {
     }
   }
 
-  const dxyLogic = getLogic('dxy', indices.dxy?.value, indices.dxy?.change_pct);
-  const us10yLogic = getLogic('us10y', indices.us10y?.value, indices.us10y?.change_pct);
-  const vixLogic = getLogic('vix', indices.vix?.value, indices.vix?.change_pct);
+  const dxyLogic = getLogic('dxy', indices.dxy?.price, indices.dxy?.change_5d_pct);
+  const us10yLogic = getLogic('us10y', indices.us10y?.price, indices.us10y?.change_5d_pct);
+  const vixLogic = getLogic('vix', indices.vix?.price, indices.vix?.change_5d_pct);
   const fgLogic = getLogic('fg', fearGreedLatest.value, fgChange);
 
   const stats: (StatItem & { sentimentType: string })[] = [
     {
       label: "DXY (Dollar)",
-      value: fmt(indices.dxy?.value) !== "--" ? fmt(indices.dxy?.value) : "Loading...",
-      change: fmtChange(indices.dxy?.change_pct),
-      trend: (indices.dxy?.change_pct || 0) < 0 ? "down" : "up",
+      value: fmt(indices.dxy?.price) !== "--" ? fmt(indices.dxy?.price) : "Loading...",
+      change: fmtChange(indices.dxy?.change_5d_pct),
+      trend: (indices.dxy?.change_5d_pct || 0) < 0 ? "down" : "up",
       interpretation: dxyLogic.text,
       color: dxyLogic.color,
       sentimentType: dxyLogic.sentimentType
     },
     {
       label: "US10Y (Yield)",
-      value: fmt(indices.us10y?.value) !== "--" ? fmt(indices.us10y?.value) : "Loading...",
-      change: fmtChange(indices.us10y?.change_pct),
-      trend: (indices.us10y?.change_pct || 0) < 0 ? "down" : "up",
+      value: fmt(indices.us10y?.price) !== "--" ? fmt(indices.us10y?.price) : "Loading...",
+      change: fmtChange(indices.us10y?.change_5d_pct),
+      trend: (indices.us10y?.change_5d_pct || 0) < 0 ? "down" : "up",
       interpretation: us10yLogic.text,
       color: us10yLogic.color,
       sentimentType: us10yLogic.sentimentType
     },
     {
       label: "VIX (Fear)",
-      value: fmt(indices.vix?.value) !== "--" ? fmt(indices.vix?.value) : "Loading...",
-      change: fmtChange(indices.vix?.change_pct),
-      trend: (indices.vix?.change_pct || 0) < 0 ? "down" : "up",
+      value: fmt(indices.vix?.price) !== "--" ? fmt(indices.vix?.price) : "Loading...",
+      change: fmtChange(indices.vix?.change_5d_pct),
+      trend: (indices.vix?.change_5d_pct || 0) < 0 ? "down" : "up",
       interpretation: vixLogic.text,
       color: vixLogic.color,
       sentimentType: vixLogic.sentimentType
