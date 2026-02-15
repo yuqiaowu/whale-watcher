@@ -90,7 +90,10 @@ export function AICopyTrading() {
           </div>
 
           <div className="flex-1 min-h-0">
-            <ProfitCurve />
+            {/* <ProfitCurve /> */}
+            <div className="flex items-center justify-center h-full text-[#8E9297] bg-[#0A0C0E]/50">
+              Chart temporarily disabled for debugging
+            </div>
           </div>
         </div>
 
@@ -103,7 +106,7 @@ export function AICopyTrading() {
                 onClick={() => setActiveTab(tab)}
                 className={`flex-1 py-4 text-sm font-bold tracking-widest relative transition-colors ${activeTab === tab ? "text-[#39FF14]" : "text-[#8E9297] hover:text-[#E8E8E8]"}`}
               >
-                {t.aiTrading.tabs[tab]}
+                {t?.aiTrading?.tabs?.[tab] || tab.toUpperCase()}
                 {activeTab === tab && (
                   <motion.div
                     layoutId="tabUnderline"
