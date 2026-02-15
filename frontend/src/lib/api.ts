@@ -1,5 +1,19 @@
 
-export const API_BASE_URL = 'http://localhost:5001/api';
+const getBaseUrl = () => {
+    // If it's a Vercel/Production build, use the VITE_API_URL if it exists
+    if (typeof process !== 'undefined' && process.env.VITE_API_URL) {
+        return process.env.VITE_API_URL;
+    }
+    // For Vite client-side environment variables
+    const viteUrl = import.meta.env.VITE_API_URL;
+    if (viteUrl) {
+        return viteUrl.endsWith('/api') ? viteUrl : `${viteUrl}/api`;
+    }
+    return 'http://localhost:5001/api';
+};
+
+export const API_BASE_URL = getBaseUrl();
+
 
 export interface PortfolioSummary {
     nav: number;
