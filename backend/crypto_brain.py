@@ -1264,10 +1264,7 @@ def main():
         "updated_at": datetime.now().isoformat(),
         "fear_greed": fear_greed,
         "macro": macro_data, 
-        "news": { 
-             "macro": [x['title'] for x in news_data.get('macro', {}).get('items', [])[:5]],
-             "crypto": [x['title'] for x in news_data.get('general', {}).get('items', [])[:5]]
-        },
+        "news": news_data,
         "eth": {
             "stats": eth_analysis["stats_7d"], 
             "stats_24h": eth_analysis["stats_24h"],

@@ -31,6 +31,58 @@ def get_market_stats():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/crypto-data', methods=['GET'])
+def get_crypto_data():
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    whale_path = os.path.join(project_root, "frontend", "data", "whale_analysis.json")
+    
+    if not os.path.exists(whale_path):
+        return jsonify({"error": "Data file not found"}), 404
+        
+    try:
+        with open(whale_path, 'r') as f:
+            full_data = json.load(f)
+            
+        result = {}
+        # Map frontend symbols to backend keys
+        symbols = ["BTC", "ETH", "SOL", "BNB", "DOGE"]
+        
+        for sym in symbols:
+            key = sym.lower()
+            if key not in full_data:
+                continue
+                
+            coin_data = full_data[key]
+            market = coin_data.get("market", {})
+            stats = coin_data.get("stats", {})
+            
+            # Determine Sentiment string from Action Signal or Score
+            sentiment = stats.get("action_signal", "NEUTRAL")
+            # Fallback if signal is missing (e.g. for simple coins)
+            if not sentiment or sentiment == "WAIT":
+                sentiment = "NEUTRAL"
+            
+            # Use confidence_score (0-100) or default to 50
+            score = stats.get("confidence_score", 50)
+            
+            result[sym] = {
+                "price": market.get("price", 0),
+                "change_24h": market.get("change_24h", 0),
+                "rsi_4h": market.get("rsi_4h", 50),
+                "funding_rate": market.get("funding_rate", 0),
+                "funding_rate_status": market.get("funding_rate_status", "NEUTRAL"),
+                "volume_24h": market.get("volume_24h", 0),
+                "sentiment": sentiment,
+                "sentimentScore": score
+            }
+            
+        return jsonify({
+            "data": result,
+            "lastUpdated":  int(datetime.now().timestamp() * 1000) # Current server time as ms
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/<path:path>')
 def serve_static(path):
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
