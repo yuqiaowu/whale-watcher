@@ -390,20 +390,107 @@ class OKXExecutor:
                 elif side == "short": exposure['short'] += abs(notional)
         return exposure
 
-    def get_account_equity(self):
+    def get_all_positions(self):
+        """
+        Get detailed list of all open positions.
+        Returns standard format list for frontend.
+        """
         if self.shadow_mode:
             state = self._load_shadow_state()
-            # Equity = Cash + Unrealized PnL
-            # Note: We aren't calculating live PnL here (need live prices).
-            # So we just return stored 'total_equity' which is updated on Close.
-            # For better accuracy, we could pass current prices in, but for now this is "Balance"
+            # Map shadow positions to standard format
+            mapped = []
+            for p in state["positions"]:
+                # Fetch current price for PnL calculation if possible, else use Entry
+                # For shadow list, we might not have live price here unless we fetch ticker
+                # Let's try to fetch ticker for PnL accuracy
+                instId = p.get("instId", f"{p['symbol']}-USDT-SWAP")
+                ticker = self.get_market_ticker(instId)
+                current_price = float(ticker['last']) if ticker else p['entry_price']
+                
+                # Calc PnL
+                entry_price = p['entry_price']
+                size = p['size'] # Contracts
+                # We need instrument info for contract value (ctVal)
+                # If cached/fetching fails, assume 0.01 for ETH/BTC etc or usage logic
+                # For simplicity in shadow view:
+                # Value = Size * ContractVal * Price
+                # But we stored 'size_usd' in execute_trade for shadow positions as approx
+                
+                # Let's simple calc:
+                # PnL % = (Current - Entry) / Entry * Leverage (Long)
+                if p['type'] == 'long':
+                    pnl_pct = ((current_price - entry_price) / entry_price) * 100 * p['leverage']
+                    pnl_amt = (pnl_pct / 100) * p['margin']
+                else:
+                    pnl_pct = ((entry_price - current_price) / entry_price) * 100 * p['leverage']
+                    pnl_amt = (pnl_pct / 100) * p['margin']
+                
+                mapped.append({
+                    "symbol": p["symbol"],
+                    "instId": instId,
+                    "leverage": p["leverage"],
+                    "type": p["type"],
+                    "entryPrice": entry_price,
+                    "currentPrice": current_price,
+                    "pnl": float(f"{pnl_amt:.2f}"),
+                    "pnlPercent": float(f"{pnl_pct:.2f}"),
+                    "amount": size, # contracts
+                    "margin": p["margin"]
+                })
+            return mapped
+
+        # REAL / DEMO MODE
+        res = self._request("GET", "/api/v5/account/positions?instType=SWAP")
+        mapped_real = []
+        if res["code"] == "0":
+            for pos in res["data"]:
+                # OKX API Fields:
+                # instId, avgPx (Entry), last (Mark), upl (Unrealized PnL), uplRatio (PnL%), lever
+                
+                sym = pos["instId"].split("-")[0]
+                entry_px = float(pos.get("avgPx", 0))
+                mark_px = float(pos.get("markPx", 0) or pos.get("last", 0))
+                upl = float(pos.get("upl", 0))
+                upl_ratio = float(pos.get("uplRatio", 0)) * 100 # OKX gives decimal usually? No, check docs. 
+                # Docs: uplRatio is ratio. e.g. 0.1 for 10%. So * 100.
+                
+                side = pos.get("posSide") # long, short, net
+                if side == "net":
+                    # If net, determine by pos sign
+                    sz = float(pos.get("pos", 0))
+                    side = "long" if sz > 0 else "short"
+                
+                mapped_real.append({
+                    "symbol": sym,
+                    "instId": pos["instId"],
+                    "leverage": int(float(pos.get("lever", 1))),
+                    "type": side,
+                    "entryPrice": entry_px,
+                    "currentPrice": mark_px,
+                    "pnl": upl,
+                    "pnlPercent": float(f"{upl_ratio:.2f}"),
+                    "amount": pos.get("pos"), # contracts
+                    "margin": float(pos.get("margin", 0) or pos.get("notionalUsd", 0)) / float(pos.get("lever", 1)) # Approx
+                })
+        return mapped_real
+
+    def get_account_equity(self):
+        """
+        Get total account equity in USDT.
+        """
+        if self.shadow_mode:
+            state = self._load_shadow_state()
+            # Update equity with live PnL? 
+            # For simplicity, return stored equity (balance) + approx PnL from get_all_positions?
+            # Or just stored total_equity (which handles realized). Unrealized might be missed.
+            # Let's trust stored for now to avoid delays.
             return state["total_equity"]
             
         res = self._request("GET", "/api/v5/account/balance?ccy=USDT")
         if res["code"] == "0" and res["data"]:
+            # details[0].eq is equity (Balance + Unrealized PnL)
             return float(res["data"][0]["details"][0]["eq"])
-        return 1.0
-
+        return 0.0
 # Simple Test
 if __name__ == "__main__":
     # Test in Shadow Mode

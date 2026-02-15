@@ -139,90 +139,59 @@ def get_crypto_data():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# --- AI Copy Trading Endpoints ---
+from okx_executor import OKXExecutor
+
+# Initialize Executor
+executor = OKXExecutor()
+
+# ...
 
 @app.route('/api/summary', methods=['GET'])
 def get_portfolio_summary():
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    path = os.path.join(project_root, "frontend", "data", "portfolio_state.json")
-    
     try:
+        # Hybrid Approach:
+        # 1. Get Equity from Executor (Source of Truth for Balance)
+        current_equity = executor.get_account_equity()
+        
+        # 2. Get Initial & History from File (for PnL tracking over time)
+        # Because OKX API doesn't easily give "Portfolio Initial Value" from API directly in a simple call
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        path = os.path.join(project_root, "frontend", "data", "portfolio_state.json")
+        
+        initial = 10000.0
+        start_time = "2024-01-01T00:00:00Z"
+        
         if os.path.exists(path):
-            with open(path, 'r') as f:
-                data = json.load(f)
-                
-            # Calculate summary stats based on current state
-            nav = data.get("total_equity", 10000)
-            initial = 10000 # Hardcoded for now or store in file
-            pnl = nav - initial
-            pnl_pct = (pnl / initial) * 100
-            
-            # Count trades from history file or maintain counter
-            # For simplicity, returning derived summary
-            return jsonify({
-                "nav": nav,
-                "initialNav": initial,
-                "totalPnl": pnl,
-                "pnlPercent": float(f"{pnl_pct:.2f}"),
-                "startTime": "2024-01-01T00:00:00Z", # Placeholder
-                "winRate": 0, # To be calculated from history
-                "totalTrades": 0 
-            })
-        else:
-             return jsonify({
-                "nav": 10000,
-                "initialNav": 10000,
-                "totalPnl": 0,
-                "pnlPercent": 0,
-                "startTime": datetime.now().isoformat(),
-                "winRate": 0,
-                "totalTrades": 0
-            })
+             with open(path, "r") as f:
+                 data = json.load(f)
+                 # Keep initial fixed or update it? 
+                 # Let's say we trust the file's "initial" if it exists, else 10k
+                 # But if we are in DEMO mode, the file might be stale?
+                 # Actually, for DEMO mood, let's just assume 100k or fetch valid
+                 pass
+
+        # Calculate PnL
+        pnl = current_equity - initial
+        pnl_pct = (pnl / initial) * 100 if initial > 0 else 0
+        
+        return jsonify({
+            "nav": current_equity,
+            "initialNav": initial,
+            "totalPnl": pnl,
+            "pnlPercent": float(f"{pnl_pct:.2f}"),
+            "startTime": start_time,
+            "winRate": 0, 
+            "totalTrades": 0 
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/positions', methods=['GET'])
 def get_positions():
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    path = os.path.join(project_root, "frontend", "data", "portfolio_state.json")
-    
     try:
-        if os.path.exists(path):
-            with open(path, 'r') as f:
-                data = json.load(f)
-            
-            positions = data.get("positions", [])
-            # Map to frontend format if needed
-            # Frontend expects: symbol, name, entryPrice, currentPrice, pnl, etc
-            # Backend positions currently might be simpler? 
-            # Assuming backend structure matches or we map it here.
-            # Example backend pos: {"symbol": "ETH", "Entry": 2000, "Size": 1.5, ...}
-            
-            mapped = []
-            for p in positions:
-                # Mock current price lookup or use stored if fresh
-                # Ideally fetch real price here or from whale_analysis.json
-                entry_price = p.get("entry_price", 0)
-                amount = p.get("size", 0)
-                # We need real-time price to calc PnL for display
-                # For MVP, send 0 or stored
-                current_price = entry_price # Placeholder
-                
-                mapped.append({
-                    "symbol": p.get("symbol"),
-                    "name": p.get("symbol"), # Placeholder name
-                    "entryPrice": entry_price,
-                    "currentPrice": current_price,
-                    "amount": amount,
-                    "pnl": 0, # Calc dynamically
-                    "pnlPercent": 0,
-                    "type": "long", # Assume long for now
-                    "leverage": 1,
-                     "stopLoss": 0,
-                    "takeProfit": 0
-                })
-            return jsonify(mapped)
-        return jsonify([])
+        # Use Executor to force alignment with Trading Mode
+        positions = executor.get_all_positions()
+        return jsonify(positions)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
