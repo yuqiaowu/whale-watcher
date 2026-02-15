@@ -83,6 +83,141 @@ def get_crypto_data():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# --- AI Copy Trading Endpoints ---
+
+@app.route('/api/summary', methods=['GET'])
+def get_portfolio_summary():
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    path = os.path.join(project_root, "frontend", "data", "portfolio_state.json")
+    
+    try:
+        if os.path.exists(path):
+            with open(path, 'r') as f:
+                data = json.load(f)
+                
+            # Calculate summary stats based on current state
+            nav = data.get("total_equity", 10000)
+            initial = 10000 # Hardcoded for now or store in file
+            pnl = nav - initial
+            pnl_pct = (pnl / initial) * 100
+            
+            # Count trades from history file or maintain counter
+            # For simplicity, returning derived summary
+            return jsonify({
+                "nav": nav,
+                "initialNav": initial,
+                "totalPnl": pnl,
+                "pnlPercent": float(f"{pnl_pct:.2f}"),
+                "startTime": "2024-01-01T00:00:00Z", # Placeholder
+                "winRate": 0, # To be calculated from history
+                "totalTrades": 0 
+            })
+        else:
+             return jsonify({
+                "nav": 10000,
+                "initialNav": 10000,
+                "totalPnl": 0,
+                "pnlPercent": 0,
+                "startTime": datetime.now().isoformat(),
+                "winRate": 0,
+                "totalTrades": 0
+            })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/positions', methods=['GET'])
+def get_positions():
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    path = os.path.join(project_root, "frontend", "data", "portfolio_state.json")
+    
+    try:
+        if os.path.exists(path):
+            with open(path, 'r') as f:
+                data = json.load(f)
+            
+            positions = data.get("positions", [])
+            # Map to frontend format if needed
+            # Frontend expects: symbol, name, entryPrice, currentPrice, pnl, etc
+            # Backend positions currently might be simpler? 
+            # Assuming backend structure matches or we map it here.
+            # Example backend pos: {"symbol": "ETH", "Entry": 2000, "Size": 1.5, ...}
+            
+            mapped = []
+            for p in positions:
+                # Mock current price lookup or use stored if fresh
+                # Ideally fetch real price here or from whale_analysis.json
+                entry_price = p.get("entry_price", 0)
+                amount = p.get("size", 0)
+                # We need real-time price to calc PnL for display
+                # For MVP, send 0 or stored
+                current_price = entry_price # Placeholder
+                
+                mapped.append({
+                    "symbol": p.get("symbol"),
+                    "name": p.get("symbol"), # Placeholder name
+                    "entryPrice": entry_price,
+                    "currentPrice": current_price,
+                    "amount": amount,
+                    "pnl": 0, # Calc dynamically
+                    "pnlPercent": 0,
+                    "type": "long", # Assume long for now
+                    "leverage": 1,
+                     "stopLoss": 0,
+                    "takeProfit": 0
+                })
+            return jsonify(mapped)
+        return jsonify([])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/history', methods=['GET'])
+def get_trade_history():
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    path = os.path.join(project_root, "frontend", "data", "trade_history.json")
+    
+    try:
+        if os.path.exists(path):
+            with open(path, 'r') as f:
+                data = json.load(f)
+            return jsonify(data[-50:][::-1]) # Return last 50, newest first
+        return jsonify([])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/agent-decision', methods=['GET'])
+def get_agent_decision():
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    path = os.path.join(project_root, "frontend", "data", "agent_decision_log.json")
+    
+    try:
+        # This file logs every run. We want to return the last few decisions.
+        if os.path.exists(path):
+            # It might be a line-delimited JSON or a list? 
+            # ai_trader.py appends?
+            # Let's assume it's a valid JSON list for now.
+             with open(path, 'r') as f:
+                try:
+                    data = json.load(f)
+                    if isinstance(data, list):
+                        return jsonify(data[-10:][::-1]) # Last 10 reversed
+                    else:
+                        return jsonify([data])
+                except json.JSONDecodeError:
+                    # Handle if it's appending objects without list wrapper?
+                    # Fallback
+                    return jsonify([])
+        return jsonify([])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
+@app.route('/api/nav-history', methods=['GET'])
+def get_nav_history():
+    # Return dummy point for profit curve
+    return jsonify([
+        {"timestamp": "2024-01-01", "nav": 10000},
+        {"timestamp": datetime.now().strftime("%Y-%m-%d"), "nav": 10000}
+    ])
+
 @app.route('/<path:path>')
 def serve_static(path):
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
