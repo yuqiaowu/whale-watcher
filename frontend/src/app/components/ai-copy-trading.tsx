@@ -1,3 +1,5 @@
+"use client";
+
 import { motion, AnimatePresence } from "motion/react";
 import { useLanguage } from "@/app/i18n/LanguageContext";
 import { useState } from "react";

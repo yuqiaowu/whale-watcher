@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 # Configuration
 INTERVAL_HOURS = 4
 INTERVAL_SECONDS = INTERVAL_HOURS * 3600
-PORT = int(os.getenv("PORT", 8080))
+PORT = int(os.getenv("PORT", 5001))
 
 # --- DATA INITIALIZATION ---
 def init_data_files():

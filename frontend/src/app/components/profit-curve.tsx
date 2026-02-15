@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState, useRef } from 'react';
 import { fetchNavHistory } from '@/lib/api';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
