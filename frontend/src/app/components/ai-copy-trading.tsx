@@ -1,5 +1,3 @@
-"use client";
-
 import { motion, AnimatePresence } from "motion/react";
 import { useLanguage } from "@/app/i18n/LanguageContext";
 import { useState } from "react";
@@ -38,16 +36,16 @@ export function AICopyTrading() {
       try {
         // Run in parallel
         const [sumData, posData, histData, decData] = await Promise.all([
-          fetchSummary(),
-          fetchPositions(),
-          fetchHistory(),
-          fetchAgentDecision()
+          fetchSummary().catch(() => null),
+          fetchPositions().catch(() => []),
+          fetchHistory().catch(() => []),
+          fetchAgentDecision().catch(() => [])
         ]);
 
         setSummary(sumData);
-        setPositions(posData);
-        setHistory(histData);
-        setDecisions(decData);
+        setPositions(Array.isArray(posData) ? posData : []);
+        setHistory(Array.isArray(histData) ? histData : []);
+        setDecisions(Array.isArray(decData) ? decData : []);
       } catch (e) {
         console.error("Failed to fetch data", e);
       }
