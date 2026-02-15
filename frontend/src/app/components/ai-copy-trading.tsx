@@ -227,44 +227,51 @@ export function AICopyTrading() {
 
                   {/* Trade List */}
                   <div className="space-y-3">
-                    {history.map((trade, i) => (
-                      <div key={trade.id || i} className="bg-[#111418] border border-[#2D3139] rounded-sm p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-2">
-                            <span className="text-base font-bold text-white">{trade.symbol}</span>
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded border ${trade.type.toLowerCase().includes('long') ? 'bg-[#1E3A8A]/30 text-[#60A5FA] border-[#1E3A8A]/50' : 'bg-[#450A0A]/30 text-[#FF3131] border-[#450A0A]/50'}`}>
-                              {trade.type.toUpperCase()}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className={`text-sm font-bold font-mono ${trade.pnl >= 0 ? 'text-[#39FF14]' : 'text-[#FF3131]'}`}>
-                              {trade.pnl >= 0 ? '+' : ''}${trade.pnl.toFixed(2)}
-                            </span>
-                            <span className={`text-[10px] px-1 py-0.5 rounded border ${trade.pnl >= 0 ? 'bg-[#14532D]/30 text-[#39FF14] border-[#14532D]/50' : 'bg-[#450A0A]/30 text-[#FF3131] border-[#450A0A]/50'}`}>
-                              {trade.pnlPercent.toFixed(2)}%
-                            </span>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-y-3 mb-3">
-                          <div>
-                            <div className="text-[10px] text-[#8E9297]">开仓: <span className="text-[#E8E8E8] font-mono">${trade.entryPrice.toLocaleString()}</span></div>
-                          </div>
-                          <div>
-                            <div className="text-[10px] text-[#8E9297]">平仓: <span className="text-[#E8E8E8] font-mono">${trade.exitPrice.toLocaleString()}</span></div>
-                          </div>
-                          <div>
-                            <div className="text-[10px] text-[#8E9297]">数量: <span className="text-[#E8E8E8] font-mono">{trade.amount}</span></div>
-                          </div>
-                          <div>
-                            <div className="text-[10px] text-[#8E9297]">杠杆: <span className="text-[#60A5FA] font-mono">{trade.leverage}x</span></div>
-                          </div>
-                        </div>
-                        <div className="pt-3 border-t border-[#2D3139]/30 text-[10px] text-[#5A5E66] font-mono">
-                          {trade.entryTime} - {trade.exitTime}
-                        </div>
+                    {history.length === 0 ? (
+                      <div className="text-center py-10 text-[#8E9297] bg-[#0A0C0E] border border-[#2D3139]/30 rounded-sm">
+                        暂无历史交易记录
                       </div>
-                    ))}
+                    ) : (
+                      history.map((trade, i) => (
+                        <div key={trade.id || i} className="bg-[#111418] border border-[#2D3139] rounded-sm p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <span className="text-base font-bold text-white">{trade.symbol}</span>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded border ${trade.type.toLowerCase().includes('long') ? 'bg-[#1E3A8A]/30 text-[#60A5FA] border-[#1E3A8A]/50' : 'bg-[#450A0A]/30 text-[#FF3131] border-[#450A0A]/50'}`}>
+                                {trade.type.toUpperCase()}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className={`text-sm font-bold font-mono ${trade.pnl >= 0 ? 'text-[#39FF14]' : 'text-[#FF3131]'}`}>
+                                {trade.pnl >= 0 ? '+' : ''}${trade.pnl.toFixed(2)}
+                              </span>
+                              <span className={`text-[10px] px-1 py-0.5 rounded border ${trade.pnl >= 0 ? 'bg-[#14532D]/30 text-[#39FF14] border-[#14532D]/50' : 'bg-[#450A0A]/30 text-[#FF3131] border-[#450A0A]/50'}`}>
+                                {trade.pnlPercent.toFixed(2)}%
+                              </span>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-y-3 mb-3">
+                            <div>
+                              <div className="text-[10px] text-[#8E9297]">开仓: <span className="text-[#E8E8E8] font-mono">${trade.entryPrice.toLocaleString()}</span></div>
+                            </div>
+                            <div>
+                              <div className="text-[10px] text-[#8E9297]">平仓: <span className="text-[#E8E8E8] font-mono">${trade.exitPrice.toLocaleString()}</span></div>
+                            </div>
+                            <div>
+                              <div className="text-[10px] text-[#8E9297]">数量: <span className="text-[#E8E8E8] font-mono">{trade.amount}</span></div>
+                            </div>
+                            <div>
+                              <div className="text-[10px] text-[#8E9297]">杠杆: <span className="text-[#60A5FA] font-mono">{trade.leverage}x</span></div>
+                            </div>
+                          </div>
+                          <div className="pt-3 border-t border-[#2D3139]/30 text-[10px] text-[#5A5E66] font-mono">
+                            {trade.entryTime} - {trade.exitTime}
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
+
                 </motion.div>
 
               )}
