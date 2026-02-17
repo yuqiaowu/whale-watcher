@@ -12,7 +12,7 @@ interface StatItem {
 }
 
 export function MarketStats() {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   const [marketData, setMarketData] = useState<MarketStatsType | null>(null);
 
   useEffect(() => {
@@ -172,7 +172,7 @@ export function MarketStats() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      {stats.map((stat: any, index: number) => (
+      {stats.map((stat: any) => (
         <div
           key={stat.label}
           className="relative bg-[#1a1a1a] border border-[#2D3139] p-4 overflow-hidden group rounded-sm hover:scale-[1.02] hover:shadow-[0_0_30px_var(--sentiment-bullish-bg)] transition-all duration-300"

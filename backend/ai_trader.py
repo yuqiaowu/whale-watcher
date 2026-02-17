@@ -11,6 +11,7 @@ from datetime import datetime
 from openai import OpenAI
 import time
 from okx_executor import OKXExecutor
+from notifier import notify_trade_execution # Restored Notification System
 
 # Load environment variables
 load_dotenv()
@@ -652,13 +653,29 @@ def run_agent():
                 executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp)
                 
                 # LOG TO MEMORY
+                # LOG TO MEMORY
                 try:
                     sym_lower = symbol.lower()
                     market_snapshot = whale_data_obj.get(sym_lower, {}).get('market', {})
                     entry_reason = act.get('entry_reason', {})
+                    # Add reason string for text logs
+                    reason_txt = entry_reason.get('en', 'Driven by whale accumulation.')
+                    
                     memory.log_trade(symbol, action_type, amount, entry_reason, market_snapshot)
+                    
+                    # 🔔 SEND NOTIFICATION (Telegram/Discord)
+                    notify_trade_execution(
+                        symbol=symbol,
+                        action=action_type,
+                        size=f"${amount} ({leverage}x)",
+                        entry_price="MARKET", # Execution is market/limit based on executor
+                        sl=sl,
+                        tp=tp,
+                        reason=reason_txt
+                    )
+                    
                 except Exception as log_err:
-                    print(f"⚠️ Memory Log Error: {log_err}")
+                    print(f"⚠️ Memory/Notify Log Error: {log_err}")
         
         # Save decision log
         log_path = BASE_DIR / "agent_decision_log.json"

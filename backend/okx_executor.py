@@ -311,6 +311,45 @@ class OKXExecutor:
                     state["cash"] += return_amount
                     state["total_equity"] += pnl
                     print(f"✅ [SHADOW] Position Closed: {symbol}. PnL: ${pnl:.2f}")
+
+                    # --- LOG TRADE HISTORY (Shadow Mode) ---
+                    # Now we must record this closed trade to trade_history.json so frontend can see it
+                    try:
+                        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                        hist_path = os.path.join(base_dir, "frontend", "data", "trade_history.json")
+                        
+                        history = []
+                        if os.path.exists(hist_path):
+                            try:
+                                with open(hist_path, 'r') as f:
+                                    history = json.load(f)
+                            except:
+                                history = []
+
+                        trade_record = {
+                            "id": f"{symbol}_{int(time.time())}",
+                            "symbol": symbol,
+                            "type": pos["type"],
+                            "entryPrice": pos["entry_price"],
+                            "exitPrice": limit_px,
+                            "amount": pos["size"], # contracts
+                            "leverage": pos["leverage"],
+                            "pnl": float(f"{pnl:.2f}"),
+                            "pnlPercent": float(f"{((limit_px - pos['entry_price'])/pos['entry_price'] * 100 * pos['leverage'] if pos['type']=='long' else (pos['entry_price'] - limit_px)/pos['entry_price'] * 100 * pos['leverage']):.2f}"),
+                            "entryTime": pos.get("timestamp", datetime.datetime.now().isoformat()), # Fallback
+                            "exitTime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                            "reason": "AI Decision (Shadow)" 
+                        }
+                        
+                        history.append(trade_record)
+                        
+                        with open(hist_path, 'w') as f:
+                            json.dump(history, f, indent=2)
+                        print(f"📝 [SHADOW] Appended trade to history: {trade_record['id']}")
+
+                    except Exception as e:
+                        print(f"⚠️ Failed to log shadow trade history: {e}")
+
                 else:
                     print(f"⚠️ [SHADOW] No position found to close for {symbol}")
 
@@ -435,12 +474,34 @@ class OKXExecutor:
                     "pnl": float(f"{pnl_amt:.2f}"),
                     "pnlPercent": float(f"{pnl_pct:.2f}"),
                     "amount": size, # contracts
-                    "margin": p["margin"]
+                    "margin": p["margin"],
+                    "stopLoss": p.get("stop_loss"),    # Return None if missing, Frontend handles '---'
+                    "takeProfit": p.get("take_profit"), # Return None if missing
+                    "name": p["symbol"] # Simple fallback
                 })
             return mapped
 
         # REAL / DEMO MODE
         res = self._request("GET", "/api/v5/account/positions?instType=SWAP")
+        
+        # Also fetch pending Algo orders (SL/TP) to populate those fields
+        # Note: This might be rate-limited if called too often, but for 4H interval it's fine.
+        algo_map = {}
+        try:
+            res_algo = self._request("GET", "/api/v5/trade/orders-algo-pending?instType=SWAP&ordType=conditional,move_order_stop,oco")
+            if res_algo["code"] == "0":
+                for algo in res_algo["data"]:
+                    # algo structure: slTriggerPx, tpTriggerPx, instId
+                    i_id = algo["instId"]
+                    if i_id not in algo_map: algo_map[i_id] = {}
+                    
+                    if algo.get("slTriggerPx") and float(algo["slTriggerPx"]) > 0:
+                        algo_map[i_id]["sl"] = float(algo["slTriggerPx"])
+                    if algo.get("tpTriggerPx") and float(algo["tpTriggerPx"]) > 0:
+                        algo_map[i_id]["tp"] = float(algo["tpTriggerPx"])
+        except Exception as e:
+            print(f"⚠️ Failed to fetch algo orders: {e}")
+
         mapped_real = []
         if res["code"] == "0":
             for pos in res["data"]:
@@ -460,6 +521,10 @@ class OKXExecutor:
                     sz = float(pos.get("pos", 0))
                     side = "long" if sz > 0 else "short"
                 
+                # Retrieve SL/TP from Algo Map
+                sl = algo_map.get(pos["instId"], {}).get("sl")
+                tp = algo_map.get(pos["instId"], {}).get("tp")
+
                 mapped_real.append({
                     "symbol": sym,
                     "instId": pos["instId"],
@@ -470,7 +535,10 @@ class OKXExecutor:
                     "pnl": upl,
                     "pnlPercent": float(f"{upl_ratio:.2f}"),
                     "amount": pos.get("pos"), # contracts
-                    "margin": float(pos.get("margin", 0) or pos.get("notionalUsd", 0)) / float(pos.get("lever", 1)) # Approx
+                    "margin": float(pos.get("margin", 0) or pos.get("notionalUsd", 0)) / float(pos.get("lever", 1)), # Approx
+                    "stopLoss": sl,
+                    "takeProfit": tp,
+                    "name": sym # Simple Name
                 })
         return mapped_real
 
@@ -491,6 +559,161 @@ class OKXExecutor:
             # details[0].eq is equity (Balance + Unrealized PnL)
             return float(res["data"][0]["details"][0]["eq"])
         return 0.0
+
+    def sync_trade_history(self):
+        """
+        [REAL MODE ONLY]
+        Fetch past filled orders from OKX and update trade_history.json.
+        This ensures the frontend shows actual trade history even if the bot restarts.
+        """
+        if self.shadow_mode:
+            print("🌑 [SHADOW] Skip syncing history from OKX (using local simulation log).")
+            return
+
+        print("🔄 [REAL] Syncing trade history from OKX...")
+        
+        # 1. Fetch Orders History (Last 7 days for recent fills)
+        # Using orders-history covers the most recent activity immediately.
+        res = self._request("GET", "/api/v5/trade/orders-history?instType=SWAP&state=filled")
+        
+        if res["code"] != "0":
+            print(f"❌ Failed to fetch OKX history: {res.get('msg')}")
+            return
+
+        okx_orders = res.get("data", [])
+        if not okx_orders:
+            print("ℹ️ No filled orders found in OKX history.")
+            return
+
+        # 2. Load existing local history to prevent duplicates
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        hist_path = os.path.join(base_dir, "frontend", "data", "trade_history.json")
+        
+        local_history = []
+        if os.path.exists(hist_path):
+            try:
+                with open(hist_path, 'r') as f:
+                    local_history = json.load(f)
+            except:
+                local_history = []
+        
+        existing_ids = set(item['id'] for item in local_history)
+        new_records = []
+
+        # 3. Process OKX Orders -> Frontend Format
+        for ord in okx_orders:
+            # We only care about orders that REDUCED position (Closing trades)
+            # Typically check 'reduceOnly' or side vs posSide.
+            # Simplified: If raw side != posSide (e.g. buy short, sell long) -> Close?
+            # Better: Check PnL. Only closing orders have realized PnL in fills?
+            # OKX Orders History endpoint has 'pnl' field for the order.
+            
+            pnl = float(ord.get("pnl", 0))
+            if pnl == 0 and ord.get("reduceOnly") != "true":
+                # Probably an opening order, skip (we only show closed trades in history usually)
+                continue
+
+            # ID unique to this order
+            trade_id = ord["ordId"]
+            if trade_id in existing_ids:
+                continue
+
+            # Format
+            symbol = ord["instId"].split("-")[0]
+            # Map side: buy + long = Open? buy + short = Close?
+            # OKX: side=buy, posSide=long -> Open Long
+            # OKX: side=sell, posSide=long -> Close Long
+            side = ord["side"]
+            posSide = ord["posSide"]
+            
+            # Determine type
+            if posSide == "long":
+                trade_type = "long"
+            elif posSide == "short":
+                trade_type = "short"
+            else:
+                trade_type = side # Net mode fallback
+
+            # Avg Price
+            avg_px = float(ord.get("avgPx", 0))
+            
+            # For a closed order, avgPx is exitPrice.
+            # Entry price is harder to get from just order history (need positions history).
+            # We can approximate or just leave entryPrice same as exit if unknown, or 0.
+            # Wait, user wants to see PnL.
+            # OKX Order JSON has `pnl` (Realized PnL).
+            
+            # Calculate approx entry price using PnL formula if valid?
+            # PnL = (Exit - Entry) * Size * ContractVal
+            # We have PnL, Exit, Size. Can solve for Entry.
+            # But we need ContractVal.
+            
+            sz = float(ord.get("sz", 0)) # Contracts
+            
+            # Attempt to get Entry Price
+            # If PnL is available, perfect.
+            entry_px = 0.0
+            
+            # Fetch instrument info for calc
+            instId = ord["instId"]
+            info = self.get_instrument_info(instId)
+            ctVal = info["ctVal"] if info else 0.01
+
+            if sz > 0 and ctVal > 0:
+                # PnL = (Exit - Entry) * sz * ctVal (Long)
+                # Entry = Exit - (PnL / (sz * ctVal))
+                if trade_type == "long": # Sell to close
+                    # Order is 'sell'
+                    entry_px = avg_px - (pnl / (sz * ctVal))
+                else: # Buy to close short
+                    # PnL = (Entry - Exit) * sz * ctVal
+                    # Entry = (PnL / (sz * ctVal)) + Exit
+                    entry_px = (pnl / (sz * ctVal)) + avg_px
+            
+            # Calculate %
+            pnl_percent = 0.0
+            if entry_px > 0:
+                if trade_type == "long":
+                     pnl_percent = ((avg_px - entry_px) / entry_px) * 100 * int(float(ord.get("lever",1)))
+                else:
+                     pnl_percent = ((entry_px - avg_px) / entry_px) * 100 * int(float(ord.get("lever",1)))
+
+            # Time
+            # uTime is unix ms
+            ts_ms = int(ord.get("uTime", 0))
+            exit_time_str = datetime.datetime.fromtimestamp(ts_ms/1000).strftime("%Y-%m-%d %H:%M:%S")
+
+            record = {
+                "id": trade_id,
+                "symbol": symbol,
+                "type": trade_type,
+                "entryPrice": float(f"{entry_px:.4f}"),
+                "exitPrice": avg_px,
+                "amount": sz,
+                "leverage": int(float(ord.get("lever", 1))),
+                "pnl": float(f"{pnl:.2f}"),
+                "pnlPercent": float(f"{pnl_percent:.2f}"),
+                "entryTime": "---", # Hard to know exact open time from close order
+                "exitTime": exit_time_str,
+                "reason": "OKX Real Trade"
+            }
+            
+            new_records.append(record)
+            existing_ids.add(trade_id)
+
+        # 4. Save if any new found
+        if new_records:
+            # Append new ones
+            local_history.extend(new_records)
+            # Sort by time desc?
+            try:
+                with open(hist_path, 'w') as f:
+                    json.dump(local_history, f, indent=2)
+                print(f"✅ [REAL] Synced {len(new_records)} new trades from OKX.")
+            except Exception as e:
+                print(f"⚠️ Failed to save synced history: {e}")
+        else:
+            print("✅ [REAL] History is up to date.")
 # Simple Test
 if __name__ == "__main__":
     # Test in Shadow Mode

@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { ProfitCurve } from "./profit-curve";
 
+
 type Tab = 'current' | 'history' | 'decisions';
 
 import { useEffect } from "react";
@@ -33,19 +34,22 @@ export function AICopyTrading() {
 
   useEffect(() => {
     async function loadData() {
+      console.log("AICopyTrading: loading data...");
       try {
         // Run in parallel
         const [sumData, posData, histData, decData] = await Promise.all([
-          fetchSummary().catch(() => null),
-          fetchPositions().catch(() => []),
-          fetchHistory().catch(() => []),
-          fetchAgentDecision().catch(() => [])
+          fetchSummary().catch(e => { console.error("fetchSummary failed", e); return null; }),
+          fetchPositions().catch(e => { console.error("fetchPositions failed", e); return []; }),
+          fetchHistory().catch(e => { console.error("fetchHistory failed", e); return []; }),
+          fetchAgentDecision().catch(e => { console.error("fetchAgentDecision failed", e); return []; })
         ]);
 
-        setSummary(sumData);
-        setPositions(Array.isArray(posData) ? posData : []);
-        setHistory(Array.isArray(histData) ? histData : []);
-        setDecisions(Array.isArray(decData) ? decData : []);
+        console.log("AICopyTrading: Data received", { sumData, posCount: Array.isArray(posData) ? posData.length : 0 });
+
+        if (sumData) setSummary(sumData);
+        if (Array.isArray(posData)) setPositions(posData);
+        if (Array.isArray(histData)) setHistory(histData);
+        if (Array.isArray(decData)) setDecisions(decData);
       } catch (e) {
         console.error("Failed to fetch data", e);
       }
@@ -90,13 +94,9 @@ export function AICopyTrading() {
           </div>
 
           <div className="flex-1 min-h-0">
-            {/* <ProfitCurve /> */}
-            <div className="flex items-center justify-center h-full text-[#8E9297] bg-[#0A0C0E]/50">
-              Chart temporarily disabled for debugging
-            </div>
+            <ProfitCurve />
           </div>
         </div>
-
         {/* Right Column - Tabs & Content (6 cols) */}
         <div className="lg:col-span-6 bg-[#111418] border border-[#2D3139]/50 rounded-sm overflow-hidden flex flex-col min-h-0">
           <div className="flex border-b border-[#2D3139]/50 flex-shrink-0">
@@ -130,15 +130,14 @@ export function AICopyTrading() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-[#0A0C0E] border border-[#2D3139]/30 p-4">
                       <div className="text-[10px] text-[#8E9297] mb-2">持仓盈亏</div>
-                      <div className={`text-2xl font-bold font-mono ${positions.reduce((acc, p) => acc + p.pnl, 0) >= 0 ? 'text-[#39FF14]' : 'text-[#FF3131]'}`}>
-                        ${positions.reduce((acc, p) => acc + p.pnl, 0).toFixed(2)}
+                      <div className={`text-2xl font-bold font-mono ${positions.reduce((acc, p) => acc + (p.pnl || 0), 0) >= 0 ? 'text-[#39FF14]' : 'text-[#FF3131]'}`}>
+                        ${positions.reduce((acc, p) => acc + (p.pnl || 0), 0).toFixed(2)}
                       </div>
                     </div>
                     <div className="bg-[#0A0C0E] border border-[#2D3139]/30 p-4">
                       <div className="text-[10px] text-[#8E9297] mb-2">现金余额</div>
                       <div className="text-2xl font-bold font-mono text-[#E8E8E8]">
-                        ${(summary?.nav ? summary.nav - positions.reduce((acc, p) => acc + (p.entryPrice * Number(p.amount) / p.leverage), 0) : 0).toFixed(2)}
-                        {/* Note: Cash calc is approximate here, better to get from backend if avail */}
+                        ${(summary?.nav ? summary.nav - positions.reduce((acc, p) => acc + (p.entryPrice * Number(p.amount) / (p.leverage || 1)), 0) : 0).toFixed(2)}
                       </div>
                     </div>
                   </div>
@@ -149,16 +148,16 @@ export function AICopyTrading() {
                     </div>
                   ) : (
                     positions.map((pos, idx) => (
-                      <div key={`${pos.symbol}-${idx}`} className="bg-[#0A0C0E] border border-[#2D3139]/30 rounded-sm p-5 space-y-4">
+                      <div key={`${pos.symbol || 'unknown'}-${idx}`} className="bg-[#0A0C0E] border border-[#2D3139]/30 rounded-sm p-5 space-y-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <div className="font-bold">
-                              <span className="text-base">{pos.symbol}</span>
-                              <span className="text-xs text-[#8E9297] ml-2">{pos.name}</span>
+                              <span className="text-base">{pos.symbol || 'Unknown'}</span>
+                              <span className="text-xs text-[#8E9297] ml-2">{pos.name || ''}</span>
                             </div>
                           </div>
                           <div className={`text-[10px] px-2 py-0.5 border rounded ${pos.type === 'long' ? 'bg-[#39FF14]/10 text-[#39FF14] border-[#39FF14]/30' : 'bg-[#FF3131]/10 text-[#FF3131] border-[#FF3131]/30'}`}>
-                            {pos.leverage}x {pos.type.toUpperCase()}
+                            {pos.leverage}x {(pos.type || '').toUpperCase()}
                           </div>
                         </div>
 
@@ -169,19 +168,19 @@ export function AICopyTrading() {
                         <div className="grid grid-cols-2 gap-y-4">
                           <div>
                             <div className="text-[10px] text-[#8E9297] mb-1">开仓价</div>
-                            <div className="font-mono text-sm">${pos.entryPrice.toLocaleString()}</div>
+                            <div className="font-mono text-sm">${pos.entryPrice?.toLocaleString() ?? '---'}</div>
                           </div>
                           <div>
                             <div className="text-[10px] text-[#8E9297] mb-1">当前价</div>
-                            <div className="font-mono text-sm">${pos.currentPrice.toLocaleString()}</div>
+                            <div className="font-mono text-sm">${pos.currentPrice?.toLocaleString() ?? '---'}</div>
                           </div>
                           <div>
                             <div className="text-[10px] text-[#FF3131] mb-1">○ 止损价</div>
-                            <div className="font-mono text-sm text-[#FF3131]">${pos.stopLoss.toLocaleString()}</div>
+                            <div className="font-mono text-sm text-[#FF3131]">${pos.stopLoss?.toLocaleString() ?? '---'}</div>
                           </div>
                           <div>
                             <div className="text-[10px] text-[#39FF14] mb-1">◎ 止盈价</div>
-                            <div className="font-mono text-sm text-[#39FF14]">${pos.takeProfit.toLocaleString()}</div>
+                            <div className="font-mono text-sm text-[#39FF14]">${pos.takeProfit?.toLocaleString() ?? '---'}</div>
                           </div>
                         </div>
 
@@ -189,10 +188,10 @@ export function AICopyTrading() {
                           <div className="text-[10px] text-[#8E9297]">盈亏</div>
                           <div className="flex items-center gap-2">
                             <span className={`font-mono text-sm font-bold ${pos.pnl >= 0 ? 'text-[#39FF14]' : 'text-[#FF3131]'}`}>
-                              ${pos.pnl.toFixed(2)}
+                              ${(pos.pnl || 0).toFixed(2)}
                             </span>
                             <span className={`text-[10px] font-mono px-1 rounded ${pos.pnl >= 0 ? 'bg-[#39FF14]/10 text-[#39FF14]' : 'bg-[#FF3131]/10 text-[#FF3131]'}`}>
-                              {pos.pnlPercent}%
+                              {(pos.pnlPercent || 0).toFixed(2)}%
                             </span>
                           </div>
                         </div>
@@ -201,7 +200,6 @@ export function AICopyTrading() {
                   )}
                 </motion.div>
               )}
-
               {activeTab === 'history' && (
                 <motion.div
                   key="history"
@@ -240,25 +238,25 @@ export function AICopyTrading() {
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
                               <span className="text-base font-bold text-white">{trade.symbol}</span>
-                              <span className={`text-[10px] px-1.5 py-0.5 rounded border ${trade.type.toLowerCase().includes('long') ? 'bg-[#1E3A8A]/30 text-[#60A5FA] border-[#1E3A8A]/50' : 'bg-[#450A0A]/30 text-[#FF3131] border-[#450A0A]/50'}`}>
-                                {trade.type.toUpperCase()}
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded border ${trade.type?.toLowerCase().includes('long') ? 'bg-[#1E3A8A]/30 text-[#60A5FA] border-[#1E3A8A]/50' : 'bg-[#450A0A]/30 text-[#FF3131] border-[#450A0A]/50'}`}>
+                                {(trade.type || '').toUpperCase()}
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className={`text-sm font-bold font-mono ${trade.pnl >= 0 ? 'text-[#39FF14]' : 'text-[#FF3131]'}`}>
-                                {trade.pnl >= 0 ? '+' : ''}${trade.pnl.toFixed(2)}
+                              <span className={`text-sm font-bold font-mono ${(trade.pnl || 0) >= 0 ? 'text-[#39FF14]' : 'text-[#FF3131]'}`}>
+                                {(trade.pnl || 0) >= 0 ? '+' : ''}${(trade.pnl || 0).toFixed(2)}
                               </span>
-                              <span className={`text-[10px] px-1 py-0.5 rounded border ${trade.pnl >= 0 ? 'bg-[#14532D]/30 text-[#39FF14] border-[#14532D]/50' : 'bg-[#450A0A]/30 text-[#FF3131] border-[#450A0A]/50'}`}>
-                                {trade.pnlPercent.toFixed(2)}%
+                              <span className={`text-[10px] px-1 py-0.5 rounded border ${(trade.pnl || 0) >= 0 ? 'bg-[#14532D]/30 text-[#39FF14] border-[#14532D]/50' : 'bg-[#450A0A]/30 text-[#FF3131] border-[#450A0A]/50'}`}>
+                                {(trade.pnlPercent || 0).toFixed(2)}%
                               </span>
                             </div>
                           </div>
                           <div className="grid grid-cols-2 gap-y-3 mb-3">
                             <div>
-                              <div className="text-[10px] text-[#8E9297]">开仓: <span className="text-[#E8E8E8] font-mono">${trade.entryPrice.toLocaleString()}</span></div>
+                              <div className="text-[10px] text-[#8E9297]">开仓: <span className="text-[#E8E8E8] font-mono">${trade.entryPrice?.toLocaleString() ?? '---'}</span></div>
                             </div>
                             <div>
-                              <div className="text-[10px] text-[#8E9297]">平仓: <span className="text-[#E8E8E8] font-mono">${trade.exitPrice.toLocaleString()}</span></div>
+                              <div className="text-[10px] text-[#8E9297]">平仓: <span className="text-[#E8E8E8] font-mono">${trade.exitPrice?.toLocaleString() ?? '---'}</span></div>
                             </div>
                             <div>
                               <div className="text-[10px] text-[#8E9297]">数量: <span className="text-[#E8E8E8] font-mono">{trade.amount}</span></div>
@@ -306,7 +304,7 @@ export function AICopyTrading() {
                             <h3 className="text-sm font-bold text-white">市场分析</h3>
                           </div>
                           <div className="bg-[#111418] border border-[#2D3139] p-4 rounded-sm text-xs leading-relaxed text-[#B0B3B8] space-y-3 font-sans whitespace-pre-line">
-                            {decision.analysis_summary[language as 'zh' | 'en'] || decision.analysis_summary['en']}
+                            {decision.analysis_summary?.[language as 'zh' | 'en'] || decision.analysis_summary?.['en'] || "No analysis"}
                           </div>
                         </div>
 
@@ -365,7 +363,7 @@ export function AICopyTrading() {
                                 </div>
                                 <div className="text-[10px] text-[#8E9297] mb-2">逻辑</div>
                                 <div className="mb-4 text-xs text-[#B0B3B8] leading-relaxed">
-                                  {action.entry_reason[language as 'zh' | 'en'] || action.entry_reason['en']}
+                                  {action.entry_reason?.[language as 'zh' | 'en'] || action.entry_reason?.['en'] || "No reason"}
                                 </div>
                                 {action.exit_plan && (
                                   <div className="flex items-center justify-between pt-3 border-t border-[#2D3139]/30">
@@ -390,8 +388,8 @@ export function AICopyTrading() {
               )}
             </AnimatePresence>
           </div>
-        </div>
-      </div>
-    </div>
+        </div >
+      </div >
+    </div >
   );
 }

@@ -37,6 +37,19 @@ def init_data_files():
         with open(port_path, "w") as f:
             json.dump(default_state, f, indent=2)
         print("✅ Initialized portfolio_state.json")
+    else:
+        # Ensure start_time exists in existing file
+        try:
+             with open(port_path, "r") as f:
+                 state = json.load(f)
+             
+             if "start_time" not in state:
+                 state["start_time"] = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
+                 with open(port_path, "w") as f:
+                     json.dump(state, f, indent=2)
+                 print("✅ Added start_time to portfolio_state.json")
+        except Exception as e:
+            print(f"⚠️ Failed to update portfolio_state.json: {e}")
 
     # 2. Trade History
     hist_path = os.path.join(data_dir, "trade_history.json")
@@ -66,6 +79,29 @@ def init_data_files():
         with open(log_path, "w") as f:
             json.dump(dummy_log, f, indent=2)
         print("✅ Initialized agent_decision_log.json")
+
+    # 4. NAV History
+    nav_path = os.path.join(data_dir, "nav_history.json")
+    if not os.path.exists(nav_path):
+        # Generate some fake history for the last 7 days for the demo
+        history = []
+        base_nav = 10000.0
+        now = datetime.now()
+        for i in range(7 * 6): # 7 days, every 4 hours
+             t = now - timedelta(hours=(7*6 - i)*4)
+             # Random walk
+             import random
+             change = random.uniform(-0.02, 0.03) # slightly bullish
+             base_nav = base_nav * (1 + change)
+             history.append({
+                 "timestamp": t.strftime("%Y-%m-%dT%H:%M:%S"),
+                 "nav": round(base_nav, 2),
+                 "btc_price": 65000 * (1 + change) # Mock BTC
+             })
+        
+        with open(nav_path, "w") as f:
+            json.dump(history, f, indent=2)
+        print("✅ Initialized nav_history.json")
 
 
 
@@ -160,15 +196,14 @@ def get_portfolio_summary():
         
         initial = 10000.0
         start_time = "2024-01-01T00:00:00Z"
-        
         if os.path.exists(path):
              with open(path, "r") as f:
                  data = json.load(f)
-                 # Keep initial fixed or update it? 
-                 # Let's say we trust the file's "initial" if it exists, else 10k
-                 # But if we are in DEMO mode, the file might be stale?
-                 # Actually, for DEMO mood, let's just assume 100k or fetch valid
-                 pass
+                 if "start_time" in data:
+                     start_time = data["start_time"]
+                 elif "timestamp" in data:
+                     # Fallback to timestamp if available or just use default
+                     pass
 
         # Calculate PnL
         pnl = current_equity - initial
@@ -198,29 +233,28 @@ def get_positions():
 @app.route('/api/history', methods=['GET'])
 def get_trade_history():
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Correct file: trade_history.json (Past completed trades)
     path = os.path.join(project_root, "frontend", "data", "trade_history.json")
     
     try:
         if os.path.exists(path):
             with open(path, 'r') as f:
                 data = json.load(f)
-            return jsonify(data[-50:][::-1]) # Return last 50, newest first
+            # Return last 50, newest first
+            return jsonify(data[-50:][::-1])
         return jsonify([])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/agent-decision', methods=['GET'])
-def get_agent_decision():
+@app.route('/api/decisions', methods=['GET'])
+def get_agent_decisions():
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Correct file: agent_decision_log.json (AI thinking logs)
     path = os.path.join(project_root, "frontend", "data", "agent_decision_log.json")
     
     try:
-        # This file logs every run. We want to return the last few decisions.
         if os.path.exists(path):
-            # It might be a line-delimited JSON or a list? 
-            # ai_trader.py appends?
-            # Let's assume it's a valid JSON list for now.
-             with open(path, 'r') as f:
+            with open(path, 'r') as f:
                 try:
                     data = json.load(f)
                     if isinstance(data, list):
@@ -228,8 +262,6 @@ def get_agent_decision():
                     else:
                         return jsonify([data])
                 except json.JSONDecodeError:
-                    # Handle if it's appending objects without list wrapper?
-                    # Fallback
                     return jsonify([])
         return jsonify([])
     except Exception as e:
@@ -237,11 +269,16 @@ def get_agent_decision():
         
 @app.route('/api/nav-history', methods=['GET'])
 def get_nav_history():
-    # Return dummy point for profit curve
-    return jsonify([
-        {"timestamp": "2024-01-01", "nav": 10000},
-        {"timestamp": datetime.now().strftime("%Y-%m-%d"), "nav": 10000}
-    ])
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    path = os.path.join(project_root, "frontend", "data", "nav_history.json")
+    try:
+        if os.path.exists(path):
+            with open(path, 'r') as f:
+                data = json.load(f)
+            return jsonify(data)
+        return jsonify([])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/<path:path>')
 def serve_static(path):
@@ -331,8 +368,18 @@ def main():
             print(">> Step 2: AI Thinking & Execution (ai_trader)...")
             success_trade = run_script("ai_trader.py")
             if success_trade:
+                print(">> Step 2.5: Syncing Trade History (Real/Shadow)...")
+                try:
+                    executor.sync_trade_history()
+                except Exception as e:
+                    print(f"⚠️ History sync failed: {e}")
+
                 print(">> Step 3: Syncing Data to GitHub (data-history)...")
                 run_script("data_sync.py")
+
+                print(">> Step 4: Sending 4H Market Report...")
+                run_script("daily_report.py")
+
                 write_status("SLEEPING", f"Cycle completed successfully.\nNext Run: {(datetime.now() + timedelta(seconds=INTERVAL_SECONDS)).strftime('%H:%M:%S')}")
             else:
                 write_status("ERROR", "AI Trader failed to execute.")
