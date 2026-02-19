@@ -3,7 +3,7 @@ import json
 import time
 import requests
 from datetime import datetime, timedelta
-from news_fetcher import NewsFetcher
+import news_fetcher
 from macro_history import MacroHistory
 from dotenv import load_dotenv
 from moralis import evm_api
