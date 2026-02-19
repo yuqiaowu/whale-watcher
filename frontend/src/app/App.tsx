@@ -22,15 +22,15 @@ function AppContent() {
   useEffect(() => {
     async function initData() {
       try {
-        const stats = await fetchMarketStats().catch(e => null);
+        const stats = await fetchMarketStats().catch((_e: Error) => null);
         if (stats) setMarketStats(stats);
 
-        const cryptoResponse = await fetchCryptoData().catch(e => null);
+        const cryptoResponse = await fetchCryptoData().catch((_e: Error) => null);
         if (cryptoResponse && cryptoResponse.data) {
           setLiveData(cryptoResponse.data);
         }
 
-        const summary = await fetchSummary().catch(e => null);
+        const summary = await fetchSummary().catch((_e: Error) => null);
         if (summary && summary.startTime) {
           const start = new Date(summary.startTime);
           const now = new Date();
@@ -39,7 +39,7 @@ function AppContent() {
           const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           setRunningTime(`${diffDays} 天 ${diffHours}`);
         }
-      } catch (e) {
+      } catch (e: any) {
         console.error("Init data error:", e);
       }
     }
