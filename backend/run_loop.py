@@ -30,14 +30,27 @@ def init_data_files():
     # 1. Portfolio State
     port_path = os.path.join(data_dir, "portfolio_state.json")
     if not os.path.exists(port_path):
+        # Default fallback
+        initial_val = 10000.0
+        try:
+            from okx_executor import OKXExecutor
+            temp_exec = OKXExecutor()
+            eq = temp_exec.get_account_equity()
+            if eq > 100:
+                initial_val = eq
+        except:
+            pass
+
         default_state = {
-            "total_equity": 10000.0,
-            "cash": 10000.0,
-            "positions": [] # {symbol, size, entry_price, type, margin, timestamp}
+            "total_equity": initial_val,
+            "cash": initial_val,
+            "positions": [],
+            "initial_equity": initial_val,
+            "start_time": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
         }
         with open(port_path, "w") as f:
             json.dump(default_state, f, indent=2)
-        print("✅ Initialized portfolio_state.json")
+        print(f"✅ Initialized portfolio_state.json (Initial: {initial_val})")
     else:
         # Ensure start_time exists in existing file
         try:
@@ -45,9 +58,11 @@ def init_data_files():
                  state = json.load(f)
              
              if "start_time" not in state:
-                 state["start_time"] = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%SZ")
-                 with open(port_path, "w") as f:
-                     json.dump(state, f, indent=2)
+                 state["start_time"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+             if "initial_equity" not in state:
+                 state["initial_equity"] = state.get("total_equity", 10000.0)
+             with open(port_path, "w") as f:
+                 json.dump(state, f, indent=2)
                  print("✅ Added start_time to portfolio_state.json")
         except Exception as e:
             print(f"⚠️ Failed to update portfolio_state.json: {e}")
@@ -62,19 +77,19 @@ def init_data_files():
     # 3. Agent Decision Log
     log_path = os.path.join(data_dir, "agent_decision_log.json")
     if not os.path.exists(log_path):
-        # Create a dummy initial log so UI isn't empty
+        # Create a cleaner initial log
         dummy_log = [{
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "analysis_summary": {
-                "zh": "系统初始化完成。AI正在准备第一次市场扫描...",
-                "en": "System initialized. AI is preparing for the first market scan..."
+                "zh": " Dolores 交易代理已启动。正在等待第一次 4H 周期数据分析...",
+                "en": "Dolores Trading Agent online. Waiting for the first 4H interval analysis..."
             },
             "actions": [],
             "context_analysis": {
-                "technical_signal": {"en": "Waiting for data..."},
-                "macro_onchain": {"en": "Waiting for data..."}, 
-                "portfolio_status": {"en": "Equity $10,000"},
-                "reflection": {"en": "Ready to trade."}
+                "technical_signal": {"zh": "数据抓取中...", "en": "Acquiring technical indicators..."},
+                "macro_onchain": {"zh": "数据抓取中...", "en": "Acquiring whale flow data..."}, 
+                "portfolio_status": {"zh": "账户连接成功", "en": "Account connected."},
+                "reflection": {"zh": "就绪", "en": "Ready."}
             }
         }]
         with open(log_path, "w") as f:
@@ -110,6 +125,13 @@ def init_data_files():
 
         history = []
         base_nav = 10000.0
+        try:
+             with open(port_path, "r") as f:
+                 ps = json.load(f)
+                 base_nav = ps.get("initial_equity", 10000.0)
+        except:
+             pass
+        
         steps = len(btc_candles) if btc_candles else 42
         
         import math
@@ -243,15 +265,12 @@ def get_portfolio_summary():
         path = os.path.join(project_root, "frontend", "data", "portfolio_state.json")
         
         initial = 10000.0
-        start_time = "2024-01-01T00:00:00Z"
+        start_time = datetime.now().strftime("%Y-%m-%dT00:00:00Z")
         if os.path.exists(path):
              with open(path, "r") as f:
                  data = json.load(f)
-                 if "start_time" in data:
-                     start_time = data["start_time"]
-                 elif "timestamp" in data:
-                     # Fallback to timestamp if available or just use default
-                     pass
+                 initial = data.get("initial_equity", data.get("initial", 10000.0))
+                 start_time = data.get("start_time", start_time)
 
         # Calculate PnL
         pnl = current_equity - initial
