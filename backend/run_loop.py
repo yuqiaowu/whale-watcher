@@ -8,6 +8,7 @@ from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime, timedelta
 import requests
+from stats_calculator import calculate_stats
 
 # Configuration
 INTERVAL_HOURS = 4
@@ -272,18 +273,18 @@ def get_portfolio_summary():
                  initial = data.get("initial_equity", data.get("initial", 10000.0))
                  start_time = data.get("start_time", start_time)
 
-        # Calculate PnL
-        pnl = current_equity - initial
-        pnl_pct = (pnl / initial) * 100 if initial > 0 else 0
-        
+        # Calculate Win Rate & Total Trades
+        hist_file = os.path.join(project_root, "frontend", "data", "trade_history.json")
+        total_trades, win_rate = calculate_stats(hist_file)
+
         return jsonify({
             "nav": current_equity,
             "initialNav": initial,
             "totalPnl": pnl,
             "pnlPercent": float(f"{pnl_pct:.2f}"),
             "startTime": start_time,
-            "winRate": 0, 
-            "totalTrades": 0 
+            "winRate": win_rate, 
+            "totalTrades": total_trades 
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
