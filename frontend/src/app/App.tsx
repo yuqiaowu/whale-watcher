@@ -226,7 +226,7 @@ function AppContent() {
                   className="text-sm font-mono font-normal mb-4 text-[#8E9297] flex items-center gap-2 tracking-wide"
                 >
                   <span className="inline-block w-0.5 h-4 bg-[#39FF14]/60 shadow-[0_0_6px_rgba(57,255,20,0.4)]" />
-                  <span className="opacity-90">4小时线为基准的AI量化策略，已成功运行 <span className="text-[#39FF14] font-medium">{runningTime}</span> 小时</span>
+                  <span className="opacity-90">4小时线为基准的AI量化策略，已成功运行 <span className="text-[#39FF14] font-medium">{runningTime}</span></span>
                 </motion.h2>
                 <AICopyTrading />
               </section>
