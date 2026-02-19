@@ -418,6 +418,13 @@ def main():
     print(f"🤖 Unified Whale Monitor & AI Trader Started.")
     print(f"⏱️  Interval: Every {INTERVAL_HOURS} hours.")
     
+    # -1. Pull historical data from GitHub if it exists to preserve PnL
+    try:
+        from data_sync import pull_data_from_github
+        pull_data_from_github()
+    except Exception as e:
+        print(f"⚠️ Failed to pull data from GitHub: {e}")
+
     # 0. Initialize Data Files
     init_data_files()
     
@@ -445,6 +452,35 @@ def main():
                     executor.sync_trade_history()
                 except Exception as e:
                     print(f"⚠️ History sync failed: {e}")
+
+                print(">> Step 2.75: Appending NAV History...")
+                try:
+                    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                    nav_path = os.path.join(project_root, "frontend", "data", "nav_history.json")
+                    if os.path.exists(nav_path):
+                        with open(nav_path, 'r') as f:
+                            nav_history = json.load(f)
+                        current_eq = executor.get_account_equity()
+                        # Get latest BTC price from whale_analysis.json or OKX
+                        btc_price = 0
+                        whale_path = os.path.join(project_root, "frontend", "data", "whale_analysis.json")
+                        if os.path.exists(whale_path):
+                            with open(whale_path, 'r') as f:
+                                w_data = json.load(f)
+                                btc_price = w_data.get("btc", {}).get("market", {}).get("price", 0)
+                        
+                        nav_history.append({
+                            "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+                            "nav": current_eq,
+                            "btc_price": btc_price
+                        })
+                        # Keep last 150 points (about 25 days of 4H data)
+                        if len(nav_history) > 150:
+                            nav_history = nav_history[-150:]
+                        with open(nav_path, 'w') as f:
+                            json.dump(nav_history, f, indent=2)
+                except Exception as e:
+                    print(f"⚠️ Failed to append NAV history: {e}")
 
                 print(">> Step 3: Syncing Data to GitHub (data-history)...")
                 run_script("data_sync.py")

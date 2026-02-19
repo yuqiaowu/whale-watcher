@@ -17,8 +17,10 @@ API_BASE = f"https://api.github.com/repos/{REPO_slug}"
 BRANCH_NAME = "data-history"
 FILES_TO_SYNC = [
     "frontend/data/whale_analysis.json",
-    "backend/trade_history.json",
-    "backend/portfolio_state.json"
+    "frontend/data/trade_history.json",
+    "frontend/data/portfolio_state.json",
+    "frontend/data/nav_history.json",
+    "frontend/data/agent_decision_log.json"
 ]
 
 def get_file_sha(path, branch):
@@ -103,6 +105,31 @@ def sync_file(file_path):
         print(f"✅ Synced: {file_path}")
     else:
         print(f"❌ Failed {file_path}: {resp.status_code} {resp.text}")
+
+def pull_data_from_github():
+    print(f"📥 Pulling existing data from '{BRANCH_NAME}'...")
+    if not GITHUB_TOKEN:
+        print("⚠️ GITHUB_TOKEN not found. Skipping pull.")
+        return
+
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    data_dir = os.path.join(base_dir, "frontend", "data")
+    os.makedirs(data_dir, exist_ok=True)
+
+    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+    for file_path in FILES_TO_SYNC:
+        url = f"{API_BASE}/contents/{file_path}?ref={BRANCH_NAME}"
+        resp = requests.get(url, headers=headers)
+        if resp.status_code == 200:
+            content_b64 = resp.json().get("content", "")
+            if content_b64:
+                content = base64.b64decode(content_b64)
+                abs_path = os.path.join(base_dir, file_path)
+                with open(abs_path, "wb") as f:
+                    f.write(content)
+                print(f"✅ Downloaded: {file_path}")
+        else:
+            print(f"⚠️ Could not download {file_path} (might not exist yet).")
 
 def sync_data_to_github():
     print(f"🔄 Starting Multi-File Sync to '{BRANCH_NAME}'...")
