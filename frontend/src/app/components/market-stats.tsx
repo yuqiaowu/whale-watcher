@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import { useLanguage } from "@/app/i18n/LanguageContext";
-import { fetchMarketStats, MarketStats as MarketStatsType } from "@/lib/api";
+import { MarketStats as MarketStatsType } from "@/lib/api";
 
 interface StatItem {
   label: string;
@@ -11,21 +10,8 @@ interface StatItem {
   color: string;
 }
 
-export function MarketStats() {
+export function MarketStats({ data: marketData }: { data: MarketStatsType | null }) {
   const { language } = useLanguage();
-  const [marketData, setMarketData] = useState<MarketStatsType | null>(null);
-
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const data = await fetchMarketStats();
-        setMarketData(data);
-      } catch (e) {
-        console.error("Failed to fetch market stats", e);
-      }
-    }
-    loadData();
-  }, []);
 
   // Helper to safely format value
   const fmt = (val: any) => val ? Number(val).toFixed(2) : "--";
@@ -136,7 +122,7 @@ export function MarketStats() {
   const stats: (StatItem & { sentimentType: string })[] = [
     {
       label: "DXY (Dollar)",
-      value: fmt(indices.dxy?.price) !== "--" ? fmt(indices.dxy?.price) : "Loading...",
+      value: fmt(indices.dxy?.price) !== "--" ? fmt(indices.dxy?.price) : "--",
       change: fmtChange(indices.dxy?.change_5d_pct),
       trend: (indices.dxy?.change_5d_pct || 0) < 0 ? "down" : "up",
       interpretation: dxyLogic.text,
@@ -145,7 +131,7 @@ export function MarketStats() {
     },
     {
       label: "US10Y (Yield)",
-      value: fmt(indices.us10y?.price) !== "--" ? fmt(indices.us10y?.price) : "Loading...",
+      value: fmt(indices.us10y?.price) !== "--" ? fmt(indices.us10y?.price) : "--",
       change: fmtChange(indices.us10y?.change_5d_pct),
       trend: (indices.us10y?.change_5d_pct || 0) < 0 ? "down" : "up",
       interpretation: us10yLogic.text,
@@ -154,7 +140,7 @@ export function MarketStats() {
     },
     {
       label: "VIX (Fear)",
-      value: fmt(indices.vix?.price) !== "--" ? fmt(indices.vix?.price) : "Loading...",
+      value: fmt(indices.vix?.price) !== "--" ? fmt(indices.vix?.price) : "--",
       change: fmtChange(indices.vix?.change_5d_pct),
       trend: (indices.vix?.change_5d_pct || 0) < 0 ? "down" : "up",
       interpretation: vixLogic.text,

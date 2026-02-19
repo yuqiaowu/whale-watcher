@@ -1,29 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { WhaleChart } from '@/app/components/whale-chart';
 import { useLanguage } from '@/app/i18n/LanguageContext';
-import { fetchMarketStats } from '@/lib/api';
 
 type WhaleType = 'ETH' | 'SOL';
 
-export function WhaleAnalytics() {
+export function WhaleAnalytics({ data }: { data: any }) {
   const { t } = useLanguage();
   const [activeWhale, setActiveWhale] = useState<WhaleType>('ETH');
-  const [data, setData] = useState<any>(null);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const stats = await fetchMarketStats();
-        setData(stats);
-      } catch (e) {
-        console.error("Whale analytics load error:", e);
-      }
-    }
-    load();
-    const inv = setInterval(load, 30000);
-    return () => clearInterval(inv);
-  }, []);
 
   const whaleInfo = data?.[activeWhale.toLowerCase()];
   const history = whaleInfo?.market?.history_60d || [];

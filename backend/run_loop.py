@@ -273,6 +273,10 @@ def get_portfolio_summary():
                  initial = data.get("initial_equity", data.get("initial", 10000.0))
                  start_time = data.get("start_time", start_time)
 
+        # Calculate PnL
+        pnl = current_equity - initial
+        pnl_pct = (pnl / initial) * 100 if initial > 0 else 0
+
         # Calculate Win Rate & Total Trades
         hist_file = os.path.join(project_root, "frontend", "data", "trade_history.json")
         total_trades, win_rate = calculate_stats(hist_file)

@@ -134,7 +134,7 @@ function AppContent() {
                 </motion.h2>
 
                 <DetailedStats data={marketStats} />
-                <MarketStats />
+                <MarketStats data={marketStats} />
               </section>
 
               {/* Crypto Cards */}
@@ -181,7 +181,7 @@ function AppContent() {
                 </div>
               </section>
 
-              {/* Whale Analytics */}
+              {/* Whale Analytics Section */}
               <section>
                 <motion.h2
                   initial={{ opacity: 0, x: -20 }}
@@ -196,7 +196,7 @@ function AppContent() {
                   {t.sections.whaleAnalytics}
                 </motion.h2>
 
-                <WhaleAnalytics />
+                <WhaleAnalytics data={marketStats} />
               </section>
 
               {/* News Feed Section */}
