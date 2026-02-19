@@ -351,34 +351,51 @@ export function AICopyTrading() {
                             <h3 className="text-sm font-bold text-white">执行动作 {decision.actions ? `(${decision.actions.length})` : ''}</h3>
                           </div>
                           <div className="space-y-3">
-                            {decision.actions?.map((action, i) => (
-                              <div key={`${idx}-${i}`} className={`bg-[#111418] border rounded-sm p-4 ${action.action === 'REJECTED' ? 'border-red-500/20 bg-red-900/5' : 'border-[#2D3139]'}`}>
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-base font-bold text-white">{action.symbol}</span>
-                                    <span className={`text-[10px] px-1.5 py-0.5 rounded border border-[#4B5563]/30 ${action.action === 'REJECTED' ? 'bg-red-500/20 text-red-500' : 'bg-[#2D3139] text-[#8E9297]'}`}>
-                                      {action.action}
-                                    </span>
-                                  </div>
+                            {(!decision.actions || decision.actions.length === 0) ? (
+                              <div className="bg-[#111418] border border-[#2D3139] rounded-sm p-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="text-base font-bold text-white">PORTFOLIO</span>
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded border border-[#2D3139] bg-[#1A1D24] text-[#8E9297]">
+                                    HOLD (观望)
+                                  </span>
                                 </div>
-                                <div className="text-[10px] text-[#8E9297] mb-2">逻辑</div>
-                                <div className="mb-4 text-xs text-[#B0B3B8] leading-relaxed">
-                                  {action.entry_reason?.[language as 'zh' | 'en'] || action.entry_reason?.['en'] || "No reason"}
+                                <div className="text-xs text-[#B0B3B8] leading-relaxed">
+                                  {decision.context_analysis?.portfolio_status?.[language as 'zh' | 'en'] ||
+                                    decision.context_analysis?.portfolio_status?.['en'] ||
+                                    decision.analysis_summary?.[language as 'zh' | 'en'] ||
+                                    "当前市场情绪不明确或触及风控限制，模型决定暂不开仓，继续保持观望状态。"}
                                 </div>
-                                {action.exit_plan && (
-                                  <div className="flex items-center justify-between pt-3 border-t border-[#2D3139]/30">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-[10px] text-[#5A5E66]">止盈:</span>
-                                      <span className="text-sm font-bold font-mono text-[#39FF14]">{action.exit_plan.take_profit ?? '---'}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-[10px] text-[#5A5E66]">止损:</span>
-                                      <span className="text-sm font-bold font-mono text-[#FF3131]">{action.exit_plan.stop_loss ?? '---'}</span>
-                                    </div>
-                                  </div>
-                                )}
                               </div>
-                            ))}
+                            ) : (
+                              decision.actions.map((action, i) => (
+                                <div key={`${idx}-${i}`} className={`bg-[#111418] border rounded-sm p-4 ${action.action === 'REJECTED' ? 'border-red-500/20 bg-red-900/5' : 'border-[#2D3139]'}`}>
+                                  <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-base font-bold text-white">{action.symbol}</span>
+                                      <span className={`text-[10px] px-1.5 py-0.5 rounded border border-[#4B5563]/30 ${action.action === 'REJECTED' ? 'bg-red-500/20 text-red-500' : 'bg-[#2D3139] text-[#8E9297]'}`}>
+                                        {action.action}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="text-[10px] text-[#8E9297] mb-2">逻辑</div>
+                                  <div className="mb-4 text-xs text-[#B0B3B8] leading-relaxed">
+                                    {action.entry_reason?.[language as 'zh' | 'en'] || action.entry_reason?.['en'] || "No reason"}
+                                  </div>
+                                  {action.exit_plan && (
+                                    <div className="flex items-center justify-between pt-3 border-t border-[#2D3139]/30">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-[10px] text-[#5A5E66]">止盈:</span>
+                                        <span className="text-sm font-bold font-mono text-[#39FF14]">{action.exit_plan.take_profit ?? '---'}</span>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-[10px] text-[#5A5E66]">止损:</span>
+                                        <span className="text-sm font-bold font-mono text-[#FF3131]">{action.exit_plan.stop_loss ?? '---'}</span>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              ))
+                            )}
                           </div>
                         </div>
                       </div>
