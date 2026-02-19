@@ -276,6 +276,18 @@ def get_portfolio_state(executor=None):
             
             # Save this real-time state to file so daily_report.py and frontend can see it
             try:
+                # Retain initial_equity and start_time if they exist
+                if PORTFOLIO_PATH.exists():
+                    try:
+                        with open(PORTFOLIO_PATH, "r") as f:
+                            old_state = json.load(f)
+                        if "initial_equity" in old_state:
+                            state["initial_equity"] = old_state["initial_equity"]
+                        if "start_time" in old_state:
+                            state["start_time"] = old_state["start_time"]
+                    except Exception:
+                        pass
+                
                 with open(PORTFOLIO_PATH, "w") as f:
                     json.dump(state, f, indent=2)
                 print("✅ Real-time portfolio state saved to file.")
