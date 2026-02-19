@@ -279,6 +279,13 @@ def gather_news(session: requests.Session = None) -> Dict[str, Any]:
         if topic == "general" and crypto_compare_cache.get("error"):
             extra_errors.append(crypto_compare_cache)
             
+        # Analyze Sentiment for each item
+        for item in topic_items:
+            title = item.get("title", "")
+            summary = item.get("summary", "")
+            full_text = f"{title} {summary}"
+            item["sentiment"] = _analyze_sentiment_simple(full_text)
+
         # Set limit based on topic
         final_limit = 5 if topic == "calendar" else 15
             
@@ -287,6 +294,33 @@ def gather_news(session: requests.Session = None) -> Dict[str, Any]:
             "errors": errors + extra_errors,
             "note": note,
         }
+    
+    return news
+
+def _analyze_sentiment_simple(text: str) -> str:
+    """Analyze text sentiment using simple keyword matching."""
+    text = text.lower()
+    
+    bullish_keywords = [
+        "soar", "jump", "gain", "record", "high", "rally", "approve", "bull", "buy", "up", "surge", "positive",
+        "breakout", "accumulat", "moon", "pattern", "support", "rebound",
+        "上涨", "新高", "买入", "利好", "突破", "增持", "飙升", "看涨", "反弹", "通过"
+    ]
+    bearish_keywords = [
+        "plunge", "crash", "loss", "low", "drop", "dive", "bear", "sell", "down", "slump", "negative", "ban", 
+        "sue", "fear", "reject", "dump", "resistance", "fail", "drain", "outflow", "pressure",
+        "下跌", "暴跌", "卖出", "利空", "跌破", "减持", "崩盘", "看跌", "恐慌", "被诉", "禁止"
+    ]
+    
+    bull_score = sum(1 for w in bullish_keywords if w in text)
+    bear_score = sum(1 for w in bearish_keywords if w in text)
+    
+    if bull_score > bear_score:
+        return "Bullish"
+    elif bear_score > bull_score:
+        return "Bearish"
+    else:
+        return "Neutral"
         
     if "items" in crypto_compare_cache and crypto_compare_cache["items"]:
         news["cryptocompare"] = crypto_compare_cache
@@ -322,7 +356,7 @@ def fetch_fed_futures() -> Dict[str, Any]:
     try:
         # ZQ=F is the continuous contract for 30-Day Fed Funds
         ticker = yf.Ticker("ZQ=F")
-        hist = ticker.history(period="5d")
+        hist = ticker.history(period="1mo")
         
         if hist.empty:
             return {"error": "No data found for ZQ=F"}
@@ -339,8 +373,8 @@ def fetch_fed_futures() -> Dict[str, Any]:
         }
         
         # Calculate 5-day change if enough data
-        if len(hist) >= 2:
-            prev_price = hist["Close"].iloc[0] # 5 days ago (approx)
+        if len(hist) >= 6:
+            prev_price = hist["Close"].iloc[-6] # 5 days ago (approx)
             prev_rate = 100 - prev_price
             change_bps = (implied_rate - prev_rate) * 100
             
@@ -374,7 +408,7 @@ def fetch_japan_context() -> Dict[str, Any]:
     """
     try:
         ticker = yf.Ticker("USDJPY=X")
-        hist = ticker.history(period="5d")
+        hist = ticker.history(period="1mo")
         
         if hist.empty:
             return {"error": "No data found for USDJPY=X"}
@@ -387,9 +421,9 @@ def fetch_japan_context() -> Dict[str, Any]:
             "trend": "Neutral"
         }
         
-        # Calculate 5-day change
-        if len(hist) >= 2:
-            prev_price = hist["Close"].iloc[0]
+        # Calculate 5-day change (approx 5 trading days)
+        if len(hist) >= 6:
+            prev_price = hist["Close"].iloc[-6]
             change_pct = ((latest_price - prev_price) / prev_price) * 100
             result["change_5d_pct"] = round(change_pct, 2)
             

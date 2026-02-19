@@ -134,8 +134,8 @@ export function DetailedStats({ data }: { data?: any }) {
     if (s.includes('dovish')) return st.dovish;
     if (s.includes('hawkish')) return st.hawkish;
     if (s.includes('critical')) return st.critical;
-    if (s.includes('weak yen')) return st.weakYen;
-    if (s.includes('strong yen')) return st.strongYen;
+    if (s.includes('weak yen') || s.includes('yen weakness')) return st.weakYen;
+    if (s.includes('strong yen') || s.includes('yen strength')) return st.strongYen;
     if (s.includes('neutral')) return st.neutral;
 
     return statusStr;

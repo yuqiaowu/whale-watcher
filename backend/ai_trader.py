@@ -209,6 +209,12 @@ Structure:
     "zh": "中文分析。重点指出：1. 鲸鱼是否在与散户对赌？(Token Flow vs Price)。2. 爆仓数据是否显示这是底部？3. AI分析结论是吸筹(Accumulation)还是出货(Distribution)？",
     "en": "English summary."
   },
+  "context_analysis": {
+    "technical_signal": { "zh": "技术面概括 (RSI, ADX...)", "en": "Brief technical summary." },
+    "macro_onchain": { "zh": "鲸鱼数据与资金费率分析", "en": "Whale flow & funding analysis." },
+    "portfolio_status": { "zh": "当前持仓风险评估", "en": "Portfolio risk check." },
+    "reflection": { "zh": "AI的一句话反思", "en": "Short reflection." }
+  },
   "actions": [
     {
       "symbol": "SOL",
@@ -233,8 +239,55 @@ Structure:
 # 2. Helper Functions
 # ------------------------------------------------------------------------
 
-def get_portfolio_state():
-    """Load or create mock portfolio state"""
+def get_portfolio_state(executor=None):
+    """Load portfolio state from OKX Executor (Real-time) or file (Fallback)."""
+    if executor:
+        try:
+            positions = executor.get_all_positions()
+            equity = executor.get_account_equity()
+            
+            state = {
+                "total_equity": equity,
+                "cash": equity, # Simplified for prompt
+                "positions": []
+            }
+            
+            for p in positions:
+                # amount from OKX is contracts usually, calculate value roughly
+                # amount * ctVal * price? 
+                # OKXExecutor returns 'amount' as pos size.
+                try:
+                    size = float(p.get("amount", 0))
+                    val = size * p.get("currentPrice", 0) # Approx value
+                except:
+                    size = 0
+                    val = 0
+                    
+                state["positions"].append({
+                    "symbol": p["symbol"],
+                    "side": p["type"],
+                    "entry_price": p.get("entryPrice", 0),
+                    "size": size,
+                    "value_usd": val,
+                    "pnl": p.get("pnl", 0),
+                    "leverage": p.get("leverage", 1),
+                    "pnlPercent": p.get("pnlPercent", 0) # Use value from executor
+                })
+            
+            # Save this real-time state to file so daily_report.py and frontend can see it
+            try:
+                with open(PORTFOLIO_PATH, "w") as f:
+                    json.dump(state, f, indent=2)
+                print("✅ Real-time portfolio state saved to file.")
+            except Exception as e:
+                print(f"⚠️ Failed to save portfolio state: {e}")
+
+            return json.dumps(state, indent=2)
+            
+        except Exception as e:
+            print(f"⚠️ Failed to fetch real portfolio from executor: {e}")
+    
+    # Fallback to static file
     if PORTFOLIO_PATH.exists():
         with open(PORTFOLIO_PATH, "r") as f:
             return f.read()
@@ -315,6 +368,24 @@ def get_whale_data():
         ctx += "\n=== DOGECOIN (DOGE) CONTRACT DATA ===\n"
         ctx += f"- Technicals: {fmt_tech(doge_market)}\n"
         ctx += f"- Liquidation Pain (24h): Longs Dropped ${doge_liq_long:,.0f} / Shorts Dropped ${doge_liq_short:,.0f}\n"
+        
+        # Add Macro Context (New Layer)
+        macro = data.get("macro", {})
+        fed = macro.get("fed_futures", {})
+        japan = macro.get("japan_macro", {})
+        liq = macro.get("liquidity_monitor", {})
+        
+        ctx += "\n=== GLOBAL MACRO CONTEXT (CRITICAL) ===\n"
+        ctx += f"- Fed Futures Rate: {fed.get('implied_rate', 0)}% (Trend: {fed.get('trend', 'Neutral')})\n"
+        if 'change_5d_bps' in fed:
+             ctx += f"  * 5d Change: {fed['change_5d_bps']} bps\n"
+        
+        ctx += f"- USD/JPY: {japan.get('price', 0)} (Trend: {japan.get('trend', 'Neutral')})\n"
+        if 'change_5d_pct' in japan:
+             ctx += f"  * 5d Change: {japan['change_5d_pct']}%\n"
+             
+        ctx += f"- VIX: {liq.get('vix', {}).get('price', 0)} (Trend: {liq.get('vix', {}).get('trend', 'Neutral')})\n"
+        ctx += f"- DXY: {liq.get('dxy', {}).get('price', 0)} (Trend: {liq.get('dxy', {}).get('trend', 'Neutral')})\n"
         
         # Add AI Narrative from Crypto Brain
         ai_narrative = data.get("ai_summary", {}).get("en", "")
@@ -569,7 +640,7 @@ def run_agent():
         print(f"⚠️ Failed to load Fear Index: {e}")
         
     # 2. Prepare Prompt
-    portfolio_state = get_portfolio_state()
+    portfolio_state = get_portfolio_state(executor)
     news_context = get_news_context()
     
     # NEW: Get Whale Data
@@ -690,7 +761,8 @@ def run_agent():
                         history = content_json
                     else:
                         history = [content_json]
-            except:
+            except Exception as e:
+                print(f"⚠️ Failed to load history: {e}")
                 history = []
         
         # Add timestamp (Force overwrite with local time UTC+8)
@@ -702,8 +774,13 @@ def run_agent():
         history.insert(0, decision)
         history = history[:50]
         
-        with open(AGENT_LOG_PATH, "w") as f:
-            json.dump(history, f, indent=2, ensure_ascii=False)
+        print(f"💾 Saving decision log to: {AGENT_LOG_PATH}")
+        try:
+            with open(AGENT_LOG_PATH, "w") as f:
+                json.dump(history, f, indent=2, ensure_ascii=False)
+            print("✅ Decision Log Saved Successfully!")
+        except Exception as e:
+            print(f"❌ FAILED to save log: {e}")
                 
     except Exception as e:
         print(f"❌ Error calling DeepSeek (OpenAI SDK): {e}")

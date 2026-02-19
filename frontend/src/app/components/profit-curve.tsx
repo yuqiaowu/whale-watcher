@@ -7,7 +7,13 @@ interface ProfitCurveProps {
     hideStats?: boolean;
 }
 
-const AnimatedDot = (props: any) => {
+interface AnimatedDotProps {
+    cx: number;
+    cy: number;
+    stroke: string;
+}
+
+const AnimatedDot = (props: AnimatedDotProps) => {
     const { cx, cy, stroke } = props;
 
     return (
@@ -72,6 +78,16 @@ export function ProfitCurve({ hideStats = false }: ProfitCurveProps) {
 
     const [data, setData] = useState<any[]>([]);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (scrollContainerRef.current) {
+            setTimeout(() => {
+                if (scrollContainerRef.current) {
+                    scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
+                }
+            }, 100);
+        }
+    }, [data]);
 
     useEffect(() => {
         console.log("ProfitCurve: Fetching nav history...");
@@ -286,14 +302,14 @@ export function ProfitCurve({ hideStats = false }: ProfitCurveProps) {
                                     strokeWidth={2}
                                     fill="url(#colorLoss)"
                                     activeDot={{ r: 6, fill: chartColor }}
-                                /* dot={(props) => {
-                                    const { index, cx, cy } = props;
-                                    // Only render dot for the last data point
-                                    if (index === data.length - 1) {
-                                        return <AnimatedDot key={index} cx={cx} cy={cy} stroke={chartColor} />;
-                                    }
-                                    return null;
-                                }} */
+                                    dot={(props: { cx: number; cy: number; index: number }) => {
+                                        const { index, cx, cy } = props;
+                                        // Only render dot for the last data point
+                                        if (index === data.length - 1) {
+                                            return <AnimatedDot key={index} cx={cx} cy={cy} stroke={chartColor} />;
+                                        }
+                                        return <g />;
+                                    }}
                                 />
                             </AreaChart>
                         </ResponsiveContainer>

@@ -118,7 +118,9 @@ export function MarketStats() {
   const fearGreedSeries = fearGreedData.series || [];
 
   let fgChange = 0;
-  if (fearGreedSeries.length >= 2) {
+  if (typeof fearGreedLatest.change === 'number') {
+    fgChange = fearGreedLatest.change;
+  } else if (fearGreedSeries.length >= 2) {
     const latest = fearGreedSeries[0].value;
     const prev = fearGreedSeries[1].value;
     if (prev !== 0) {

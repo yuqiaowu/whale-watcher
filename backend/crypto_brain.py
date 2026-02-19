@@ -3,6 +3,8 @@ import json
 import time
 import requests
 from datetime import datetime, timedelta
+from news_fetcher import NewsFetcher
+from macro_history import MacroHistory
 from dotenv import load_dotenv
 from moralis import evm_api
 
@@ -424,21 +426,32 @@ def fetch_defillama_global_flows():
         return 0
 
 def fetch_fear_greed_index():
-    """Fetch Bitcoin Fear & Greed Index from alternative.me."""
+    """Fetch Bitcoin Fear & Greed Index from alternative.me (Today + Yesterday for change)."""
     try:
-        url = "https://api.alternative.me/fng/"
+        url = "https://api.alternative.me/fng/?limit=2"
         response = requests.get(url, timeout=10)
         data = response.json()
+        
         if "data" in data and len(data["data"]) > 0:
-            item = data["data"][0]
+            today_item = data["data"][0]
+            today_val = int(today_item["value"])
+            
+            if len(data["data"]) > 1:
+                yesterday_val = int(data["data"][1]["value"])
+                if yesterday_val != 0:
+                    change = ((today_val - yesterday_val) / yesterday_val) * 100
+                else:
+                    change = 0
+                
             return {
-                "value": int(item["value"]),
-                "value_classification": item["value_classification"]
+                "value": today_val,
+                "value_classification": today_item["value_classification"],
+                "change": change
             }
     except Exception as e:
         print(f"Error fetching Fear & Greed Index: {e}")
     
-    return {"value": 50, "value_classification": "Neutral"} # Fallback
+    return {"value": 50, "value_classification": "Neutral", "change": 0} # Fallback
 
 def analyze_transfers(transfers):
     """Calculate sentiment score, aggregate metrics, and top whale for both 7d and 24h."""
@@ -824,6 +837,7 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
     # Default dicts if None
     if btc_market is None: btc_market = {}
     if btc_analysis is None: btc_analysis = {"stats_24h": {}}
+    if fear_greed is None: fear_greed = {"value": "50", "value_classification": "Neutral"}
     """
     Generate the V2 Strategy Narrative (Tri-Layer Analysis).
     Combines:
@@ -960,48 +974,164 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
     * **Reality Check**: [Compare News Sentiment vs Whale Flow. **CRITICAL: Compare 7-Day Trend (Structural) vs 24H (Immediate). Check Liquidation Pain**: Are retail traders bleeding? If Long Liqs are high, is the bottom near?]
     * **Key Metric**: [Mention crucial metric]
     """
-
-    # Use DeepSeek V3 exclusively
-    print("🔄 Generating Analysis via DeepSeek V3...")
     
-    try:
-        deepseek_key = os.getenv("DEEPSEEK_API_KEY")
-        if not deepseek_key:
-            raise ValueError("No DEEPSEEK_API_KEY found in env")
+    # Add prompt reinforcement
+    prompt += "\n\nCRITICAL: You MUST include BOTH 'en' (English) and 'zh' (Chinese) analysis in the JSON."
+    
+    res = _call_ai_with_fallback(prompt)
+    
+    if res and isinstance(res, dict):
+        if "en" in res and ("zh" not in res or not res["zh"]):
+            print("⚠️ AI omitted 'zh'. Copying 'en' as fallback.")
+            res["zh"] = "[AI 暂未提供中文，显示原逻辑]\n\n" + res["en"]
             
-        ds_url = "https://api.deepseek.com/chat/completions"
-        ds_headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {deepseek_key}"
-        }
-        ds_payload = {
-            "model": "deepseek-chat",
-            "messages": [
-                {"role": "system", "content": "You are a hedge fund AI. Return ONLY valid JSON."},
-                {"role": "user", "content": prompt}
-            ],
-            "stream": False
-        }
-        
-        ds_res = requests.post(ds_url, headers=ds_headers, json=ds_payload, timeout=60)
-            
-        if ds_res.status_code != 200:
-            raise Exception(f"DeepSeek Status {ds_res.status_code}: {ds_res.text}")
-            
-        ds_data = ds_res.json()
-        ds_text = ds_data["choices"][0]["message"]["content"].strip()
-        
-        import re
-        match = re.search(r'\{.*\}', ds_text, re.DOTALL)
-        if match: ds_text = match.group(0)
-        
-        return json.loads(ds_text)
-        
-    except Exception as e_ds:
-        print(f"❌ DeepSeek AI Error: {e_ds}")
-        return {"en": "AI analysis unavailable.", "zh": "AI 分析暂时不可用。"}
+    return res
 
-# ... (rest of file)
+def _call_ai_with_fallback(prompt, system_prompt="You are a professional crypto AI. Return ONLY valid JSON.", is_translation=False):
+    """
+    Primary: DeepSeek V3
+    Fallback: Gemini 1.5 Pro
+    """
+    # 1. Try DeepSeek (Primary)
+    ds_key = os.getenv("DEEPSEEK_API_KEY")
+    if ds_key:
+        try:
+            print(f"🔄 Requesting DeepSeek V3 ({'Translation' if is_translation else 'Analysis'})...")
+            url = "https://api.deepseek.com/chat/completions"
+            headers = {"Content-Type": "application/json", "Authorization": f"Bearer {ds_key}"}
+            payload = {
+                "model": "deepseek-chat",
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": prompt}
+                ],
+                "stream": False,
+                "response_format": {"type": "json_object"}
+            }
+            res = requests.post(url, headers=headers, json=payload, timeout=90)
+            if res.status_code == 200:
+                text = res.json()["choices"][0]["message"]["content"].strip()
+                import re
+                match = re.search(r'\{.*\}', text, re.DOTALL)
+                return json.loads(match.group(0)) if match else json.loads(text)
+            else:
+                print(f"⚠️ DeepSeek Status {res.status_code}: {res.text[:100]}")
+        except Exception as e:
+            print(f"⚠️ DeepSeek failed: {e}")
+
+    # 2. Fallback to Gemini (Secondary)
+    gemini_key = os.getenv("GEMINI_API_KEY")
+    if gemini_key:
+        try:
+            print(f"🔄 DeepSeek failing... Falling back to Gemini Pro...")
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={gemini_key}"
+            headers = {"Content-Type": "application/json"}
+            payload = {
+                "contents": [{
+                    "parts": [{"text": f"SYSTEM: {system_prompt}\n\nUSER: {prompt}"}]
+                }],
+                "generationConfig": {
+                    "response_mime_type": "application/json"
+                }
+            }
+            res = requests.post(url, headers=headers, json=payload, timeout=90)
+            if res.status_code == 200:
+                text = res.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+                import re
+                match = re.search(r'\{.*\}', text, re.DOTALL)
+                return json.loads(match.group(0)) if match else json.loads(text)
+            else:
+                print(f"⚠️ Gemini Status {res.status_code}: {res.text[:100]}")
+        except Exception as e:
+            print(f"⚠️ Gemini fallback failed: {e}")
+
+    # 3. Last Resort
+    return None
+
+def generate_market_narrative(prompt):
+    """Refactored to use fallback logic"""
+    result = _call_ai_with_fallback(prompt)
+    if result:
+        return result
+    return {"en": "AI analysis currently unavailable.", "zh": "AI 分析暂时不可用。"}
+
+def translate_news_data(news_data):
+    """
+    Batch translate news titles and summaries using AI Fallback.
+    """
+    if not news_data:
+        return news_data
+    
+    api_key = os.getenv("DEEPSEEK_API_KEY")
+    if not api_key:
+        print("⚠️ No DeepSeek API Key for translation.")
+        return news_data
+
+    # 1. Extract titles and summaries to translate
+    to_translate = []
+    refs = []  # To map back: (category, index)
+    
+    import re
+    def clean_html(raw_html):
+        cleanr = re.compile('<.*?>')
+        cleantext = re.sub(cleanr, '', raw_html)
+        return cleantext.strip()
+
+    # Priority categories
+    for category in ["bitcoin", "ethereum", "general"]:
+        if category in news_data and isinstance(news_data[category], dict) and "items" in news_data[category]:
+            # Only translate the top 8 items per category to save tokens/time
+            for i, item in enumerate(news_data[category]["items"][:8]):
+                raw_summary = item.get("summary", "")
+                clean_summary = clean_html(raw_summary)
+                
+                to_translate.append({
+                    "title": item.get("title", ""),
+                    "summary": clean_summary[:300] # Extend truncate limit now that tags are gone
+                })
+                refs.append((category, i))
+    
+    if not to_translate:
+        return news_data
+
+    prompt = (
+        "You are a professional crypto translator. Identify the core message and translate the following news items (titles and summaries) into professional Chinese (Simplified). "
+        "Strictly maintain the order. "
+        "Return ONLY a JSON object with a 'translations' key containing a list of objects in the EXACT same order. "
+        "Example format: {'translations': [{'title': '...', 'summary': '...'}, ...]}.\n\n"
+        f"ITEMS: {json.dumps(to_translate)}"
+    )
+    
+    print(f"DEBUG: Sending translation request for {len(to_translate)} items.")
+    result = _call_ai_with_fallback(prompt, system_prompt="Return ONLY a JSON object with a 'translations' key. No preamble.", is_translation=True)
+    
+    if result and "translations" in result:
+        translated_list = result["translations"]
+        print(f"DEBUG: AI returned {len(translated_list)} translations.")
+        
+        # 3. Apply back to news_data
+        count = 0
+        for j, (cat, idx) in enumerate(refs):
+            if j < len(translated_list):
+                item = news_data[cat]["items"][idx]
+                t_title = translated_list[j].get("title", "")
+                t_summary = translated_list[j].get("summary", "")
+                
+                # Check for validity
+                if t_title and t_summary:
+                    item["title"] = t_title
+                    item["summary"] = t_summary
+                    count += 1
+                    
+        print(f"✅ News translated successfully via AI ({count} items updated).")
+    else:
+        print(f"❌ News translation failed (Result was None or missing key): {result}")
+        # Fallback: Mark as [Untranslated] so we know
+        # for j, (cat, idx) in enumerate(refs):
+        #    item = news_data[cat]["items"][idx]
+        #    item["title"] = "[EN] " + item["title"]
+        
+    return news_data
 
 def main():
     print("DEBUG: Entering whale_watcher.main()...")
@@ -1027,9 +1157,38 @@ def main():
             "japan_macro": news_fetcher.fetch_japan_context(),
             "liquidity_monitor": news_fetcher.fetch_liquidity_monitor()
         }
+        
+        # --- Macro History Persistence ---
+        try:
+             data_dir_path = os.path.join(base_dir, "../frontend/data")
+             mh = MacroHistory(data_dir_path)
+             mh.add_snapshot(
+                 macro_data.get("fed_futures", {}), 
+                 macro_data.get("japan_macro", {}), 
+                 macro_data.get("liquidity_monitor", {})
+             )
+             
+             # Calculate 5-day changes from LOCAL history (Overwrite API-based if available)
+             # Fed Change (bps)
+             fed_rate = macro_data.get("fed_futures", {}).get("implied_rate")
+             change_bps = mh.get_change_absolute("fed_rate", fed_rate, days=5)
+             if change_bps is not None:
+                 macro_data["fed_futures"]["change_5d_bps"] = round(change_bps, 1)
+
+             # Japan Change (%)
+             japan_price = macro_data.get("japan_macro", {}).get("price")
+             change_pct = mh.get_change_percentage("japan", japan_price, days=5)
+             if change_pct is not None:
+                 macro_data["japan_macro"]["change_5d_pct"] = round(change_pct, 2)
+                 
+             print("✅ Macro History updated locally.")
+        except Exception as e:
+             print(f"⚠️ Macro History update failed: {e}")
+        # --------------------------------
         print("Fetching Global News...")
         news_data = news_fetcher.gather_news()
-        print("✅ Macro & News fetched successfully.")
+        news_data = translate_news_data(news_data)
+        print("✅ Macro & News fetched and translated successfully.")
     except Exception as e:
         print(f"⚠️ News/Macro fetch failed: {e}")
         import traceback
@@ -1184,6 +1343,8 @@ def main():
     except Exception as e:
         print(f"AI Generation Error: {e}")
         import traceback
+        with open("error_log.txt", "w") as ef:
+            traceback.print_exc(file=ef)
         traceback.print_exc()
 
     # 6. Save Final JSON

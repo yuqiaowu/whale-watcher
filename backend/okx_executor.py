@@ -485,22 +485,25 @@ class OKXExecutor:
         res = self._request("GET", "/api/v5/account/positions?instType=SWAP")
         
         # Also fetch pending Algo orders (SL/TP) to populate those fields
-        # Note: This might be rate-limited if called too often, but for 4H interval it's fine.
+        # Note: API might not support comma-separated ordType, so we fetch sequentially.
         algo_map = {}
-        try:
-            res_algo = self._request("GET", "/api/v5/trade/orders-algo-pending?instType=SWAP&ordType=conditional,move_order_stop,oco")
-            if res_algo["code"] == "0":
-                for algo in res_algo["data"]:
-                    # algo structure: slTriggerPx, tpTriggerPx, instId
-                    i_id = algo["instId"]
-                    if i_id not in algo_map: algo_map[i_id] = {}
-                    
-                    if algo.get("slTriggerPx") and float(algo["slTriggerPx"]) > 0:
-                        algo_map[i_id]["sl"] = float(algo["slTriggerPx"])
-                    if algo.get("tpTriggerPx") and float(algo["tpTriggerPx"]) > 0:
-                        algo_map[i_id]["tp"] = float(algo["tpTriggerPx"])
-        except Exception as e:
-            print(f"⚠️ Failed to fetch algo orders: {e}")
+        for o_type in ["oco", "conditional", "trigger"]:
+            try:
+                res_algo = self._request("GET", f"/api/v5/trade/orders-algo-pending?instType=SWAP&ordType={o_type}")
+                if res_algo["code"] == "0":
+                    for algo in res_algo["data"]:
+                        # algo structure: slTriggerPx, tpTriggerPx, instId
+                        i_id = algo["instId"]
+                        if i_id not in algo_map: algo_map[i_id] = {}
+                        
+                        # SL
+                        if algo.get("slTriggerPx") and float(algo["slTriggerPx"]) > 0:
+                            algo_map[i_id]["sl"] = float(algo["slTriggerPx"])
+                        # TP
+                        if algo.get("tpTriggerPx") and float(algo["tpTriggerPx"]) > 0:
+                            algo_map[i_id]["tp"] = float(algo["tpTriggerPx"])
+            except Exception as e:
+                print(f"⚠️ Failed to fetch algo orders ({o_type}): {e}")
 
         mapped_real = []
         if res["code"] == "0":
