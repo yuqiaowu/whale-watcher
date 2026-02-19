@@ -6,6 +6,8 @@ import base64
 import hashlib
 import requests
 import datetime
+import math
+from decimal import Decimal, ROUND_HALF_UP
 from dotenv import load_dotenv
 
 # Load Environment Variables
@@ -89,6 +91,23 @@ class OKXExecutor:
         except Exception as e:
             return {"code": "-1", "msg": f"Network Error: {str(e)}"}
 
+    def round_step_size(self, value, step_size):
+        """
+        Round a value to the nearest multiple of step_size for OKX API compliance.
+        """
+        if not step_size or step_size <= 0: return value
+        
+        # Calculate precision based on step_size string representation
+        d_step = Decimal(str(step_size))
+        d_val = Decimal(str(value))
+        
+        rounded = (d_val / d_step).quantize(Decimal('1'), rounding=ROUND_HALF_UP) * d_step
+        
+        # Extract precision for float conversion
+        precision = abs(d_step.as_tuple().exponent) if "." in str(step_size) else 0
+        fmt = "{:." + str(precision) + "f}"
+        return float(fmt.format(rounded))
+
     def get_market_ticker(self, instId):
         """Get full ticker data (Ask/Bid/Last)"""
         res = requests.get(f"{self.base_url}/api/v5/market/ticker?instId={instId}")
@@ -99,8 +118,7 @@ class OKXExecutor:
 
     def get_instrument_info(self, instId):
         """
-        Get contract face value (ctVal) to convert USDT -> Contracts.
-        Example: BTC-USDT-SWAP, ctVal = 0.01 (1 contract = 0.01 BTC)
+        Get contract info (ctVal, lotSz, tickSz) to convert USDT -> Contracts correctly.
         """
         if instId in self.instrument_cache:
             return self.instrument_cache[instId]
@@ -110,12 +128,12 @@ class OKXExecutor:
         
         if data["code"] == "0" and data["data"]:
             info = data["data"][0]
-            # ctVal: Contract value (e.g., 0.01 BTC)
-            # ctMult: Multiplier (usually 1 for crypto)
             self.instrument_cache[instId] = {
                 "ctVal": float(info["ctVal"]),
                 "ctMult": float(info.get("ctMult", 1)),
-                "minSz": float(info["minSz"])
+                "minSz": float(info["minSz"]),
+                "lotSz": float(info["lotSz"]),
+                "tickSz": float(info["tickSz"])
             }
             return self.instrument_cache[instId]
         return None
@@ -132,11 +150,16 @@ class OKXExecutor:
             return 0
         
         ctVal = info["ctVal"]
+        lotSz = info["lotSz"]
         # Approximate USD value of 1 contract
         one_contract_val = price * ctVal 
         
         contracts = amount_usd / one_contract_val
-        sz = int(contracts)
+        # Round to nearest Lot Size
+        sz = self.round_step_size(contracts, lotSz)
+        
+        if lotSz >= 1:
+            sz = int(sz)
         
         # --- SMART ROUND UP LOGIC ---
         if sz == 0 and amount_usd > 50:
@@ -356,36 +379,39 @@ class OKXExecutor:
             self._save_shadow_state(state)
             return "SHADOW_ORDER_ID"
 
-        # REAL MODE EXECUTION (Keep existing logic...)
+        # REAL MODE EXECUTION
+        info = self.get_instrument_info(instId)
+        tick_sz = info["tickSz"] if info else 0.01
+
         # 0. Set Leverage
         if "open" in action:
              self.set_leverage(instId, leverage, posSide=target_pos_side)
 
-        # ... (Rest of Real Mode logic, similar to original file but simplified here for replacement context)
-        # For brevity in this tool call, I will need to be careful not to delete the real mode logic if I can't see it all.
-        # Actually I see line 269 in previous `view_file`.
-        # I will just return the SHADOW block above and let the rest flow? No, I need to replace the whole method to be safe or use precise lines.
-        # I'll re-implement the REAL part based on previous view to ensure integrity.
-        
-        limit_px = 0
         if symbol in ["BTC", "ETH"]: SLIPPAGE_TOLERANCE = 0.002
         else: SLIPPAGE_TOLERANCE = 0.005
 
         if side == "buy": limit_px = ask_price * (1 + SLIPPAGE_TOLERANCE)
         else: limit_px = bid_price * (1 - SLIPPAGE_TOLERANCE)
-        limit_px = round(limit_px, 2) 
-
+        
+        # Round to precision
+        limit_px = self.round_step_size(limit_px, tick_sz)
+        
         payload = {
             "instId": instId, "tdMode": "isolated", "side": side,
             "ordType": "limit", "px": str(limit_px), "sz": str(sz), "posSide": target_pos_side
         }
         
         if stop_loss or take_profit:
+            # Calculate and round TP/SL
             algo_order = { "attachAlgoId": f"tpsl_{int(time.time())}", "tpOrdPx": "-1", "slOrdPx": "-1" }
             if take_profit:
-                algo_order["tpTriggerPx"] = str(take_profit); algo_order["tpTriggerPxType"] = "last"
+                tp_val = self.round_step_size(float(take_profit), tick_sz)
+                algo_order["tpTriggerPx"] = str(tp_val)
+                algo_order["tpTriggerPxType"] = "last"
             if stop_loss:
-                algo_order["slTriggerPx"] = str(stop_loss); algo_order["slTriggerPxType"] = "last"
+                sl_val = self.round_step_size(float(stop_loss), tick_sz)
+                algo_order["slTriggerPx"] = str(sl_val)
+                algo_order["slTriggerPxType"] = "last"
             payload["attachAlgoOrds"] = [algo_order]
         
         print(f"📡 Sending POST /api/v5/trade/order...")
