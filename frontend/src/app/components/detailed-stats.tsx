@@ -134,8 +134,8 @@ export function DetailedStats({ data }: { data?: any }) {
     if (s.includes('dovish')) return st.dovish;
     if (s.includes('hawkish')) return st.hawkish;
     if (s.includes('critical')) return st.critical;
-    if (s.includes('weak yen') || s.includes('yen weakness')) return st.weakYen;
-    if (s.includes('strong yen') || s.includes('yen strength')) return st.strongYen;
+    if (s.includes('weak yen')) return st.weakYen;
+    if (s.includes('strong yen')) return st.strongYen;
     if (s.includes('neutral')) return st.neutral;
 
     return statusStr;
@@ -147,10 +147,10 @@ export function DetailedStats({ data }: { data?: any }) {
       badge: t.detailedStats.fedBadge,
       badgeColor: "bg-[#3B82F6]/20 text-[#60A5FA]",
       items: [
-        { label: t.detailedStats.impliedRate, value: data?.macro?.fed_futures?.implied_rate ? `${data.macro.fed_futures.implied_rate}%` : "--" },
-        { label: t.detailedStats.range, value: translateMacroStatus(data?.macro?.fed_futures?.trend), highlight: true },
-        { label: t.detailedStats.price, value: data?.macro?.fed_futures?.price ? `${data.macro.fed_futures.price}` : "--" },
-        { label: t.detailedStats.change5d, value: data?.macro?.fed_futures?.change_5d_bps ? `${data.macro.fed_futures.change_5d_bps} bps` : "--", sentiment: t.sentiment.neutral }
+        { label: t.detailedStats.impliedRate, value: data?.fed_futures?.implied_rate ? `${data.fed_futures.implied_rate}%` : "--" },
+        { label: t.detailedStats.range, value: translateMacroStatus(data?.fed_futures?.trend), highlight: true },
+        { label: t.detailedStats.price, value: data?.fed_futures?.price ? `${data.fed_futures.price}` : "--" },
+        { label: t.detailedStats.change5d, value: data?.fed_futures?.change_5d_bps ? `${data.fed_futures.change_5d_bps} bps` : "--", sentiment: t.sentiment.neutral }
       ]
     },
     {
@@ -158,9 +158,9 @@ export function DetailedStats({ data }: { data?: any }) {
       badge: t.detailedStats.japanBadge,
       badgeColor: "bg-[#FF3131]/20 text-[#FF3131]",
       items: [
-        { label: t.detailedStats.price, value: data?.macro?.japan_macro?.price ? `${data.macro.japan_macro.price}` : "--" },
-        { label: t.detailedStats.range, value: translateMacroStatus(data?.macro?.japan_macro?.trend), highlight: true },
-        { label: t.detailedStats.change5d, value: data?.macro?.japan_macro?.change_5d_pct ? `${data.macro.japan_macro.change_5d_pct}%` : "--", sentiment: t.detailedStats.appreciation }
+        { label: t.detailedStats.price, value: data?.japan_rates?.price ? `${data.japan_rates.price}` : "--" },
+        { label: t.detailedStats.range, value: translateMacroStatus(data?.japan_rates?.trend), highlight: true },
+        { label: t.detailedStats.change5d, value: data?.japan_rates?.change_5d_pct ? `${data.japan_rates.change_5d_pct}%` : "--", sentiment: t.detailedStats.appreciation }
       ]
     },
     {

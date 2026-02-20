@@ -7,13 +7,7 @@ interface ProfitCurveProps {
     hideStats?: boolean;
 }
 
-interface AnimatedDotProps {
-    cx: number;
-    cy: number;
-    stroke: string;
-}
-
-const AnimatedDot = (props: AnimatedDotProps) => {
+const AnimatedDot = (props: any) => {
     const { cx, cy, stroke } = props;
 
     return (
@@ -80,27 +74,21 @@ export function ProfitCurve({ hideStats = false }: ProfitCurveProps) {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (scrollContainerRef.current) {
-            setTimeout(() => {
-                if (scrollContainerRef.current) {
-                    scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
-                }
-            }, 100);
+        if (scrollContainerRef.current && data.length > 0) {
+            scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
         }
     }, [data]);
 
     useEffect(() => {
-        console.log("ProfitCurve: Fetching nav history...");
         fetchNavHistory()
             .then(history => {
-                console.log("ProfitCurve: History received", history?.length);
-                if (history && history.length > 0) {
+                if (history.length > 0) {
                     // Find first valid BTC price for normalization
                     const startBtcPrice = history.find(h => h.btc_price)?.btc_price || 1;
                     const initialNav = history[0].nav;
 
                     // Format data with safer date parsing
-                    const formatted = history.map((h, idx) => {
+                    const formatted = history.map(h => {
                         let dateStr = h.timestamp;
                         try {
                             const dateObj = new Date(dateStr);
@@ -112,6 +100,7 @@ export function ProfitCurve({ hideStats = false }: ProfitCurveProps) {
                                 const minutes = dateObj.getMinutes().toString().padStart(2, '0');
                                 dateStr = `${month}/${day} ${hours}:${minutes}`;
                             } else {
+                                // Fallback to slice if standard parse fails but string structure is known fixed width
                                 dateStr = h.timestamp.slice(5, 16).replace('-', '/');
                             }
                         } catch (e) {
@@ -124,35 +113,28 @@ export function ProfitCurve({ hideStats = false }: ProfitCurveProps) {
                             : null;
 
                         return {
-                            id: idx, // Explicit ID for Recharts if needed
                             date: dateStr,
                             value: h.nav,
                             btcValue: btcNormalized || h.nav
                         };
                     });
-
-                    // Filter out NaNs
-                    const cleanData = formatted.filter(d => !isNaN(d.value));
-
                     // Downsample data for smoother chart if too many points
                     const targetPoints = 200;
-                    const samplingRate = Math.max(1, Math.floor(cleanData.length / targetPoints));
-                    const downsampled = cleanData.filter((_, index) => index % samplingRate === 0);
+                    const samplingRate = Math.max(1, Math.floor(formatted.length / targetPoints));
+                    const downsampled = formatted.filter((_, index) => index % samplingRate === 0);
 
                     // Always include the last point for accuracy
-                    if (downsampled.length > 0 && downsampled[downsampled.length - 1] !== cleanData[cleanData.length - 1]) {
-                        downsampled.push(cleanData[cleanData.length - 1]);
+                    if (downsampled[downsampled.length - 1] !== formatted[formatted.length - 1]) {
+                        downsampled.push(formatted[formatted.length - 1]);
                     }
 
-                    console.log("ProfitCurve: Setting data", downsampled.length);
                     setData(downsampled);
                 } else {
-                    console.warn("ProfitCurve: No history data, using fallback");
                     setData(generateChartData()); // Fallback
                 }
             })
             .catch((e) => {
-                console.error("ProfitCurve: Fetch error", e);
+                console.error(e);
                 setData(generateChartData());
             });
     }, []);
@@ -302,13 +284,13 @@ export function ProfitCurve({ hideStats = false }: ProfitCurveProps) {
                                     strokeWidth={2}
                                     fill="url(#colorLoss)"
                                     activeDot={{ r: 6, fill: chartColor }}
-                                    dot={(props: { cx: number; cy: number; index: number }) => {
+                                    dot={(props) => {
                                         const { index, cx, cy } = props;
                                         // Only render dot for the last data point
                                         if (index === data.length - 1) {
-                                            return <AnimatedDot key={index} cx={cx} cy={cy} stroke={chartColor} />;
+                                            return <AnimatedDot cx={cx} cy={cy} stroke={chartColor} />;
                                         }
-                                        return <g />;
+                                        return <></>;
                                     }}
                                 />
                             </AreaChart>

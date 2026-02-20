@@ -780,7 +780,7 @@ def run_agent():
                     notify_trade_execution(
                         symbol=symbol,
                         action=action_type,
-                        size=f"${amount} ({leverage}x)",
+                        size=f"ALL" if "close" in action_type and amount == 0 else f"${amount} ({leverage}x)",
                         entry_price="MARKET", # Execution is market/limit based on executor
                         sl=sl,
                         tp=tp,

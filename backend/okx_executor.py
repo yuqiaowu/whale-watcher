@@ -254,6 +254,27 @@ class OKXExecutor:
 
         # 2. Calculate Size in Contracts
         sz = self.calculate_position_size(instId, amount_usd, last_price)
+        
+        # Smart Handling for Close Actions: If amount is 0, fetch current full position size
+        if "close" in action and (sz <= 0 or amount_usd <= 0):
+             if self.shadow_mode:
+                 state = self._load_shadow_state()
+                 for p in state["positions"]:
+                     if p["symbol"] == symbol and (target_pos_side == "net" or p["type"] == target_pos_side):
+                          sz = p["size"]
+                          print(f"🔍 [SHADOW] Auto-detected position size for closing: {sz} contracts")
+                          break
+             else:
+                 # Real Mode: Fetch actual position from OKX to ensure full closure
+                 raw_res = self._request("GET", f"/api/v5/account/positions?instId={instId}")
+                 if raw_res.get("code") == "0" and raw_res.get("data"):
+                      for p in raw_res["data"]:
+                           # Match by position side (long/short/net)
+                           if p.get("posSide") == target_pos_side or (target_pos_side == "net" and float(p.get("pos", 0)) != 0):
+                                sz = abs(float(p["pos"]))
+                                print(f"🔍 [REAL] Auto-detected position size for closing: {sz} contracts")
+                                break
+
         if sz <= 0:
             print(f"⚠️ Calculated size is 0 for ${amount_usd}. Minimum not met?")
             return

@@ -19,18 +19,23 @@ export function MarketAnalysis() {
         const stats = await fetchMarketStats();
 
         // Prioritize Agent Decision Analysis (DeepSeek - Telegram source)
-        // Backend key is "ai_summary" (top-level)
-        if (stats.ai_summary && (stats.ai_summary.zh || stats.ai_summary.en)) {
+        if (stats.agent_analysis && (stats.agent_analysis.zh || stats.agent_analysis.en)) {
           console.log("Using Agent Analysis (DeepSeek)");
-          const summary = language === 'zh' ? stats.ai_summary.zh : stats.ai_summary.en;
+          const summary = language === 'zh' ? stats.agent_analysis.zh : stats.agent_analysis.en;
           setAnalysisText(summary);
+          return;
+        }
+
+        // Fallback to Global Market Summary (Gemini)
+        if (stats.ai_analysis?.global_summary_cn) {
+          setAnalysisText(stats.ai_analysis.global_summary_cn);
           return;
         }
 
         // Fallback: Construct summary from available raw paragraphs
         let parts = [];
-        if (stats.macro?.fed_futures?.trend) {
-          const fedText = language === 'zh' ? `美联储趋势: ${stats.macro.fed_futures.trend}` : `Fed Trend: ${stats.macro.fed_futures.trend}`;
+        if (stats.fed_futures?.trend) {
+          const fedText = language === 'zh' ? `美联储趋势: ${stats.fed_futures.trend}` : `Fed Trend: ${stats.fed_futures.trend}`;
           parts.push(fedText);
         }
         if (stats.daily_report?.stablecoins?.paragraph) {

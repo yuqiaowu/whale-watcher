@@ -21,8 +21,8 @@ export const translations = {
     // Market Analysis
     marketAnalysis: {
       title: 'AI 数据分析观点',
-      updateTime: '更新状态',
-      content: '🔄 正在等待 Dolores 的最新市场研判数据，请稍后刷新 (Awaiting live data...)',
+      updateTime: '更新时间',
+      content: '当前市场处于风险偏好状态，多项宏观指标显示市场情绪积极向上。美联储降息预期持续增强，市场预期2025年将有2-3次降息操作，流动性环境将进一步改善。日元套利交易活跃度显著提升，USD/JPY汇率波动加大，国际资本重新配置风险资产。美元指数（DXY）回落至104-105合理区间，缓解了新兴市场货币压力，有利于全球风险资产表现。以太坊和SOL链上巨鲸地址持续增持，24小时内大额转账频繁，显示机构资金正在加速流入优质加密资产。VIX波动率指数维持在12-15低位运行，表明传统金融市场恐慌情绪基本消退，风险偏好回升明显。加密货币恐慌贪婪指数突破70，进入贪婪区间。综合来看，当前市场流动性充裕，风险情绪积极，建议重点关注BTC、ETH、SOL等主流币种的突破机会，同时需警惕短期获利回吐压力。',
       riskOn: '风险偏好',
       expand: '展开全文',
       collapse: '收起'
@@ -168,8 +168,6 @@ export const translations = {
       activeWhales: '活跃巨鲸',
       stableCoinFlow: '稳定币流量',
       tokenFlow: '代币流量',
-      whaleVolume: '巨鲸异动量',
-      globalVolume: '全局成交量',
       leverage: '杠杆',
       volatility: '波动率',
       longLiquidation: '多头清算',
@@ -177,7 +175,7 @@ export const translations = {
       increase: '增加',
       decrease: '减少',
       liquidationContext: '清算数据',
-      volumeVsVolatility: '全局成交量 vs 波动率'
+      volumeVsVolatility: '成交量 vs 波动率'
     },
 
     // News Items
@@ -377,8 +375,8 @@ export const translations = {
     // Market Analysis
     marketAnalysis: {
       title: 'AI Data Analysis Insights',
-      updateTime: 'Update Status',
-      content: '🔄 Awaiting the latest market judgment data from Dolores, please refresh later...',
+      updateTime: 'Update Time',
+      content: 'The current market is in a risk-on state, with multiple macro indicators showing positive market sentiment. The Fed\'s rate cut expectations have strengthened, and the market anticipates 2-3 rate cuts in 2025, further improving the liquidity environment. Yen carry trade activity has significantly increased, with USD/JPY exchange rate volatility rising, leading to international capital reallocation towards risk assets. The US Dollar Index (DXY) has fallen to a reasonable range of 104-105, alleviating pressure on emerging market currencies and benefiting global risk asset performance. Ethereum and SOL chain whale addresses continue to accumulate, with frequent large transfers in the past 24 hours, indicating that institutional capital is rapidly flowing into high-quality cryptocurrencies. The VIX volatility index remains at a low level of 12-15, indicating that panic sentiment in traditional financial markets has largely subsided, and risk appetite has increased significantly. The cryptocurrency fear and greed index has broken through 70, entering the greed zone. Overall, the current market has ample liquidity and positive risk sentiment, and it is recommended to focus on breakouts of major cryptocurrencies such as BTC, ETH, and SOL. However, one should also be cautious of short-term profit-taking pressure.',
       riskOn: 'Risk-On',
       expand: 'Expand Full Text',
       collapse: 'Collapse'
@@ -524,8 +522,6 @@ export const translations = {
       activeWhales: 'Active Whales',
       stableCoinFlow: 'Stablecoin Flow',
       tokenFlow: 'Token Flow',
-      whaleVolume: 'Whale Tx Vol',
-      globalVolume: 'Global Volume',
       leverage: 'Leverage',
       volatility: 'Volatility',
       longLiquidation: 'Long Liquidation',
@@ -533,7 +529,7 @@ export const translations = {
       increase: 'Increase',
       decrease: 'Decrease',
       liquidationContext: 'Liquidation Context',
-      volumeVsVolatility: 'Global Vol vs Volatility'
+      volumeVsVolatility: 'Volume vs Volatility'
     },
 
     // News Items
