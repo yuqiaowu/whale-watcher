@@ -591,16 +591,25 @@ class OKXExecutor:
         """
         if self.shadow_mode:
             state = self._load_shadow_state()
-            # Update equity with live PnL? 
-            # For simplicity, return stored equity (balance) + approx PnL from get_all_positions?
-            # Or just stored total_equity (which handles realized). Unrealized might be missed.
-            # Let's trust stored for now to avoid delays.
-            return state["total_equity"]
+            return state.get("total_equity", 0.0)
             
-        res = self._request("GET", "/api/v5/account/balance?ccy=USDT")
-        if res["code"] == "0" and res["data"]:
-            # details[0].eq is equity (Balance + Unrealized PnL)
-            return float(res["data"][0]["details"][0]["eq"])
+        # Get total balance
+        res = self._request("GET", "/api/v5/account/balance")
+        if res.get("code") == "0" and res.get("data"):
+            data = res["data"][0]
+            # totalEq is the most reliable metric for Unified Accounts
+            eq = float(data.get("totalEq", 0))
+            if eq == 0:
+                # Fallback: check details for USDT specifically if totalEq is empty
+                for details in data.get("details", []):
+                    if details.get("ccy") == "USDT":
+                        eq = float(details.get("eq", 0))
+                        break
+            return eq
+        else:
+            msg = res.get("msg", "Unknown Error")
+            code = res.get("code", "Unknown")
+            print(f"❌ [OKX API] Balance Fetch Failed: {msg} (Code: {code})")
         return 0.0
 
     def sync_trade_history(self):
