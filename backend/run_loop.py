@@ -429,8 +429,8 @@ def main():
                 print(">> Step 3: Syncing Data to GitHub (data-history)...")
                 run_script("data_sync.py")
 
-                print(">> Step 4: Sending 4H Market Report...")
-                run_script("daily_report.py")
+                # print(">> Step 4: Sending 4H Market Report...")
+                # run_script("daily_report.py") # Deactivated redundant simplified report
 
                 write_status("SLEEPING", f"Cycle completed successfully.\nNext Run: {(datetime.now() + timedelta(seconds=INTERVAL_SECONDS)).strftime('%H:%M:%S')}")
             else:
