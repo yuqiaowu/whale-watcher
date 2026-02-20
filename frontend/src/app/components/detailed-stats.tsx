@@ -141,16 +141,19 @@ export function DetailedStats({ data }: { data?: any }) {
     return statusStr;
   };
 
+  const fedFutures = data?.macro?.fed_futures || {};
+  const japanMacro = data?.macro?.japan_macro || {};
+
   const stats = [
     {
       title: t.detailedStats.fedTitle,
       badge: t.detailedStats.fedBadge,
       badgeColor: "bg-[#3B82F6]/20 text-[#60A5FA]",
       items: [
-        { label: t.detailedStats.impliedRate, value: data?.fed_futures?.implied_rate ? `${data.fed_futures.implied_rate}%` : "--" },
-        { label: t.detailedStats.range, value: translateMacroStatus(data?.fed_futures?.trend), highlight: true },
-        { label: t.detailedStats.price, value: data?.fed_futures?.price ? `${data.fed_futures.price}` : "--" },
-        { label: t.detailedStats.change5d, value: data?.fed_futures?.change_5d_bps ? `${data.fed_futures.change_5d_bps} bps` : "--", sentiment: t.sentiment.neutral }
+        { label: t.detailedStats.impliedRate, value: fedFutures.implied_rate ? `${fedFutures.implied_rate}%` : "--" },
+        { label: t.detailedStats.range, value: translateMacroStatus(fedFutures.trend), highlight: true },
+        { label: t.detailedStats.price, value: fedFutures.price ? `${fedFutures.price}` : "--" },
+        { label: t.detailedStats.change5d, value: fedFutures.change_5d_bps ? `${fedFutures.change_5d_bps} bps` : "--", sentiment: t.sentiment.neutral }
       ]
     },
     {
@@ -158,9 +161,9 @@ export function DetailedStats({ data }: { data?: any }) {
       badge: t.detailedStats.japanBadge,
       badgeColor: "bg-[#FF3131]/20 text-[#FF3131]",
       items: [
-        { label: t.detailedStats.price, value: data?.japan_rates?.price ? `${data.japan_rates.price}` : "--" },
-        { label: t.detailedStats.range, value: translateMacroStatus(data?.japan_rates?.trend), highlight: true },
-        { label: t.detailedStats.change5d, value: data?.japan_rates?.change_5d_pct ? `${data.japan_rates.change_5d_pct}%` : "--", sentiment: t.detailedStats.appreciation }
+        { label: t.detailedStats.price, value: japanMacro.price ? `${japanMacro.price}` : "--" },
+        { label: t.detailedStats.range, value: translateMacroStatus(japanMacro.trend), highlight: true },
+        { label: t.detailedStats.change5d, value: japanMacro.change_5d_pct ? `${japanMacro.change_5d_pct}%` : "--", sentiment: t.detailedStats.appreciation }
       ]
     },
     {
