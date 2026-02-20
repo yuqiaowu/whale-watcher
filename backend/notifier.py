@@ -20,7 +20,7 @@ def send_telegram_message(message):
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
         "text": message,
-        "parse_mode": "Markdown"
+        "parse_mode": "HTML"
     }
     
     try:
@@ -77,7 +77,20 @@ _{reason}_
     print(f"📢 Sending Trade Alert for {symbol}...")
     
     # 1. Telegram
-    tg_msg = f"*{title}*\n{body}"
+    tg_msg = f"<b>{title}</b>\n" + f"""
+<b>Symbol:</b> <code>{symbol}</code>
+<b>Action:</b> <code>{action.upper()}</code>
+<b>Size:</b> <code>{size}</code>
+<b>Entry Price:</b> <code>${entry_price}</code>
+<b>Time:</b> <code>{timestamp}</code>
+
+🛡️ <b>Risk Management:</b>
+• <b>Stop Loss:</b> <code>{sl if sl else '---'}</code>
+• <b>Take Profit:</b> <code>{tp if tp else '---'}</code>
+
+🧠 <b>Rationale:</b>
+<i>{reason}</i>
+"""
     send_telegram_message(tg_msg)
     
     # 2. Discord (Rich Embed)
