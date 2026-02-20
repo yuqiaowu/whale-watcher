@@ -265,15 +265,16 @@ class OKXExecutor:
                           print(f"🔍 [SHADOW] Auto-detected position size for closing: {sz} contracts")
                           break
              else:
-                 # Real Mode: Fetch actual position from OKX to ensure full closure
+                  # Real Mode: Fetch actual position from OKX to ensure full closure
                  raw_res = self._request("GET", f"/api/v5/account/positions?instId={instId}")
                  if raw_res.get("code") == "0" and raw_res.get("data"):
                       for p in raw_res["data"]:
                            # Match by position side (long/short/net) AND ensure it has a size > 0
-                           if (p.get("posSide") == target_pos_side or target_pos_side == "net") and float(p.get("pos", 0)) != 0:
-                                sz = abs(float(p["pos"]))
-                                print(f"🔍 [REAL] Auto-detected position size for closing: {sz} contracts")
-                                break
+                           if p.get("posSide") == target_pos_side or target_pos_side == "net":
+                               if float(p.get("pos", 0)) != 0:
+                                   sz = abs(float(p["pos"]))
+                                   print(f"🔍 [REAL] Auto-detected position size for closing: {sz} contracts")
+                                   break
 
         if sz <= 0:
             print(f"⚠️ Calculated size is 0 for ${amount_usd}. Minimum not met?")
