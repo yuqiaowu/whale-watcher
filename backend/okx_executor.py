@@ -564,6 +564,11 @@ class OKXExecutor:
                     sz = float(pos.get("pos", 0))
                     side = "long" if sz > 0 else "short"
                 
+                # Get instrument info for ctVal conversion (Contracts -> Tokens)
+                info = self.get_instrument_info(pos["instId"])
+                ct_val = info.get("ctVal", 1.0) if info else 1.0
+                actual_amount = abs(float(pos.get("pos", 0))) * ct_val
+
                 # Retrieve SL/TP from Algo Map
                 sl = algo_map.get(pos["instId"], {}).get("sl")
                 tp = algo_map.get(pos["instId"], {}).get("tp")
@@ -577,7 +582,7 @@ class OKXExecutor:
                     "currentPrice": mark_px,
                     "pnl": upl,
                     "pnlPercent": float(f"{upl_ratio:.2f}"),
-                    "amount": pos.get("pos"), # contracts
+                    "amount": str(actual_amount), # Actual tokens/size
                     "margin": float(pos.get("margin", 0) or pos.get("notionalUsd", 0)) / float(pos.get("lever", 1)), # Approx
                     "stopLoss": sl,
                     "takeProfit": tp,
