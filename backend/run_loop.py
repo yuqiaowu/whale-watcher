@@ -22,7 +22,7 @@ def init_data_files():
     # 1. Portfolio State
     state = db.get_data("portfolio_state")
     if not state:
-        initial_val = 10000.0
+        initial_val = 2000.0
         try:
             from okx_executor import OKXExecutor
             temp_exec = OKXExecutor()
@@ -82,8 +82,8 @@ def init_data_files():
     # 4. NAV History
     nav = db.get_data("nav_history")
     if not nav:
-        # Generate history bridging Initial 10k -> Current API Equity
-        current_equity = 10000.0
+        # Generate history bridging Initial 2000 -> Current API Equity
+        current_equity = 2000.0
         try:
              from okx_executor import OKXExecutor
              temp_exec = OKXExecutor()
