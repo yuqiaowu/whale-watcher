@@ -74,6 +74,9 @@ def send_daily_report(data_path="frontend/data/whale_analysis.json"):
 
         # Clean AI text using regex for safe HTML replacement
         import re
+        # Escape HTML special characters
+        ai_text = ai_text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        
         # Replace **text** with <b>text</b>
         ai_text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', ai_text)
         # Replace * text with • text (bullet points)

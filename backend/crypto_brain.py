@@ -1350,7 +1350,6 @@ def main():
     # 6. Save Final JSON
     # [SYNC FIX] Update Global Snapshot for Frontend Consistency
     SNAPSHOT_PATHS = [
-        os.path.join(os.path.dirname(__file__), "../ai_agent_repo/global_onchain_news_snapshot.json"),
         os.path.join(os.path.dirname(__file__), "../frontend/data/global_onchain_news_snapshot.json")
     ]
     
