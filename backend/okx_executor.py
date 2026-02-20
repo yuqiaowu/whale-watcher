@@ -400,10 +400,19 @@ class OKXExecutor:
         # Round to precision
         limit_px = self.round_step_size(limit_px, tick_sz)
         
-        payload = {
-            "instId": instId, "tdMode": "isolated", "side": side,
-            "ordType": "limit", "px": str(limit_px), "sz": str(sz), "posSide": target_pos_side
-        }
+        if "close" in action:
+            # Force market order for closing to prevent hang-ups and add reduceOnly for safety
+            payload = {
+                "instId": instId, "tdMode": "isolated", "side": side,
+                "ordType": "market", "sz": str(sz), "posSide": target_pos_side,
+                "reduceOnly": "true"
+            }
+        else:
+            # Limit order for opening
+            payload = {
+                "instId": instId, "tdMode": "isolated", "side": side,
+                "ordType": "limit", "px": str(limit_px), "sz": str(sz), "posSide": target_pos_side
+            }
         
         if (stop_loss and str(stop_loss) != "None") or (take_profit and str(take_profit) != "None"):
             # Calculate and round TP/SL
