@@ -134,7 +134,7 @@ function AppContent() {
                 </motion.h2>
 
                 <DetailedStats data={marketStats} />
-                <MarketStats />
+                <MarketStats data={marketStats} />
               </section>
 
               {/* Crypto Cards */}
