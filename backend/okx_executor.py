@@ -266,7 +266,11 @@ class OKXExecutor:
         print(f"🤖 Execution Request: {action} {symbol} | Last: {last_price} | Val: ${amount_usd} | Size: {sz} contracts")
 
         # 3. Determine Side & Limit Price
-        side = "buy" if "long" in action else "sell"
+        if "close" in action:
+            side = "sell" if ("long" in action or target_pos_side == "long") else "buy"
+        else:
+            side = "buy" if ("long" in action or target_pos_side == "long") else "sell"
+            
         limit_px = ask_price if side == "buy" else bid_price # Simplified for shadow
 
         if self.shadow_mode:
@@ -401,18 +405,33 @@ class OKXExecutor:
             "ordType": "limit", "px": str(limit_px), "sz": str(sz), "posSide": target_pos_side
         }
         
-        if stop_loss or take_profit:
+        if (stop_loss and str(stop_loss) != "None") or (take_profit and str(take_profit) != "None"):
             # Calculate and round TP/SL
             algo_order = { "attachAlgoId": f"tpsl_{int(time.time())}", "tpOrdPx": "-1", "slOrdPx": "-1" }
-            if take_profit:
-                tp_val = self.round_step_size(float(take_profit), tick_sz)
-                algo_order["tpTriggerPx"] = str(tp_val)
-                algo_order["tpTriggerPxType"] = "last"
-            if stop_loss:
-                sl_val = self.round_step_size(float(stop_loss), tick_sz)
-                algo_order["slTriggerPx"] = str(sl_val)
-                algo_order["slTriggerPxType"] = "last"
-            payload["attachAlgoOrds"] = [algo_order]
+            if take_profit and str(take_profit) != "None":
+                try:
+                    tp_val = self.round_step_size(float(take_profit), tick_sz)
+                    algo_order["tpTriggerPx"] = str(tp_val)
+                    algo_order["tpTriggerPxType"] = "last"
+                except ValueError:
+                    print(f"⚠️ Invalid take_profit format: {take_profit}. Skipping TP.")
+            
+            if stop_loss and str(stop_loss) != "None":
+                sl_str = str(stop_loss).lower()
+                try:
+                    if "dynamic" in sl_str or "%" in sl_str:
+                        # Auto-calculate the 5% dynamic stop loss
+                        sl_float = limit_px * 0.95 if "long" in action else limit_px * 1.05
+                    else:
+                        sl_float = float(stop_loss)
+                    sl_val = self.round_step_size(sl_float, tick_sz)
+                    algo_order["slTriggerPx"] = str(sl_val)
+                    algo_order["slTriggerPxType"] = "last"
+                except Exception as e:
+                    print(f"⚠️ Failed to parse stop_loss: {stop_loss}. Error: {e}")
+                    
+            if "slTriggerPx" in algo_order or "tpTriggerPx" in algo_order:
+                payload["attachAlgoOrds"] = [algo_order]
         
         print(f"📡 Sending POST /api/v5/trade/order...")
         res = self._request("POST", "/api/v5/trade/order", payload)
@@ -702,10 +721,14 @@ class OKXExecutor:
             # Calculate %
             pnl_percent = 0.0
             if entry_px > 0:
-                if trade_type == "long":
-                     pnl_percent = ((avg_px - entry_px) / entry_px) * 100 * int(float(ord.get("lever",1)))
-                else:
-                     pnl_percent = ((entry_px - avg_px) / entry_px) * 100 * int(float(ord.get("lever",1)))
+                try:
+                    lever = int(float(ord.get("lever", 1)))
+                    if trade_type == "long":
+                        pnl_percent = ((avg_px - entry_px) / entry_px) * 100 * lever
+                    else:
+                        pnl_percent = ((entry_px - avg_px) / entry_px) * 100 * lever
+                except ZeroDivisionError:
+                    pnl_percent = 0.0
 
             # Time
             # uTime is unix ms

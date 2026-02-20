@@ -589,14 +589,18 @@ def validate_and_enforce_decision(decision, market_summary, daily_context, fear_
     for action in decision["actions"]:
         symbol = action.get("symbol")
         act_type = action.get("action")
-        size_usd = float(action.get("position_size_usd", 0))
+        try:
+            size_usd = float(str(action.get("position_size_usd", 0)).replace('$', '').replace(',', ''))
+        except ValueError:
+            print(f"⚠️ Failed to parse size_usd: {action.get('position_size_usd')}, defaulting to 0")
+            size_usd = 0.0
         
         # Skip 'hold' actions
         if act_type == "hold":
             continue
             
         # TRACKING: Close actions reduce exposure
-        if act_type == "close":
+        if "close" in act_type:
             current_positions = max(0, current_positions - 1)
             # We don't know exact size to reduce without tracking, so we just allow it.
             # Closing reduces risk, so it's always allowed.
@@ -747,18 +751,21 @@ def run_agent():
         for act in actions:
             symbol = act.get("symbol")
             action_type = act.get("action")
-            amount = act.get("position_size_usd", 0)
+            try:
+                amount = float(str(act.get("position_size_usd", 0)).replace('$', '').replace(',', ''))
+            except ValueError:
+                amount = 0.0
+                
             leverage = act.get("leverage", 1)
             
             exit_plan = act.get("exit_plan", {})
             sl = exit_plan.get("stop_loss")
             tp = exit_plan.get("take_profit")
             
-            if action_type in ["open_long", "open_short"]:
-                print(f"\n🚀 Triggering Executor for {symbol}...")
+            if action_type in ["open_long", "open_short", "close", "close_long", "close_short"]:
+                print(f"\n🚀 Triggering Executor for {symbol} ({action_type})...")
                 executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp)
                 
-                # LOG TO MEMORY
                 # LOG TO MEMORY
                 try:
                     sym_lower = symbol.lower()
