@@ -269,8 +269,8 @@ class OKXExecutor:
                  raw_res = self._request("GET", f"/api/v5/account/positions?instId={instId}")
                  if raw_res.get("code") == "0" and raw_res.get("data"):
                       for p in raw_res["data"]:
-                           # Match by position side (long/short/net)
-                           if p.get("posSide") == target_pos_side or (target_pos_side == "net" and float(p.get("pos", 0)) != 0):
+                           # Match by position side (long/short/net) AND ensure it has a size > 0
+                           if (p.get("posSide") == target_pos_side or target_pos_side == "net") and float(p.get("pos", 0)) != 0:
                                 sz = abs(float(p["pos"]))
                                 print(f"🔍 [REAL] Auto-detected position size for closing: {sz} contracts")
                                 break
