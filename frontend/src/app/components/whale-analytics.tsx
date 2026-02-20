@@ -1,29 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { WhaleChart } from '@/app/components/whale-chart';
 import { useLanguage } from '@/app/i18n/LanguageContext';
-import { fetchMarketStats } from '@/lib/api';
 
 type WhaleType = 'ETH' | 'SOL';
 
-export function WhaleAnalytics() {
+export function WhaleAnalytics({ data }: { data: any }) {
   const { t } = useLanguage();
   const [activeWhale, setActiveWhale] = useState<WhaleType>('ETH');
-  const [data, setData] = useState<any>(null);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const stats = await fetchMarketStats();
-        setData(stats);
-      } catch (e) {
-        console.error("Whale analytics load error:", e);
-      }
-    }
-    load();
-    const inv = setInterval(load, 30000);
-    return () => clearInterval(inv);
-  }, []);
 
   const whaleInfo = data?.[activeWhale.toLowerCase()];
   const history = whaleInfo?.market?.history_60d || [];
@@ -84,6 +68,15 @@ export function WhaleAnalytics() {
     volatility: p.volatility
   }));
 
+  const getTrendText = (arr: any[], key = 'value') => {
+    if (!arr || arr.length < 2) return '---';
+    const current = arr[arr.length - 1][key];
+    const prev = arr[arr.length - 2][key];
+    if (current > prev) return t.whale.increase;
+    if (current < prev) return t.whale.decrease;
+    return '---';
+  };
+
   const charts = [
     {
       title: `${t.whale.longLiquidation} & ${t.whale.shortLiquidation}`, // Updated title since leverage is gone
@@ -99,7 +92,7 @@ export function WhaleAnalytics() {
     },
     {
       title: `${t.whale.activeWhales}: ${stats24h.whale_count || '--'}`,
-      subtitle: t.whale.decrease,
+      subtitle: getTrendText(whaleCountData),
       type: 'line' as const,
       color: '#39FF14',
       data: whaleCountData,
@@ -107,7 +100,7 @@ export function WhaleAnalytics() {
     },
     {
       title: `${t.whale.stableCoinFlow}: ${formatFlow(stats24h.stablecoin_net_flow || 0)}`,
-      subtitle: t.whale.decrease,
+      subtitle: getTrendText(stableFlowData),
       type: 'area' as const,
       color: (stats24h.stablecoin_net_flow || 0) >= 0 ? '#39FF14' : '#FF3131',
       data: stableFlowData,
@@ -115,21 +108,21 @@ export function WhaleAnalytics() {
     },
     {
       title: `${t.whale.tokenFlow}: ${formatFlow(stats24h.token_net_flow || 0)}`,
-      subtitle: t.whale.decrease,
+      subtitle: getTrendText(tokenFlowData),
       type: 'line' as const,
       color: (stats24h.token_net_flow || 0) >= 0 ? '#39FF14' : '#FF3131',
       data: tokenFlowData,
       seriesNames: { value: t.whale.tokenFlow }
     },
     {
-      title: t.whale.liquidationContext,
+      title: `${t.whale.whaleVolume} & ${t.whale.leverage}`,
       subtitle: (whaleInfo?.market?.liquidation_context || 'No data')
         .replace(/Long Liquidation/g, t.whale.longLiquidation)
         .replace(/Short Liquidation/g, t.whale.shortLiquidation),
       type: 'composed' as const,
       color: '#39FF14',
       data: leverageVolumeData,
-      seriesNames: { volume: t.header.volume, leverage: t.whale.leverage }
+      seriesNames: { volume: t.whale.whaleVolume, leverage: t.whale.leverage }
     },
     {
       title: `${t.whale.volatility}: ${whaleInfo?.market?.natr_percent?.toFixed(2) || '--'}%`,
@@ -138,7 +131,7 @@ export function WhaleAnalytics() {
       color: '#39FF14',
       data: volatilityData,
       seriesNames: {
-        volume: t.header.volume,
+        volume: t.whale.globalVolume,
         volatility: t.whale.volatility
       }
     },

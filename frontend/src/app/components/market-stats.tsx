@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import { useLanguage } from "@/app/i18n/LanguageContext";
-import { fetchMarketStats, MarketStats as MarketStatsType } from "@/lib/api";
+import { MarketStats as MarketStatsType } from "@/lib/api";
 
 interface StatItem {
   label: string;
@@ -11,21 +10,8 @@ interface StatItem {
   color: string;
 }
 
-export function MarketStats() {
-  const { t, language } = useLanguage();
-  const [marketData, setMarketData] = useState<MarketStatsType | null>(null);
-
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const data = await fetchMarketStats();
-        setMarketData(data);
-      } catch (e) {
-        console.error("Failed to fetch market stats", e);
-      }
-    }
-    loadData();
-  }, []);
+export function MarketStats({ data: marketData }: { data: MarketStatsType | null }) {
+  const { language } = useLanguage();
 
   // Helper to safely format value
   const fmt = (val: any) => val ? Number(val).toFixed(2) : "--";
@@ -111,47 +97,59 @@ export function MarketStats() {
   }
 
   // Calculate logic for each
-  const liquidityMonitor = (marketData?.macro?.liquidity_monitor || {}) as any;
+  const indices = (marketData?.macro?.liquidity_monitor || {}) as any;
   const fearGreedData = (marketData?.fear_greed || {}) as any;
+  // Handle both flat and nested structures for Fear & Greed
+  const fearGreedLatest = fearGreedData.latest ? fearGreedData.latest : fearGreedData;
+  const fearGreedSeries = fearGreedData.series || [];
 
-  let fgChange = fearGreedData.change || 0;
+  let fgChange = 0;
+  if (typeof fearGreedLatest.change === 'number') {
+    fgChange = fearGreedLatest.change;
+  } else if (fearGreedSeries.length >= 2) {
+    const latest = fearGreedSeries[0].value;
+    const prev = fearGreedSeries[1].value;
+    if (prev !== 0) {
+      fgChange = ((latest - prev) / prev) * 100;
+    }
+  }
 
-  const dxyLogic = getLogic('dxy', liquidityMonitor.dxy?.price, liquidityMonitor.dxy?.change_5d_pct);
-  const us10yLogic = getLogic('us10y', liquidityMonitor.us10y?.price, liquidityMonitor.us10y?.change_5d_pct);
-  const vixLogic = getLogic('vix', liquidityMonitor.vix?.price, liquidityMonitor.vix?.change_5d_pct);
-  const fgLogic = getLogic('fg', fearGreedData.value, fgChange);
+  const dxyLogic = getLogic('dxy', indices.dxy?.price, indices.dxy?.change_5d_pct);
+  const us10yLogic = getLogic('us10y', indices.us10y?.price, indices.us10y?.change_5d_pct);
+  const vixLogic = getLogic('vix', indices.vix?.price, indices.vix?.change_5d_pct);
+  const fgLogic = getLogic('fg', fearGreedLatest.value, fgChange);
 
   const stats: (StatItem & { sentimentType: string })[] = [
     {
       label: "DXY (Dollar)",
-      value: fmt(liquidityMonitor.dxy?.price) !== "--" ? fmt(liquidityMonitor.dxy?.price) : "Loading...",
-      change: fmtChange(liquidityMonitor.dxy?.change_5d_pct),
-      trend: (liquidityMonitor.dxy?.change_5d_pct || 0) < 0 ? "down" : "up",
+      value: fmt(indices.dxy?.price) !== "--" ? fmt(indices.dxy?.price) : "--",
+      change: fmtChange(indices.dxy?.change_5d_pct),
+      trend: (indices.dxy?.change_5d_pct || 0) < 0 ? "down" : "up",
       interpretation: dxyLogic.text,
       color: dxyLogic.color,
       sentimentType: dxyLogic.sentimentType
     },
     {
       label: "US10Y (Yield)",
-      value: fmt(liquidityMonitor.us10y?.price) !== "--" ? fmt(liquidityMonitor.us10y?.price) : "Loading...",
-      change: fmtChange(liquidityMonitor.us10y?.change_5d_pct),
-      trend: (liquidityMonitor.us10y?.change_5d_pct || 0) < 0 ? "down" : "up",
+      value: fmt(indices.us10y?.price) !== "--" ? fmt(indices.us10y?.price) : "--",
+      change: fmtChange(indices.us10y?.change_5d_pct),
+      trend: (indices.us10y?.change_5d_pct || 0) < 0 ? "down" : "up",
       interpretation: us10yLogic.text,
       color: us10yLogic.color,
       sentimentType: us10yLogic.sentimentType
     },
     {
       label: "VIX (Fear)",
-      value: fmt(liquidityMonitor.vix?.price) !== "--" ? fmt(liquidityMonitor.vix?.price) : "Loading...",
-      change: fmtChange(liquidityMonitor.vix?.change_5d_pct),
-      trend: (liquidityMonitor.vix?.change_5d_pct || 0) < 0 ? "down" : "up",
+      value: fmt(indices.vix?.price) !== "--" ? fmt(indices.vix?.price) : "--",
+      change: fmtChange(indices.vix?.change_5d_pct),
+      trend: (indices.vix?.change_5d_pct || 0) < 0 ? "down" : "up",
       interpretation: vixLogic.text,
       color: vixLogic.color,
       sentimentType: vixLogic.sentimentType
     },
     {
       label: "Fear & Greed",
-      value: fearGreedData.value || "Loading...",
+      value: fearGreedLatest.value || "Loading...",
       change: fgChange !== 0 ? (fgChange > 0 ? "+" : "") + fgChange.toFixed(1) + "%" : "--",
       trend: fgChange < 0 ? "down" : "up",
       interpretation: fgLogic.text,
@@ -162,7 +160,7 @@ export function MarketStats() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      {stats.map((stat: any, index: number) => (
+      {stats.map((stat: any) => (
         <div
           key={stat.label}
           className="relative bg-[#1a1a1a] border border-[#2D3139] p-4 overflow-hidden group rounded-sm hover:scale-[1.02] hover:shadow-[0_0_30px_var(--sentiment-bullish-bg)] transition-all duration-300"

@@ -196,7 +196,7 @@ function AppContent() {
                   {t.sections.whaleAnalytics}
                 </motion.h2>
 
-                <WhaleAnalytics />
+                <WhaleAnalytics data={marketStats} />
               </section>
 
               {/* News Feed Section */}
