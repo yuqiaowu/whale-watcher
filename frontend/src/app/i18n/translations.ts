@@ -168,6 +168,8 @@ export const translations = {
       activeWhales: '活跃巨鲸',
       stableCoinFlow: '稳定币流量',
       tokenFlow: '代币流量',
+      whaleVolume: '巨鲸异动量',
+      globalVolume: '全局成交量',
       leverage: '杠杆',
       volatility: '波动率',
       longLiquidation: '多头清算',
@@ -175,7 +177,7 @@ export const translations = {
       increase: '增加',
       decrease: '减少',
       liquidationContext: '清算数据',
-      volumeVsVolatility: '成交量 vs 波动率'
+      volumeVsVolatility: '全局成交量 vs 波动率'
     },
 
     // News Items
@@ -522,6 +524,8 @@ export const translations = {
       activeWhales: 'Active Whales',
       stableCoinFlow: 'Stablecoin Flow',
       tokenFlow: 'Token Flow',
+      whaleVolume: 'Whale Tx Vol',
+      globalVolume: 'Global Volume',
       leverage: 'Leverage',
       volatility: 'Volatility',
       longLiquidation: 'Long Liquidation',
@@ -529,7 +533,7 @@ export const translations = {
       increase: 'Increase',
       decrease: 'Decrease',
       liquidationContext: 'Liquidation Context',
-      volumeVsVolatility: 'Volume vs Volatility'
+      volumeVsVolatility: 'Global Vol vs Volatility'
     },
 
     // News Items

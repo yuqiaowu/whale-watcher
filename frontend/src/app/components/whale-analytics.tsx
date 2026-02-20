@@ -115,14 +115,14 @@ export function WhaleAnalytics({ data }: { data: any }) {
       seriesNames: { value: t.whale.tokenFlow }
     },
     {
-      title: `${t.header.volume} & ${t.whale.leverage}`,
+      title: `${t.whale.whaleVolume} & ${t.whale.leverage}`,
       subtitle: (whaleInfo?.market?.liquidation_context || 'No data')
         .replace(/Long Liquidation/g, t.whale.longLiquidation)
         .replace(/Short Liquidation/g, t.whale.shortLiquidation),
       type: 'composed' as const,
       color: '#39FF14',
       data: leverageVolumeData,
-      seriesNames: { volume: t.header.volume, leverage: t.whale.leverage }
+      seriesNames: { volume: t.whale.whaleVolume, leverage: t.whale.leverage }
     },
     {
       title: `${t.whale.volatility}: ${whaleInfo?.market?.natr_percent?.toFixed(2) || '--'}%`,
@@ -131,7 +131,7 @@ export function WhaleAnalytics({ data }: { data: any }) {
       color: '#39FF14',
       data: volatilityData,
       seriesNames: {
-        volume: t.header.volume,
+        volume: t.whale.globalVolume,
         volatility: t.whale.volatility
       }
     },
