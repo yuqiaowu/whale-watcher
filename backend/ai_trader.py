@@ -348,8 +348,21 @@ def get_whale_data():
         # Helper to format tech
         def fmt_tech(m):
             if not m: return "No Tech Data"
+            
+            natr_str = f"Volatility(NATR)={m.get('natr_percent', 0):.2f}%"
+            hist = m.get('history_60d', [])
+            if len(hist) >= 2:
+                curr_natr = hist[-1].get('natr', 0)
+                prev_natr = hist[-2].get('natr', 0)
+                if curr_natr > prev_natr:
+                    natr_str += "[Rising]"
+                elif curr_natr < prev_natr:
+                    natr_str += "[Falling]"
+                else:
+                    natr_str += "[Flat]"
+
             return (f"RSI={m.get('rsi_14', 50):.1f} | ADX={m.get('adx_14', 0):.1f} | "
-                    f"VolRatio={m.get('vol_ratio', 1):.1f}x | Rank={m.get('price_percentile_20', 0.5)*100:.0f}% | "
+                    f"VolRatio={m.get('vol_ratio', 1):.1f}x | {natr_str} | Rank={m.get('price_percentile_20', 0.5)*100:.0f}% | "
                     f"BBW={m.get('bb_width', 0):.3f} | Trend={m.get('bb_trend', 'FLAT')} | Funding={m.get('funding_rate', 0)*100:.4f}% | "
                     f"Stars: Buy={m.get('buy_stars',0)}/Sell={m.get('sell_stars',0)}")
 
