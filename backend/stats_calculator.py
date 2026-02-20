@@ -1,13 +1,12 @@
 import json
 import os
+from db_client import db
 
-def calculate_stats(history_path):
-    if not os.path.exists(history_path):
-        return 0, 0
-    
+def calculate_stats():
     try:
-        with open(history_path, "r") as f:
-            history = json.load(f)
+        history = db.get_data("trade_history", [])
+        if not history:
+            return 0, 0
         
         # Filter for closed trades (those with a 'pnl' field)
         closed_trades = [t for t in history if "pnl" in t]

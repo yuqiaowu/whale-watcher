@@ -791,21 +791,14 @@ def run_agent():
                     print(f"⚠️ Memory/Notify Log Error: {log_err}")
         
         # Save decision log
-        log_path = BASE_DIR / "agent_decision_log.json"
-        
-        # Load History
-        history = []
-        if AGENT_LOG_PATH.exists():
-            try:
-                with open(AGENT_LOG_PATH, "r") as f:
-                    content_json = json.load(f)
-                    if isinstance(content_json, list):
-                        history = content_json
-                    else:
-                        history = [content_json]
-            except Exception as e:
-                print(f"⚠️ Failed to load history: {e}")
-                history = []
+        try:
+            from db_client import db
+            history = db.get_data("agent_decision_log", [])
+            if not isinstance(history, list):
+                history = [history] if history else []
+        except Exception as e:
+            print(f"⚠️ Failed to load history from DB: {e}")
+            history = []
         
         # Add timestamp (Force overwrite with local time UTC+8)
         import datetime as dt
@@ -816,13 +809,13 @@ def run_agent():
         history.insert(0, decision)
         history = history[:50]
         
-        print(f"💾 Saving decision log to: {AGENT_LOG_PATH}")
+        print(f"💾 Saving decision log to DB")
         try:
-            with open(AGENT_LOG_PATH, "w") as f:
-                json.dump(history, f, indent=2, ensure_ascii=False)
+            from db_client import db
+            db.save_data("agent_decision_log", history)
             print("✅ Decision Log Saved Successfully!")
         except Exception as e:
-            print(f"❌ FAILED to save log: {e}")
+            print(f"❌ FAILED to save log to DB: {e}")
                 
     except Exception as e:
         print(f"❌ Error calling DeepSeek (OpenAI SDK): {e}")

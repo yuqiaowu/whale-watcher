@@ -9,6 +9,7 @@ from flask_cors import CORS
 from datetime import datetime, timedelta
 import requests
 from stats_calculator import calculate_stats
+from db_client import db
 
 # Configuration
 INTERVAL_HOURS = 4
@@ -18,20 +19,9 @@ PORT = int(os.getenv("PORT", 5001))
 # --- DATA INITIALIZATION ---
 def init_data_files():
     """Ensure data files exist on startup to prevent API 404s"""
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    data_dir = os.path.join(project_root, "frontend", "data")
-    
-    if not os.path.exists(data_dir):
-        try:
-            os.makedirs(data_dir, exist_ok=True)
-        except Exception as e:
-            print(f"⚠️ Failed to create data dir: {e}")
-            return
-
     # 1. Portfolio State
-    port_path = os.path.join(data_dir, "portfolio_state.json")
-    if not os.path.exists(port_path):
-        # Default fallback
+    state = db.get_data("portfolio_state")
+    if not state:
         initial_val = 10000.0
         try:
             from okx_executor import OKXExecutor
@@ -49,36 +39,29 @@ def init_data_files():
             "initial_equity": initial_val,
             "start_time": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
         }
-        with open(port_path, "w") as f:
-            json.dump(default_state, f, indent=2)
-        print(f"✅ Initialized portfolio_state.json (Initial: {initial_val})")
+        db.save_data("portfolio_state", default_state)
+        print(f"✅ Initialized portfolio_state in MongoDB (Initial: {initial_val})")
     else:
-        # Ensure start_time exists in existing file
-        try:
-             with open(port_path, "r") as f:
-                 state = json.load(f)
-             
-             if "start_time" not in state:
-                 state["start_time"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-             if "initial_equity" not in state:
-                 state["initial_equity"] = state.get("total_equity", 10000.0)
-             with open(port_path, "w") as f:
-                 json.dump(state, f, indent=2)
-                 print("✅ Added start_time to portfolio_state.json")
-        except Exception as e:
-            print(f"⚠️ Failed to update portfolio_state.json: {e}")
+        changed = False
+        if "start_time" not in state:
+            state["start_time"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            changed = True
+        if "initial_equity" not in state:
+            state["initial_equity"] = state.get("total_equity", 10000.0)
+            changed = True
+        if changed:
+            db.save_data("portfolio_state", state)
+            print("✅ Added start_time to portfolio_state in DB")
 
     # 2. Trade History
-    hist_path = os.path.join(data_dir, "trade_history.json")
-    if not os.path.exists(hist_path):
-        with open(hist_path, "w") as f:
-            json.dump([], f)
-        print("✅ Initialized trade_history.json")
+    hist = db.get_data("trade_history")
+    if not hist:
+        db.save_data("trade_history", [])
+        print("✅ Initialized trade_history in DB")
         
     # 3. Agent Decision Log
-    log_path = os.path.join(data_dir, "agent_decision_log.json")
-    if not os.path.exists(log_path):
-        # Create a cleaner initial log
+    log = db.get_data("agent_decision_log")
+    if not log:
         dummy_log = [{
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "analysis_summary": {
@@ -93,13 +76,12 @@ def init_data_files():
                 "reflection": {"zh": "就绪", "en": "Ready."}
             }
         }]
-        with open(log_path, "w") as f:
-            json.dump(dummy_log, f, indent=2)
-        print("✅ Initialized agent_decision_log.json")
+        db.save_data("agent_decision_log", dummy_log)
+        print("✅ Initialized agent_decision_log in DB")
 
     # 4. NAV History
-    nav_path = os.path.join(data_dir, "nav_history.json")
-    if not os.path.exists(nav_path):
+    nav = db.get_data("nav_history")
+    if not nav:
         # Generate history bridging Initial 10k -> Current API Equity
         current_equity = 10000.0
         try:
@@ -125,13 +107,7 @@ def init_data_files():
              print(f"⚠️ Failed to fetch BTC candles: {e}")
 
         history = []
-        base_nav = 10000.0
-        try:
-             with open(port_path, "r") as f:
-                 ps = json.load(f)
-                 base_nav = ps.get("initial_equity", 10000.0)
-        except:
-             pass
+        base_nav = state.get("initial_equity", 10000.0) if getattr(locals(), 'state', None) else 10000.0
         
         steps = len(btc_candles) if btc_candles else 42
         
@@ -170,9 +146,8 @@ def init_data_files():
                  "btc_price": btc_px
              })
              
-        with open(nav_path, "w") as f:
-            json.dump(history, f, indent=2)
-        print(f"✅ Generated nav_history.json with real BTC data (10k -> {current_equity:.2f})")
+        db.save_data("nav_history", history)
+        print(f"✅ Generated nav_history in DB (10k -> {current_equity:.2f})")
 
 
 
@@ -260,26 +235,17 @@ def get_portfolio_summary():
         # 1. Get Equity from Executor (Source of Truth for Balance)
         current_equity = executor.get_account_equity()
         
-        # 2. Get Initial & History from File (for PnL tracking over time)
-        # Because OKX API doesn't easily give "Portfolio Initial Value" from API directly in a simple call
-        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        path = os.path.join(project_root, "frontend", "data", "portfolio_state.json")
-        
-        initial = 10000.0
-        start_time = datetime.now().strftime("%Y-%m-%dT00:00:00Z")
-        if os.path.exists(path):
-             with open(path, "r") as f:
-                 data = json.load(f)
-                 initial = data.get("initial_equity", data.get("initial", 10000.0))
-                 start_time = data.get("start_time", start_time)
+        # 2. Get Initial & History from DB
+        state = db.get_data("portfolio_state", {})
+        initial = state.get("initial_equity", state.get("total_equity", 10000.0))
+        start_time = state.get("start_time", datetime.now().strftime("%Y-%m-%dT00:00:00Z"))
 
         # Calculate PnL
         pnl = current_equity - initial
         pnl_pct = (pnl / initial) * 100 if initial > 0 else 0
 
         # Calculate Win Rate & Total Trades
-        hist_file = os.path.join(project_root, "frontend", "data", "trade_history.json")
-        total_trades, win_rate = calculate_stats(hist_file)
+        total_trades, win_rate = calculate_stats()
 
         return jsonify({
             "nav": current_equity,
@@ -304,51 +270,29 @@ def get_positions():
 
 @app.route('/api/history', methods=['GET'])
 def get_trade_history():
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # Correct file: trade_history.json (Past completed trades)
-    path = os.path.join(project_root, "frontend", "data", "trade_history.json")
-    
     try:
-        if os.path.exists(path):
-            with open(path, 'r') as f:
-                data = json.load(f)
-            # Return last 50, newest first
-            return jsonify(data[-50:][::-1])
-        return jsonify([])
+        history = db.get_data("trade_history", [])
+        # Return last 50, newest first
+        return jsonify(history[-50:][::-1])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/agent-decision', methods=['GET'])
 def get_agent_decisions():
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # Correct file: agent_decision_log.json (AI thinking logs)
-    path = os.path.join(project_root, "frontend", "data", "agent_decision_log.json")
-    
     try:
-        if os.path.exists(path):
-            with open(path, 'r') as f:
-                try:
-                    data = json.load(f)
-                    if isinstance(data, list):
-                        return jsonify(data[:10]) # First 10 (Newest first)
-                    else:
-                        return jsonify([data])
-                except json.JSONDecodeError:
-                    return jsonify([])
-        return jsonify([])
+        decisions = db.get_data("agent_decision_log", [])
+        if isinstance(decisions, list):
+            return jsonify(decisions[:10]) # First 10 (Newest first)
+        else:
+            return jsonify([decisions])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
         
 @app.route('/api/nav-history', methods=['GET'])
 def get_nav_history():
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    path = os.path.join(project_root, "frontend", "data", "nav_history.json")
     try:
-        if os.path.exists(path):
-            with open(path, 'r') as f:
-                data = json.load(f)
-            return jsonify(data)
-        return jsonify([])
+        history = db.get_data("nav_history", [])
+        return jsonify(history)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

@@ -215,13 +215,10 @@ class OKXExecutor:
         return os.path.join(base_dir, "frontend", "data", "portfolio_state.json")
 
     def _load_shadow_state(self):
-        path = self._get_portfolio_path()
-        if os.path.exists(path):
-            try:
-                with open(path, "r") as f:
-                    return json.load(f)
-            except:
-                pass
+        from db_client import db
+        state = db.get_data("portfolio_state")
+        if state:
+            return state
         # Default State
         return {
             "total_equity": 10000.0,
@@ -230,11 +227,9 @@ class OKXExecutor:
         }
 
     def _save_shadow_state(self, state):
-        path = self._get_portfolio_path()
+        from db_client import db
         try:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-            with open(path, "w") as f:
-                json.dump(state, f, indent=2)
+            db.save_data("portfolio_state", state)
         except Exception as e:
             print(f"⚠️ Failed to save shadow state: {e}")
 
@@ -340,18 +335,10 @@ class OKXExecutor:
                     print(f"✅ [SHADOW] Position Closed: {symbol}. PnL: ${pnl:.2f}")
 
                     # --- LOG TRADE HISTORY (Shadow Mode) ---
-                    # Now we must record this closed trade to trade_history.json so frontend can see it
+                    # Now we must record this closed trade to trade_history so frontend can see it
                     try:
-                        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-                        hist_path = os.path.join(base_dir, "frontend", "data", "trade_history.json")
-                        
-                        history = []
-                        if os.path.exists(hist_path):
-                            try:
-                                with open(hist_path, 'r') as f:
-                                    history = json.load(f)
-                            except:
-                                history = []
+                        from db_client import db
+                        history = db.get_data("trade_history", [])
 
                         trade_record = {
                             "id": f"{symbol}_{int(time.time())}",
@@ -370,8 +357,7 @@ class OKXExecutor:
                         
                         history.append(trade_record)
                         
-                        with open(hist_path, 'w') as f:
-                            json.dump(history, f, indent=2)
+                        db.save_data("trade_history", history)
                         print(f"📝 [SHADOW] Appended trade to history: {trade_record['id']}")
 
                     except Exception as e:
@@ -643,16 +629,8 @@ class OKXExecutor:
             return
 
         # 2. Load existing local history to prevent duplicates
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        hist_path = os.path.join(base_dir, "frontend", "data", "trade_history.json")
-        
-        local_history = []
-        if os.path.exists(hist_path):
-            try:
-                with open(hist_path, 'r') as f:
-                    local_history = json.load(f)
-            except:
-                local_history = []
+        from db_client import db
+        local_history = db.get_data("trade_history", [])
         
         existing_ids = set(item['id'] for item in local_history)
         new_records = []
@@ -768,8 +746,8 @@ class OKXExecutor:
             local_history.extend(new_records)
             # Sort by time desc?
             try:
-                with open(hist_path, 'w') as f:
-                    json.dump(local_history, f, indent=2)
+                from db_client import db
+                db.save_data("trade_history", local_history)
                 print(f"✅ [REAL] Synced {len(new_records)} new trades from OKX.")
             except Exception as e:
                 print(f"⚠️ Failed to save synced history: {e}")
