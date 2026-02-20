@@ -113,22 +113,13 @@ export function MarketStats() {
   // Calculate logic for each
   const liquidityMonitor = (marketData?.macro?.liquidity_monitor || {}) as any;
   const fearGreedData = (marketData?.fear_greed || {}) as any;
-  const fearGreedLatest = fearGreedData.latest || {};
-  const fearGreedSeries = fearGreedData.series || [];
 
-  let fgChange = 0;
-  if (fearGreedSeries.length >= 2) {
-    const latest = fearGreedSeries[0].value;
-    const prev = fearGreedSeries[1].value;
-    if (prev !== 0) {
-      fgChange = ((latest - prev) / prev) * 100;
-    }
-  }
+  let fgChange = fearGreedData.change || 0;
 
   const dxyLogic = getLogic('dxy', liquidityMonitor.dxy?.price, liquidityMonitor.dxy?.change_5d_pct);
   const us10yLogic = getLogic('us10y', liquidityMonitor.us10y?.price, liquidityMonitor.us10y?.change_5d_pct);
   const vixLogic = getLogic('vix', liquidityMonitor.vix?.price, liquidityMonitor.vix?.change_5d_pct);
-  const fgLogic = getLogic('fg', fearGreedLatest.value, fgChange);
+  const fgLogic = getLogic('fg', fearGreedData.value, fgChange);
 
   const stats: (StatItem & { sentimentType: string })[] = [
     {
@@ -160,7 +151,7 @@ export function MarketStats() {
     },
     {
       label: "Fear & Greed",
-      value: fearGreedLatest.value || "Loading...",
+      value: fearGreedData.value || "Loading...",
       change: fgChange !== 0 ? (fgChange > 0 ? "+" : "") + fgChange.toFixed(1) + "%" : "--",
       trend: fgChange < 0 ? "down" : "up",
       interpretation: fgLogic.text,
