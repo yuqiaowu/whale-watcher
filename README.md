@@ -4,6 +4,8 @@ An advanced, autonomous crypto trading system that combines **On-Chain Whale Ana
 
 Dolores (the AI Agent) monitors the market 24/7, identifies anomalies (e.g., retail capitulation vs. whale accumulation), and executes trades on OKX (or paper trading) while synchronizing all data to a serverless frontend backend.
 
+📺 **Live Demo:** [https://whale.sparkvalues.com/](https://whale.sparkvalues.com/)
+
 ---
 
 ## 🌟 Key Features

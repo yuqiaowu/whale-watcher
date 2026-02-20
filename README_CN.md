@@ -1,87 +1,97 @@
-# 🐋 AI 鲸鱼监控与自动交易系统 (Dolores V1.4)
+# 🐋 AI 鲸鱼监控与量化交易终端 (Dolores V2.0)
 
-这是一个先进的、自主的加密货币交易系统，结合了 **链上鲸鱼分析**、**技术指标**、**全球宏观情绪** 以及 **强化学习风格的 AI 决策**。
+这是一个企业级、完全自主的加密货币 AI 量化交易与链上数据监控终端。它结合了 **链上巨鲸分析 (On-chain Whale Tracking)**、**技术指标 (Technical Indicators)**、**全球宏观情绪 (Macro & Sentiment)** 以及 **Agentic AI 决策模型 (基于 DeepSeek)**，能够在无人干预的情况下进行 24/7 的市场研判与真金白银交易。
 
-Dolores (AI 代理) 24/7 全天候监控市场，识别异常情况（例如：散户恐慌抛售 vs 鲸鱼底部吸筹），并在 OKX 上执行交易（支持实盘或模拟盘），同时将所有分析数据同步到 Serverless 前端。
+本系统包含一个强大的 Python 后台调度引擎与一个具有极佳多维数据可视化的 React/Next.js Web3 前端仪表盘。
 
----
-
-## 🌟 核心功能 (Key Features)
-
-### 1. 六维感知 (Multi-Dimensional Perception)
-AI 不仅仅看价格，她通过 6 个维度感知市场：
-*   **🐋 链上资金流 (Flow)**: 追踪鲸鱼的代币净流入/流出和稳定币动向 (ETH & SOL)。
-*   **📊 技术面 (Technicals)**: 高级指标包括 RSI, ADX (趋势强度), MACD, 以及 **布林带宽度/趋势 (BBW/Trend)**。
-*   **⭐ 星级评分 (Star Ratings)**: 基于价格排位、成交量异常和 RSI 极值的自动评分系统 (0-3 星)。
-*   **💸 市场痛点 (Pain)**: 监控 **爆仓数据 (Liquidation)** (多头 vs 空头谁在流血)，寻找反转和轧空机会。
-*   **📉 资金费率 (Rates)**: 检测交易拥挤度和轧空潜力 (负费率 = 空头拥挤)。
-*   **🌍 宏观环境 (Macro)**: 整合美联储利率期货、VIX 恐慌指数、美元指数 (DXY) 和全球新闻情绪。
-
-### 2. "诚实且健壮" 的架构 (Honest & Robust)
-*   **Fail-Loudly (主要报错)**: 系统在计算指标前会严格验证数据充足性 (>50 根 K 线)。如果关键数据 (如 ADX) 缺失，它会直接报错而不是使用虚假的默认值误导 AI。
-*   **算术安全**: 在复杂的指标计算中增加了完善的除零保护。
-
-### 3. AI 自我反思闭环 (V2.0 Alpha) 🧠
-*   **滑动记忆 (Rolling Memory)**: AI 会维护一个包含最近 5 笔交易的“日记”，详细记录开仓时的市场快照 (RSI, ADX, 鲸鱼流向)。
-*   **持续学习**: 在做任何新决策之前，AI 会先复盘这些历史记录，寻找成功或失败的模式（例如：“上次我在 ADX > 50 时抄底结果亏损了”）。这使得策略能够动态适应不断变化的市场风格。
-
-### 4. Serverless 数据同步
-*   **无需本地 Git**: 使用 GitHub REST API 直接推送数据到 `data-history` 分支。
-*   **零维护成本**: 完美适配 Railway/Vercel 等无状态环境。
+📺 **实时在线演示 (Live Demo):** [https://whale.sparkvalues.com/](https://whale.sparkvalues.com/)
 
 ---
 
-## 🛠️ 系统架构
+## 🌟 核心突破与功能 (Key Features)
 
-*   **`backend/crypto_brain.py`**: **情报官**。负责抓取链上数据 (Moralis)、新闻和宏观数据。
-*   **`backend/market_data.py`**: **矿工**。从 OKX 抓取 OHLCV 市场数据 (支持分页抓取 500 根 K 线)。
-*   **`backend/technical_analysis.py`**: **分析师**。计算 RSI, ADX, 布林带, 星级评分等硬核指标。
-*   **`backend/ai_trader.py`**: **基金经理**。汇总所有上下文信息，通过 DeepSeek LLM 进行最终交易决策。
-*   **`backend/data_sync.py`**: **档案员**。将 JSON 数据上传到 GitHub `data-history` 分支。
-*   **`backend/run_loop.py`**: **调度员**。每 4 小时唤醒一次系统。
+### 1. 全自动 AI 基金经理 (Agentic AI Trader)
+不再是简单的死板网格或均线策略，系统的核心大脑（DeepSeek LLM）综合了当前市场的六维多模态情报（资金、图形、宏观、杠杆、仓位），并在执行交易后自动附带 **开单逻辑 (Rationale)** 与 **风控计划 (Exit Plan)**。
+*   **支持 OKX V5 统一账户**: 全自动处理多空双向 (Long/Short) 合约交易、动态杠杆计算、实时未实现盈亏 (uPnL) 监控。
+*   **自带 OCO 止盈止损**: 系统每次开仓都会向 OKX 发送 Conditional Trigger 订单，严格锁定最大回撤。
+*   **历史自我反思**: AI 每次交易前会拉取过去的历史判断与盈亏表现，动态调整当下的风险偏好。
+
+### 2. 六维全景感知 (Multi-Dimensional Perception)
+大模型每 4 小时进行一次深度思考，输入的数据包含：
+*   **🐋 链上资金流**: 追踪巨鲸的买卖金额、稳定币净流入/流出 (基于 Moralis & Solana Helius API)。
+*   **📊 技术面特征工程**: 不向 AI 抛原始 K 线，而是通过内部清洗提取 RSI, ADX (趋势极值), MACD 以及 **星级评分 (Star Ratings)**（基于价格排位、成交量异常和 RSI 极值的 0~3 星级评估法，专门寻找顶部反转与底部吸筹）。
+*   **💸 衍生品清算**: 监控多空爆仓强平数据，寻找空头轧空 (Short Squeeze) 机会。
+*   **🌍 宏观经济 (Macro)**: 无缝集成美联储降息预期 (Fed Futures)、美元指数 (DXY)、美债收益率 (US10Y)、VIX 恐慌指数、日元套利影响 (Japan Rates) 以及全球恐慌贪婪指数。
+*   **📰 新闻情绪面**: 实时抓取圈内头条新闻并分析整体文本情绪分。
+
+### 3. 数据层与部署架构彻底解耦 (V2.0 更新)
+*   **云原生 MongoDB 存储**: 彻底告别了依靠 GitHub commit 同步数据的痛点。现在系统的后台执行记录、组合净值 (Portfolio State) 与实时市场研判全都毫秒级保存至 MongoDB。
+*   **Serverless 前端**: 前端基于 React/TypeScript 构建，部署于 Vercel。提供赛博朋克风的动态布局，具备多语言切换 (i18n)、实时资金收益曲线绘制、大模型多维分析报告展示等功能。
+*   **自动化容器调度**: 后端通过 Railway 等云平台进行调度，严格匹配 4 小时 K 线收盘时间（0点, 4点, 8点...）执行感知-分析-交易的闭环运转。
+
+### 4. 实时战报多渠道预警
+*   集成 Telegram (HTML 渲染) 和 Discord 通知。只要模型触发了下单、平仓或检测到重大异动，实时代币方向、盈亏概览和 AI 判断的“核心理由”都会推送到手机。
 
 ---
 
-## 🚀 部署指南 (Railway)
+## 🛠️ 技术栈与系统架构 (Tech Stack)
 
-### 1. 环境变量配置
-请在 Railway 项目设置中配置以下变量：
+### **Backend (Python 3.10+)**
+*   **`ai_trader.py`**: 基金经理大脑。构建复杂的 Prompt，通过 DeepSeek API 思考并调用执行器下单。
+*   **`crypto_brain.py`**: 情报总局。负责拼接所有外部 API (Moralis/Macro/News) 的数据。
+*   **`technical_analysis.py`**: Quant 引擎。负责计算 RSI、ADX、星级打分以及流动性指标。
+*   **`okx_executor.py`**: 执行引擎。封装了高健壮性的 OKX V5 REST API 签名、下单和鉴权。
+*   **`db_client.py`**: 数据持久化引擎。连接 MongoDB 处理状态。
+*   **`run_loop.py`**: 时序调度器。对齐 K 线收盘时间启动工作流。
 
-| 变量名 | 说明 | 示例 |
-| :--- | :--- | :--- |
-| `OKX_API_KEY` | OKX API Key | `...` |
-| `OKX_SECRET_KEY` | OKX Secret | `...` |
-| `OKX_PASSPHRASE` | OKX Passphrase | `...` |
-| `DEEPSEEK_API_KEY`| DeepSeek AI Key | `sk-...` |
-| `MORALIS_API_KEY` | Moralis Key (链上数据) | `...` |
-| `ETHERSCAN_API_KEY` | Etherscan Key | `...` |
-| `GITHUB_TOKEN` | **数据同步必需**。需要 Repo 读写权限。 | `ghp_...` |
-| `REPO_URL` | 您的 GitHub 仓库地址 | `github.com/yourname/whale-watcher` |
-| `IS_PAPER_TRADING`| `true` 模拟盘, `false` 实盘 | `true` |
+### **Frontend (React / Vite / Tailwind)**
+*   组件化仪表盘：宏观流动性分析 (`detailed-stats`, `market-stats`)、巨鲸异动分析 (`whale-analytics`)、AI 跟单模拟 (`ai-copy-trading` 包含真实 PnL 曲线可视化)。
 
-### 2. 前端集成
-后端会自动将数据推送到 `data-history` 分支。您的前端应该直接读取 Raw URL：
+---
+
+## 🚀 部署与运行指南
+
+### 1. 核心环境变量 (`.env`)
+无论在本地还是 Railway 部署，都需要配置以下核心秘钥：
+
+```ini
+# OKX 交易密钥
+OKX_API_KEY="..."
+OKX_SECRET_KEY="..."
+OKX_PASSPHRASE="..."
+TRADING_MODE="REAL" # 填 PAPER 可开启模拟盘不消耗真金白银
+
+# 数据库与大语言模型
+MONGODB_URI="mongodb+srv://..."
+DEEPSEEK_API_KEY="sk-..."
+
+# 数据源 API
+MORALIS_API_KEYS="key1,key2" # 支持逗号分隔的密钥池轮换
+SOLANA_API_KEYS="key1,key2"
+
+# 消息通知
+TELEGRAM_BOT_TOKEN="..."
+TELEGRAM_CHAT_ID="..."
 ```
-https://raw.githubusercontent.com/username/repo/data-history/frontend/data/whale_analysis.json
+
+### 2. 本地调试后端运行
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python run_loop.py
 ```
-这样不仅速度快，而且无需每次重新构建前端。
+
+### 3. Vercel 前端一键构建
+```bash
+cd frontend
+npm install
+npm run dev
+# 或将其推送至 GitHub，Vercel 将自动识别 Vite 配置并完成发布
+```
 
 ---
 
-## 📊 数据结构 (whale_analysis.json)
-
-生成的 JSON 文件包含：
-*   **`eth`, `sol`, `btc`**: 各币种的独立板块。
-    *   `market`: 实时价格、技术指标 (RSI, ADX, BBW, Funding)。
-    *   `stats_24h`: 鲸鱼流向、爆仓数据。
-    *   `history_60d`: 包含过去 60 个周期的历史数据数组（用于画图）。
-*   **`ai_summary`**: AI 对当前市场状态的文字分析（中英文）。
-*   **`actions`**: 执行的交易决策列表 (Open Long, Short 等)。
-
----
-
-## 🛡️ 风险提示
-这是一个实验性的 AI 代理系统。尽管它使用了复杂的逻辑和多维数据，加密货币市场仍然具有极高的波动性。建议在实盘前充分测试 (使用 Paper Trading 模式)。
-
----
-*Built with ❤️ by Deepmind Advanced Coding Agent.*
+## 🛡️ 风险提示 (Disclaimer)
+本项目作为一个完整的量化与链上监控体系，调用了真实的深度交易接口。尽管系统中内置了完备的异常处理、安全防线和硬止损逻辑，但加密货币市场的极端行情依然可能导致严重的资产折损。作者提供本架构仅作为学习与系统演示之目的，不对在 **REAL 模式实盘运行代码** 造成的资金亏损负责。建议先在纸面 (Paper Trading) 或模拟盘测试策略！
