@@ -360,6 +360,16 @@ def get_whale_data():
                     natr_str += "[Falling]"
                 else:
                     natr_str += "[Flat]"
+                    
+            natr_avg = m.get('natr_avg_30d', 0)
+            if natr_avg > 0:
+                natr_val = m.get('natr_percent', 0)
+                if natr_val > natr_avg * 1.1:
+                    natr_str += f"(>30d Avg {natr_avg:.2f}%)"
+                elif natr_val < natr_avg * 0.9:
+                    natr_str += f"(<30d Avg {natr_avg:.2f}%)"
+                else:
+                    natr_str += f"(~30d Avg {natr_avg:.2f}%)"
 
             return (f"RSI={m.get('rsi_14', 50):.1f} | ADX={m.get('adx_14', 0):.1f} | "
                     f"VolRatio={m.get('vol_ratio', 1):.1f}x | {natr_str} | Rank={m.get('price_percentile_20', 0.5)*100:.0f}% | "

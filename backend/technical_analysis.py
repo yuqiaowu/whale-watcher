@@ -200,6 +200,7 @@ def add_all_indicators(df: pd.DataFrame) -> dict:
         "bb_trend": "UP" if latest.get('bb_trend', 0) > 0 else "DOWN",
         "atr_14": get_strict('atr_14'),
         "natr_percent": get_strict('natr'),
+        "natr_avg_30d": float(df['natr'].iloc[-180:].mean()) if len(df) >= 180 else float(df['natr'].mean()),
         
         # Context / Rank / Signals
         "price_rank_20": get_strict('price_percentile_20') * 100, 
