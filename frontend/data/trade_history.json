@@ -140,43 +140,31 @@
     "reason": "OKX Real Trade"
   },
   {
-    "id": "ETH_1771646872",
-    "timestamp": "2026-02-21T12:07:52.171635",
+    "id": "3327218921565855744",
     "symbol": "ETH",
-    "action": "open_long",
-    "size": 400.0,
-    "entry_price": 1958.32,
-    "reason": {
-      "zh": "\u68c0\u6d4b\u5230\u9cb8\u9c7c\u5438\u7b79\u9677\u9631\uff1a\u4ef7\u683c\u4e0b\u8dcc\u4f46\u7a33\u5b9a\u5e01\u6d41\u5165202\u4e07\u7f8e\u5143\uff0c\u4e14\u591a\u5934\u7206\u4ed3\u9ad8\uff085912\u4e07\u7f8e\u5143\uff09\uff0c\u663e\u793a\u6563\u6237\u6050\u614c\u800c\u9cb8\u9c7c\u53ef\u80fd\u4e70\u5165\u3002RSI 47.2\u63a5\u8fd1\u8d85\u5356\uff0c\u8d44\u91d1\u8d39\u73870.0011%\u4e2d\u6027\uff0c\u9002\u5408\u4f4e\u6760\u6746\u505a\u591a\u3002",
-      "en": "Detected whale accumulation trap: Price down but stablecoin inflow $2.02M and high long liquidations ($59.1M), indicating retail panic and potential whale buying. RSI 47.2 near oversold, funding 0.0011% neutral, suitable for low-leverage long."
-    },
-    "context": {
-      "rsi": 47.21934769859927,
-      "adx": 22.116244834431296,
-      "funding": 1.13025787194e-05,
-      "whale_flow": null,
-      "bb_trend": "DOWN"
-    },
-    "outcome": null
+    "type": "long",
+    "entryPrice": 1958.17,
+    "exitPrice": 1963.1,
+    "amount": 2.04,
+    "leverage": 2,
+    "pnl": 1.01,
+    "pnlPercent": 0.5,
+    "entryTime": "---",
+    "exitTime": "2026-02-21 16:07:30",
+    "reason": "OKX Real Trade"
   },
   {
-    "id": "BTC_1771646873",
-    "timestamp": "2026-02-21T12:07:53.831938",
+    "id": "3327218880864329728",
     "symbol": "BTC",
-    "action": "open_short",
-    "size": 300.0,
-    "entry_price": 67660.0,
-    "reason": {
-      "zh": "\u68c0\u6d4b\u5230\u8f67\u7a7a\u9677\u9631\uff1a\u8d44\u91d1\u8d39\u73870.01%\u504f\u9ad8\uff0c\u591a\u5934\u7206\u4ed312.6\u4ebf\u7f8e\u5143\u8fdc\u9ad8\u4e8e\u7a7a\u5934\uff0c\u663e\u793a\u6563\u6237\u8fc7\u5ea6\u6760\u6746\u5316\uff0c\u4ef7\u683c\u53ef\u80fd\u56de\u8c03\u3002\u8d8b\u52bf\u5411\u4e0a\u4f46\u5904\u4e8e\u718a\u5e02\uff0c\u9002\u5408\u53cd\u5f39\u505a\u7a7a\u3002",
-      "en": "Detected squeeze trap: Funding 0.01% elevated, long liquidations $1.26B far exceed shorts, indicating retail over-leverage and potential pullback. Trend up but in bear market, suitable for shorting on rallies."
-    },
-    "context": {
-      "rsi": 50.77011620669052,
-      "adx": 16.462576987725434,
-      "funding": 0.0001,
-      "whale_flow": null,
-      "bb_trend": "UP"
-    },
-    "outcome": null
+    "type": "short",
+    "entryPrice": 67659.6,
+    "exitPrice": 67844.1,
+    "amount": 0.44,
+    "leverage": 2,
+    "pnl": -0.81,
+    "pnlPercent": -0.55,
+    "entryTime": "---",
+    "exitTime": "2026-02-21 16:07:29",
+    "reason": "OKX Real Trade"
   }
 ]
