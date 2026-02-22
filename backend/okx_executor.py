@@ -104,7 +104,7 @@ class OKXExecutor:
         rounded = (d_val / d_step).quantize(Decimal('1'), rounding=ROUND_HALF_UP) * d_step
         
         # Extract precision for float conversion
-        precision = abs(d_step.as_tuple().exponent) if "." in str(step_size) else 0
+        precision = abs(d_step.as_tuple().exponent)
         fmt = "{:." + str(precision) + "f}"
         return float(fmt.format(rounded))
 
