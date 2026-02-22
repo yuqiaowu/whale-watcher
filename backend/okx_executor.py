@@ -262,6 +262,7 @@ class OKXExecutor:
                  for p in state["positions"]:
                      if p["symbol"] == symbol and (target_pos_side == "net" or p["type"] == target_pos_side):
                           sz = p["size"]
+                          target_pos_side = p["type"]
                           print(f"🔍 [SHADOW] Auto-detected position size for closing: {sz} contracts")
                           break
              else:
@@ -273,7 +274,8 @@ class OKXExecutor:
                            if p.get("posSide") == target_pos_side or target_pos_side == "net":
                                if float(p.get("pos", 0)) != 0:
                                    sz = abs(float(p["pos"]))
-                                   print(f"🔍 [REAL] Auto-detected position size for closing: {sz} contracts")
+                                   target_pos_side = p.get("posSide")
+                                   print(f"🔍 [REAL] Auto-detected position size for closing: {sz} contracts ({target_pos_side})")
                                    break
 
         if sz <= 0:
