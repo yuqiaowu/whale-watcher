@@ -611,7 +611,11 @@ def validate_and_enforce_decision(decision, market_summary, daily_context, fear_
         if act_type.startswith("open_"):
             # A. Position Count Limit
             if current_positions >= MAX_POSITIONS:
-                print(f"🛡️ RISK: Max positions ({MAX_POSITIONS}) reached. Skipping {symbol}.")
+                reason = f"🛡️ Max positions ({MAX_POSITIONS}) reached."
+                print(f"{reason} Skipping {symbol}.")
+                action["action"] = "REJECTED"
+                action["reason"] = reason
+                validated_actions.append(action)
                 continue
             
             # B. Exposure Cap Limit
@@ -619,7 +623,11 @@ def validate_and_enforce_decision(decision, market_summary, daily_context, fear_
                 projected_long = current_long_exposure + size_usd
                 limit_usd = equity * MAX_LONG_CAP
                 if projected_long > limit_usd:
-                    print(f"🛡️ RISK: Long Cap Exceeded for {symbol}. Projected ${projected_long:.0f} > Limit ${limit_usd:.0f} ({MAX_LONG_CAP*100}%). Skipping.")
+                    reason = f"🛡️ Long Cap Exceeded. Projected ${projected_long:.0f} > Limit ${limit_usd:.0f} ({MAX_LONG_CAP*100}%)."
+                    print(f"{reason} Skipping {symbol}.")
+                    action["action"] = "REJECTED"
+                    action["reason"] = reason
+                    validated_actions.append(action)
                     continue
                 # Approved -> Update sim tracker
                 current_long_exposure += size_usd
@@ -628,7 +636,11 @@ def validate_and_enforce_decision(decision, market_summary, daily_context, fear_
                 projected_short = current_short_exposure + size_usd
                 limit_usd = equity * MAX_SHORT_CAP
                 if projected_short > limit_usd:
-                    print(f"🛡️ RISK: Short Cap Exceeded for {symbol}. Projected ${projected_short:.0f} > Limit ${limit_usd:.0f} ({MAX_SHORT_CAP*100}%). Skipping.")
+                    reason = f"🛡️ Short Cap Exceeded. Projected ${projected_short:.0f} > Limit ${limit_usd:.0f} ({MAX_SHORT_CAP*100}%)."
+                    print(f"{reason} Skipping {symbol}.")
+                    action["action"] = "REJECTED"
+                    action["reason"] = reason
+                    validated_actions.append(action)
                     continue
                 # Approved -> Update sim tracker
                 current_short_exposure += size_usd
@@ -762,7 +774,10 @@ def run_agent():
             sl = exit_plan.get("stop_loss")
             tp = exit_plan.get("take_profit")
             
-            if action_type in ["open_long", "open_short", "close", "close_long", "close_short"]:
+            # Filter for actual executable trade actions
+            is_trade = any(keyword in action_type for keyword in ["open_", "close"])
+            
+            if is_trade and action_type != "REJECTED":
                 print(f"\n🚀 Triggering Executor for {symbol} ({action_type})...")
                 executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp)
                 
