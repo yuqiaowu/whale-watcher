@@ -40,22 +40,23 @@ class DBClient:
         if self.is_connected:
             try:
                 collection = self.db[collection_name]
-                if collection_name == "portfolio_state":
-                    # Fetch the latest state document (there should be only 1 main state, or we fetch the most recent if history)
-                    # We will treat portfolio_state as a single document store for now
+                if collection_name in ["portfolio_state", "whale_analysis"]:
+                    # Fetch the latest state document
                     doc = collection.find_one({"_id": "current_state"})
                     if doc:
                         doc.pop("_id", None)
                         return doc
-                    # If empty, upload the local fallback logic once later
+                    # If MongoDB is empty for this, fall through to local fallback
                 else:
                     # Logs, nav history, trade history are arrays of documents
-                    # Sort logic depending on collection could be added, but array is fine
                     cursor = collection.find({}, {"_id": 0})
-                    # We reverse sort the agent_decision_log usually or just return as list
                     if collection_name == "agent_decision_log":
-                        cursor = collection.find({}, {"_id": 0}).sort("timestamp", -1) # newest first
-                    return list(cursor)
+                        cursor = cursor.sort("timestamp", -1) # newest first
+                    
+                    data = list(cursor)
+                    if data:
+                        return data
+                    # If empty list, fall through to local fallback
             except Exception as e:
                 print(f"⚠️ [MongoDB Fetch Error] {collection_name}: {e}. Falling back to local.")
         

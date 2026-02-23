@@ -1454,8 +1454,13 @@ def main():
         with open(output_file, 'w') as f:
             json.dump(final_output, f, indent=2)
         print(f"✅ Analysis saved to {output_file}")
+        
+        # Sync to DB
+        from db_client import db
+        db.save_data("whale_analysis", final_output)
+        print("✅ Analysis synced to MongoDB")
     except Exception as e:
-        print(f"❌ Error saving output: {e}")
+        print(f"❌ Error saving/syncing output: {e}")
     
     # 7. Notifications
     new_tx_count = len(unique_new_eth) + len(unique_new_sol)

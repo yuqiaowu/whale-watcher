@@ -414,9 +414,19 @@ def main():
                     # Get latest BTC price for benchmark
                     btc_price = 0
                     whale_data = db.get_data("whale_analysis", {})
-                    if whale_data:
-                        # Handle potential different structures
+                    if whale_data and isinstance(whale_data, dict):
                         btc_price = whale_data.get("btc", {}).get("market", {}).get("price", 0)
+                    
+                    # Fallback to direct OKX fetch if DB is stale/missing price
+                    if btc_price <= 0:
+                        try:
+                            from market_data import get_strategy_metrics
+                            btc_m = get_strategy_metrics("BTC")
+                            if btc_m:
+                                btc_price = btc_m.get("price", 0)
+                                print(f"ℹ️ Fetched BTC price from OKX fallback: {btc_price}")
+                        except:
+                            pass
                     
                     nav_history.append({
                         "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
