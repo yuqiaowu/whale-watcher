@@ -40,6 +40,7 @@ def init_data_files():
             "start_time": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
         }
         db.save_data("portfolio_state", default_state)
+        state = default_state
         print(f"✅ Initialized portfolio_state in MongoDB (Initial: {initial_val})")
     else:
         changed = False
@@ -108,7 +109,9 @@ def init_data_files():
              print(f"⚠️ Failed to fetch BTC candles: {e}")
 
         history = []
-        base_nav = state.get("initial_equity", 10000.0) if getattr(locals(), 'state', None) else 10000.0
+        base_nav = 10000.0
+        if state:
+            base_nav = state.get("initial_equity", state.get("total_equity", 10000.0))
         
         steps = len(btc_candles) if btc_candles else 42
         
@@ -148,7 +151,17 @@ def init_data_files():
              })
              
         db.save_data("nav_history", history)
-        print(f"✅ Generated nav_history in DB (10k -> {current_equity:.2f})")
+        print(f"✅ Generated nav_history in DB (base: {base_nav} -> current: {current_equity:.2f})")
+        
+        # Deployment debug log
+        try:
+            with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "deploy_info.txt"), "w") as f:
+                f.write(f"Init Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                f.write(f"History Points: {len(history)}\n")
+                f.write(f"Base NAV: {base_nav}\n")
+                f.write(f"Current Equity: {current_equity}\n")
+        except:
+            pass
 
 
 
