@@ -119,43 +119,43 @@ export interface CryptoDataResponse {
 }
 
 export async function fetchSummary(): Promise<PortfolioSummary> {
-    const res = await fetch(`${API_BASE_URL}/summary`);
+    const res = await fetch(`${API_BASE_URL}/summary`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch summary');
     return res.json();
 }
 
 export async function fetchPositions(): Promise<Position[]> {
-    const res = await fetch(`${API_BASE_URL}/positions`);
+    const res = await fetch(`${API_BASE_URL}/positions`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch positions');
     return res.json();
 }
 
 export async function fetchHistory(): Promise<TradeHistory[]> {
-    const res = await fetch(`${API_BASE_URL}/history`);
+    const res = await fetch(`${API_BASE_URL}/history`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch history');
     return res.json();
 }
 
 export async function fetchAgentDecision(): Promise<AgentDecision[]> {
-    const res = await fetch(`${API_BASE_URL}/agent-decision`);
+    const res = await fetch(`${API_BASE_URL}/agent-decision`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch agent decision');
     return res.json();
 }
 
 export async function fetchNavHistory(): Promise<NavPoint[]> {
-    const res = await fetch(`${API_BASE_URL}/nav-history`);
+    const res = await fetch(`${API_BASE_URL}/nav-history`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch nav history');
     return res.json();
 }
 
 export async function fetchMarketStats(): Promise<MarketStats> {
-    const res = await fetch(`${API_BASE_URL}/market-stats`);
+    const res = await fetch(`${API_BASE_URL}/market-stats`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch market stats');
     return res.json();
 }
 
 export async function fetchCryptoData(): Promise<CryptoDataResponse> {
-    const res = await fetch(`${API_BASE_URL}/crypto-data`);
+    const res = await fetch(`${API_BASE_URL}/crypto-data`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch crypto data');
     return res.json();
 }
