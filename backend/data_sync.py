@@ -20,7 +20,8 @@ FILES_TO_SYNC = [
     "frontend/data/trade_history.json",
     "frontend/data/portfolio_state.json",
     "frontend/data/nav_history.json",
-    "frontend/data/agent_decision_log.json"
+    "frontend/data/agent_decision_log.json",
+    "frontend/data/agent_memory.json"
 ]
 
 def get_file_sha(path, branch):

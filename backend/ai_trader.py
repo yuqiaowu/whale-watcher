@@ -35,14 +35,15 @@ PAYLOAD_PATH = QLIB_DATA_DIR / "deepseek_payload.json"
 PORTFOLIO_PATH = DATA_DIR / "portfolio_state.json"
 TRADE_HISTORY_PATH = DATA_DIR / "trade_history.json"
 AGENT_LOG_PATH = DATA_DIR / "agent_decision_log.json"
+AGENT_MEMORY_PATH = DATA_DIR / "agent_memory.json"
 
 class TradeMemory:
     """
     Manages the recording of trade rationale and outcomes for AI reflection.
     """
     def __init__(self):
-        if not TRADE_HISTORY_PATH.exists():
-            with open(TRADE_HISTORY_PATH, "w") as f:
+        if not AGENT_MEMORY_PATH.exists():
+            with open(AGENT_MEMORY_PATH, "w") as f:
                 json.dump([], f)
     
     def log_trade(self, symbol, action, size, reason, market_snapshot):
@@ -51,7 +52,7 @@ class TradeMemory:
         market_snapshot: dict containing current price, rsi, adx, whale_flow etc.
         """
         try:
-            with open(TRADE_HISTORY_PATH, "r") as f:
+            with open(AGENT_MEMORY_PATH, "r") as f:
                 history = json.load(f)
             
             entry = {
@@ -59,24 +60,24 @@ class TradeMemory:
                 "timestamp": datetime.now().isoformat(),
                 "symbol": symbol,
                 "action": action,
-                "size": size,
                 "entry_price": market_snapshot.get('price', 0),
+                "leverage": 1, # Default
                 "reason": reason,
                 "context": {
-                    "rsi": market_snapshot.get('rsi_14'),
-                    "adx": market_snapshot.get('adx_14'),
-                    "funding": market_snapshot.get('funding_rate'),
-                    "whale_flow": market_snapshot.get('whale_flow'),
+                    "rsi": market_snapshot.get('rsi_14', 50),
+                    "adx": market_snapshot.get('adx_14', 0),
+                    "whale_flow": market_snapshot.get('whale_flow', 0),
+                    "bb_width": market_snapshot.get('bb_width'),
                     "bb_trend": market_snapshot.get('bb_trend')
                 },
-                "outcome": None # To be filled later
+                "outcome": "Closed" if "close" in action.lower() else None
             }
             
             history.append(entry)
             # Keep last 50 trades
             if len(history) > 50: history = history[-50:]
                 
-            with open(TRADE_HISTORY_PATH, "w") as f:
+            with open(AGENT_MEMORY_PATH, "w") as f:
                 json.dump(history, f, indent=2)
             print(f"🧠 Logged trade memory for {symbol}")
             
@@ -87,11 +88,11 @@ class TradeMemory:
         """
         Returns a summary of recent trades to inject into AI prompt.
         """
-        if not TRADE_HISTORY_PATH.exists():
+        if not AGENT_MEMORY_PATH.exists():
             return "No trading history yet."
             
         try:
-            with open(TRADE_HISTORY_PATH, "r") as f:
+            with open(AGENT_MEMORY_PATH, "r") as f:
                 history = json.load(f)
             if not history: return "No trading history yet."
             
@@ -100,9 +101,11 @@ class TradeMemory:
             summary = "=== 📜 RECENT TRADE MEMORY (LEARN FROM THIS) ===\n"
             for t in recent:
                 summary += f"- {t['timestamp'][:16]} {t['action']} {t['symbol']} @ {t['entry_price']}\n"
-                summary += f"  Context: RSI={t['context'].get('rsi',0):.1f}, ADX={t['context'].get('adx',0):.1f}, Whale={t['context'].get('whale_flow')}\n"
                 summary += f"  Rationale: {t['reason'].get('en', '')[:100]}...\n"
-                if t['outcome']:
+                
+                if t.get('outcome') == "Closed" or "close" in t['action'].lower():
+                    summary += f"  STATUS: Completed (Position Exited)\n"
+                elif t.get('outcome'):
                     summary += f"  RESULT: {t['outcome']}\n"
                 else:
                     summary += f"  STATUS: Open\n"
