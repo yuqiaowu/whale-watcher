@@ -321,17 +321,21 @@ def get_whale_data():
         with open(WHALE_DATA_PATH, "r") as f:
             data = json.load(f)
             
-        eth_stat = data.get("eth", {}).get("stats_24h", {})
-        sol_stat = data.get("sol", {}).get("stats_24h", {})
+        eth_stat_24h = data.get("eth", {}).get("stats_24h", {})
+        eth_stat_7d = data.get("eth", {}).get("stats", {}) # stats is 7d
+        
+        sol_stat_24h = data.get("sol", {}).get("stats_24h", {})
+        sol_stat_7d = data.get("sol", {}).get("stats", {})
+        
         btc_stat = data.get("btc", {}).get("stats_24h", {})
-        bnb_stat = data.get("bnb", {}).get("stats_24h", {}) # NEW
-        doge_stat = data.get("doge", {}).get("stats_24h", {}) # NEW
+        bnb_stat = data.get("bnb", {}).get("stats_24h", {})
+        doge_stat = data.get("doge", {}).get("stats_24h", {})
         
         # Extract Liquidation Data (if available)
-        eth_liq_long = eth_stat.get("liquidation_long_usd", 0)
-        eth_liq_short = eth_stat.get("liquidation_short_usd", 0)
-        sol_liq_long = sol_stat.get("liquidation_long_usd", 0)
-        sol_liq_short = sol_stat.get("liquidation_short_usd", 0)
+        eth_liq_long = eth_stat_24h.get("liquidation_long_usd", 0)
+        eth_liq_short = eth_stat_24h.get("liquidation_short_usd", 0)
+        sol_liq_long = sol_stat_24h.get("liquidation_long_usd", 0)
+        sol_liq_short = sol_stat_24h.get("liquidation_short_usd", 0)
         btc_liq_long = btc_stat.get("liquidation_long_usd", 0)
         btc_liq_short = btc_stat.get("liquidation_short_usd", 0)
         bnb_liq_long = bnb_stat.get("liquidation_long_usd", 0)
@@ -377,24 +381,24 @@ def get_whale_data():
                     f"Stars: Buy={m.get('buy_stars',0)}/Sell={m.get('sell_stars',0)}")
 
         # Build Context String
-        ctx = "=== ETHEREUM (ETH) WHALE DATA ===\n"
-        ctx += f"- Sentiment Score (24h): {eth_stat.get('sentiment_score', 0):.2f}\n"
-        ctx += f"- Token Net Flow (Whale): {eth_stat.get('token_net_flow', 0):,.2f} ETH\n"
-        ctx += f"- Stablecoin Net Flow: ${eth_stat.get('stablecoin_net_flow', 0):,.2f}\n"
+        ctx = "=== ETHEREUM (ETH) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
+        ctx += f"- Sentiment Score: 24h={eth_stat_24h.get('sentiment_score', 0):.2f} / 7d={eth_stat_7d.get('sentiment_score', 0):.2f}\n"
+        ctx += f"- Token Net Flow: 24h={eth_stat_24h.get('token_net_flow', 0):,.1f} / 7d={eth_stat_7d.get('token_net_flow', 0):,.1f} ETH\n"
+        ctx += f"- Stablecoin Net Flow: 24h=${eth_stat_24h.get('stablecoin_net_flow', 0):,.0f} / 7d=${eth_stat_7d.get('stablecoin_net_flow', 0):,.0f}\n"
         ctx += f"- Technicals: {fmt_tech(eth_market)}\n"
         ctx += f"- Liquidation Pain (24h): Longs Dropped ${eth_liq_long:,.0f} / Shorts Dropped ${eth_liq_short:,.0f}\n"
         
-        ctx += "\n=== SOLANA (SOL) WHALE DATA ===\n"
-        ctx += f"- Sentiment Score (24h): {sol_stat.get('sentiment_score', 0):.2f}\n"
-        ctx += f"- Token Net Flow (Whale): {sol_stat.get('token_net_flow', 0):,.2f} SOL\n"
-        ctx += f"- Stablecoin Net Flow: ${sol_stat.get('stablecoin_net_flow', 0):,.2f}\n"
+        ctx += "\n=== SOLANA (SOL) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
+        ctx += f"- Sentiment Score: 24h={sol_stat_24h.get('sentiment_score', 0):.2f} / 7d={sol_stat_7d.get('sentiment_score', 0):.2f}\n"
+        ctx += f"- Token Net Flow: 24h={sol_stat_24h.get('token_net_flow', 0):,.1f} / 7d={sol_stat_7d.get('token_net_flow', 0):,.1f} SOL\n"
+        ctx += f"- Stablecoin Net Flow: 24h=${sol_stat_24h.get('stablecoin_net_flow', 0):,.0f} / 7d=${sol_stat_7d.get('stablecoin_net_flow', 0):,.0f}\n"
         ctx += f"- Technicals: {fmt_tech(sol_market)}\n"
         ctx += f"- Liquidation Pain (24h): Longs Dropped ${sol_liq_long:,.0f} / Shorts Dropped ${sol_liq_short:,.0f}\n"
         
         ctx += "\n=== BITCOIN (BTC) CONTRACT DATA ===\n"
         ctx += f"- Technicals: {fmt_tech(btc_market)}\n"
         ctx += f"- Liquidation Pain (24h): Longs Dropped ${btc_liq_long:,.0f} / Shorts Dropped ${btc_liq_short:,.0f}\n"
-        ctx += f"- Note: No Whale Flow for BTC. Use Liquidation Pain + Funding Rates to detect Squeezes.\n"
+        ctx += f"- Note: Focus on Squeeze potential via Liquidation Pain + Funding Rates.\n"
         
         ctx += "\n=== BNB CHAIN (BNB) CONTRACT DATA ===\n"
         ctx += f"- Technicals: {fmt_tech(bnb_market)}\n"
@@ -403,6 +407,8 @@ def get_whale_data():
         ctx += "\n=== DOGECOIN (DOGE) CONTRACT DATA ===\n"
         ctx += f"- Technicals: {fmt_tech(doge_market)}\n"
         ctx += f"- Liquidation Pain (24h): Longs Dropped ${doge_liq_long:,.0f} / Shorts Dropped ${doge_liq_short:,.0f}\n"
+        
+        ctx += "\n*INSTRUCTION*: If 24h Sentiment is higher than 7d, it indicates SHARP ACCUMULATION. If 24h is significantly lower, it indicates a POTENTIAL CLIFF DUMP. Prioritize sustained 7d trends for safety.*\n"
         
         # Add Macro Context (New Layer)
         macro = data.get("macro", {})
