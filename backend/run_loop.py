@@ -148,15 +148,30 @@ def init_data_files():
         db.save_data("nav_history", history)
         print(f"✅ Generated nav_history in DB (base: {base_nav} -> current: {current_equity:.2f})")
         
-        # Deployment debug log
-        try:
-            with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "deploy_info.txt"), "w") as f:
-                f.write(f"Init Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-                f.write(f"History Points: {len(history)}\n")
-                f.write(f"Base NAV: {base_nav}\n")
-                f.write(f"Current Equity: {current_equity}\n")
-        except:
-            pass
+    # Auto-fix: Ensure all points have valid btc_price for benchmark
+    final_nav = db.get_data("nav_history", [])
+    if final_nav:
+        fixed = False
+        last_valid_btc = 66000.0 # fallback
+        for h in final_nav:
+            if h.get("btc_price", 0) <= 0:
+                h["btc_price"] = last_valid_btc
+                fixed = True
+            else:
+                last_valid_btc = h["btc_price"]
+        if fixed:
+            db.save_data("nav_history", final_nav)
+            print("✅ Auto-fixed missing BTC prices in nav_history")
+
+    # Deployment debug log
+    try:
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        with open(os.path.join(project_root, "frontend", "deploy_info.txt"), "w") as f:
+            f.write(f"Init Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"History Points: {len(final_nav)}\n")
+            f.write(f"Current Equity: {current_equity if 'current_equity' in locals() else 'N/A'}\n")
+    except:
+        pass
 
 
 
