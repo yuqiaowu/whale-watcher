@@ -13,11 +13,11 @@ import { useState, useEffect } from "react";
 import { fetchCryptoData, fetchMarketStats, fetchSummary, type CryptoDataResponse, type MarketStats as MarketStatsType } from "@/lib/api";
 
 function AppContent() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activePage, setActivePage] = useState('liquidity');
   const [marketStats, setMarketStats] = useState<MarketStatsType | null>(null);
   const [liveData, setLiveData] = useState<CryptoDataResponse["data"] | null>(null);
-  const [runningTime, setRunningTime] = useState<string>("-- 天 --");
+  const [runningTime, setRunningTime] = useState<string>(language === 'zh' ? "-- 天 -- 小时" : "-- days -- hours");
 
   useEffect(() => {
     async function initData() {
@@ -37,7 +37,9 @@ function AppContent() {
           const diffMs = now.getTime() - start.getTime();
           const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
           const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          setRunningTime(`${diffDays} 天 ${diffHours}`);
+          const unitDays = language === 'zh' ? '天' : 'days';
+          const unitHours = language === 'zh' ? '小时' : 'hours';
+          setRunningTime(`${diffDays} ${unitDays} ${diffHours} ${unitHours}`);
         }
       } catch (e: any) {
         console.error("Init data error:", e);
