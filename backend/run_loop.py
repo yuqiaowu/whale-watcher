@@ -80,8 +80,9 @@ def init_data_files():
         print("✅ Initialized agent_decision_log in DB")
 
     # 4. NAV History
-    nav = db.get_data("nav_history")
-    if not nav:
+    nav = db.get_data("nav_history", [])
+    if not nav or len(nav) < 10:
+        print("📊 NAV history missing or too short. Generating recovery points...")
         # Generate history bridging Initial 2000 -> Current API Equity
         current_equity = 2000.0
         try:
@@ -399,30 +400,28 @@ def main():
 
                 print(">> Step 2.75: Appending NAV History...")
                 try:
-                    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-                    nav_path = os.path.join(project_root, "frontend", "data", "nav_history.json")
-                    if os.path.exists(nav_path):
-                        with open(nav_path, 'r') as f:
-                            nav_history = json.load(f)
-                        current_eq = executor.get_account_equity()
-                        # Get latest BTC price from whale_analysis.json or OKX
-                        btc_price = 0
-                        whale_path = os.path.join(project_root, "frontend", "data", "whale_analysis.json")
-                        if os.path.exists(whale_path):
-                            with open(whale_path, 'r') as f:
-                                w_data = json.load(f)
-                                btc_price = w_data.get("btc", {}).get("market", {}).get("price", 0)
+                    nav_history = db.get_data("nav_history", [])
+                    current_eq = executor.get_account_equity()
+                    
+                    # Get latest BTC price for benchmark
+                    btc_price = 0
+                    whale_data = db.get_data("whale_analysis", {})
+                    if whale_data:
+                        # Handle potential different structures
+                        btc_price = whale_data.get("btc", {}).get("market", {}).get("price", 0)
+                    
+                    nav_history.append({
+                        "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+                        "nav": round(current_eq, 2),
+                        "btc_price": btc_price
+                    })
+                    
+                    # Keep last 150 points (about 25 days of 4H data)
+                    if len(nav_history) > 150:
+                        nav_history = nav_history[-150:]
                         
-                        nav_history.append({
-                            "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-                            "nav": current_eq,
-                            "btc_price": btc_price
-                        })
-                        # Keep last 150 points (about 25 days of 4H data)
-                        if len(nav_history) > 150:
-                            nav_history = nav_history[-150:]
-                        with open(nav_path, 'w') as f:
-                            json.dump(nav_history, f, indent=2)
+                    db.save_data("nav_history", nav_history)
+                    print(f"✅ NAV History Updated (${current_eq:.2f})")
                 except Exception as e:
                     print(f"⚠️ Failed to append NAV history: {e}")
 
