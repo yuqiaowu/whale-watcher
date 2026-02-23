@@ -22,7 +22,7 @@ def init_data_files():
     # 1. Portfolio State
     state = db.get_data("portfolio_state")
     if not state:
-        initial_val = 2000.0
+        initial_val = 3905.0
         try:
             from okx_executor import OKXExecutor
             temp_exec = OKXExecutor()
@@ -37,7 +37,7 @@ def init_data_files():
             "cash": initial_val,
             "positions": [],
             "initial_equity": initial_val,
-            "start_time": datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            "start_time": "2026-02-22T00:00:00Z"
         }
         db.save_data("portfolio_state", default_state)
         state = default_state
@@ -82,8 +82,8 @@ def init_data_files():
 
     # 4. NAV History
     nav = db.get_data("nav_history", [])
-    # Force re-generation for the new requested baseline
-    if True: # Force once for this update
+    # Re-generate if empty or too short
+    if not nav or len(nav) < 5:
         print("📊 Adjusting baseline: $3905 starting from Feb 22...")
         base_nav = 3905.0
         current_equity = 3905.0
