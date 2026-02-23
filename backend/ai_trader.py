@@ -200,10 +200,20 @@ C. HYPOTHESIS MENU (Generate 3 Scenarios)
 Current State:
 {{PORTFOLIO_STATE_JSON}}
 
+Market Regime: {{MARKET_REGIME}}
+Dynamic Exposure Limits (STRICT):
+- Max Total LONG Exposure: ${{MAX_LONG_LIMIT_USD}} ({{MAX_LONG_PCT}}% of Equity)
+- Max Total SHORT Exposure: ${{MAX_SHORT_LIMIT_USD}} ({{MAX_SHORT_PCT}}% of Equity)
+- Current LONG Exposure: ${{CURR_LONG_EXP_USD}}
+- Current SHORT Exposure: ${{CURR_SHORT_EXP_USD}}
+- Available LONG Room: ${{AVAILABLE_LONG_USD}}
+- Available SHORT Room: ${{AVAILABLE_SHORT_USD}}
+
 Constraints:
 - Max Open Positions: 3.
 - Max Risk Per Trade: 2% of NAV.
 - Max Leverage: 5x (Normal), 10x (High Conviction Whale Signal).
+- **DO NOT exceed the Available Room.** If available room is low, consider closing existing positions first.
 
 🟫 6. OUTPUT FORMAT (JSON ONLY)
 Structure:
@@ -723,6 +733,46 @@ def run_agent():
     
     final_prompt = final_prompt.replace("{{PORTFOLIO_STATE_JSON}}", portfolio_state)
     final_prompt = final_prompt.replace("{{NEWS_CONTEXT}}", news_context)
+
+    # 2.5 Inject Dynamic Risk Limits
+    # Determine Regime
+    regime = "NEUTRAL"
+    if "GLOBAL MARKET STATE: BULL" in daily_context: regime = "BULL"
+    elif "GLOBAL MARKET STATE: BEAR" in daily_context: regime = "BEAR"
+
+    # Define Caps (Sync with validate_and_enforce_decision)
+    if regime == "BULL":
+        max_long_cap = 0.98
+        max_short_cap = 0.30
+    elif regime == "BEAR":
+        max_long_cap = 0.40
+        max_short_cap = 0.78
+    else: # NEUTRAL
+        max_long_cap = 0.48
+        max_short_cap = 0.48
+
+    # Calculate Values
+    equity = executor.get_account_equity()
+    exposure = executor.get_total_exposure()
+    curr_long = exposure['long']
+    curr_short = exposure['short']
+
+    max_long_usd = equity * max_long_cap
+    max_short_usd = equity * max_short_cap
+
+    avail_long = max(0, max_long_usd - curr_long)
+    avail_short = max(0, max_short_usd - curr_short)
+
+    # Replace Placeholders
+    final_prompt = final_prompt.replace("{{MARKET_REGIME}}", regime)
+    final_prompt = final_prompt.replace("{{MAX_LONG_LIMIT_USD}}", f"{max_long_usd:.0f}")
+    final_prompt = final_prompt.replace("{{MAX_LONG_PCT}}", f"{max_long_cap*100:.0f}")
+    final_prompt = final_prompt.replace("{{MAX_SHORT_LIMIT_USD}}", f"{max_short_usd:.0f}")
+    final_prompt = final_prompt.replace("{{MAX_SHORT_PCT}}", f"{max_short_cap*100:.0f}")
+    final_prompt = final_prompt.replace("{{CURR_LONG_EXP_USD}}", f"{curr_long:.0f}")
+    final_prompt = final_prompt.replace("{{CURR_SHORT_EXP_USD}}", f"{curr_short:.0f}")
+    final_prompt = final_prompt.replace("{{AVAILABLE_LONG_USD}}", f"{avail_long:.0f}")
+    final_prompt = final_prompt.replace("{{AVAILABLE_SHORT_USD}}", f"{avail_short:.0f}")
     
     # 3. Call DeepSeek API with OpenAI SDK (with manual retry loop)
     try:
