@@ -82,7 +82,7 @@ def init_data_files():
 
     # 4. NAV History
     nav = db.get_data("nav_history", [])
-    if not nav or len(nav) < 10:
+    if not nav or len(nav) < 45:
         print("📊 NAV history missing or too short. Generating recovery points...")
         # Generate history bridging Initial 2000 -> Current API Equity
         current_equity = 2000.0
@@ -109,9 +109,9 @@ def init_data_files():
              print(f"⚠️ Failed to fetch BTC candles: {e}")
 
         history = []
-        base_nav = 10000.0
-        if state:
-            base_nav = state.get("initial_equity", state.get("total_equity", 10000.0))
+        # Re-fetch state to be absolutely sure
+        fresh_state = db.get_data("portfolio_state", {})
+        base_nav = fresh_state.get("initial_equity", fresh_state.get("total_equity", 1999.0))
         
         steps = len(btc_candles) if btc_candles else 42
         
