@@ -70,22 +70,22 @@ export function AICopyTrading() {
         <div className="lg:col-span-6 flex flex-col min-h-0 bg-[#111418] border border-[#2D3139]/50 rounded-sm p-4 overflow-hidden">
           <div className="flex items-center gap-2 mb-4 flex-shrink-0">
             <Activity className="w-4 h-4 text-[#39FF14]" />
-            <h3 className="text-sm font-bold tracking-wide">收益曲线</h3>
+            <h3 className="text-sm font-bold tracking-wide">{t.aiTrading.profitCurve}</h3>
           </div>
 
           <div className="grid grid-cols-3 gap-3 mb-6 flex-shrink-0">
             <div className="bg-[#0A0C0E] border border-[#2D3139]/30 p-4">
-              <div className="text-[10px] text-[#8E9297] mb-2">初始资金</div>
+              <div className="text-[10px] text-[#8E9297] mb-2">{t.aiTrading.initialValue}</div>
               <div className="text-xl font-bold font-mono">${summary?.initialNav?.toLocaleString() ?? "10,000"}</div>
             </div>
             <div className="bg-[#0A0C0E] border border-[#2D3139]/30 p-4">
-              <div className="text-[10px] text-[#8E9297] mb-2">当前净值</div>
+              <div className="text-[10px] text-[#8E9297] mb-2">{t.aiTrading.currentValue}</div>
               <div className="text-xl font-bold font-mono">
                 ${summary?.nav?.toLocaleString() ?? "---"}
               </div>
             </div>
             <div className="bg-[#0A0C0E] border border-[#2D3139]/30 p-4">
-              <div className="text-[10px] text-[#8E9297] mb-2">总收益</div>
+              <div className="text-[10px] text-[#8E9297] mb-2">{t.aiTrading.historyStats.totalProfitLoss}</div>
               <div className={`text-xl font-bold font-mono flex items-center gap-1 ${summary?.totalPnl && summary.totalPnl >= 0 ? 'text-[#39FF14]' : 'text-[#FF3131]'}`}>
                 <TrendingUp className="w-4 h-4" />
                 {summary?.pnlPercent ? (summary.pnlPercent > 0 ? '+' : '') + summary.pnlPercent + '%' : '---'}
@@ -129,13 +129,13 @@ export function AICopyTrading() {
                 >
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-[#0A0C0E] border border-[#2D3139]/30 p-4">
-                      <div className="text-[10px] text-[#8E9297] mb-2">持仓盈亏</div>
+                      <div className="text-[10px] text-[#8E9297] mb-2">{t.aiTrading.positionProfitLoss}</div>
                       <div className={`text-2xl font-bold font-mono ${positions.reduce((acc, p) => acc + (p.pnl || 0), 0) >= 0 ? 'text-[#39FF14]' : 'text-[#FF3131]'}`}>
                         ${positions.reduce((acc, p) => acc + (p.pnl || 0), 0).toFixed(2)}
                       </div>
                     </div>
                     <div className="bg-[#0A0C0E] border border-[#2D3139]/30 p-4">
-                      <div className="text-[10px] text-[#8E9297] mb-2">现金余额</div>
+                      <div className="text-[10px] text-[#8E9297] mb-2">{t.aiTrading.cashBalance}</div>
                       <div className="text-2xl font-bold font-mono text-[#E8E8E8]">
                         ${(summary?.nav ? summary.nav - positions.reduce((acc, p) => acc + (p.entryPrice * Number(p.amount) / (p.leverage || 1)), 0) : 0).toFixed(2)}
                       </div>
@@ -144,7 +144,7 @@ export function AICopyTrading() {
 
                   {positions.length === 0 ? (
                     <div className="text-center py-10 text-[#8E9297] bg-[#0A0C0E] border border-[#2D3139]/30 rounded-sm">
-                      暂无持仓
+                      {t.aiTrading.noPositions}
                     </div>
                   ) : (
                     positions.map((pos, idx) => (
@@ -162,30 +162,30 @@ export function AICopyTrading() {
                         </div>
 
                         <div className="text-[10px] text-[#8E9297] font-mono">
-                          持仓: {pos.amount}
+                          {t.aiTrading.holding}: {pos.amount}
                         </div>
 
                         <div className="grid grid-cols-2 gap-y-4">
                           <div>
-                            <div className="text-[10px] text-[#8E9297] mb-1">开仓价</div>
+                            <div className="text-[10px] text-[#8E9297] mb-1">{t.aiTrading.openPrice}</div>
                             <div className="font-mono text-sm">${pos.entryPrice?.toLocaleString() ?? '---'}</div>
                           </div>
                           <div>
-                            <div className="text-[10px] text-[#8E9297] mb-1">当前价</div>
+                            <div className="text-[10px] text-[#8E9297] mb-1">{t.aiTrading.currentPrice}</div>
                             <div className="font-mono text-sm">${pos.currentPrice?.toLocaleString() ?? '---'}</div>
                           </div>
                           <div>
-                            <div className="text-[10px] text-[#FF3131] mb-1">○ 止损价</div>
+                            <div className="text-[10px] text-[#FF3131] mb-1">○ {t.aiTrading.stopLoss}</div>
                             <div className="font-mono text-sm text-[#FF3131]">${pos.stopLoss?.toLocaleString() ?? '---'}</div>
                           </div>
                           <div>
-                            <div className="text-[10px] text-[#39FF14] mb-1">◎ 止盈价</div>
+                            <div className="text-[10px] text-[#39FF14] mb-1">◎ {t.aiTrading.takeProfit}</div>
                             <div className="font-mono text-sm text-[#39FF14]">${pos.takeProfit?.toLocaleString() ?? '---'}</div>
                           </div>
                         </div>
 
                         <div className="pt-4 border-t border-[#2D3139]/30 flex items-center justify-between">
-                          <div className="text-[10px] text-[#8E9297]">盈亏</div>
+                          <div className="text-[10px] text-[#8E9297]">{t.aiTrading.profitLoss}</div>
                           <div className="flex items-center gap-2">
                             <span className={`font-mono text-sm font-bold ${pos.pnl >= 0 ? 'text-[#39FF14]' : 'text-[#FF3131]'}`}>
                               ${(pos.pnl || 0).toFixed(2)}
@@ -211,17 +211,17 @@ export function AICopyTrading() {
                   {/* Summary Stats */}
                   <div className="grid grid-cols-3 gap-3">
                     <div className="bg-[#111418] border border-[#2D3139] p-3 rounded-sm">
-                      <div className="text-[10px] text-[#8E9297] mb-1">总盈亏</div>
+                      <div className="text-[10px] text-[#8E9297] mb-1">{t.aiTrading.historyStats.totalProfitLoss}</div>
                       <div className={`text-xl font-bold font-mono ${summary?.totalPnl && summary.totalPnl >= 0 ? 'text-[#39FF14]' : 'text-[#FF3131]'}`}>
                         {summary?.totalPnl ? (summary.totalPnl > 0 ? '+' : '') + summary.totalPnl.toFixed(0) : '---'}
                       </div>
                     </div>
                     <div className="bg-[#111418] border border-[#2D3139] p-3 rounded-sm">
-                      <div className="text-[10px] text-[#8E9297] mb-1">胜率</div>
+                      <div className="text-[10px] text-[#8E9297] mb-1">{t.aiTrading.historyStats.winRate}</div>
                       <div className="text-xl font-bold font-mono text-[#39FF14]">{summary?.winRate ?? "--"}%</div>
                     </div>
                     <div className="bg-[#111418] border border-[#2D3139] p-3 rounded-sm">
-                      <div className="text-[10px] text-[#8E9297] mb-1">交易次数</div>
+                      <div className="text-[10px] text-[#8E9297] mb-1">{t.aiTrading.historyStats.tradeCount}</div>
                       <div className="text-xl font-bold font-mono text-[#E8E8E8]">{history.length}</div>
                     </div>
                   </div>
@@ -230,7 +230,7 @@ export function AICopyTrading() {
                   <div className="space-y-3">
                     {history.length === 0 ? (
                       <div className="text-center py-10 text-[#8E9297] bg-[#0A0C0E] border border-[#2D3139]/30 rounded-sm">
-                        暂无历史交易记录
+                        {t.aiTrading.noHistory}
                       </div>
                     ) : (
                       history.map((trade, i) => (
@@ -253,16 +253,16 @@ export function AICopyTrading() {
                           </div>
                           <div className="grid grid-cols-2 gap-y-3 mb-3">
                             <div>
-                              <div className="text-[10px] text-[#8E9297]">开仓: <span className="text-[#E8E8E8] font-mono">${trade.entryPrice?.toLocaleString() ?? '---'}</span></div>
+                              <div className="text-[10px] text-[#8E9297]">{t.aiTrading.entryLabel}: <span className="text-[#E8E8E8] font-mono">${trade.entryPrice?.toLocaleString() ?? '---'}</span></div>
                             </div>
                             <div>
-                              <div className="text-[10px] text-[#8E9297]">平仓: <span className="text-[#E8E8E8] font-mono">${trade.exitPrice?.toLocaleString() ?? '---'}</span></div>
+                              <div className="text-[10px] text-[#8E9297]">{t.aiTrading.exitLabel}: <span className="text-[#E8E8E8] font-mono">${trade.exitPrice?.toLocaleString() ?? '---'}</span></div>
                             </div>
                             <div>
-                              <div className="text-[10px] text-[#8E9297]">数量: <span className="text-[#E8E8E8] font-mono">{trade.amount}</span></div>
+                              <div className="text-[10px] text-[#8E9297]">{t.aiTrading.quantity}: <span className="text-[#E8E8E8] font-mono">{trade.amount}</span></div>
                             </div>
                             <div>
-                              <div className="text-[10px] text-[#8E9297]">杠杆: <span className="text-[#60A5FA] font-mono">{trade.leverage}x</span></div>
+                              <div className="text-[10px] text-[#8E9297]">{t.aiTrading.leverage}: <span className="text-[#60A5FA] font-mono">{trade.leverage}x</span></div>
                             </div>
                           </div>
                           <div className="pt-3 border-t border-[#2D3139]/30 text-[10px] text-[#5A5E66] font-mono">
@@ -301,7 +301,7 @@ export function AICopyTrading() {
                         <div className="mb-6">
                           <div className="flex items-center gap-2 mb-3">
                             <div className="w-1 h-3 bg-gradient-to-b from-[#3B82F6] to-[#60A5FA] rounded-full"></div>
-                            <h3 className="text-sm font-bold text-white">市场分析</h3>
+                            <h3 className="text-sm font-bold text-white">{t.aiTrading.marketAnalysis}</h3>
                           </div>
                           <div className="bg-[#111418] border border-[#2D3139] p-4 rounded-sm text-xs leading-relaxed text-[#B0B3B8] space-y-3 font-sans whitespace-pre-line">
                             {decision.analysis_summary?.[language as 'zh' | 'en'] || decision.analysis_summary?.['en'] || "No analysis"}
@@ -313,7 +313,7 @@ export function AICopyTrading() {
                           <div className="mb-8">
                             <div className="flex items-center gap-2 mb-3">
                               <div className="w-1 h-3 bg-gradient-to-b from-[#8B5CF6] to-[#A78BFA] rounded-full"></div>
-                              <h3 className="text-sm font-bold text-white">决策依据详情</h3>
+                              <h3 className="text-sm font-bold text-white">{t.aiTrading.decisionDetail}</h3>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
@@ -348,7 +348,7 @@ export function AICopyTrading() {
                         <div>
                           <div className="flex items-center gap-2 mb-3">
                             <div className="w-1 h-3 bg-gradient-to-b from-[#E9B124] to-[#FCD34D] rounded-full"></div>
-                            <h3 className="text-sm font-bold text-white">执行动作 {decision.actions ? `(${decision.actions.length})` : ''}</h3>
+                            <h3 className="text-sm font-bold text-white">{t.aiTrading.actions} {decision.actions ? `(${decision.actions.length})` : ''}</h3>
                           </div>
                           <div className="space-y-3">
                             {(!decision.actions || decision.actions.length === 0) ? (
@@ -356,7 +356,7 @@ export function AICopyTrading() {
                                 <div className="flex items-center gap-2 mb-2">
                                   <span className="text-base font-bold text-white">PORTFOLIO</span>
                                   <span className="text-[10px] px-1.5 py-0.5 rounded border border-[#2D3139] bg-[#1A1D24] text-[#8E9297]">
-                                    HOLD (观望)
+                                    {t.aiTrading.hold}
                                   </span>
                                 </div>
                                 <div className="text-xs text-[#B0B3B8] leading-relaxed">
@@ -377,18 +377,18 @@ export function AICopyTrading() {
                                       </span>
                                     </div>
                                   </div>
-                                  <div className="text-[10px] text-[#8E9297] mb-2">逻辑</div>
+                                  <div className="text-[10px] text-[#8E9297] mb-2">{t.aiTrading.logicLabel}</div>
                                   <div className="mb-4 text-xs text-[#B0B3B8] leading-relaxed">
                                     {action.entry_reason?.[language as 'zh' | 'en'] || action.entry_reason?.['en'] || "No reason"}
                                   </div>
                                   {action.exit_plan && (
                                     <div className="flex items-center justify-between pt-3 border-t border-[#2D3139]/30">
                                       <div className="flex items-center gap-2">
-                                        <span className="text-[10px] text-[#5A5E66]">止盈:</span>
+                                        <span className="text-[10px] text-[#5A5E66]">{t.aiTrading.takeProfit}:</span>
                                         <span className="text-sm font-bold font-mono text-[#39FF14]">{action.exit_plan.take_profit ?? '---'}</span>
                                       </div>
                                       <div className="flex items-center gap-2">
-                                        <span className="text-[10px] text-[#5A5E66]">止损:</span>
+                                        <span className="text-[10px] text-[#5A5E66]">{t.aiTrading.stopLoss}:</span>
                                         <span className="text-sm font-bold font-mono text-[#FF3131]">{action.exit_plan.stop_loss ?? '---'}</span>
                                       </div>
                                     </div>

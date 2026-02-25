@@ -76,7 +76,16 @@ export const translations = {
       rejected: '已预警 (REJECTED)',
       marketLogic: '市场逻辑',
       riskWarning: '风险警告 (Rejection Reason)',
-      position: '仓位'
+      position: '仓位',
+      profitCurve: '收益曲线',
+      cashBalance: '现金余额',
+      noPositions: '暂无持仓',
+      noHistory: '暂无历史交易记录',
+      decisionDetail: '决策依据详情',
+      logicLabel: '逻辑',
+      entryLabel: '开仓',
+      exitLabel: '平仓',
+      btcBenchmark: 'BTC 基准'
     },
 
     // Liquidity Market
@@ -435,7 +444,16 @@ export const translations = {
       rejected: 'REJECTED',
       marketLogic: 'Logic',
       riskWarning: 'Rejection Reason',
-      position: 'Position'
+      position: 'Position',
+      profitCurve: 'Profit Curve',
+      cashBalance: 'Cash Balance',
+      noPositions: 'No Positions',
+      noHistory: 'No Trade History',
+      decisionDetail: 'Decision Details',
+      logicLabel: 'Logic',
+      entryLabel: 'Entry',
+      exitLabel: 'Exit',
+      btcBenchmark: 'BTC Benchmark'
     },
 
     // Liquidity Market

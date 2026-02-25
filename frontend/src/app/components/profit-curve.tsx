@@ -193,7 +193,7 @@ export function ProfitCurve({ hideStats = false }: ProfitCurveProps) {
     const isIdentical = Math.abs(strategyRoi - btcRoi) < 0.01;
     const showBenchmark = !hideStats && !isIdentical;
 
-    const { language } = useLanguage();
+    const { t, language } = useLanguage();
 
     return (
         <div className="h-full w-full min-h-[300px] relative p-0 flex flex-col">
@@ -201,7 +201,7 @@ export function ProfitCurve({ hideStats = false }: ProfitCurveProps) {
             {showBenchmark && (
                 <div className="absolute top-2 right-4 z-20 flex items-center gap-2 bg-[#0a0e1a]/90 backdrop-blur-md px-3 py-1.5 rounded border border-[#2D3139]/50 shadow-lg">
                     <div className="w-2 h-0.5 bg-[#6B7280]"></div>
-                    <span className="text-[10px] text-[#8E9297]">{language === 'zh' ? 'BTC 基准' : 'BTC Benchmark'}</span>
+                    <span className="text-[10px] text-[#8E9297]">{t.aiTrading.btcBenchmark}</span>
                     <span className="text-xs font-mono font-bold text-[#39FF14]">{btcRoi > 0 ? '+' : ''}{btcRoi.toFixed(2)}%</span>
                 </div>
             )}
@@ -270,8 +270,8 @@ export function ProfitCurve({ hideStats = false }: ProfitCurveProps) {
                                     formatter={(value: number, name: string) => [
                                         `$${value.toLocaleString()}`,
                                         name === 'value'
-                                            ? (language === 'zh' ? '当前净值' : 'Net Value')
-                                            : (language === 'zh' ? 'BTC 基准' : 'BTC Benchmark')
+                                            ? t.aiTrading.currentValue
+                                            : t.aiTrading.btcBenchmark
                                     ]}
                                     labelStyle={{ color: '#8E9297', marginBottom: '0.25rem' }}
                                 />
