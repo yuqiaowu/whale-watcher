@@ -1119,11 +1119,11 @@ def translate_news_data(news_data):
                 
                 # Check for validity
                 if t_title and t_summary:
-                    item["title"] = t_title
-                    item["summary"] = t_summary
+                    item["title_cn"] = t_title
+                    item["summary_cn"] = t_summary
                     count += 1
                     
-        print(f"✅ News translated successfully via AI ({count} items updated).")
+        print(f"✅ News translated successfully via AI ({count} items updated with _cn fields).")
     else:
         print(f"❌ News translation failed (Result was None or missing key): {result}")
         # Fallback: Mark as [Untranslated] so we know
