@@ -42,6 +42,8 @@ export const translations = {
       initialValue: '初始金额',
       currentValue: '当前总值',
       todayChange: '今日',
+      strategyDesc: '4小时线为基准的AI量化策略，已成功运行',
+      runningTimePlaceholder: '-- 天 -- 小时',
       tabs: {
         current: '当前持仓',
         history: '历史记录',
@@ -410,6 +412,8 @@ export const translations = {
       initialValue: 'Initial Amount',
       currentValue: 'Current Value',
       todayChange: 'Today',
+      strategyDesc: 'AI Quantitative Strategy (4H), successfully running for',
+      runningTimePlaceholder: '-- days -- hours',
       tabs: {
         current: 'Current Holdings',
         history: 'History',

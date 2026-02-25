@@ -17,7 +17,7 @@ function AppContent() {
   const [activePage, setActivePage] = useState('liquidity');
   const [marketStats, setMarketStats] = useState<MarketStatsType | null>(null);
   const [liveData, setLiveData] = useState<CryptoDataResponse["data"] | null>(null);
-  const [runningTime, setRunningTime] = useState<string>(language === 'zh' ? "-- 天 -- 小时" : "-- days -- hours");
+  const [runningTime, setRunningTime] = useState<string>(t.aiTrading.runningTimePlaceholder || "-- days -- hours");
 
   useEffect(() => {
     async function initData() {
@@ -37,9 +37,9 @@ function AppContent() {
           const diffMs = now.getTime() - start.getTime();
           const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
           const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const unitDays = language === 'zh' ? '天' : 'days';
-          const unitHours = language === 'zh' ? '小时' : 'hours';
-          setRunningTime(`${diffDays} ${unitDays} ${diffHours} ${unitHours}`);
+          const days = language === 'zh' ? ' 天 ' : ' days ';
+          const hours = language === 'zh' ? ' 小时' : ' hours';
+          setRunningTime(`${diffDays}${days}${diffHours}${hours}`);
         }
       } catch (e: any) {
         console.error("Init data error:", e);
@@ -228,7 +228,7 @@ function AppContent() {
                   className="text-sm font-mono font-normal mb-4 text-[#8E9297] flex items-center gap-2 tracking-wide"
                 >
                   <span className="inline-block w-0.5 h-4 bg-[#39FF14]/60 shadow-[0_0_6px_rgba(57,255,20,0.4)]" />
-                  <span className="opacity-90">4小时线为基准的AI量化策略，已成功运行 <span className="text-[#39FF14] font-medium">{runningTime}</span></span>
+                  <span className="opacity-90">{t.aiTrading.strategyDesc} <span className="text-[#39FF14] font-medium">{runningTime}</span></span>
                 </motion.h2>
                 <AICopyTrading />
               </section>
