@@ -213,7 +213,9 @@ Constraints:
 - Max Open Positions: 3.
 - Max Risk Per Trade: 2% of NAV.
 - Max Leverage: 5x (Normal), 10x (High Conviction Whale Signal).
-- **DO NOT exceed the Available Room.** If available room is low, consider closing existing positions first.
+- **DO NOT exceed the Available Room.** 
+- **SAFETY RULE**: Always keep your total exposure at least $10 BELOW the limit to account for market volatility and fees.
+- If available room is low, consider closing existing positions first.
 
 🟫 6. OUTPUT FORMAT (JSON ONLY)
 Structure:
@@ -641,7 +643,8 @@ def validate_and_enforce_decision(decision, market_summary, daily_context, fear_
             if "long" in act_type:
                 projected_long = current_long_exposure + size_usd
                 limit_usd = equity * MAX_LONG_CAP
-                if projected_long > limit_usd:
+                TOLERANCE = 5.0 # Allow $5 overage for market/decimal noise
+                if projected_long > (limit_usd + TOLERANCE):
                     reason = f"🛡️ Long Cap Exceeded. Projected ${projected_long:.0f} > Limit ${limit_usd:.0f} ({MAX_LONG_CAP*100}%)."
                     print(f"{reason} Skipping {symbol}.")
                     action["action"] = "REJECTED"
@@ -654,7 +657,8 @@ def validate_and_enforce_decision(decision, market_summary, daily_context, fear_
             elif "short" in act_type:
                 projected_short = current_short_exposure + size_usd
                 limit_usd = equity * MAX_SHORT_CAP
-                if projected_short > limit_usd:
+                TOLERANCE = 5.0
+                if projected_short > (limit_usd + TOLERANCE):
                     reason = f"🛡️ Short Cap Exceeded. Projected ${projected_short:.0f} > Limit ${limit_usd:.0f} ({MAX_SHORT_CAP*100}%)."
                     print(f"{reason} Skipping {symbol}.")
                     action["action"] = "REJECTED"
@@ -760,8 +764,8 @@ def run_agent():
     max_long_usd = equity * max_long_cap
     max_short_usd = equity * max_short_cap
 
-    avail_long = max(0, max_long_usd - curr_long)
-    avail_short = max(0, max_short_usd - curr_short)
+    avail_long = max(0, max_long_usd - curr_long - 10) # Deduct $10 buffer for AI
+    avail_short = max(0, max_short_usd - curr_short - 10)
 
     # Replace Placeholders
     final_prompt = final_prompt.replace("{{MARKET_REGIME}}", regime)

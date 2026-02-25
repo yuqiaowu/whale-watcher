@@ -2,7 +2,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { X, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/app/i18n/LanguageContext";
-import QRCode from "react-qr-code";
 
 interface DonationModalProps {
   isOpen: boolean;
@@ -16,12 +15,11 @@ export function DonationModal({ isOpen, onClose }: DonationModalProps) {
   const [copied, setCopied] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('SOL');
 
-  const solWalletAddress = "3bdnJtKwN1jWPXQZfzKKFb62HZwAYGQiCShCbG5suBRm";
-  const alipayAccount = "914506728@qq.com";
-  const alipayQRUrl = "https://ds.alipay.com/?from=mobilecodec&scheme=alipays%3A%2F%2Fplatformapi%2Fstartapp%3FsaId%3D10000007%26clientVersion%3D3.7.0.0718%26qrcode%3Dhttps%253A%252F%252Fqr.alipay.com%252Ftsx18982j0uthxus1xmoj0c%253F_s%253Dweb-other";
+  const solWalletAddress = "2oAoK4D4hq5nGE2JVSknuWY4YDxaF5u7uB1arf1s2TNY";
+  const alipayAccount = "newjowu@gmail.com";
+  const solBlinkUrl = "https://www.dial.to/?action=solana-action:https://action.solscan.io/api/donate?receiver=2oAoK4D4hq5nGE2JVSknuWY4YDxaF5u7uB1arf1s2TNY";
 
   const currentAddress = paymentMethod === 'SOL' ? solWalletAddress : alipayAccount;
-  const currentQRValue = paymentMethod === 'SOL' ? solWalletAddress : alipayQRUrl;
 
   const copyToClipboard = async () => {
     try {
@@ -83,7 +81,7 @@ export function DonationModal({ isOpen, onClose }: DonationModalProps) {
             </div>
 
             {/* Content */}
-            <div className="px-6 py-6">
+            <div className="px-6 py-6 overflow-y-auto max-h-[80vh]">
               {/* Payment Method Selection */}
               <div className="mb-6">
                 <label className="text-xs font-mono text-[#8E9297] mb-2 block">
@@ -94,11 +92,10 @@ export function DonationModal({ isOpen, onClose }: DonationModalProps) {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handlePaymentMethodChange('SOL')}
-                    className={`px-4 py-2 border font-mono text-sm font-bold transition-all ${
-                      paymentMethod === 'SOL'
-                        ? 'bg-[#39FF14] text-black border-[#39FF14]'
-                        : 'bg-[#0a0a0a] text-[#39FF14] border-[#39FF14] hover:bg-[#39FF1422]'
-                    }`}
+                    className={`px-4 py-2 border font-mono text-sm font-bold transition-all ${paymentMethod === 'SOL'
+                      ? 'bg-[#39FF14] text-black border-[#39FF14]'
+                      : 'bg-[#0a0a0a] text-[#39FF14] border-[#39FF14] hover:bg-[#39FF1422]'
+                      }`}
                     style={
                       paymentMethod === 'SOL'
                         ? { boxShadow: '0 0 10px rgba(57, 255, 20, 0.4)' }
@@ -111,11 +108,10 @@ export function DonationModal({ isOpen, onClose }: DonationModalProps) {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handlePaymentMethodChange('ALIPAY')}
-                    className={`px-4 py-2 border font-mono text-sm font-bold transition-all ${
-                      paymentMethod === 'ALIPAY'
-                        ? 'bg-[#39FF14] text-black border-[#39FF14]'
-                        : 'bg-[#0a0a0a] text-[#39FF14] border-[#39FF14] hover:bg-[#39FF1422]'
-                    }`}
+                    className={`px-4 py-2 border font-mono text-sm font-bold transition-all ${paymentMethod === 'ALIPAY'
+                      ? 'bg-[#39FF14] text-black border-[#39FF14]'
+                      : 'bg-[#0a0a0a] text-[#39FF14] border-[#39FF14] hover:bg-[#39FF1422]'
+                      }`}
                     style={
                       paymentMethod === 'ALIPAY'
                         ? { boxShadow: '0 0 10px rgba(57, 255, 20, 0.4)' }
@@ -128,21 +124,51 @@ export function DonationModal({ isOpen, onClose }: DonationModalProps) {
               </div>
 
               {/* QR Code */}
-              <div className="flex justify-center mb-6">
-                <div className="bg-white p-4 rounded-lg">
-                  <QRCode
-                    value={currentQRValue}
-                    size={180}
-                    level="H"
-                    bgColor="#ffffff"
-                    fgColor="#000000"
+              <div className="flex flex-col items-center mb-6">
+                <div className="bg-white p-2 rounded-lg mb-4 overflow-hidden flex items-center justify-center w-[200px] h-[200px]">
+                  <img
+                    src={paymentMethod === 'SOL' ? "/src/assets/sol_qr.png" : "/src/assets/alipay_qr.png"}
+                    alt="QR Code"
+                    className="w-full h-full object-contain"
                   />
                 </div>
+                {paymentMethod === 'SOL' && (
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="px-3 py-1 bg-[#39FF1422] border border-[#39FF14] rounded text-[10px] font-mono text-[#39FF14] animate-pulse">
+                      {t.donation.stablecoinSupport}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="text-center text-xs font-mono text-[#8E9297] mb-4">
                 {paymentMethod === 'SOL' ? t.donation.scanQR : t.donation.scanAlipay}
               </div>
+
+              {/* Solana Blink Option (Only for SOL) */}
+              {paymentMethod === 'SOL' && (
+                <div className="mb-6">
+                  <label className="text-xs font-mono text-[#8E9297] mb-2 block">
+                    {t.donation.solanaBlink}
+                  </label>
+                  <motion.a
+                    href={solBlinkUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full py-3 bg-gradient-to-r from-[#14F195] to-[#9945FF] text-white font-mono text-xs font-bold flex items-center justify-center gap-2 rounded-sm"
+                    style={{
+                      boxShadow: '0 0 15px rgba(153, 69, 255, 0.4)'
+                    }}
+                  >
+                    🚀 {t.donation.openBlink}
+                  </motion.a>
+                  <p className="text-[10px] text-[#8E9297] mt-2 text-center italic">
+                    * {t.donation.solanaBlink}
+                  </p>
+                </div>
+              )}
 
               {/* Wallet Address / Account */}
               <div className="mb-6">
@@ -150,14 +176,14 @@ export function DonationModal({ isOpen, onClose }: DonationModalProps) {
                   {paymentMethod === 'SOL' ? t.donation.walletAddress : t.donation.alipayAccount}
                 </label>
                 <div className="flex gap-2">
-                  <div className="flex-1 bg-[#0a0a0a] border border-[#2D3139] px-3 py-2 text-xs font-mono text-[#E8E8E8] overflow-x-auto">
+                  <div className="flex-1 bg-[#0a0a0a] border border-[#2D3139] px-3 py-2 text-xs font-mono text-[#E8E8E8] overflow-x-auto whitespace-nowrap scrollbar-hide">
                     {currentAddress}
                   </div>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={copyToClipboard}
-                    className="px-4 py-2 bg-[#39FF14] text-black font-mono text-xs font-bold hover:bg-[#2DD00F] transition-colors flex items-center gap-2"
+                    className="px-4 py-2 bg-[#39FF14] text-black font-mono text-xs font-bold hover:bg-[#2DD00F] transition-colors flex items-center gap-2 shrink-0"
                     style={{
                       boxShadow: '0 0 10px rgba(57, 255, 20, 0.3)'
                     }}

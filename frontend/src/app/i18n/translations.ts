@@ -344,7 +344,10 @@ export const translations = {
       copied: '已复制！',
       scanQR: '扫码转账（自定义金额）',
       scanAlipay: '扫码支付（自定义金额）',
-      thankYou: '感谢您的支持！'
+      thankYou: '感谢您的支持！',
+      solanaBlink: 'Solana Blink (一键赞赏)',
+      stablecoinSupport: '支持 SOL / USDC / USDT',
+      openBlink: '在钱包中打开'
     },
 
     // Footer
@@ -700,7 +703,10 @@ export const translations = {
       copied: 'Copied!',
       scanQR: 'Scan to Transfer (Custom Amount)',
       scanAlipay: 'Scan to Pay (Custom Amount)',
-      thankYou: 'Thank you for your support! 🙏'
+      thankYou: 'Thank you for your support! 🙏',
+      solanaBlink: 'Solana Blink (One-click)',
+      stablecoinSupport: 'Supports SOL / USDC / USDT',
+      openBlink: 'Open in Wallet'
     },
 
     // Footer
