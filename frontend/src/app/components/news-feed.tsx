@@ -11,7 +11,7 @@ interface NewsItem {
 }
 
 export function NewsFeed() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,8 +26,8 @@ export function NewsFeed() {
         // Check for AI Analysis first
         if (stats.ai_analysis && stats.ai_analysis.news_analysis) {
           const aiItems = stats.ai_analysis.news_analysis.slice(0, 10).map((item: any) => ({
-            title: item.title_cn || item.title,
-            description: item.reason_cn || item.summary, // Use AI reason as description
+            title: language === 'zh' ? (item.title_cn || item.title) : item.title,
+            description: language === 'zh' ? (item.reason_cn || item.summary_cn || item.summary) : (item.reason_en || item.summary),
             sentiment: item.sentiment?.toLowerCase().includes('bull') ? 'bullish' :
               item.sentiment?.toLowerCase().includes('bear') ? 'bearish' : 'neutral',
             url: "#" // AI analysis might not strictly link back yet, or we need to find original URL. For now placeholder or match title.
@@ -46,16 +46,19 @@ export function NewsFeed() {
         if (items.length > 0) {
           const mappedNews: NewsItem[] = items.slice(0, 10).map((item: any) => {
             // Strip HTML tags from description
-            let rawDesc = item.summary || item.title || "";
+            const displayTitle = language === 'zh' ? (item.title_cn || item.title) : item.title;
+            const displayDesc = language === 'zh' ? (item.summary_cn || item.summary) : item.summary;
+
+            let rawDesc = displayDesc || displayTitle || "";
             // Remove <img> tags and other HTML
             const cleanDesc = rawDesc.replace(/<[^>]+>/g, '').trim();
 
             return {
-              title: item.title,
+              title: displayTitle,
               description: cleanDesc,
               sentiment: item.sentiment?.toLowerCase().includes('bull') ? 'bullish' :
                 item.sentiment?.toLowerCase().includes('bear') ? 'bearish' : 'neutral',
-              url: item.url
+              url: item.link || item.url
             };
           });
           setNews(mappedNews);
