@@ -127,7 +127,7 @@ export function DonationModal({ isOpen, onClose }: DonationModalProps) {
               <div className="flex flex-col items-center mb-6">
                 <div className="bg-white p-2 rounded-lg mb-4 overflow-hidden flex items-center justify-center w-[200px] h-[200px]">
                   <img
-                    src={paymentMethod === 'SOL' ? "/src/assets/sol_qr.png" : "/src/assets/alipay_qr.png"}
+                    src={paymentMethod === 'SOL' ? "/sol_qr.png" : "/alipay_qr.png"}
                     alt="QR Code"
                     className="w-full h-full object-contain"
                   />
