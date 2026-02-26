@@ -247,7 +247,7 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 - NATR at peak / Vol Z-Score spike (volatility climax signal)
 → Verdict: "SAFE_MR" — Mean reversion entry is justified with tight stop.
 
-� 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
+🛡️ 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
 
 1. **Anti-Liquidity Rush (Do not fight the cascade)**:
    - If Liquidations are **SIGNIFICANTLY LOPSIDED** (e.g., one side is 3x+ the other) OR price is moving vertically on high volume, DO NOT open a reverse trade immediately. 
@@ -258,8 +258,17 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 3. **Left Signal, Right Entry (Wait for Confirmation)**:
    - Whale Divergence is a "Left-side" warning signal. Do not jump in just because whales are buying.
    - Wait for a "Right-side" confirmation: e.g., price breaking a recent 4H high (for longs) or low (for shorts), or RSI starting to turn back from extreme levels.
+4. **ADX No-Trade Zone (HARD RULE — NEVER VIOLATE)**:
+   - If ADX < 20 for the target coin: **DO NOT open any new directional position (long or short)**.
+   - ADX < 20 means there is NO established trend. Opening a directional bet in a trendless market is a coin-flip at best. Wait for ADX to rise above 20 before committing capital.
+   - This is the single most common reason for getting stopped out by a random spike. A trendless market will whipsaw both bulls and bears.
+5. **Minimum Stop-Loss Distance Rule**:
+   - Before placing any order, calculate: Stop Distance % = |entry_price - stop_loss| / entry_price × 100
+   - Minimum safe stop distance: **5% × (1 / leverage)**. At 3x leverage this is ~1.7%; at 2x this is 2.5%; at 5x this is 1%.
+   - If your stop requires a distance less than this minimum, **widen the stop OR reduce the position size**.
+   - A stop that's too tight at high leverage WILL be hit by noise. It is better to hold a smaller position with a proper stop than a large position with a stop that gets triggered by a single candle.
 
-�🟧 5. PORTFOLIO & RISK MANAGEMENT
+🟧 5. PORTFOLIO & RISK MANAGEMENT
 Current State:
 {{PORTFOLIO_STATE_JSON}}
 
