@@ -40,6 +40,17 @@ Profit curve and trading rationale decided by AI models
 
 ---
 
+# 📅 Update History (Changelog)
+
+| Date | Major Updates |
+| :--- | :--- |
+| **2026-02-26** | **V2.0 Upgrade**: Integrated Qlib Model, Z-Score detection, and enhanced risk control. Added Quantitative & Regime Safety panels, Live Qlib Bridge for real-time data, and comprehensive multi-language support (UI & Docs). |
+| **2026-02-25** | **Localization**: Full dual-language support for frontend (News feed, AI Trading section). Updated support & donation mechanisms with Solana Blink. |
+| **2026-02-24** | **Risk Control**: Injected dynamic risk limits into AI prompts to prevent OKX trade rejections. Added self-healing utilities for DB NAV history. |
+| **2026-02-23** | **AI Agent Enhancements**: Separated agent memory from history to prevent hallucinations. Injected 7-day whale flow trends into prompts. Stabilized baseline & NAV history generation. |
+
+---
+
 # 🌟 Key Features
 
 ### 1. Agentic AI Trader
