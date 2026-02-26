@@ -1,7 +1,12 @@
 FROM python:3.11-slim
 
-# Install git
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+# Install git and build dependencies for Qlib/LightGBM
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    g++ \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Ensure logs are not buffered
 ENV PYTHONUNBUFFERED=1
