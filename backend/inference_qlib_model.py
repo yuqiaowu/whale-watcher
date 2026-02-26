@@ -355,6 +355,18 @@ def fetch_live_context_and_predict():
     live_data = []
     
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Load whale_analysis.json for funding Z-Score (not available from market_data)
+    whale_zscore_map = {}
+    whale_path = BASE_DIR.parent / "frontend" / "data" / "whale_analysis.json"
+    try:
+        with open(whale_path, "r") as f:
+            whale_data = json.load(f)
+        for sym in symbols:
+            market = whale_data.get(sym.lower(), {}).get("market", {})
+            whale_zscore_map[sym] = market.get("funding_zscore", 0)
+    except Exception:
+        pass  # Silently fall back to 0 if file not available
     
     for sym in symbols:
         metrics = get_strategy_metrics(sym)
@@ -367,15 +379,16 @@ def fetch_live_context_and_predict():
                 "close": metrics.get("price", 0),
                 "volume": metrics.get("volume_24h", 0),
                 "ret": metrics.get("change_24h", 0) / 100.0,
-                "momentum_12": metrics.get("change_24h", 0) / 100.0, # Approximation for now
+                "momentum_12": metrics.get("change_24h", 0) / 100.0,
                 "macd_hist": metrics.get("macd_hist", 0),
                 "atr_14": metrics.get("atr_14", 0),
                 "bb_width_20": metrics.get("bb_width", 0),
                 "rsi_14": metrics.get("rsi_14", 50),
+                "vol_zscore_20": metrics.get("vol_zscore_20", 0),  # Z-Score for volume anomaly
                 "rel_volume_20": metrics.get("vol_ratio_20", 1),
                 "price_position_20": metrics.get("price_rank_20", 50) / 100.0,
                 "funding_rate": metrics.get("funding_rate", 0),
-                "funding_rate_zscore": metrics.get("funding_zscore", 0),
+                "funding_rate_zscore": whale_zscore_map.get(sym, 0),  # Z-Score from whale_analysis
                 "oi_change": metrics.get("delta_oi_24h_percent", 0) / 100.0,
                 "oi_rsi": metrics.get("oi_rsi", 50),
                 "btc_corr_24h": metrics.get("btc_corr_24h", 1),
@@ -411,7 +424,7 @@ def fetch_live_context_and_predict():
     live_df['score'] = live_df['ret'] * 0.5 + (live_df['rsi_14'] - 50) * 0.01 + live_df['rel_volume_20'] * 0.1
     live_df = live_df.sort_values("score", ascending=False)
     
-    for idx, row in live_df.iterrows():
+    for idx, row in live_df.iterrows():\
         payload["coins"].append({
             "symbol": row['instrument'],
             "qlib_score": round(row['score'], 4),
@@ -420,6 +433,7 @@ def fetch_live_context_and_predict():
                 "price": row['close'],
                 "rsi": round(row['rsi_14'], 2),
                 "vol_z": round(row.get('vol_zscore_20', 0), 2),
+                "funding_z": round(row.get('funding_rate_zscore', 0), 2),
                 "funding": f"{row['funding_rate']:.4%}"
             }
         })
