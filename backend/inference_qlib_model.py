@@ -110,9 +110,16 @@ def load_model():
         return None
     
     print(f"✅ Loading model: {MODEL_PATH}")
-    with open(MODEL_PATH, "rb") as f:
-        model = pickle.load(f)
-    return model
+    try:
+        with open(MODEL_PATH, "rb") as f:
+            model = pickle.load(f)
+        return model
+    except ModuleNotFoundError as e:
+        print(f"⚠️ Model uses qlib classes not available here ({e}). Skipping model — Live Bridge will use simple scoring.")
+        return None
+    except Exception as e:
+        print(f"⚠️ Model load failed ({e}). Proceeding without model.")
+        return None
 
 # -----------------------
 # 3. Inference Dataset
