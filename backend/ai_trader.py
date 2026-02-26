@@ -107,9 +107,8 @@ class TradeMemory:
                 act = t['action']
                 price = t.get('entry_price', '?')
                 
-                # Full rationale (not truncated)
+                # Full rationale (English only)
                 rationale_en = t['reason'].get('en', '') if isinstance(t.get('reason'), dict) else str(t.get('reason', ''))
-                rationale_zh = t['reason'].get('zh', '') if isinstance(t.get('reason'), dict) else ''
                 
                 # Market context at time of trade
                 ctx = t.get('context', {})
@@ -125,10 +124,7 @@ class TradeMemory:
                 
                 summary += f"[{i}] {ts} | {act} {sym} @ ${price} | {status}\n"
                 summary += f"    Market at entry: RSI={rsi}, ADX={adx}, WhaleFlow={whale}\n"
-                summary += f"    Rationale (EN): {rationale_en[:400]}\n"
-                if rationale_zh:
-                    summary += f"    Rationale (ZH): {rationale_zh[:200]}\n"
-                summary += "\n"
+                summary += f"    Rationale: {rationale_en[:400]}\n\n"
             
             summary += "⚠️ REFLECTION MANDATE: Before ANY new action, explicitly state what you learned from the above history and how it affects this decision.\n"
             return summary
