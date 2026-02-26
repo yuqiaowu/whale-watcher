@@ -88,10 +88,17 @@ CSV_PATH = QLIB_DATA_DIR / "multi_coin_features.csv"
 MODEL_PATH = QLIB_DATA_DIR / "model_latest.pkl"
 PAYLOAD_PATH = QLIB_DATA_DIR / "deepseek_payload.json"
 
-# Initialize Qlib
-if not BIN_DIR.exists():
-    raise FileNotFoundError(f"Qlib BIN directory not found: {BIN_DIR}")
-qlib.init(provider_uri=str(BIN_DIR), region="cn")
+# Initialize Qlib (only if available)
+if HAS_QLIB:
+    if not BIN_DIR.exists():
+        print(f"⚠️ Qlib BIN directory not found: {BIN_DIR}. Skipping init.")
+        HAS_QLIB = False
+    else:
+        try:
+            qlib.init(provider_uri=str(BIN_DIR), region="cn")
+        except Exception as e:
+            print(f"⚠️ qlib.init() failed: {e}. Falling back to CSV mode.")
+            HAS_QLIB = False
 
 # -----------------------
 # 2. Model Loading

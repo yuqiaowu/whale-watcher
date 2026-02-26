@@ -810,6 +810,12 @@ def run_agent():
     raw_avail_short = max_short_usd - curr_short - 10
     avail_short = max(0, raw_avail_short) if raw_avail_short >= MIN_TRADE_USD else 0
 
+    # Extract Fear & Greed Index (needed for validate_and_enforce_decision)
+    try:
+        fear_index = float(whale_data_obj.get("fear_greed", {}).get("latest", {}).get("value", 50))
+    except Exception:
+        fear_index = 50  # Default: neutral, no extreme leverage restrictions
+
     # Replace Placeholders
     final_prompt = final_prompt.replace("{{MARKET_REGIME}}", regime)
     final_prompt = final_prompt.replace("{{MAX_LONG_LIMIT_USD}}", f"{max_long_usd:.0f}")
