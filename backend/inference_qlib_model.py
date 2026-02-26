@@ -431,19 +431,22 @@ def fetch_live_context_and_predict():
     return payload
 
 if __name__ == "__main__":
-    # If the local Qlib calendar is too old, we switch to Live Bridge
-    # Otherwise we use the standard predict_and_export
-    
-    try:
-        cal = D.calendar(start_time="2025-01-01")
-        latest_qlib = cal[-1]
-        
-        # If Qlib is more than 3 days old, force live fetch
-        if (datetime.now() - pd.to_datetime(latest_qlib)).days > 3:
-            print(f"⚠️ Qlib Data is too old ({latest_qlib}). Switching to Live Bridge...")
-            fetch_live_context_and_predict()
-        else:
-            predict_and_export()
-    except Exception as e:
-        print(f"⚠️ Qlib Init Failed or Staleness Check Error: {e}")
+    # If Qlib is not available, go straight to Live Bridge
+    if not HAS_QLIB:
+        print("⚠️ Qlib not installed on this machine. Running Live Bridge directly...")
         fetch_live_context_and_predict()
+    else:
+        # Qlib is available — check if the calendar is fresh enough
+        try:
+            cal = D.calendar(start_time="2025-01-01")
+            latest_qlib = cal[-1]
+            
+            # If Qlib is more than 3 days old, force live fetch
+            if (datetime.now() - pd.to_datetime(latest_qlib)).days > 3:
+                print(f"⚠️ Qlib Data is too old ({latest_qlib}). Switching to Live Bridge...")
+                fetch_live_context_and_predict()
+            else:
+                predict_and_export()
+        except Exception as e:
+            print(f"⚠️ Qlib Calendar Check Error: {e}. Falling back to Live Bridge...")
+            fetch_live_context_and_predict()
