@@ -410,6 +410,11 @@ def main():
         print(">> Step 1: Updating Market Reality (crypto_brain)...")
         success_data = run_script("crypto_brain.py")
         
+        # 1.5 Run Qlib Strategy Ranking
+        if success_data:
+            print(">> Step 1.5: Running Qlib Strategy Ranking...")
+            run_script("inference_qlib_model.py")
+        
         # 2. Run AI Execution (ai_trader)
         if success_data:
             print(">> Step 2: AI Thinking & Execution (ai_trader)...")

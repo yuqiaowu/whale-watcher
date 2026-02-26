@@ -182,21 +182,37 @@ Pay close attention to **GLOBAL MARKET STATE** in the Daily Context above.
 🟥 4. ANALYSIS LOGIC (The "Dolores" Method)
 
 A. NARRATIVE VS REALITY CHECK (Crucial Step)
-Compare the "News Narrative" (Retail view) vs "Whale Reality" (Smart Money view).
-- If News says "Dead" but Whales are "Buying" -> **TRAP (Buy)**.
-- If News says "Moon" but Whales are "Dumping" -> **TRAP (Sell)**.
+For each major news item or market move, ask:
+- **Impulse**: Is this a NEW driver that changes the thesis? (Price moves WITH news).
+- **Priced In**: Is this old news? (Price fades or ignores good news).
+- **Divergence**: Good News + Bad Price = Distribution (Bearish). Bad News + Good Price = Accumulation (Whale Trap - Bullish).
+- Compare "Retail News" vs "Whale Reality" (On-chain flow). If they disagree, follow the Whales.
 
 B. THE PAIN TRADE (Liquidity Hunting)
 Identify where the crowd is trapped:
-- **Long Squeeze Risk**: Funding > 0.03% + Price Stalling.
-- **Short Squeeze Opportunity**: Funding < -0.01% + Price Holding Support + Whale Buying.
+- **Long Squeeze Risk**: Funding > 0.03% (Crowded Longs) + Price Stalling + High Long Liquidations. -> DANGER for Longs.
+- **Short Squeeze Opportunity**: Funding < -0.01% (Crowded Shorts) + Price Holding Support + Whale Buying. -> OPPORTUNITY for Longs.
+- **Liquidity Trap**: Late chasers entering at resistance (High Funding + High RSI).
 
 C. HYPOTHESIS MENU (Generate 3 Scenarios)
-1.  **Trend Following**: Models Align + Whales Align.
-2.  **Mean Reversion**: Extreme RSI + Liquidation Spike (Reversal).
-3.  **Whale Front-Run**: Whales buying heavily into fear.
+For top candidates, evaluate:
+1.  **Trend Following**: Models Align + Whale Accumulation + Normal Funding. (Go with the flow).
+2.  **Mean Reversion**: Extreme RSI (>70 or <30) + Liquidation Spike + Extreme Funding. (Fade the move).
+3.  **Whale Front-Run**: Massive Token Inflow detected while retail is panicking. (Bet on the Smart Money).
 
-🟧 5. PORTFOLIO & RISK MANAGEMENT
+� 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
+
+1. **Anti-Liquidity Rush (Do not fight the cascade)**:
+   - If Liquidations are **SIGNIFICANTLY LOPSIDED** (e.g., one side is 3x+ the other) OR price is moving vertically on high volume, DO NOT open a reverse trade immediately. 
+   - Treat these liquidations as **FUEL** for the current move. Acknowledge that the move is likely to overshoot. Wait for the liquidation spike to plateau or a 4H candle to close with a long wick before considering a reversal.
+2. **Funding Trap Check**:
+   - Before going LONG: Funding Rate should ideally be flat or negative (Retail is fearful/shorting). If Funding is high (>0.03%), the long is crowded and dangerous.
+   - Before going SHORT: Funding Rate should ideally be flat or positive (Retail is greedy/longing). If Funding is very negative (<-0.01%), the short is crowded and prone to a squeeze.
+3. **Left Signal, Right Entry (Wait for Confirmation)**:
+   - Whale Divergence is a "Left-side" warning signal. Do not jump in just because whales are buying.
+   - Wait for a "Right-side" confirmation: e.g., price breaking a recent 4H high (for longs) or low (for shorts), or RSI starting to turn back from extreme levels.
+
+�🟧 5. PORTFOLIO & RISK MANAGEMENT
 Current State:
 {{PORTFOLIO_STATE_JSON}}
 
@@ -221,8 +237,8 @@ Constraints:
 Structure:
 {
   "analysis_summary": {
-    "zh": "中文分析。重点指出：1. 鲸鱼是否在与散户对赌？(Token Flow vs Price)。2. 爆仓数据是否显示这是底部？3. AI分析结论是吸筹(Accumulation)还是出货(Distribution)？",
-    "en": "English summary."
+    "zh": "必须是中文，综合叙述（3-4句话）。1. 首先进行【叙事校验】（Section 4A），判断当前驱动力是Impulse还是已定价。2. 结合【痛苦交易】（4B）和【战场纪律】（4D），指出市场是否处于“爆仓踩踏”中，是否有足够的“燃料”支撑继续上涨/下跌。3. 阐明选择的【假设分析】剧本（4C）。",
+    "en": "English translation of the above Chinese summary."
   },
   "context_analysis": {
     "technical_signal": { "zh": "技术面概括 (RSI, ADX...)", "en": "Brief technical summary." },
@@ -391,7 +407,9 @@ def get_whale_data():
                     natr_str += f"(~30d Avg {natr_avg:.2f}%)"
 
             return (f"RSI={m.get('rsi_14', 50):.1f} | ADX={m.get('adx_14', 0):.1f} | "
-                    f"VolRatio={m.get('vol_ratio', 1):.1f}x | {natr_str} | Rank={m.get('price_percentile_20', 0.5)*100:.0f}% | "
+                    f"VolRatio={m.get('vol_ratio_20', 1):.1f}x | VolZ={m.get('vol_zscore_20', 0):.2f} | "
+                    f"NATR={m.get('natr_percent', 0):.2f}% | Rank={m.get('price_rank_20', 50):.0f}% | "
+                    f"Wick:Up={m.get('upper_wick_ratio',0)*100:.0f}%/Down={m.get('lower_wick_ratio',0)*100:.0f}% | "
                     f"BBW={m.get('bb_width', 0):.3f} | Trend={m.get('bb_trend', 'FLAT')} | Funding={m.get('funding_rate', 0)*100:.4f}% | "
                     f"Stars: Buy={m.get('buy_stars',0)}/Sell={m.get('sell_stars',0)}")
 
@@ -616,9 +634,18 @@ def validate_and_enforce_decision(decision, market_summary, daily_context, fear_
             print(f"⚠️ Failed to parse size_usd: {action.get('position_size_usd')}, defaulting to 0")
             size_usd = 0.0
         
-        # Skip 'hold' actions
         if act_type == "hold":
             continue
+
+        MIN_ORDER_USD = 50.0
+        # Skip if size is zero or too tiny (prevents dust orders)
+        if size_usd < MIN_ORDER_USD and act_type.startswith("open_"):
+             reason = f"🛡️ Trade size ${size_usd:.2f} too small (< ${MIN_ORDER_USD}). REJECTED."
+             print(f"{reason} Skipping {symbol}.")
+             action["action"] = "REJECTED"
+             action["reason"] = reason
+             validated_actions.append(action)
+             continue
             
         # TRACKING: Close actions reduce exposure
         if "close" in act_type:
@@ -764,8 +791,14 @@ def run_agent():
     max_long_usd = equity * max_long_cap
     max_short_usd = equity * max_short_cap
 
-    avail_long = max(0, max_long_usd - curr_long - 10) # Deduct $10 buffer for AI
-    avail_short = max(0, max_short_usd - curr_short - 10)
+    MIN_TRADE_USD = 100.0  # Require at least $100 room to suggest a trade to AI
+    
+    # Calculate available room with a buffer
+    raw_avail_long = max_long_usd - curr_long - 10
+    avail_long = max(0, raw_avail_long) if raw_avail_long >= MIN_TRADE_USD else 0
+    
+    raw_avail_short = max_short_usd - curr_short - 10
+    avail_short = max(0, raw_avail_short) if raw_avail_short >= MIN_TRADE_USD else 0
 
     # Replace Placeholders
     final_prompt = final_prompt.replace("{{MARKET_REGIME}}", regime)

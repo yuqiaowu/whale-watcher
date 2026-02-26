@@ -82,6 +82,15 @@ def add_all_indicators(df: pd.DataFrame) -> dict:
     # Normalized ATR (Volatility %)
     df['natr'] = (df['atr_14'] / df['close']) * 100
 
+    # 5.1 Candle Shape Analysis (Wick Ratios)
+    # Wick Ratio = Wick Length / Total Range (High - Low)
+    full_range = (df['high'] - df['low']).replace(0, 1e-9)
+    body_top = df[['open', 'close']].max(axis=1)
+    body_bottom = df[['open', 'close']].min(axis=1)
+    
+    df['upper_wick_ratio'] = (df['high'] - body_top) / full_range
+    df['lower_wick_ratio'] = (body_bottom - df['low']) / full_range
+
     # 6. ADX (14) - Trend Strength
     # +DM = H - PrevH, -DM = PrevL - L
     df['up_move'] = df['high'] - df['high'].shift(1)
@@ -115,8 +124,10 @@ def add_all_indicators(df: pd.DataFrame) -> dict:
     
     # 8. Volume Anomalies (Window 20 - Matching Reference Repo)
     # Ratio of current volume to 20-period MA
-    df['vol_ma_20'] = df['volume'].rolling(window=20).mean()
+    df['vol_ma_20'] = df['volume'].rolling(window=20, min_periods=20).mean()
+    df['vol_std_20'] = df['volume'].rolling(window=20, min_periods=20).std()
     df['vol_ratio_20'] = df['volume'] / df['vol_ma_20']
+    df['vol_zscore_20'] = (df['volume'] - df['vol_ma_20']) / (df['vol_std_20'] + 1e-9)
 
     # --- SIGNAL LOGIC (Replicating compute_signal_info) ---
     # Masks
@@ -205,6 +216,11 @@ def add_all_indicators(df: pd.DataFrame) -> dict:
         # Context / Rank / Signals
         "price_rank_20": get_strict('price_percentile_20') * 100, 
         "vol_ratio_20": get_strict('vol_ratio_20'),
+        "vol_zscore_20": get_strict('vol_zscore_20'),
+        
+        # Candle Shape
+        "upper_wick_ratio": get_strict('upper_wick_ratio'),
+        "lower_wick_ratio": get_strict('lower_wick_ratio'),
         
         # Star Signals
         "signal_low_high_vol": bool(latest['price_percentile_20'] < 0.10 and latest['vol_ratio_20'] > 2.0),

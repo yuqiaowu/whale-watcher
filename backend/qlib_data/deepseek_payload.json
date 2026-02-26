@@ -1,0 +1,28 @@
+{
+  "as_of": "2026-01-26 08:00:00",
+  "strategy": "Multi-Coin Relative Strength",
+  "model_meta": {
+    "trained_until": "2025-11-21",
+    "target": "next_24h_relative_return",
+    "feature_count": 12,
+    "model_type": "LightGBM Ranker"
+  },
+  "market_summary": {
+    "trend": "neutral",
+    "volatility": "medium",
+    "leverage_sentiment": "neutral",
+    "metrics": {
+      "avg_momentum_12": NaN,
+      "avg_bb_width": NaN,
+      "avg_funding_rate": "nan%"
+    }
+  },
+  "recommend_top": [
+    {
+      "symbol": "CASH",
+      "weight": 1.0,
+      "reason": "All scores negative"
+    }
+  ],
+  "coins": []
+}
