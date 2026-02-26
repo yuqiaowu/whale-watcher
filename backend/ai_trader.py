@@ -86,7 +86,8 @@ class TradeMemory:
 
     def get_recent_performance(self):
         """
-        Returns a summary of recent trades to inject into AI prompt.
+        Returns a rich summary of recent trades to inject into AI prompt for self-reflection.
+        Includes full rationale, market context at entry, and outcome.
         """
         if not AGENT_MEMORY_PATH.exists():
             return "No trading history yet."
@@ -96,19 +97,40 @@ class TradeMemory:
                 history = json.load(f)
             if not history: return "No trading history yet."
             
-            # Simple summarization of last 5 trades
+            # Last 5 trades with full context
             recent = history[-5:]
-            summary = "=== 📜 RECENT TRADE MEMORY (LEARN FROM THIS) ===\n"
-            for t in recent:
-                summary += f"- {t['timestamp'][:16]} {t['action']} {t['symbol']} @ {t['entry_price']}\n"
-                summary += f"  Rationale: {t['reason'].get('en', '')[:100]}...\n"
+            summary = "=== 📜 RECENT TRADE MEMORY (SELF-REFLECTION — LEARN FROM THIS) ===\n"
+            summary += "Critically review these past decisions before acting:\n\n"
+            for i, t in enumerate(recent, 1):
+                ts = t['timestamp'][:16]
+                sym = t['symbol']
+                act = t['action']
+                price = t.get('entry_price', '?')
                 
-                if t.get('outcome') == "Closed" or "close" in t['action'].lower():
-                    summary += f"  STATUS: Completed (Position Exited)\n"
-                elif t.get('outcome'):
-                    summary += f"  RESULT: {t['outcome']}\n"
+                # Full rationale (not truncated)
+                rationale_en = t['reason'].get('en', '') if isinstance(t.get('reason'), dict) else str(t.get('reason', ''))
+                rationale_zh = t['reason'].get('zh', '') if isinstance(t.get('reason'), dict) else ''
+                
+                # Market context at time of trade
+                ctx = t.get('context', {})
+                rsi = ctx.get('rsi', '?')
+                adx = ctx.get('adx', '?')
+                whale = ctx.get('whale_flow', '?')
+                
+                # Status / outcome
+                if t.get('outcome') == "Closed" or "close" in act.lower():
+                    status = "✅ CLOSED"
                 else:
-                    summary += f"  STATUS: Open\n"
+                    status = "🟡 OPEN (still holding)"
+                
+                summary += f"[{i}] {ts} | {act} {sym} @ ${price} | {status}\n"
+                summary += f"    Market at entry: RSI={rsi}, ADX={adx}, WhaleFlow={whale}\n"
+                summary += f"    Rationale (EN): {rationale_en[:400]}\n"
+                if rationale_zh:
+                    summary += f"    Rationale (ZH): {rationale_zh[:200]}\n"
+                summary += "\n"
+            
+            summary += "⚠️ REFLECTION MANDATE: Before ANY new action, explicitly state what you learned from the above history and how it affects this decision.\n"
             return summary
         except Exception as e:
             return f"Error reading history: {e}"
