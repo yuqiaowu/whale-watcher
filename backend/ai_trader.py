@@ -474,23 +474,31 @@ def get_whale_data():
         ctx += f"- Token Net Flow: 24h={eth_stat_24h.get('token_net_flow', 0):,.1f} / 7d={eth_stat_7d.get('token_net_flow', 0):,.1f} ETH\n"
         ctx += f"- Stablecoin Net Flow: 24h=${eth_stat_24h.get('stablecoin_net_flow', 0):,.0f} / 7d=${eth_stat_7d.get('stablecoin_net_flow', 0):,.0f}\n"
         ctx += f"- Technicals: {fmt_tech(eth_market)}\n"
-        ctx += f"- Liquidation Pain (24h): Longs Dropped ${eth_liq_long:,.0f} / Shorts Dropped ${eth_liq_short:,.0f}\n"
+        eth_liq_ratio = eth_liq_long / eth_liq_short if eth_liq_short > 0 else 0
+        eth_liq_signal = "⚠️ LONG_FLUSH" if eth_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if eth_liq_short > eth_liq_long * 2 else "BALANCED")
+        ctx += f"- Liquidation Pain (24h): Longs ${eth_liq_long:,.0f} / Shorts ${eth_liq_short:,.0f} | Ratio(L/S)={eth_liq_ratio:.2f} [{eth_liq_signal}]\n"
         
         ctx += "\n=== SOLANA (SOL) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
         ctx += f"- Sentiment Score: 24h={sol_stat_24h.get('sentiment_score', 0):.2f} / 7d={sol_stat_7d.get('sentiment_score', 0):.2f}\n"
         ctx += f"- Token Net Flow: 24h={sol_stat_24h.get('token_net_flow', 0):,.1f} / 7d={sol_stat_7d.get('token_net_flow', 0):,.1f} SOL\n"
         ctx += f"- Stablecoin Net Flow: 24h=${sol_stat_24h.get('stablecoin_net_flow', 0):,.0f} / 7d=${sol_stat_7d.get('stablecoin_net_flow', 0):,.0f}\n"
         ctx += f"- Technicals: {fmt_tech(sol_market)}\n"
-        ctx += f"- Liquidation Pain (24h): Longs Dropped ${sol_liq_long:,.0f} / Shorts Dropped ${sol_liq_short:,.0f}\n"
+        sol_liq_ratio = sol_liq_long / sol_liq_short if sol_liq_short > 0 else 0
+        sol_liq_signal = "⚠️ LONG_FLUSH" if sol_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if sol_liq_short > sol_liq_long * 2 else "BALANCED")
+        ctx += f"- Liquidation Pain (24h): Longs ${sol_liq_long:,.0f} / Shorts ${sol_liq_short:,.0f} | Ratio(L/S)={sol_liq_ratio:.2f} [{sol_liq_signal}]\n"
         
         ctx += "\n=== BITCOIN (BTC) CONTRACT DATA ===\n"
         ctx += f"- Technicals: {fmt_tech(btc_market)}\n"
-        ctx += f"- Liquidation Pain (24h): Longs Dropped ${btc_liq_long:,.0f} / Shorts Dropped ${btc_liq_short:,.0f}\n"
+        btc_liq_ratio = btc_liq_long / btc_liq_short if btc_liq_short > 0 else 0
+        btc_liq_signal = "⚠️ LONG_FLUSH" if btc_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if btc_liq_short > btc_liq_long * 2 else "BALANCED")
+        ctx += f"- Liquidation Pain (24h): Longs ${btc_liq_long:,.0f} / Shorts ${btc_liq_short:,.0f} | Ratio(L/S)={btc_liq_ratio:.2f} [{btc_liq_signal}]\n"
         ctx += f"- Note: Focus on Squeeze potential via Liquidation Pain + Funding Rates.\n"
         
         ctx += "\n=== BNB CHAIN (BNB) CONTRACT DATA ===\n"
         ctx += f"- Technicals: {fmt_tech(bnb_market)}\n"
-        ctx += f"- Liquidation Pain (24h): Longs Dropped ${bnb_liq_long:,.0f} / Shorts Dropped ${bnb_liq_short:,.0f}\n"
+        bnb_liq_ratio = bnb_liq_long / bnb_liq_short if bnb_liq_short > 0 else 0
+        bnb_liq_signal = "⚠️ LONG_FLUSH" if bnb_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if bnb_liq_short > bnb_liq_long * 2 else "BALANCED")
+        ctx += f"- Liquidation Pain (24h): Longs ${bnb_liq_long:,.0f} / Shorts ${bnb_liq_short:,.0f} | Ratio(L/S)={bnb_liq_ratio:.2f} [{bnb_liq_signal}]\n"
         
         ctx += "\n=== DOGECOIN (DOGE) CONTRACT DATA ===\n"
         ctx += f"- Technicals: {fmt_tech(doge_market)}\n"
