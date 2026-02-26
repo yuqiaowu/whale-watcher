@@ -12,6 +12,8 @@ from dotenv import load_dotenv
 
 # Load Environment Variables
 load_dotenv()
+HTTP_TIMEOUT = (5, 10) # Default timeout for all API requests
+
 
 class OKXExecutor:
     """
@@ -80,12 +82,12 @@ class OKXExecutor:
         # Simulation flag in header is custom logic, but standard OKX also has a separate demo trading URL.
         # Here we just use the shadow mode boolean to block requests.
         
-        print(f"📡 Sending {method} {path}...")
+        # print(f"📡 Sending {method} {path}...") # Muted to prevent log spam
         try:
             if method == "GET":
-                response = requests.get(url, headers=headers)
+                response = requests.get(url, headers=headers, timeout=HTTP_TIMEOUT)
             else:
-                response = requests.post(url, headers=headers, data=body)
+                response = requests.post(url, headers=headers, data=body, timeout=HTTP_TIMEOUT)
                 
             return response.json()
         except Exception as e:
@@ -110,7 +112,7 @@ class OKXExecutor:
 
     def get_market_ticker(self, instId):
         """Get full ticker data (Ask/Bid/Last)"""
-        res = requests.get(f"{self.base_url}/api/v5/market/ticker?instId={instId}")
+        res = requests.get(f"{self.base_url}/api/v5/market/ticker?instId={instId}", timeout=(5, 10))
         data = res.json()
         if data["code"] == "0":
             return data["data"][0]
@@ -123,7 +125,7 @@ class OKXExecutor:
         if instId in self.instrument_cache:
             return self.instrument_cache[instId]
 
-        res = requests.get(f"{self.base_url}/api/v5/public/instruments?instType=SWAP&instId={instId}")
+        res = requests.get(f"{self.base_url}/api/v5/public/instruments?instType=SWAP&instId={instId}", timeout=(5, 10))
         data = res.json()
         
         if data["code"] == "0" and data["data"]:

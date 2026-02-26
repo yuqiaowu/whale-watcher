@@ -65,7 +65,7 @@ class OKXDataClient:
         try:
             url = self.base_url + request_path
             # print(f"DEBUG: Requesting {url}")
-            r = requests.request(method, url, headers=headers, timeout=10)
+            r = requests.request(method, url, headers=headers, timeout=(5, 10))
             
             if r.status_code != 200:
                 print(f"Error {r.status_code}: {r.text}")

@@ -11,7 +11,7 @@ from xml.etree import ElementTree
 
 import yfinance as yf
 
-HTTP_TIMEOUT = int(os.getenv("HTTP_TIMEOUT", "30"))
+HTTP_TIMEOUT = (5.0, 10.0)
 
 def _resolve_proxy() -> Optional[str]:
     proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY")

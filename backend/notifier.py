@@ -24,7 +24,7 @@ def send_telegram_message(message):
     }
     
     try:
-        resp = requests.post(url, json=payload, timeout=10)
+        resp = requests.post(url, json=payload, timeout=(5, 10))
         return resp.status_code == 200
     except Exception as e:
         print(f"❌ Telegram send failed: {e}")
@@ -43,7 +43,7 @@ def send_discord_message(message, embed=None):
         payload["embeds"] = [embed]
         
     try:
-        resp = requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=10)
+        resp = requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=(5, 10))
         return resp.status_code in [200, 204]
     except Exception as e:
         print(f"❌ Discord send failed: {e}")

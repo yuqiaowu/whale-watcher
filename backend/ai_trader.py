@@ -540,7 +540,7 @@ def get_daily_context_summary():
             instId = f"{symbol}-USDT-SWAP"
             # Fetch 300 candles for SMA200
             url = f"https://www.okx.com/api/v5/market/candles?instId={instId}&bar=1D&limit=300"
-            res = requests.get(url, timeout=5).json()
+            res = requests.get(url, timeout=(5, 10)).json()
             
             if res["code"] != "0" or not res["data"]:
                 continue

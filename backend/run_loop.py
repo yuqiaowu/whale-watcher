@@ -97,7 +97,7 @@ def init_data_files():
         btc_candles = []
         try:
              url = "https://www.okx.com/api/v5/market/candles?instId=BTC-USDT-SWAP&bar=4H&limit=10"
-             r = requests.get(url, timeout=10)
+             r = requests.get(url, timeout=(5, 10))
              if r.status_code == 200:
                   d = r.json()
                   if d["code"] == "0":
@@ -250,45 +250,54 @@ from okx_executor import OKXExecutor
 # Initialize Executor
 executor = OKXExecutor()
 
-# ...
+# Mute Flask access logs to keep terminal clean
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
+API_CACHE = {}
+CACHE_TTL = 15 # seconds
+
+def get_cached(key, fetch_func):
+    now = time.time()
+    if key in API_CACHE:
+        val, ts = API_CACHE[key]
+        if now - ts < CACHE_TTL:
+            return val
+    val = fetch_func()
+    API_CACHE[key] = (val, now)
+    return val
 
 @app.route('/api/summary', methods=['GET'])
 def get_portfolio_summary():
     try:
-        # Hybrid Approach:
-        # 1. Get Equity from Executor (Source of Truth for Balance)
-        current_equity = executor.get_account_equity()
-        
-        # 2. Get Initial & History from DB
-        state = db.get_data("portfolio_state", {})
-        initial = state.get("initial_equity", state.get("total_equity", 10000.0))
-        start_time = state.get("start_time", datetime.now().strftime("%Y-%m-%dT00:00:00Z"))
-
-        # Calculate PnL
-        pnl = current_equity - initial
-        pnl_pct = (pnl / initial) * 100 if initial > 0 else 0
-
-        # Calculate Win Rate & Total Trades
-        total_trades, win_rate = calculate_stats()
-
-        return jsonify({
-            "nav": current_equity,
-            "initialNav": initial,
-            "totalPnl": pnl,
-            "pnlPercent": float(f"{pnl_pct:.2f}"),
-            "startTime": start_time,
-            "winRate": win_rate, 
-            "totalTrades": total_trades 
-        })
+        def fetch():
+            current_equity = executor.get_account_equity()
+            state = db.get_data("portfolio_state", {})
+            initial = state.get("initial_equity", state.get("total_equity", 10000.0))
+            start_time = state.get("start_time", datetime.now().strftime("%Y-%m-%dT00:00:00Z"))
+            pnl = current_equity - initial
+            pnl_pct = (pnl / initial) * 100 if initial > 0 else 0
+            total_trades, win_rate = calculate_stats()
+            return {
+                "nav": current_equity,
+                "initialNav": initial,
+                "totalPnl": pnl,
+                "pnlPercent": float(f"{pnl_pct:.2f}"),
+                "startTime": start_time,
+                "winRate": win_rate, 
+                "totalTrades": total_trades 
+            }
+        return jsonify(get_cached("summary", fetch))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/positions', methods=['GET'])
 def get_positions():
     try:
-        # Use Executor to force alignment with Trading Mode
-        positions = executor.get_all_positions()
-        return jsonify(positions)
+        def fetch():
+            return executor.get_all_positions()
+        return jsonify(get_cached("positions", fetch))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -351,31 +360,36 @@ def write_status(status, detail=""):
         print(f"⚠️ Failed to write status log: {e}")
 
 def run_script(script_name):
-    """Result: True if success, False if failed"""
+    """Result: True if success, False if failed. Streams output in real-time."""
     print(f"\n🚀 Starting {script_name} at {datetime.now().strftime('%H:%M:%S')}...")
     try:
         # Get absolute path to backend dir
         backend_dir = os.path.dirname(os.path.abspath(__file__))
         script_path = os.path.join(backend_dir, script_name)
         
-        # Run python script
-        result = subprocess.run(
-            [sys.executable, script_path], 
-            capture_output=True, # Capture output for logging
-            text=True
+        # Start subprocess with unbuffered output or pipe
+        process = subprocess.Popen(
+            [sys.executable, "-u", script_path], # -u for unbuffered stdout
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, # Merge stderr into stdout
+            text=True,
+            bufsize=1 # Line buffered
         )
         
-        # Print output to console (streaming effect simulation)
-        print(result.stdout)
-        if result.stderr:
-            print(f"⚠️ STDERR from {script_name}:\n{result.stderr}")
-
-        if result.returncode == 0:
+        # Stream output line by line
+        if process.stdout:
+            for line in process.stdout:
+                print(line, end="") # Print line exactly as received
+                sys.stdout.flush() # Ensure it hits terminal immediately
+        
+        process.wait() # Wait for completion
+        
+        if process.returncode == 0:
             print(f"✅ {script_name} finished successfully.")
             return True
         else:
-            print(f"❌ {script_name} failed with code {result.returncode}.")
-            write_status("ERROR", f"Script {script_name} failed.\n{result.stderr}")
+            print(f"❌ {script_name} failed with code {process.returncode}.")
+            write_status("ERROR", f"Script {script_name} failed.")
             return False
     except Exception as e:
         print(f"❌ Error running {script_name}: {e}")

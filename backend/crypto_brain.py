@@ -158,7 +158,7 @@ def fetch_large_transfers():
             }
 
             try:
-                response = requests.get(etherscan_url, params=params, timeout=30)
+                response = requests.get(etherscan_url, params=params, timeout=(5, 30))
                 data = response.json()
                 
                 if data["status"] == "1" and isinstance(data["result"], list):
@@ -264,7 +264,7 @@ def get_solana_price(address):
         # Use Moralis Token API for price
         url = f"https://solana-gateway.moralis.io/token/mainnet/{address}/price"
         headers = {"X-API-Key": get_current_key()}
-        response = requests.get(url, headers=headers, timeout=30)
+        response = requests.get(url, headers=headers, timeout=(5, 10))
         data = response.json()
         return data.get("usdPrice", 0)
     except Exception as e:
@@ -302,7 +302,7 @@ def fetch_solana_swaps():
                 for attempt in range(max_retries):
                     # Update header with potentially new key
                     headers["X-API-Key"] = get_current_key()
-                    response = requests.get(url, headers=headers, params=params, timeout=30)
+                    response = requests.get(url, headers=headers, params=params, timeout=(5, 10))
                     
                     if response.status_code in [401, 429]:
                          print(f"SOL API Quota hit. Rotating...")
@@ -396,7 +396,7 @@ def fetch_defillama_global_flows():
     """Fetch global stablecoin market cap change (24h) from DefiLlama."""
     try:
         url = "https://stablecoins.llama.fi/stablecoins?includePrices=true"
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=(5, 10))
         data = response.json()
         
         total_change = 0
@@ -429,7 +429,7 @@ def fetch_fear_greed_index():
     """Fetch Bitcoin Fear & Greed Index from alternative.me (Today + Yesterday for change)."""
     try:
         url = "https://api.alternative.me/fng/?limit=2"
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=(5, 10))
         data = response.json()
         
         if "data" in data and len(data["data"]) > 0:
@@ -1008,7 +1008,7 @@ def _call_ai_with_fallback(prompt, system_prompt="You are a professional crypto 
                 "stream": False,
                 "response_format": {"type": "json_object"}
             }
-            res = requests.post(url, headers=headers, json=payload, timeout=90)
+            res = requests.post(url, headers=headers, json=payload, timeout=(10, 60))
             if res.status_code == 200:
                 text = res.json()["choices"][0]["message"]["content"].strip()
                 import re
@@ -1024,7 +1024,7 @@ def _call_ai_with_fallback(prompt, system_prompt="You are a professional crypto 
     if gemini_key:
         try:
             print(f"🔄 DeepSeek failing... Falling back to Gemini Pro...")
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={gemini_key}"
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key={gemini_key}"
             headers = {"Content-Type": "application/json"}
             payload = {
                 "contents": [{
@@ -1034,7 +1034,7 @@ def _call_ai_with_fallback(prompt, system_prompt="You are a professional crypto 
                     "response_mime_type": "application/json"
                 }
             }
-            res = requests.post(url, headers=headers, json=payload, timeout=90)
+            res = requests.post(url, headers=headers, json=payload, timeout=(10, 60))
             if res.status_code == 200:
                 text = res.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
                 import re
@@ -1494,7 +1494,7 @@ def main():
                                f"**ETH**: Signal `{eth_stats['action_signal']}` | Conf `{eth_stats['confidence_score']}` | Flow `{fmt(eth_stats['stablecoin_net_flow'])}`\n"
                                f"**SOL**: Signal `{sol_stats['action_signal']}` | Conf `{sol_stats['confidence_score']}` | Flow `{fmt(sol_stats['stablecoin_net_flow'])}`"
                 }
-                requests.post(discord_url, json=msg)
+                requests.post(discord_url, json=msg, timeout=(5, 10))
             except Exception as e:
                 print(f"Discord fail: {e}")
     else:

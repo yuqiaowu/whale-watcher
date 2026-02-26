@@ -1,28 +1,69 @@
 {
-  "as_of": "2026-01-26 08:00:00",
-  "strategy": "Multi-Coin Relative Strength",
+  "as_of": "2026-02-26 18:33:12",
+  "strategy": "Live Multi-Coin Ranking (Qlib Bridge)",
   "model_meta": {
-    "trained_until": "2025-11-21",
-    "target": "next_24h_relative_return",
-    "feature_count": 12,
-    "model_type": "LightGBM Ranker"
+    "type": "LGBM-Ranker",
+    "source": "Live OKX + Static Normalization"
   },
   "market_summary": {
-    "trend": "neutral",
-    "volatility": "medium",
-    "leverage_sentiment": "neutral",
-    "metrics": {
-      "avg_momentum_12": NaN,
-      "avg_bb_width": NaN,
-      "avg_funding_rate": "nan%"
-    }
+    "trend": "mixed",
+    "volatility": "evaluating"
   },
-  "recommend_top": [
+  "coins": [
     {
-      "symbol": "CASH",
-      "weight": 1.0,
-      "reason": "All scores negative"
+      "symbol": "ETH",
+      "qlib_score": 0.2593,
+      "rank": 1,
+      "market_data": {
+        "price": 2071.3,
+        "rsi": 70.04,
+        "vol_z": 0,
+        "funding": "0.0100%"
+      }
+    },
+    {
+      "symbol": "SOL",
+      "qlib_score": 0.2012,
+      "rank": 2,
+      "market_data": {
+        "price": 87.61,
+        "rsi": 65.34,
+        "vol_z": 0,
+        "funding": "0.0034%"
+      }
+    },
+    {
+      "symbol": "BNB",
+      "qlib_score": 0.1488,
+      "rank": 3,
+      "market_data": {
+        "price": 626.9,
+        "rsi": 61.72,
+        "vol_z": 0,
+        "funding": "0.0100%"
+      }
+    },
+    {
+      "symbol": "BTC",
+      "qlib_score": 0.1481,
+      "rank": 4,
+      "market_data": {
+        "price": 68370.8,
+        "rsi": 60.25,
+        "vol_z": 0,
+        "funding": "0.0092%"
+      }
+    },
+    {
+      "symbol": "DOGE",
+      "qlib_score": 0.1261,
+      "rank": 5,
+      "market_data": {
+        "price": 0.09928,
+        "rsi": 57.03,
+        "vol_z": 0,
+        "funding": "0.0100%"
+      }
     }
-  ],
-  "coins": []
+  ]
 }
