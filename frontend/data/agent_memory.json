@@ -318,5 +318,45 @@
       "bb_trend": "UP"
     },
     "outcome": null
+  },
+  {
+    "id": "ETH_1772064452",
+    "timestamp": "2026-02-26T08:07:32.351004",
+    "symbol": "ETH",
+    "action": "close_short",
+    "entry_price": 2051.1,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u5173\u95edETH\u7a7a\u5934\u4ed3\u4f4d\uff1a\u4ef7\u683c\u5df2\u4ece\u5165\u573a\u70b9$2020.62\u4e0b\u8dcc\u81f3$2054.65\uff0c\u4f46\u9cb8\u9c7c\u6570\u636e\u663e\u793a\u6301\u7eed\u6d41\u51fa\uff0c\u77ed\u671f\u53cd\u5f39\u53ef\u80fd\u7ed3\u675f\u3002\u9501\u5b9a\u5229\u6da6\u5e76\u964d\u4f4e\u98ce\u9669\uff0c\u907f\u514d\u5728\u8d1f\u8d44\u91d1\u8d39\u7387\u4e0b\u88ab\u8f67\u7a7a\u3002",
+      "en": "Close ETH short position: Price has dropped from entry $2020.62 to $2054.65, but whale data shows continued outflow, suggesting short-term bounce may end. Lock profits and reduce risk, avoiding squeeze amid negative funding."
+    },
+    "context": {
+      "rsi": 67.72714673941788,
+      "adx": 33.147993560645084,
+      "whale_flow": 0,
+      "bb_width": 0.16741775798378122,
+      "bb_trend": "UP"
+    },
+    "outcome": "Closed"
+  },
+  {
+    "id": "BTC_1772064454",
+    "timestamp": "2026-02-26T08:07:34.133566",
+    "symbol": "BTC",
+    "action": "open_long",
+    "entry_price": 67826.6,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u5f00\u7acbBTC\u591a\u5934\u4ed3\u4f4d\uff1a\u8d44\u91d1\u8d39\u7387\u4e3a\u8d1f\uff08-0.0091%\uff09\uff0c\u7a7a\u5934\u7206\u4ed3\u5de8\u5927\uff08$1.18B\uff09\uff0c\u5b58\u5728\u8f67\u7a7a\u673a\u4f1a\u3002\u9cb8\u9c7c\u6570\u636e\u672a\u663e\u793a\u660e\u663e\u6d41\u51fa\uff0c\u4e14\u718a\u5e02\u4e2d\u4ec5\u5141\u8bb8\u5728\u6781\u7aef\u4fe1\u53f7\u4e0b\u505a\u591a\uff08\u6700\u5927\u6760\u67462x\uff09\u3002",
+      "en": "Open BTC long position: Negative funding (-0.0091%) and high short liquidations ($1.18B) indicate squeeze opportunity. Whale data shows no significant outflow, and bear regime allows longs only on extreme signals (max 2x leverage)."
+    },
+    "context": {
+      "rsi": 58.38551699802714,
+      "adx": 29.972498167187958,
+      "whale_flow": 0,
+      "bb_width": 0.10453362384160818,
+      "bb_trend": "UP"
+    },
+    "outcome": null
   }
 ]
