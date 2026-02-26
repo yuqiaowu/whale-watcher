@@ -317,25 +317,55 @@ export function AICopyTrading() {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
-                                <div className="text-[10px] text-[#8E9297] font-bold uppercase tracking-wider">Technical Signal</div>
+                                <div className="text-[10px] text-[#3B82F6] font-bold uppercase tracking-wider flex items-center gap-1">
+                                  <div className="w-1 h-3 bg-[#3B82F6] rounded-full"></div>
+                                  Technical Signal
+                                </div>
                                 <div className="text-xs text-[#d1d5db] leading-relaxed">
                                   {decision.context_analysis.technical_signal?.[language as 'zh' | 'en'] || decision.context_analysis.technical_signal?.['en'] || "N/A"}
                                 </div>
                               </div>
                               <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
-                                <div className="text-[10px] text-[#8E9297] font-bold uppercase tracking-wider">Macro & On-Chain</div>
+                                <div className="text-[10px] text-[#8B5CF6] font-bold uppercase tracking-wider flex items-center gap-1">
+                                  <div className="w-1 h-3 bg-[#8B5CF6] rounded-full"></div>
+                                  Macro & On-Chain
+                                </div>
                                 <div className="text-xs text-[#d1d5db] leading-relaxed">
                                   {decision.context_analysis.macro_onchain?.[language as 'zh' | 'en'] || decision.context_analysis.macro_onchain?.['en'] || "N/A"}
                                 </div>
                               </div>
                               <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
-                                <div className="text-[10px] text-[#8E9297] font-bold uppercase tracking-wider">Portfolio Status</div>
+                                <div className="text-[10px] text-[#06B6D4] font-bold uppercase tracking-wider flex items-center gap-1">
+                                  <div className="w-1 h-3 bg-[#06B6D4] rounded-full"></div>
+                                  Quantitative (Qlib/Z-Vol)
+                                </div>
+                                <div className="text-xs text-[#d1d5db] leading-relaxed">
+                                  {decision.context_analysis.quantitative_analysis?.[language as 'zh' | 'en'] || decision.context_analysis.quantitative_analysis?.['en'] || "Evaluating quant markers..."}
+                                </div>
+                              </div>
+                              <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
+                                <div className="text-[10px] text-[#F97316] font-bold uppercase tracking-wider flex items-center gap-1">
+                                  <div className="w-1 h-3 bg-[#F97316] rounded-full"></div>
+                                  Regime Safety (Knife/Rocket)
+                                </div>
+                                <div className="text-xs text-[#d1d5db] leading-relaxed">
+                                  {decision.context_analysis.regime_safety?.[language as 'zh' | 'en'] || decision.context_analysis.regime_safety?.['en'] || "Analyzing trend exhaustion..."}
+                                </div>
+                              </div>
+                              <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
+                                <div className="text-[10px] text-[#39FF14] font-bold uppercase tracking-wider flex items-center gap-1">
+                                  <div className="w-1 h-3 bg-[#39FF14] rounded-full"></div>
+                                  Portfolio Status
+                                </div>
                                 <div className="text-xs text-[#d1d5db] leading-relaxed">
                                   {decision.context_analysis.portfolio_status?.[language as 'zh' | 'en'] || decision.context_analysis.portfolio_status?.['en'] || "N/A"}
                                 </div>
                               </div>
                               <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
-                                <div className="text-[10px] text-[#8E9297] font-bold uppercase tracking-wider">Reflection</div>
+                                <div className="text-[10px] text-[#FCD34D] font-bold uppercase tracking-wider flex items-center gap-1">
+                                  <div className="w-1 h-3 bg-[#FCD34D] rounded-full"></div>
+                                  Reflection
+                                </div>
                                 <div className="text-xs text-[#d1d5db] leading-relaxed italic">
                                   "{decision.context_analysis.reflection?.[language as 'zh' | 'en'] || decision.context_analysis.reflection?.['en'] || "No reflection"}"
                                 </div>

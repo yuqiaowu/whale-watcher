@@ -243,6 +243,14 @@ Structure:
   "context_analysis": {
     "technical_signal": { "zh": "技术面概括 (RSI, ADX...)", "en": "Brief technical summary." },
     "macro_onchain": { "zh": "鲸鱼数据与资金费率分析", "en": "Whale flow & funding analysis." },
+    "quantitative_analysis": { 
+        "zh": "分析 Qlib 排名靠前的币种及 Z-Score 的异常显著性（如成交量或资金费率的统计偏差）。", 
+        "en": "Analyze Qlib top-ranked coins and Z-Score significance (statistical deviations in vol/funding)." 
+    },
+    "regime_safety": { 
+        "zh": "评估当前是否为‘接飞刀’（左侧抄底风险）或‘挡火箭’（垂直上涨中强行逆势），判断均值回归的安全性及当前趋势是否处于衰竭期。", 
+        "en": "Assess 'Falling Knife' or 'Rocket Blocking' risks. Evaluate mean reversion safety and trend exhaustion." 
+    },
     "portfolio_status": { "zh": "当前持仓风险评估", "en": "Portfolio risk check." },
     "reflection": { "zh": "AI的一句话反思", "en": "Short reflection." }
   },

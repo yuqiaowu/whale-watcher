@@ -58,6 +58,8 @@ export interface AgentDecision {
     context_analysis?: {
         technical_signal: { zh: string; en: string };
         macro_onchain: { zh: string; en: string };
+        quantitative_analysis?: { zh: string; en: string };
+        regime_safety?: { zh: string; en: string };
         portfolio_status: { zh: string; en: string };
         reflection: { zh: string; en: string };
     };
