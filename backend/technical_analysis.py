@@ -27,6 +27,7 @@ def add_all_indicators(df: pd.DataFrame) -> dict:
     Returns a dictionary with the latest indicator values.
     """
     # Ensure numerical types
+    df['open'] = df['open'].astype(float)
     df['close'] = df['close'].astype(float)
     df['high'] = df['high'].astype(float)
     df['low'] = df['low'].astype(float)

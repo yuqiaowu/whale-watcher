@@ -237,8 +237,8 @@ Constraints:
 Structure:
 {
   "analysis_summary": {
-    "zh": "必须是中文，综合叙述（3-4句话）。1. 首先进行【叙事校验】（Section 4A），判断当前驱动力是Impulse还是已定价。2. 结合【痛苦交易】（4B）和【战场纪律】（4D），指出市场是否处于“爆仓踩踏”中，是否有足够的“燃料”支撑继续上涨/下跌。3. 阐明选择的【假设分析】剧本（4C）。",
-    "en": "English translation of the above Chinese summary."
+    "zh": "必须是中文，综合叙述（3-4句话）。分析要求：\n1. 首先进行【叙事校验】（Section 4A），判断当前驱动力是Impulse还是已定价。\n2. 明确参考【Qlib 相对强弱排名】和【Z-Score 异常探测】，解释它们如何支持/反驳当前决策。\n3. 结合【痛苦交易】（4B）和【战场纪律】（4D），指出市场是否处于“爆仓踩踏”中，是否有足够的“燃料”支撑继续上涨/下跌。\n4. 阐明选择的【假设分析】剧本（4C）。",
+    "en": "Must be in English, comprehensive narrative (3-4 sentences). Requirements:\n1. Perform Narrative vs Reality Check (4A).\n2. Explicitly reference Qlib ratings and Z-Score anomalies, explaining how they support/refute the decision.\n3. Combine Pain Trade (4B) and Tactical Discipline (4D) to identify liquidation rushes and fuel.\n4. Specify the selected Scenario (4C)."
   },
   "context_analysis": {
     "technical_signal": { "zh": "技术面概括 (RSI, ADX...)", "en": "Brief technical summary." },
@@ -721,37 +721,39 @@ def run_agent():
     # TODO: Set shadow_mode=False via env var for REAL TRADING later
     executor = OKXExecutor()
     
-    # 1. Load Qlib Payload (Optional now, if missing we proceed with partial data)
-    qlib_payload = "{}"
+    # 1. Load Qlib Payload (Live Check)
+    qlib_payload_obj = {}
+    qlib_stale_warning = ""
     if PAYLOAD_PATH.exists():
-        with open(PAYLOAD_PATH, "r") as f:
-            qlib_payload = f.read()
+        try:
+            with open(PAYLOAD_PATH, "r") as f:
+                qlib_payload_obj = json.load(f)
+            
+            # Check for staleness (e.g., more than 24h old)
+            as_of_str = qlib_payload_obj.get("as_of", "2000-01-01")
+            as_of_dt = datetime.strptime(as_of_str, "%Y-%m-%d %H:%M:%S")
+            if (datetime.now() - as_of_dt).total_seconds() > 86400:
+                qlib_stale_warning = f"⚠️ WARNING: Qlib scores are STALE (As of {as_of_str}). Use with caution."
+        except Exception as e:
+            qlib_payload_obj = {"error": str(e)}
 
-    # Load Fear & Greed Index for Validation
-    fear_index = 50 # Default Neutral
-    try:
-        snapshot_path = BASE_DIR / "global_onchain_news_snapshot.json"
-        if snapshot_path.exists():
-            with open(snapshot_path, "r") as f:
-                snap_data = json.load(f)
-                fng_val = snap_data.get("fear_greed", {}).get("latest", {}).get("value")
-                if fng_val is not None:
-                    fear_index = float(fng_val)
-    except Exception as e:
-        print(f"⚠️ Failed to load Fear Index: {e}")
-        
+    qlib_payload_str = json.dumps(qlib_payload_obj, indent=2)
+
     # 2. Prepare Prompt
     portfolio_state = get_portfolio_state(executor)
     news_context = get_news_context()
     
     # NEW: Get Whale Data
     whale_context, whale_data_obj = get_whale_data()
-    print(f"🐋 Whale Data Loaded:\n{whale_context[:200]}...") # Debug print
     
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     final_prompt = SYSTEM_PROMPT.replace("{{CURRENT_TIMESTAMP}}", current_time)
-    final_prompt = final_prompt.replace("{{QLIB_JSON_PAYLOAD}}", qlib_payload)
+    
+    # Precise Qlib Injection with Warning
+    qlib_block = f"[[ QLIB ANALYSIS PAYLOAD ]]\n{qlib_payload_str}\n{qlib_stale_warning}"
+    final_prompt = final_prompt.replace("{{QLIB_JSON_PAYLOAD}}", qlib_block)
+    
     final_prompt = final_prompt.replace("{{WHALE_CONTEXT}}", whale_context)
     
     # Add Daily Context + MEMORY INJECTION
