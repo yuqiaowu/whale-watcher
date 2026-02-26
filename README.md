@@ -27,15 +27,15 @@
 
 ---
 
-This system includes a Python backend scheduling engine and a React/Next.js Web3 frontend dashboard with excellent multi-dimensional data visualization.
+**This system includes a Python backend scheduling engine and a React/Next.js Web3 frontend dashboard with excellent multi-dimensional data visualizatio  n.**
 ![whale.sparkvalues.com](image.png)
-Profit curve and trading rationale decided by AI models
+**Profit curve and trading rationale decided by AI models**
 ![alt text](image-2.png)
 ![alt text](image-5.png)
 ![alt text](image-4.png)
-4H interval Telegram alerts and trade notifications
+**4H interval Telegram alerts and trade notifications**
 ![alt text](image-1.png)
-4H interval Discord alerts and trade notifications
+**4H interval Discord alerts and trade notifications**
 ![alt text](image-6.png)
 
 ---

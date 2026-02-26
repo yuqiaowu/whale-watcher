@@ -27,21 +27,21 @@
 
 ---
 
-###本系统包含一个 Python 后台调度引擎与一个多维数据可视化的 React/Next.js Web3 前端仪表盘。
+**本系统包含一个 Python 后台调度引擎与一个多维数据可视化的 React/Next.js Web3 前端仪表盘。**
 ![whale.sparkvalues.com](image.png)
-###由AI模型决策的开单收益曲线与交易理由
+**由AI模型决策的开单收益曲线与交易理由**
 ![alt text](image-2.png)
 ![alt text](image-5.png)
 ![alt text](image-4.png)
-###4小时维度的telegram群发与开单通知
+**4小时维度的telegram群发与开单通知**
 ![alt text](image-1.png)
-###4小时维度的discord群发与开单通知
+**4小时维度的discord群发与开单通知**
 ![alt text](image-6.png)
 
 
 ---
 
-# 📅 更新日志 (Update History)
+# 📅 近期更新日志 (Update History)
 
 | 日期 | 核心更新内容 |
 | :--- | :--- |

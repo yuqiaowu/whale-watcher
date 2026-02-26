@@ -27,15 +27,15 @@
 
 ---
 
-本システムは、Python バックエンド・スケジューリングエンジンと、優れた多次元データ視覚化を備えた React/Next.js Web3 フロントエンドダッシュボードで構成されています。
+**本システムは、Python バックエンド・スケジューリングエンジンと、優れた多次元データ視覚化を備えた React/Next.js Web3 フロントエンドダッシュボードで構成されています。**
 ![whale.sparkvalues.com](image.png)
-AI モデルによる取引根拠と収益曲線
+**AI モデルによる取引根拠と収益曲線**
 ![alt text](image-2.png)
 ![alt text](image-5.png)
 ![alt text](image-4.png)
-4時間周期の Telegram 通知
+**4時間周期の Telegram 通知**
 ![alt text](image-1.png)
-4時間周期の Discord 通知
+**4時間周期の Discord 通知**
 ![alt text](image-6.png)
 
 ---
