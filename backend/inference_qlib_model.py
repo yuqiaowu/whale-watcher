@@ -388,7 +388,7 @@ def fetch_live_context_and_predict():
                 "rel_volume_20": metrics.get("vol_ratio_20", 1),
                 "price_position_20": metrics.get("price_rank_20", 50) / 100.0,
                 "funding_rate": metrics.get("funding_rate", 0),
-                "funding_rate_zscore": whale_zscore_map.get(sym, 0),  # Z-Score from whale_analysis
+                "funding_rate_zscore": metrics.get("funding_zscore", whale_zscore_map.get(sym, 0)),  # Z-Score: live OKX history first, whale_analysis fallback
                 "oi_change": metrics.get("delta_oi_24h_percent", 0) / 100.0,
                 "oi_rsi": metrics.get("oi_rsi", 50),
                 "btc_corr_24h": metrics.get("btc_corr_24h", 1),

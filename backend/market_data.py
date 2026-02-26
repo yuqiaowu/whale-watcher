@@ -214,15 +214,32 @@ class OKXDataClient:
                 print(f"DEBUG: DF Shape: {df_input.shape if 'df_input' in locals() else 'No DF'}")
                 traceback.print_exc()
 
-        # 3. Funding Rate
+        # 3. Funding Rate (Current + Z-Score from 30-period history)
         data = self._request("GET", "/api/v5/public/funding-rate", {"instId": inst_id})
         if data:
             val = float(data[0]["fundingRate"])
             metrics["funding_rate"] = val
             # Determine status
-            if val > 0.0003: metrics["funding_rate_status"] = "EXTREME_BULLISH_CROWDED" # > 0.03% (High)
+            if val > 0.0003: metrics["funding_rate_status"] = "EXTREME_BULLISH_CROWDED"
             elif val < -0.0003: metrics["funding_rate_status"] = "EXTREME_BEARISH_CROWDED"
             else: metrics["funding_rate_status"] = "NORMAL"
+        
+        # Funding Rate Z-Score (requires historical rates)
+        try:
+            hist_data = self._request("GET", "/api/v5/public/funding-rate-history",
+                                      {"instId": inst_id, "limit": "30"})
+            if hist_data and len(hist_data) >= 5:
+                hist_rates = [float(x["fundingRate"]) for x in hist_data]
+                mean_fr = np.mean(hist_rates)
+                std_fr = np.std(hist_rates)
+                if std_fr > 1e-9:
+                    metrics["funding_zscore"] = round((metrics["funding_rate"] - mean_fr) / std_fr, 2)
+                else:
+                    metrics["funding_zscore"] = 0.0
+            else:
+                metrics["funding_zscore"] = 0.0
+        except Exception as e:
+            metrics["funding_zscore"] = 0.0
 
         # 4. Open Interest (Current)
         # 5. Open Interest History (30 Days) -> Calculate Delta & Avg
