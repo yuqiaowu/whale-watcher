@@ -193,7 +193,7 @@ export function ProfitCurve({ hideStats = false }: ProfitCurveProps) {
     const isIdentical = Math.abs(strategyRoi - btcRoi) < 0.01;
     const showBenchmark = !hideStats && !isIdentical;
 
-    const { t, language } = useLanguage();
+    const { t } = useLanguage();
 
     return (
         <div className="h-full w-full min-h-[300px] relative p-0 flex flex-col">

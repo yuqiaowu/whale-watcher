@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { useLanguage } from "@/app/i18n/LanguageContext";
 import { useEffect, useState } from "react";
-import { fetchMarketStats, type MarketStats } from "@/lib/api";
+import { fetchMarketStats } from "@/lib/api";
 
 interface NewsItem {
   title: string;
@@ -13,7 +13,6 @@ interface NewsItem {
 export function NewsFeed() {
   const { t, language } = useLanguage();
   const [news, setNews] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadNews() {
@@ -33,7 +32,6 @@ export function NewsFeed() {
             url: "#" // AI analysis might not strictly link back yet, or we need to find original URL. For now placeholder or match title.
           }));
           setNews(aiItems);
-          setLoading(false);
           return;
         }
 
@@ -69,8 +67,6 @@ export function NewsFeed() {
       } catch (e) {
         console.error("News fetch failed", e);
         fallbackToStatic();
-      } finally {
-        setLoading(false);
       }
     }
 

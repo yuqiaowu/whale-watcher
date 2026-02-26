@@ -244,11 +244,11 @@ function AppContent() {
             >
               <div className="flex items-center justify-center gap-2 text-[#8E9297] text-sm font-mono">
                 <div className="w-2 h-2 bg-[#39FF14] rounded-full animate-pulse shadow-[0_0_8px_rgba(57,255,20,0.6)]" />
-                <span>CRYPTO_DATA</span>
+                <span>{t.title}</span>
                 <span>|</span>
                 <span>{t.footer.platform}</span>
                 <span>|</span>
-                <span>© 2025</span>
+                <span>© 2024</span>
               </div>
             </motion.footer>
           )}
