@@ -1,8 +1,8 @@
 export const translations = {
   zh: {
     // Header
-    title: '加密货币检测',
-    subtitle: 'CRYPTOCURRENCY DETECTION',
+    title: 'AI 鲸鱼监控与量化交易V2.0',
+    subtitle: 'WHALE MONITOR & QUANTITATIVE TRADING V2.0',
     language: '语言',
 
     // Navigation
@@ -365,14 +365,14 @@ export const translations = {
     footer: {
       platform: '实时监测平台',
       disclaimer: '免责声明：本网站提供的信息仅供参考，不构成投资议。加密货币投有风险，请谨慎决策。',
-      rights: '© 2024 加密货币检测. 保留所有权利.'
+      rights: '© 2024 AI 鲸鱼监控与量化交易V2.0. 保留所有权利.'
     }
   },
 
   en: {
     // Header
-    title: 'Crypto Monitor',
-    subtitle: 'CRYPTOCURRENCY DETECTION',
+    title: 'AI Whale & Quantitative Trading V2.0',
+    subtitle: 'WHALE MONITOR & QUANTITATIVE TRADING V2.0',
     language: 'Language',
 
     // Navigation
@@ -735,7 +735,7 @@ export const translations = {
     footer: {
       platform: 'Real-Time Monitoring Platform',
       disclaimer: 'Disclaimer: The information provided on this website is for reference only and does not constitute investment advice. Cryptocurrency investment is risky, please make decisions carefully.',
-      rights: '© 2024 Cryptocurrency Detection. All rights reserved.'
+      rights: '© 2024 AI Whale & Quantitative Trading V2.0. All rights reserved.'
     }
   }
 };

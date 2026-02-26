@@ -153,7 +153,11 @@ npm run dev
 
 # ☕️ Buy Me a Coffee
 
-If this project has helped you, feel free to buy the author a coffee to support continuous updates and maintenance.
+Thanks for the Star ⭐ and Follow! Updates come frequently.
+Author's contact info is on the homepage. Feel free to reach out with any questions.
+Check out my other projects! PRs and Issues are welcome.
+Thanks for the support! If this project helps you, feel free to buy the author a milk tea~~ (Makes my day! 😊😊)
+thank you~~~
 
 | Alipay | Solana (SOL/USDC) |
 | :---: | :---: |

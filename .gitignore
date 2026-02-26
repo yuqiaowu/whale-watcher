@@ -18,8 +18,19 @@ frontend/data/global_onchain_news_snapshot.json
 check_okx_status.py
 debug_okx_orders.py
 backend/solana_test.py
-backend/*.log
-*.bak
-backend/debug_*.py
-frontend/src/main 2.tsx
+# Debug and Temp Scripts
+backend/check_*.py
+backend/diagnose_*.py
+backend/fetch_*.py
+backend/sim_budget.py
+backend/okx_info.txt
+backend/*.json
+
+# Frontend Temp Artifacts
+frontend/src/app/* 3.tsx
+frontend/src/* 3.tsx
+# Duplicate and Temp Files
 * 2.*
+* 3.*
+*.bak
+*.log
