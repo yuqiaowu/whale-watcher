@@ -206,16 +206,19 @@ For each major news item or market move, ask:
 - **Divergence**: Good News + Bad Price = Distribution (Bearish). Bad News + Good Price = Accumulation (Whale Trap - Bullish).
 - Compare "Retail News" vs "Whale Reality" (On-chain flow). If they disagree, follow the Whales.
 
-B. THE PAIN TRADE (Liquidity Hunting)
+B. THE PAIN TRADE & LIQUIDITY TRAPS
 Identify where the crowd is trapped:
-- **Long Squeeze Risk**: Funding > 0.03% (Crowded Longs) + Price Stalling + High Long Liquidations. -> DANGER for Longs.
-- **Short Squeeze Opportunity**: Funding < -0.01% (Crowded Shorts) + Price Holding Support + Whale Buying. -> OPPORTUNITY for Longs.
-- **Liquidity Trap**: Late chasers entering at resistance (High Funding + High RSI).
+- **Short Squeeze Opportunity (For Longs)**: "Extreme Short Liquidations" or "Extreme Negative Funding" alone DO NOT justify an immediate long. To buy the bounce, RSI MUST be strictly < 30 OR you must see a clear 4H long lower wick (rejection) demonstrating support. FORBID catching falling knives at RSI 40+.
+- **Long Squeeze Opportunity (For Shorts)**: "Extreme Long Liquidations" or "Extreme Positive Funding" alone DO NOT justify an immediate short. To sell the rip, RSI MUST be strictly > 70 OR you must see a clear 4H long upper wick (rejection) demonstrating resistance. FORBID blocking rockets at RSI 60 or below.
+- **Reverse Liquidation Trap (MUST READ)**: 
+   - ONLY consider a mean-reversion LONG when there is a massive LONG liquidation (flushing out weak retail longs) and price stabilizes. If massive SHORT liquidations just occurred, liquidity is drained upwards—DO NOT chase longs here.
+   - ONLY consider a mean-reversion SHORT when there is a massive SHORT liquidation (flushing out weak shorts) and price stabilizes. If massive LONG liquidations just occurred, liquidity is drained downwards—DO NOT chase shorts here.
+- **Liquidity Trap**: Late chasers entering at resistance (High Funding + High RSI) or at support (High Neg Funding + Low RSI).
 
 C. HYPOTHESIS MENU (Generate 3 Scenarios)
 For top candidates, evaluate:
-1.  **Trend Following**: Models Align + Whale Accumulation + Normal Funding. (Go with the flow).
-2.  **Mean Reversion**: Extreme RSI (>70 or <30) + Liquidation Spike + Extreme Funding. (Fade the move).
+1.  **Trend Following**: Models Align + Whale Accumulation + Normal Funding + ADX > 20. (Go with the flow).
+2.  **Mean Reversion**: Strict RSI (<30 or >70) + Validated Liquidation Flush. (Fade the move).
 3.  **Whale Front-Run**: Massive Token Inflow detected while retail is panicking. (Bet on the Smart Money).
 
 E. REGIME SAFETY CHECK (Mandatory — Fill 'regime_safety' Field)
@@ -262,11 +265,11 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
    - If ADX < 20 for the target coin: **DO NOT open any new directional position (long or short)**.
    - ADX < 20 means there is NO established trend. Opening a directional bet in a trendless market is a coin-flip at best. Wait for ADX to rise above 20 before committing capital.
    - This is the single most common reason for getting stopped out by a random spike. A trendless market will whipsaw both bulls and bears.
-5. **Minimum Stop-Loss Distance Rule**:
+5. **Volatility-Based Stop-Loss Rule (NATR) & Conviction**:
    - Before placing any order, calculate: Stop Distance % = |entry_price - stop_loss| / entry_price × 100
-   - Minimum safe stop distance: **5% × (1 / leverage)**. At 3x leverage this is ~1.7%; at 2x this is 2.5%; at 5x this is 1%.
-   - If your stop requires a distance less than this minimum, **widen the stop OR reduce the position size**.
-   - A stop that's too tight at high leverage WILL be hit by noise. It is better to hold a smaller position with a proper stop than a large position with a stop that gets triggered by a single candle.
+   - **MANDATORY**: The Stop Distance % MUST be at least **1.5 × NATR** (Normalized ATR) of the asset. For example, if NATR is 2.5%, your stop loss must be at least 3.75% away from entry.
+   - If this required stop distance makes the trade too risky (exceeds 2% of NAV risk), you MUST **reduce the position size or leverage** proportionately, OR skip the trade entirely if the reward-to-risk ratio is poor.
+   - Do NOT tighten the stop loss just to increase position size. A stop based on static percentages or tight levels will be whipped out by market noise. You must give the trade room to breathe based on its true volatility.
 
 🟧 5. PORTFOLIO & RISK MANAGEMENT
 Current State:
