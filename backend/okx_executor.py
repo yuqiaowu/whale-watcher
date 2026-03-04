@@ -334,27 +334,34 @@ class OKXExecutor:
         # 2. Calculate Size in Contracts
         sz = self.calculate_position_size(instId, amount_usd, last_price)
         
-        # Smart Handling for Close Actions: If amount is 0, fetch current full position size
-        if "close" in action and (sz <= 0 or amount_usd <= 0):
+        # Smart Handling for Close & Reduce Actions: Fetch current full position size
+        if "close" in action or "reduce_" in action:
+             percent_to_close = 1.0
+             if "reduce_25" in action: percent_to_close = 0.25
+             elif "reduce_50" in action: percent_to_close = 0.50
+             elif "reduce_75" in action: percent_to_close = 0.75
+
              if self.shadow_mode:
                  state = self._load_shadow_state()
                  for p in state["positions"]:
                      if p["symbol"] == symbol and (target_pos_side == "net" or p["type"] == target_pos_side):
-                          sz = p["size"]
+                          full_sz = float(p["size"])
+                          sz = max(1, int(full_sz * percent_to_close)) if full_sz >= 1 else full_sz * percent_to_close
                           target_pos_side = p["type"]
-                          print(f"🔍 [SHADOW] Auto-detected position size for closing: {sz} contracts")
+                          print(f"🔍 [SHADOW] Auto-detected position size for {action}: {sz} out of {full_sz} contracts")
                           break
              else:
-                  # Real Mode: Fetch actual position from OKX to ensure full closure
+                  # Real Mode: Fetch actual position from OKX to ensure full/partial closure
                  raw_res = self._request("GET", f"/api/v5/account/positions?instId={instId}")
                  if raw_res.get("code") == "0" and raw_res.get("data"):
                       for p in raw_res["data"]:
                            # Match by position side (long/short/net) AND ensure it has a size > 0
                            if p.get("posSide") == target_pos_side or target_pos_side == "net":
                                if float(p.get("pos", 0)) != 0:
-                                   sz = abs(float(p["pos"]))
+                                   full_sz = abs(float(p["pos"]))
+                                   sz = max(1, int(full_sz * percent_to_close)) if full_sz >= 1 else full_sz * percent_to_close
                                    target_pos_side = p.get("posSide")
-                                   print(f"🔍 [REAL] Auto-detected position size for closing: {sz} contracts ({target_pos_side})")
+                                   print(f"🔍 [REAL] Auto-detected position size for {action}: {sz} out of {full_sz} contracts ({target_pos_side})")
                                    break
 
         if sz <= 0:
@@ -364,7 +371,7 @@ class OKXExecutor:
         print(f"🤖 Execution Request: {action} {symbol} | Last: {last_price} | Val: ${amount_usd} | Size: {sz} contracts")
 
         # 3. Determine Side & Limit Price
-        if "close" in action:
+        if "close" in action or "reduce_" in action:
             side = "sell" if ("long" in action or target_pos_side == "long") else "buy"
         else:
             side = "buy" if ("long" in action or target_pos_side == "long") else "sell"
@@ -409,7 +416,7 @@ class OKXExecutor:
                 state["positions"].append(new_pos)
                 print(f"✅ [SHADOW] Position Opened: {symbol} {action}")
                 
-            elif "close" in action:
+            elif "close" in action or "reduce_" in action:
                 # Find Position
                 pos_idx = -1
                 for i, p in enumerate(state["positions"]):
@@ -418,56 +425,63 @@ class OKXExecutor:
                         break
                 
                 if pos_idx >= 0:
-                    pos = state["positions"].pop(pos_idx)
-                    # PnL Calc
-                    # Long: (Exit - Entry) * Size * ContractVal
-                    # Short: (Entry - Exit) * Size * ContractVal
-                    # Need ContractVal... 
+                    pos = state["positions"][pos_idx]
+                    # PnL Calc based on reduced size
                     info = self.get_instrument_info(instId)
-                    ctVal = info["ctVal"] if info else 0.01 # Fallback
+                    ctVal = float(info["ctVal"]) if info else 0.01 # Fallback
+                    
+                    entry_price = float(pos["entry_price"])
+                    leverage_val = float(pos["leverage"])
+                    pos_size = float(pos["size"])
+                    sz_to_close = float(sz)
                     
                     if pos["type"] == "long":
-                        pnl = (limit_px - pos["entry_price"]) * pos["size"] * ctVal
+                        pnl = (limit_px - entry_price) * sz_to_close * ctVal
                     else:
-                        pnl = (pos["entry_price"] - limit_px) * pos["size"] * ctVal
+                        pnl = (entry_price - limit_px) * sz_to_close * ctVal
                         
                     # Return Margin + PnL to Cash
-                    return_amount = pos["margin"] + pnl
+                    margin_reduced = float(pos["margin"]) * (sz_to_close / pos_size) if pos_size > 0 else 0
+                    return_amount = margin_reduced + pnl
                     state["cash"] += return_amount
                     state["total_equity"] += pnl
-                    print(f"✅ [SHADOW] Position Closed: {symbol}. PnL: ${pnl:.2f}")
+                    print(f"✅ [SHADOW] Position {'Reduced' if 'reduce' in action else 'Closed'}: {symbol} sz={sz_to_close}. PnL: ${pnl:.2f}")
 
                     # --- LOG TRADE HISTORY (Shadow Mode) ---
-                    # Now we must record this closed trade to trade_history so frontend can see it
                     try:
                         from db_client import db
                         history = db.get_data("trade_history", [])
 
+                        pnl_pct = (((limit_px - entry_price)/entry_price) if pos['type']=='long' else ((entry_price - limit_px)/entry_price)) * 100 * leverage_val
+                        
                         trade_record = {
                             "id": f"{symbol}_{int(time.time())}",
                             "symbol": symbol,
                             "type": pos["type"],
-                            "entryPrice": pos["entry_price"],
+                            "entryPrice": entry_price,
                             "exitPrice": limit_px,
-                            "amount": pos["size"], # contracts
-                            "leverage": pos["leverage"],
+                            "amount": sz_to_close,
+                            "leverage": leverage_val,
                             "pnl": float(f"{pnl:.2f}"),
-                            "pnlPercent": float(f"{((limit_px - pos['entry_price'])/pos['entry_price'] * 100 * pos['leverage'] if pos['type']=='long' else (pos['entry_price'] - limit_px)/pos['entry_price'] * 100 * pos['leverage']):.2f}"),
-                            "entryTime": pos.get("timestamp", datetime.datetime.now().isoformat()), # Fallback
+                            "pnlPercent": float(f"{pnl_pct:.2f}"),
+                            "entryTime": pos.get("timestamp", datetime.datetime.now().isoformat()),
                             "exitTime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                            "reason": "AI Decision (Shadow)" 
+                            "reason": f"AI Decision (Shadow) - {action}" 
                         }
                         
                         history.append(trade_record)
-                        
                         db.save_data("trade_history", history)
                         print(f"📝 [SHADOW] Appended trade to history: {trade_record['id']}")
-
                     except Exception as e:
                         print(f"⚠️ Failed to log shadow trade history: {e}")
 
+                    if "reduce_" in action:
+                        pos["size"] = pos_size - sz_to_close
+                        pos["margin"] = float(pos["margin"]) - margin_reduced
+                    else:
+                        state["positions"].pop(pos_idx)
                 else:
-                    print(f"⚠️ [SHADOW] No position found to close for {symbol}")
+                    print(f"⚠️ [SHADOW] No position found to close/reduce for {symbol}")
 
             self._save_shadow_state(state)
             return "SHADOW_ORDER_ID"

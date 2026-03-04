@@ -288,7 +288,10 @@ Before opening new positions:
 3. For each existing position, decide ONE action:
 - `hold`: If still valid and no adjustment needed.
 - `adjust_sl`: Update `stop_loss` and/or `take_profit` parameters in `exit_plan` to trail profits or maximize gains.
-- `close_position`: If invalidated or hitting a critical resistance target.
+- `reduce_25`: Close 25% of the position to lock in profit.
+- `reduce_50`: Close 50% of the position to lock in profit.
+- `reduce_75`: Close 75% of the position to lock in profit.
+- `close_position`: Close 100% of the position if invalidated or hitting a critical resistance target.
 
 Market Regime: {{MARKET_REGIME}}
 Dynamic Exposure Limits (STRICT):
@@ -331,7 +334,7 @@ Structure:
   "actions": [
     {
       "symbol": "SOL",
-      "action": "open_long", // OPTIONS: open_long, open_short, close_position, adjust_sl, hold
+      "action": "open_long", // OPTIONS: open_long, open_short, close_position, adjust_sl, hold, reduce_25, reduce_50, reduce_75
       "leverage": 3,
       "position_size_usd": 1000,
       "entry_reason": {
@@ -991,7 +994,7 @@ def run_agent():
             tp = exit_plan.get("take_profit")
             
             # Filter for actual executable trade actions
-            is_trade = any(keyword in action_type for keyword in ["open_", "close", "adjust_sl"])
+            is_trade = any(keyword in action_type for keyword in ["open_", "close", "adjust_sl", "reduce_"])
             
             if is_trade and action_type != "REJECTED":
                 print(f"\n🚀 Triggering Executor for {symbol} ({action_type})...")
