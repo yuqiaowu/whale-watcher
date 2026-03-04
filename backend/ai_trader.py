@@ -272,7 +272,8 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
    - Before going SHORT: Funding Rate should ideally be flat or positive (Retail is greedy/longing). If Funding is very negative (<-0.01%), the short is crowded and prone to a squeeze.
 3. **Left Signal, Right Entry (Wait for Confirmation)**:
    - Whale Divergence is a "Left-side" warning signal. Do not jump in just because whales are buying.
-   - Wait for a "Right-side" confirmation: e.g., price breaking a recent 4H high (for longs) or low (for shorts), or RSI starting to turn back from extreme levels.
+   - Wait for a "Right-side" confirmation. You MUST manually check the provided `Last_Closed_4H_Close` against the `Prev_5_4H_High` (for longs) or `Prev_5_4H_Low` (for shorts).
+   - If `Last_Closed_4H_Close` HAS NOT broken the trend (e.g. is still <= `Prev_5_4H_High`), you MUST issue a "WAIT" action and document your rationale. Do not anticipate a breakout before the 4H candle closes!
 4. **Volatility-Based Stop-Loss Rule (NATR) & Conviction**:
    - Before placing any order, calculate: Stop Distance % = |entry_price - stop_loss| / entry_price × 100
    - **MANDATORY**: The Stop Distance % MUST be at least **1.5 × NATR** (Normalized ATR) of the asset. For example, if NATR is 2.5%, your stop loss must be at least 3.75% away from entry.
