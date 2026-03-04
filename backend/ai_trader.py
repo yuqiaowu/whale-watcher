@@ -261,10 +261,10 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 3. **Left Signal, Right Entry (Wait for Confirmation)**:
    - Whale Divergence is a "Left-side" warning signal. Do not jump in just because whales are buying.
    - Wait for a "Right-side" confirmation: e.g., price breaking a recent 4H high (for longs) or low (for shorts), or RSI starting to turn back from extreme levels.
-4. **ADX No-Trade Zone (HARD RULE — NEVER VIOLATE)**:
-   - If ADX < 20 for the target coin: **DO NOT open any new directional position (long or short)**.
-   - ADX < 20 means there is NO established trend. Opening a directional bet in a trendless market is a coin-flip at best. Wait for ADX to rise above 20 before committing capital.
-   - This is the single most common reason for getting stopped out by a random spike. A trendless market will whipsaw both bulls and bears.
+4. **ADX Choppy Zone (Proceed with Caution)**:
+   - If ADX < 20 for the target coin, the market is in a ranging or choppy regime without a strong trend.
+   - You **ARE ALLOWED** to open directional bets here, but you MUST rely heavily on your dynamic Stop-Loss and Take-Profit adjustments to survive the noise.
+   - Consider reducing your position size slightly, as a trendless market will whipsaw both bulls and bears.
 5. **Volatility-Based Stop-Loss Rule (NATR) & Conviction**:
    - Before placing any order, calculate: Stop Distance % = |entry_price - stop_loss| / entry_price × 100
    - **MANDATORY**: The Stop Distance % MUST be at least **1.5 × NATR** (Normalized ATR) of the asset. For example, if NATR is 2.5%, your stop loss must be at least 3.75% away from entry.
@@ -810,12 +810,8 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
                  # EXCEPTION: If the AI expressly stated it wants to wait for a breakout, we don't reject it here.
                  # We let the breakout logic handle it (which will likely put it in WAIT mode).
                  if adx_val != 0 and adx_val < 20 and not is_breakout_trade:
-                     reason = f"🛡️ ADX Rule Violated: {symbol} ADX is {adx_val:.1f} < 20. Market is trendless. REJECTED."
-                     print(f"{reason} Skipping {symbol}.")
-                     action["action"] = "REJECTED"
-                     action["reason"] = reason
-                     validated_actions.append(action)
-                     continue
+                     print(f"⚠️ ADX Warning: {symbol} ADX is {adx_val:.1f} < 20. Market is trendless. Relying on Dynamic SL/TP.")
+                     # We no longer reject the trade here. Let the AI and Dynamic SL handle the chop.
 
             # G. Verify Right-Side Breakout / Confirmation if AI wait intended
             if is_breakout_trade:
