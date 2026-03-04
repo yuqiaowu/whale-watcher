@@ -54,10 +54,18 @@ def notify_trade_execution(symbol, action, size, entry_price, sl=None, tp=None, 
     Constructs a rich trade alert and sends it to all configured channels.
     """
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    side_icon = "🟢" if "long" in action.lower() or "buy" in action.lower() else "🔴"
+    
+    if action.lower() == "adjust_sl":
+        side_icon = "🛡️"
+        action_text = "RISK ADJUSTED"
+        color_code = 3447003 # Blue
+    else:
+        side_icon = "🟢" if "long" in action.lower() or "buy" in action.lower() else "🔴"
+        action_text = "TRADE EXECUTED"
+        color_code = 5763719 if "long" in action.lower() else 15548997
     
     # --- Format Message ---
-    title = f"{side_icon} TRADE EXECUTED: {action.upper()} {symbol}"
+    title = f"{side_icon} {action_text}: {action.upper()} {symbol}"
     
     body = f"""
 **Symbol:** `{symbol}`
@@ -97,7 +105,7 @@ _{reason}_
     discord_embed = {
         "title": title,
         "description": body.replace("*", "").replace("_", ""), # Clean markdown slightly for Discord description
-        "color": 5763719 if "long" in action else 15548997, # Green or Red
+        "color": color_code,
         "footer": {"text": "Dolores AI Agent"}
     }
     send_discord_message("", embed=discord_embed)
