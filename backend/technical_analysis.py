@@ -225,8 +225,11 @@ def add_all_indicators(df: pd.DataFrame) -> dict:
         
         # Recent Closed History
         "last_closed_close": float(df.iloc[-2]['close']) if len(df) >= 2 else get_strict('close'),
+        "last_closed_high": float(df.iloc[-2]['high']) if len(df) >= 2 else get_strict('high'),
+        "last_closed_low": float(df.iloc[-2]['low']) if len(df) >= 2 else get_strict('low'),
         "prev_5_high": float(df.iloc[-7:-2]['high'].max()) if len(df) >= 7 else get_strict('high'),
         "prev_5_low": float(df.iloc[-7:-2]['low'].min()) if len(df) >= 7 else get_strict('low'),
+        "prev_5_closes": [float(x) for x in df.iloc[-7:-2]['close'].tolist()] if len(df) >= 7 else [],
         
         # Star Signals
         "signal_low_high_vol": bool(latest['price_percentile_20'] < 0.10 and latest['vol_ratio_20'] > 2.0),
