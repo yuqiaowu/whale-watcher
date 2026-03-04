@@ -254,6 +254,83 @@ class OKXExecutor:
         ask_price = float(ticker['askPx'])
         bid_price = float(ticker['bidPx'])
 
+        # --- NEW: Handle Adjust SL/TP ---
+        if action == "adjust_sl":
+            print(f"🔄 Executing Trailing Stop/Adjust SL for {symbol}...")
+            if self.shadow_mode:
+                state = self._load_shadow_state()
+                updated = False
+                for p in state["positions"]:
+                    if p["symbol"] == symbol:
+                        if stop_loss: p["stop_loss"] = stop_loss
+                        if take_profit: p["take_profit"] = take_profit
+                        updated = True
+                if updated:
+                    self._save_shadow_state(state)
+                    print(f"✅ [SHADOW] Successfully adjusted SL to {stop_loss} for {symbol}")
+                else:
+                    print(f"⚠️ [SHADOW] Adjust SL failed: No open position found for {symbol}")
+                return "SHADOW_ADJUSTED"
+            else:
+                # REAL MODE
+                info = self.get_instrument_info(instId)
+                tick_sz = info["tickSz"] if info else 0.01
+                
+                # 1. Fetch pending Algo orders
+                res_algo = self._request("GET", f"/api/v5/trade/orders-algo-pending?instId={instId}&ordType=conditional,oco")
+                if res_algo["code"] == "0":
+                    algo_ids = [{"algoId": r["algoId"], "instId": instId} for r in res_algo["data"]]
+                    # 2. Cancel existing
+                    if algo_ids:
+                        self._request("POST", "/api/v5/trade/cancel-algos", algo_ids)
+                        print(f"🗑️ Canceled {len(algo_ids)} old Algo orders for {instId}")
+                
+                # 3. Create New Algo
+                if not stop_loss and not take_profit:
+                    return None
+                    
+                # We need to know the position side for the new algo order
+                pos_res = self._request("GET", f"/api/v5/account/positions?instId={instId}")
+                if pos_res.get("code") == "0" and pos_res.get("data"):
+                    success_id = None
+                    for pos in pos_res["data"]:
+                        pos_side = pos.get("posSide", "net")
+                        if pos_side == "net":
+                            sz_val = float(pos.get("pos", 0))
+                            side = "sell" if sz_val > 0 else "buy"
+                        else:
+                            side = "sell" if pos_side == "long" else "buy"
+                            
+                        sz = abs(float(pos.get("pos", 0)))
+                        
+                        if sz > 0:
+                            algo_payload = {
+                                "instId": instId, "tdMode": "isolated", "side": side,
+                                "ordType": "conditional" if not (stop_loss and take_profit) else "oco",
+                                "sz": str(sz), "posSide": pos_side
+                            }
+                            
+                            if stop_loss:
+                                sl_val = self.round_step_size(float(stop_loss), tick_sz)
+                                algo_payload["slTriggerPx"] = str(sl_val)
+                                algo_payload["slTriggerPxType"] = "last"
+                                algo_payload["slOrdPx"] = "-1"
+                                
+                            if take_profit:
+                                tp_val = self.round_step_size(float(take_profit), tick_sz)
+                                algo_payload["tpTriggerPx"] = str(tp_val)
+                                algo_payload["tpTriggerPxType"] = "last"
+                                algo_payload["tpOrdPx"] = "-1"
+                            
+                            res = self._request("POST", "/api/v5/trade/order-algo", algo_payload)
+                            if res["code"] == "0":
+                                success_id = res["data"][0]["algoId"]
+                                print(f"✅ [REAL] Successfully placed new SL {stop_loss} / TP {take_profit} for {symbol} ({pos_side})")
+                            else:
+                                print(f"❌ [REAL] Failed to place new SL/TP: {res['msg']}")
+                    return success_id
+                return None
+
         # 2. Calculate Size in Contracts
         sz = self.calculate_position_size(instId, amount_usd, last_price)
         

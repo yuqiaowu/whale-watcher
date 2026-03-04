@@ -275,6 +275,15 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 Current State:
 {{PORTFOLIO_STATE_JSON}}
 
+**IMPORTANT: Review Existing Positions First!**
+Before opening new positions:
+1. Look at your floating profit/loss ("pnlPercent") for each holding.
+2. If floating profit is > 5%, you MUST output an `adjust_sl` action to move the stop loss up above entry price to lock in profits. You may also adjust `take_profit` to adapt to changing momentum. DO NOT LET A WINNING TRADE TURN INTO A LOSS.
+3. For each existing position, decide ONE action:
+- `hold`: If still valid and no adjustment needed.
+- `adjust_sl`: Update `stop_loss` and/or `take_profit` parameters in `exit_plan` to trail profits or maximize gains.
+- `close_position`: If invalidated or hitting a critical resistance target.
+
 Market Regime: {{MARKET_REGIME}}
 Dynamic Exposure Limits (STRICT):
 - Max Total LONG Exposure: ${{MAX_LONG_LIMIT_USD}} ({{MAX_LONG_PCT}}% of Equity)
@@ -316,7 +325,7 @@ Structure:
   "actions": [
     {
       "symbol": "SOL",
-      "action": "open_long",
+      "action": "open_long", // OPTIONS: open_long, open_short, close_position, adjust_sl, hold
       "leverage": 3,
       "position_size_usd": 1000,
       "entry_reason": {
@@ -652,7 +661,7 @@ def get_daily_context_summary():
             
     return summary
 
-def validate_and_enforce_decision(decision, market_summary, daily_context, fear_index, executor):
+def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_index, executor):
     """
     Risk Management Layer (The "Supervisor").
     Sanitizes and overrides AI decisions based on hard rules.
@@ -730,6 +739,11 @@ def validate_and_enforce_decision(decision, market_summary, daily_context, fear_
             validated_actions.append(action)
             continue
             
+        # TRACKING: Adjust SL
+        if act_type == "adjust_sl":
+            validated_actions.append(action)
+            continue
+            
         # CHECK: Open Actions
         if act_type.startswith("open_"):
             # A. Position Count Limit
@@ -776,6 +790,66 @@ def validate_and_enforce_decision(decision, market_summary, daily_context, fear_
                 print(f"🛡️ RISK: Capping leverage for {symbol} from {raw_lev}x to {MAX_LEVERAGE}x")
                 action["leverage"] = MAX_LEVERAGE
             
+            # E. Parse AI Intent (Is this a breakout / right-side wait trade?)
+            intent = action.get("entry_reason", {})
+            if isinstance(intent, dict):
+                reason_str = (str(intent.get("zh", "")) + " " + str(intent.get("en", ""))).lower()
+            else:
+                reason_str = str(intent).lower()
+            is_breakout_trade = any(w in reason_str for w in ["突破", "右侧", "right-side", "breakout", "break above", "等待", "wait"])
+            
+            # F. Verify ADX Hard Rule
+            # Fetch ADX safely from whale_data_obj
+            market_data = None
+            if isinstance(whale_data_obj, dict):
+                 market_data = whale_data_obj.get(symbol.lower(), {}).get("market", {})
+                 
+            if market_data:
+                 adx_val = market_data.get("adx_14", 100) # Default to 100 to pass if data is missing
+                 # Sometimes okx market can have adx_14=0 if insufficient history
+                 # EXCEPTION: If the AI expressly stated it wants to wait for a breakout, we don't reject it here.
+                 # We let the breakout logic handle it (which will likely put it in WAIT mode).
+                 if adx_val != 0 and adx_val < 20 and not is_breakout_trade:
+                     reason = f"🛡️ ADX Rule Violated: {symbol} ADX is {adx_val:.1f} < 20. Market is trendless. REJECTED."
+                     print(f"{reason} Skipping {symbol}.")
+                     action["action"] = "REJECTED"
+                     action["reason"] = reason
+                     validated_actions.append(action)
+                     continue
+
+            # G. Verify Right-Side Breakout / Confirmation if AI wait intended
+            if is_breakout_trade:
+                import requests
+                instId = f"{symbol}-USDT-SWAP"
+                try:
+                    url = f"https://www.okx.com/api/v5/market/candles?instId={instId}&bar=4H&limit=10"
+                    res = requests.get(url, timeout=5).json()
+                    if res["code"] == "0" and len(res["data"]) >= 5:
+                        candles = res["data"]
+                        # candles[0] is current unclosed 4H candle, candles[1] is last completed 4H candle
+                        last_closed = candles[1]
+                        last_closed_close = float(last_closed[4])
+                        
+                        # Highs/Lows of the 5 candles prior to the last closed candle
+                        # Note: OKX data is newest first. So candles[2] to candles[6] are the 5 previous candles.
+                        prev_high = max(float(c[2]) for c in candles[2:7])
+                        prev_low = min(float(c[3]) for c in candles[2:7])
+                        
+                        if "long" in act_type and last_closed_close <= prev_high:
+                            action["action"] = "WAIT"
+                            action["reason"] = f"🛡️ Waiting for right-side breakout: Last 4H close {last_closed_close:.2f} <= Prev High {prev_high:.2f}. System on WAIT."
+                            print(f"{action['reason']} Skipping {symbol}.")
+                            validated_actions.append(action)
+                            continue
+                        elif "short" in act_type and last_closed_close >= prev_low:
+                            action["action"] = "WAIT"
+                            action["reason"] = f"🛡️ Waiting for right-side breakdown: Last 4H close {last_closed_close:.2f} >= Prev Low {prev_low:.2f}. System on WAIT."
+                            print(f"{action['reason']} Skipping {symbol}.")
+                            validated_actions.append(action)
+                            continue
+                except Exception as e:
+                    print(f"⚠️ Failed to verify 4H breakout for {symbol}: {e}")
+
             # D. Mandatory Stop Loss
             exit_plan = action.get("exit_plan", {})
             sl = exit_plan.get("stop_loss")
@@ -932,7 +1006,7 @@ def run_agent():
                     raise e # Final attempt failed
         
         # Validate & Enforce
-        decision = validate_and_enforce_decision(decision, {}, daily_context, fear_index, executor)
+        decision = validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_index, executor)
             
         print("\n💡 Dolores' Decision:")
         print(json.dumps(decision, indent=2, ensure_ascii=False))
@@ -954,7 +1028,7 @@ def run_agent():
             tp = exit_plan.get("take_profit")
             
             # Filter for actual executable trade actions
-            is_trade = any(keyword in action_type for keyword in ["open_", "close"])
+            is_trade = any(keyword in action_type for keyword in ["open_", "close", "adjust_sl"])
             
             if is_trade and action_type != "REJECTED":
                 print(f"\n🚀 Triggering Executor for {symbol} ({action_type})...")
