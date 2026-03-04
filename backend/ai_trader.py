@@ -187,7 +187,7 @@ This data comes from direct on-chain monitoring and exchange liquidation feeds.
 1. **Accumulation Signal**: If Prices are dropping, but Token Net Flow is POSITIVE (Whales buying) + High Long Liquidations (Retail capitulating) -> **BULLISH DIVERGENCE (Buy the dip)**.
 2. **Distribution Signal**: If Prices are rising, but Token Net Flow is NEGATIVE (Whales selling) + High Short Liquidations -> **BEARISH DIVERGENCE (Sell the rip)**.
 3. **Squeeze Warning**: Negative Funding + High "Retail Pain" (Oversold RSI) -> **SHORT SQUEEZE IMMINENT**.
-4. **BLIND SPOT EXCEPTION (BTC, BNB, DOGE)**: We DO NOT have on-chain whale flow data for BTC, BNB, and DOGE. For these assets, you MUST evaluate setups based purely on Technical Indicators (Right-side Breakouts) + Liquidation/Funding Flow. Do not wait for or expect Whale confirmations for these three coins.
+4. **BLIND SPOT EXCEPTION (BTC, BNB, DOGE)**: We DO NOT have on-chain whale flow data for BTC, BNB, and DOGE. For these assets, you MUST evaluate setups based purely on Technical Indicators + Liquidation/Funding Flow. Do not wait for or expect Whale confirmations for these three coins.
 
 🟦 2.1 MACRO TREND (1D TIMEFRAME)
 Use this daily context to filter 4H signals.
@@ -247,7 +247,7 @@ Signals of a falling knife (DO NOT go long blindly):
 - Lower Wick Ratio < 0.1 (no rejection wicks — no buyers stepping in)
 → Verdict: "KNIFE" — Wait for RSI divergence OR a 4H candle close with long lower wick AND whale accumulation signal before considering long.
 
-🚀 ROCKET BLOCKING (挡火箭 — Right-side Reversal Risk):
+🚀 ROCKET BLOCKING (挡火箭 — Reversal Risk):
 Signals of chasing into a vertical move (DO NOT go short blindly):
 - RSI > 70 AND still rising (momentum intact)
 - ADX > 30 (strong uptrend — shorting against momentum)
