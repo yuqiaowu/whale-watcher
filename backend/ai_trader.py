@@ -271,7 +271,12 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 2. **Funding Trap Check**:
    - Before going LONG: Funding Rate should ideally be flat or negative (Retail is fearful/shorting). If Funding is high (>0.03%), the long is crowded and dangerous.
    - Before going SHORT: Funding Rate should ideally be flat or positive (Retail is greedy/longing). If Funding is very negative (<-0.01%), the short is crowded and prone to a squeeze.
-3. **Volatility-Based Stop-Loss Rule (NATR) & Conviction**:
+3. **Left Signal, Right Entry (Wait for Confirmation)**:
+   - Whale Divergence is a "Left-side" warning signal. Do not jump in just because whales are buying.
+   - Wait for a "Right-side" confirmation. You MUST manually check the provided `Last_Closed_4H_Close` against the `Prev_5_4H_High` (for longs) or `Prev_5_4H_Low` (for shorts).
+   - For LONGS: If `Last_Closed_4H_Close` <= `Prev_5_4H_High`, the breakout has NOT happened yet. You MUST issue a "WAIT" action.
+   - For SHORTS: If `Last_Closed_4H_Close` >= `Prev_5_4H_Low`, the breakdown has NOT happened yet. You MUST issue a "WAIT" action.
+4. **Volatility-Based Stop-Loss Rule (NATR) & Conviction**:
    - Before placing any order, calculate: Stop Distance % = |entry_price - stop_loss| / entry_price × 100
    - **MANDATORY**: The Stop Distance % MUST be at least **1.5 × NATR** (Normalized ATR) of the asset. For example, if NATR is 2.5%, your stop loss must be at least 3.75% away from entry.
    - If this required stop distance makes the trade too risky (exceeds 2% of NAV risk), you MUST **reduce the position size or leverage** proportionately, OR skip the trade entirely if the reward-to-risk ratio is poor.
@@ -796,6 +801,47 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
             if raw_lev > MAX_LEVERAGE:
                 print(f"🛡️ RISK: Capping leverage for {symbol} from {raw_lev}x to {MAX_LEVERAGE}x")
                 action["leverage"] = MAX_LEVERAGE
+            
+            # E. Parse AI Intent (Is this a breakout / right-side wait trade?)
+            intent = action.get("entry_reason", {})
+            if isinstance(intent, dict):
+                reason_str = (str(intent.get("zh", "")) + " " + str(intent.get("en", ""))).lower()
+            else:
+                reason_str = str(intent).lower()
+            is_breakout_trade = any(w in reason_str for w in ["突破", "右侧", "right-side", "breakout", "break above", "等待", "wait"])
+            # F. Verify Right-Side Breakout / Confirmation if AI wait intended
+            if is_breakout_trade:
+                import requests
+                instId = f"{symbol}-USDT-SWAP"
+                try:
+                    url = f"https://www.okx.com/api/v5/market/candles?instId={instId}&bar=4H&limit=10"
+                    res = requests.get(url, timeout=5).json()
+                    if res["code"] == "0" and len(res["data"]) >= 5:
+                        candles = res["data"]
+                        # candles[0] is current unclosed 4H candle, candles[1] is last completed 4H candle
+                        last_closed = candles[1]
+                        last_closed_close = float(last_closed[4])
+                        
+                        # Highs/Lows of the 5 candles prior to the last closed candle
+                        # Note: OKX data is newest first. So candles[2] to candles[6] are the 5 previous candles.
+                        prev_high = max(float(c[2]) for c in candles[2:7])
+                        prev_low = min(float(c[3]) for c in candles[2:7])
+                        
+                        if "long" in act_type and last_closed_close <= prev_high:
+                            action["action"] = "WAIT"
+                            action["reason"] = f"🛡️ Waiting for right-side breakout: Last 4H close {last_closed_close:.2f} <= Prev High {prev_high:.2f}. System on WAIT."
+                            print(f"{action['reason']} Skipping {symbol}.")
+                            validated_actions.append(action)
+                            continue
+                        elif "short" in act_type and last_closed_close >= prev_low:
+                            action["action"] = "WAIT"
+                            action["reason"] = f"🛡️ Waiting for right-side breakdown: Last 4H close {last_closed_close:.2f} >= Prev Low {prev_low:.2f}. System on WAIT."
+                            print(f"{action['reason']} Skipping {symbol}.")
+                            validated_actions.append(action)
+                            continue
+                except Exception as e:
+                    print(f"⚠️ Failed to verify 4H breakout for {symbol}: {e}")
+
             # D. Mandatory Stop Loss
             exit_plan = action.get("exit_plan", {})
             sl = exit_plan.get("stop_loss")
