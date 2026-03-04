@@ -229,7 +229,7 @@ Identify where the crowd is trapped:
 
 C. HYPOTHESIS MENU (Generate 3 Scenarios)
 For top candidates, evaluate:
-1.  **Trend Following**: Models Align + Whale Accumulation + Normal Funding + ADX > 20. (Go with the flow).
+1.  **Trend Following**: Models Align + Whale Accumulation + Normal Funding. (Go with the flow).
 2.  **Mean Reversion**: Strict RSI (<30 or >70) + Validated Liquidation Flush. (Fade the move).
 3.  **Whale Front-Run**: Massive Token Inflow detected while retail is panicking. (Bet on the Smart Money).
 
@@ -273,11 +273,7 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 3. **Left Signal, Right Entry (Wait for Confirmation)**:
    - Whale Divergence is a "Left-side" warning signal. Do not jump in just because whales are buying.
    - Wait for a "Right-side" confirmation: e.g., price breaking a recent 4H high (for longs) or low (for shorts), or RSI starting to turn back from extreme levels.
-4. **ADX Choppy Zone (Proceed with Caution)**:
-   - If ADX < 20 for the target coin, the market is in a ranging or choppy regime without a strong trend.
-   - You **ARE ALLOWED** to open directional bets here, but you MUST rely heavily on your dynamic Stop-Loss and Take-Profit adjustments to survive the noise.
-   - Consider reducing your position size slightly, as a trendless market will whipsaw both bulls and bears.
-5. **Volatility-Based Stop-Loss Rule (NATR) & Conviction**:
+4. **Volatility-Based Stop-Loss Rule (NATR) & Conviction**:
    - Before placing any order, calculate: Stop Distance % = |entry_price - stop_loss| / entry_price × 100
    - **MANDATORY**: The Stop Distance % MUST be at least **1.5 × NATR** (Normalized ATR) of the asset. For example, if NATR is 2.5%, your stop loss must be at least 3.75% away from entry.
    - If this required stop distance makes the trade too risky (exceeds 2% of NAV risk), you MUST **reduce the position size or leverage** proportionately, OR skip the trade entirely if the reward-to-risk ratio is poor.
@@ -809,23 +805,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
             else:
                 reason_str = str(intent).lower()
             is_breakout_trade = any(w in reason_str for w in ["突破", "右侧", "right-side", "breakout", "break above", "等待", "wait"])
-            
-            # F. Verify ADX Hard Rule
-            # Fetch ADX safely from whale_data_obj
-            market_data = None
-            if isinstance(whale_data_obj, dict):
-                 market_data = whale_data_obj.get(symbol.lower(), {}).get("market", {})
-                 
-            if market_data:
-                 adx_val = market_data.get("adx_14", 100) # Default to 100 to pass if data is missing
-                 # Sometimes okx market can have adx_14=0 if insufficient history
-                 # EXCEPTION: If the AI expressly stated it wants to wait for a breakout, we don't reject it here.
-                 # We let the breakout logic handle it (which will likely put it in WAIT mode).
-                 if adx_val != 0 and adx_val < 20 and not is_breakout_trade:
-                     print(f"⚠️ ADX Warning: {symbol} ADX is {adx_val:.1f} < 20. Market is trendless. Relying on Dynamic SL/TP.")
-                     # We no longer reject the trade here. Let the AI and Dynamic SL handle the chop.
-
-            # G. Verify Right-Side Breakout / Confirmation if AI wait intended
+            # F. Verify Right-Side Breakout / Confirmation if AI wait intended
             if is_breakout_trade:
                 import requests
                 instId = f"{symbol}-USDT-SWAP"

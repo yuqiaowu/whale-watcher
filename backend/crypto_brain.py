@@ -941,7 +941,7 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
     2. **Layer 2 (Narrative)**: What is the media saying? Are headlines bullish or bearish?
     3. **Layer 3 (Reality Check)**: Do Whales & Money Flow agree with the Narrative?
        - **Technical Confirmation**:
-         - **Trend (ADX)**: If ADX > 25, the trend is STRONG (Don't fade it). If ADX < 20, market is CHOPPING (Mean Reversion).
+         - **Trend (ADX)**: If ADX > 25, the trend is STRONG (Don't fade it).
          - **Momentum (MACD)**: Check for Divergences. Price Lower Low + MACD Higher Low = Bullish Divergence.
          - **Volatility (BB/ATR)**: If Bollinger Width is compressing (Low), expect a BREAKOUT. Use ATR % to gauge stop-loss width.
          - **Volume Anomaly (CRITICAL)**:
