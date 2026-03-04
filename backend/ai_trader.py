@@ -8,6 +8,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import pandas as pd
 from datetime import datetime
+import google.generativeai as genai
 from openai import OpenAI
 import time
 from okx_executor import OKXExecutor
@@ -18,6 +19,9 @@ load_dotenv()
 
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 BASE_URL = "https://api.deepseek.com"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
 
 # Initialize Client
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url=BASE_URL)
@@ -995,11 +999,28 @@ def run_agent():
             except Exception as e:
                 wait_time = RETRY_DELAY * (2 ** attempt) # Exponential backoff
                 print(f"⚠️ Attempt {attempt+1} failed: {e}")
+                if attempt == MAX_RETRIES - 1 or "401" in str(e):
+                    print("🔄 DeepSeek failing... Falling back to Gemini Pro...")
+                    try:
+                        # Fallback to Gemini 2.5
+                        model = genai.GenerativeModel('gemini-2.5-pro')
+                        prompt_with_instructions = final_prompt + "\n\nUser request: Analyze the market reality (Whales vs Retail). Detect traps. Generate trading actions.\nIMPORTANT: Output MUST be a valid JSON object matching the requested schema. DO NOT wrap the output in markdown code blocks."
+                        
+                        gemini_res = model.generate_content(
+                            prompt_with_instructions,
+                            generation_config={"response_mime_type": "application/json"}
+                        )
+                        content = gemini_res.text
+                        decision = json.loads(content)
+                        break
+                    except Exception as gemini_err:
+                        print(f"❌ Gemini fallback also failed: {gemini_err}")
+                        if attempt == MAX_RETRIES - 1:
+                            raise gemini_err
+                
                 if attempt < MAX_RETRIES - 1:
                     print(f"🔄 Retrying in {wait_time}s...")
                     time.sleep(wait_time)
-                else:
-                    raise e # Final attempt failed
         
         # Validate & Enforce
         decision = validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_index, executor)
