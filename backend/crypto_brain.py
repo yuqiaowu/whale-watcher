@@ -700,12 +700,7 @@ def analyze_transfers_v1(transfers, market_metrics, target_symbol="UNKNOWN"):
         amount_usd = tx["amount_usd"]
         signal = tx["signal"]
         
-        # Isolation: Filter out non-target altcoins that aren't stablecoins.
-        # e.g. If target_symbol="ETH", skip SHIB, PEPE.
-        # e.g. If target_symbol="SOL", skip BONK, WIF.
-        if symbol not in STABLECOINS and symbol != target_symbol:
-            continue
-        
+        # Isolation logic removed: We want to capture flow for ALL tokens tracked on the chain (e.g. WETH, SHIB, LINK on Ethereum).
         # 1. Base Score
         score = 0
         if signal == "BULLISH_INFLOW": score = 2
