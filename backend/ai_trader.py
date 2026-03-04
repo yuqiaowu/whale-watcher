@@ -284,7 +284,7 @@ Current State:
 **IMPORTANT: Review Existing Positions First!**
 Before opening new positions:
 1. Look at your floating profit/loss ("pnlPercent") for each holding.
-2. If floating profit is > 5%, you MUST output an `adjust_sl_tp` action to move the stop loss up above entry price to lock in profits. You may also adjust `take_profit` to adapt to changing momentum. DO NOT LET A WINNING TRADE TURN INTO A LOSS.
+2. DYNAMIC PROFIT TAKING: If the position is in profit and encounters technical resistance/support, or if momentum indicator (e.g. RSI, ADX) starts turning, you MUST lock in gains. Do not wait for a fixed percentage. Use `reduce_50` to secure profits, or `adjust_sl_tp` to move the stop loss past the entry price. DO NOT LET A WINNING TRADE TURN INTO A LOSS.
 3. For each existing position, decide ONE action:
 - `hold`: If still valid and no adjustment needed.
 - `adjust_sl_tp`: Update `stop_loss` and/or `take_profit` parameters in `exit_plan` to trail profits or adapt to new resistance/support.
