@@ -584,16 +584,19 @@ def merge_and_filter_txs(new_txs, old_txs):
     """
     Merge new and old transactions, remove duplicates, and keep only those from the last 7 days.
     """
-    # 1. Deduplicate using hash as key
+    # 1. Deduplicate using (hash, symbol) as key to avoid overwriting multi-leg DEX swaps
     merged_map = {}
     
     # Add old first
     for tx in old_txs:
-        merged_map[tx['hash']] = tx
+        # Provide fallback to just "hash" string if key is just string from old storage
+        key = (tx['hash'], tx.get('symbol', 'UNKNOWN')) if isinstance(tx, dict) else tx
+        merged_map[key] = tx
         
     # Add new (overwrite if exists)
     for tx in new_txs:
-        merged_map[tx['hash']] = tx
+        key = (tx['hash'], tx.get('symbol', 'UNKNOWN'))
+        merged_map[key] = tx
         
     all_txs = list(merged_map.values())
     
@@ -647,14 +650,15 @@ def merge_and_filter_txs(new_txs, old_txs):
     return filtered_txs
 
 
-def analyze_transfers_v1(transfers, market_metrics):
+def analyze_transfers_v1(transfers, market_metrics, target_symbol="UNKNOWN"):
     """
     Strategy V1 Analysis:
     Combines Chain Transfers (Intent) + Market Data (Confirmation).
     Calculates Sentiment Score and Confidence Score.
+    Target Symbol is specifically checked to avoid meme coin pollution.
     """
     
-    # Initialize Stats Structure
+    # ... stats init ...
     def init_stats():
         return {
             "sentiment_score": 0,
@@ -682,9 +686,7 @@ def analyze_transfers_v1(transfers, market_metrics):
 
     import math
     
-    # Market Context for Scoring Adjustments (Patch 1 & Confirmation)
-    # We use market_metrics from OKX
-    # If market data is missing, we use neutral defaults
+    # Market Context for Scoring Adjustments
     if not market_metrics:
         market_metrics = {"volume_ratio": 1.0, "delta_oi_24h_percent": 0, "funding_rate": 0, "oi_trend": "FLAT"}
 
@@ -694,9 +696,15 @@ def analyze_transfers_v1(transfers, market_metrics):
 
     # --- Transfer Scoring Logic ---
     for tx in transfers:
+        symbol = tx["symbol"]
         amount_usd = tx["amount_usd"]
         signal = tx["signal"]
-        symbol = tx["symbol"]
+        
+        # Isolation: Filter out non-target altcoins that aren't stablecoins.
+        # e.g. If target_symbol="ETH", skip SHIB, PEPE.
+        # e.g. If target_symbol="SOL", skip BONK, WIF.
+        if symbol not in STABLECOINS and symbol != target_symbol:
+            continue
         
         # 1. Base Score
         score = 0
@@ -710,7 +718,9 @@ def analyze_transfers_v1(transfers, market_metrics):
             is_real_dump = (vol_ratio >= 1.5) or (oi_delta > 2.0)
             score = -2 if is_real_dump else -1
             
-        weight = math.log10(amount_usd) if amount_usd > 1 else 0
+        # Patch 2: Square Root gives big whales much stronger emphasis than Log10
+        # E.g. $10k => 100 weight. $10M => 3162 weight.
+        weight = math.sqrt(amount_usd) if amount_usd > 0 else 0
 
         # Update Helper
         def update(acc):
@@ -1251,8 +1261,8 @@ def main():
     print(f"BTC Liq: Long ${btc_liquidation.get('long_vol_usd',0):.0f} / Short ${btc_liquidation.get('short_vol_usd',0):.0f}")
 
     print("Calculating Strategy V1 Metrics...")
-    eth_analysis = analyze_transfers_v1(eth_transfers, eth_market)
-    sol_analysis = analyze_transfers_v1(sol_transfers, sol_market)
+    eth_analysis = analyze_transfers_v1(eth_transfers, eth_market, target_symbol="ETH")
+    sol_analysis = analyze_transfers_v1(sol_transfers, sol_market, target_symbol="SOL")
     
     # Helper to create dummy analysis for chains without whale data
     def create_dummy_analysis(liq_data):
