@@ -490,7 +490,8 @@ def get_whale_data():
                 else:
                     natr_str += f"(~30d Avg {natr_avg:.2f}%)"
 
-            return (f"RSI={m.get('rsi_14', 50):.1f} | ADX={m.get('adx_14', 0):.1f} | "
+            return (f"Last 4H Close=${m.get('last_closed_close', 0):.2f} | Prev 5 High=${m.get('prev_5_high', 0):.2f} | Prev 5 Low=${m.get('prev_5_low', 0):.2f} | "
+                    f"RSI={m.get('rsi_14', 50):.1f} | ADX={m.get('adx_14', 0):.1f} | "
                     f"VolRatio={m.get('vol_ratio_20', 1):.1f}x | VolZ={m.get('vol_zscore_20', 0):.2f} | "
                     f"NATR={m.get('natr_percent', 0):.2f}% | Rank={m.get('price_rank_20', 50):.0f}% | "
                     f"Wick:Up={m.get('upper_wick_ratio',0)*100:.0f}%/Down={m.get('lower_wick_ratio',0)*100:.0f}% | "

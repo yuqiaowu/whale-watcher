@@ -877,7 +877,10 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
                     "Net_Flow_Stablecoin": f"${eth_data['stats_7d']['stablecoin_net_flow']:,.0f}",
                 },
                 "Market_Technicals": {
-                    "Price": eth_market.get('price_close'),
+                    "Price_Unclosed": eth_market.get('price_close'),
+                    "Last_Closed_4H_Close": eth_market.get('last_closed_close', 0),
+                    "Prev_5_4H_High": eth_market.get('prev_5_high', 0),
+                    "Prev_5_4H_Low": eth_market.get('prev_5_low', 0),
                     "Price_Rank": f"{eth_market.get('price_rank_20', 50):.1f}/100",
                     "Vol_Ratio": f"{eth_market.get('vol_ratio_20', 1):.2f}x",
                     "Buy_Stars": f"{eth_market.get('buy_stars', 0)}/3",
@@ -902,7 +905,10 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
                     "Net_Flow_Stablecoin": f"${sol_data['stats_7d']['stablecoin_net_flow']:,.0f}",
                 },
                 "Market_Technicals": {
-                    "Price": sol_market.get('price_close'),
+                    "Price_Unclosed": sol_market.get('price_close'),
+                    "Last_Closed_4H_Close": sol_market.get('last_closed_close', 0),
+                    "Prev_5_4H_High": sol_market.get('prev_5_high', 0),
+                    "Prev_5_4H_Low": sol_market.get('prev_5_low', 0),
                     "Price_Rank": f"{sol_market.get('price_rank_20', 50):.1f}/100",
                     "Vol_Ratio": f"{sol_market.get('vol_ratio_20', 1):.2f}x",
                     "Buy_Stars": f"{sol_market.get('buy_stars', 0)}/3",
@@ -920,6 +926,10 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
                 "Liquidation": sol_market.get("liquidation_context", "N/A")
             },
             "BTC_Context": {
+                "Price_Unclosed": btc_market.get('price_close'),
+                "Last_Closed_4H_Close": btc_market.get('last_closed_close', 0),
+                "Prev_5_4H_High": btc_market.get('prev_5_high', 0),
+                "Prev_5_4H_Low": btc_market.get('prev_5_low', 0),
                 "RSI": f"{btc_market.get('rsi_14', 50):.1f}",
                 "MACD": f"{btc_market.get('macd_hist', 0):.4f}",
                 "ADX": f"{btc_market.get('adx_14', 0):.1f}",
