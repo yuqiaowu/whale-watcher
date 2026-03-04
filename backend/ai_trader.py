@@ -91,49 +91,57 @@ class TradeMemory:
     def get_recent_performance(self):
         """
         Returns a rich summary of recent trades to inject into AI prompt for self-reflection.
-        Includes full rationale, market context at entry, and outcome.
+        Includes full rationale, market context at entry, outcome, and the LATEST cycle reflection.
         """
-        if not AGENT_MEMORY_PATH.exists():
-            return "No trading history yet."
-            
+        summary = "=== 📜 RECENT TRADE MEMORY (SELF-REFLECTION — LEARN FROM THIS) ===\n"
+        summary += "Critically review these past decisions before acting:\n\n"
+        
+        # 1. Get the absolute latest thought/reflection from the DB (even if HOLD/WAIT)
         try:
-            with open(AGENT_MEMORY_PATH, "r") as f:
-                history = json.load(f)
-            if not history: return "No trading history yet."
-            
-            # Last 5 trades with full context
-            recent = history[-5:]
-            summary = "=== 📜 RECENT TRADE MEMORY (SELF-REFLECTION — LEARN FROM THIS) ===\n"
-            summary += "Critically review these past decisions before acting:\n\n"
-            for i, t in enumerate(recent, 1):
-                ts = t['timestamp'][:16]
-                sym = t['symbol']
-                act = t['action']
-                price = t.get('entry_price', '?')
-                
-                # Full rationale (English only)
-                rationale_en = t['reason'].get('en', '') if isinstance(t.get('reason'), dict) else str(t.get('reason', ''))
-                
-                # Market context at time of trade
-                ctx = t.get('context', {})
-                rsi = ctx.get('rsi', '?')
-                adx = ctx.get('adx', '?')
-                whale = ctx.get('whale_flow', '?')
-                
-                # Status / outcome
-                if t.get('outcome') == "Closed" or "close" in act.lower():
-                    status = "✅ CLOSED"
-                else:
-                    status = "🟡 OPEN (still holding)"
-                
-                summary += f"[{i}] {ts} | {act} {sym} @ ${price} | {status}\n"
-                summary += f"    Market at entry: RSI={rsi}, ADX={adx}, WhaleFlow={whale}\n"
-                summary += f"    Rationale: {rationale_en[:400]}\n\n"
-            
-            summary += "⚠️ REFLECTION MANDATE: Before ANY new action, explicitly state what you learned from the above history and how it affects this decision.\n"
-            return summary
+            from db_client import db
+            history_db = db.get_data("agent_decision_log", [])
+            if history_db and isinstance(history_db, list) and len(history_db) > 0:
+                latest_decision = history_db[0]
+                latest_time = latest_decision.get("timestamp", "Unknown Time")
+                reflection = latest_decision.get("context_analysis", {}).get("reflection", {}).get("en", "")
+                if reflection:
+                    summary += f"[LATEST AI CYCLE: {latest_time}]\n"
+                    summary += f"Your Previous Reflection: {reflection}\n\n"
         except Exception as e:
-            return f"Error reading history: {e}"
+            pass  # Silently skip if DB fails to load
+            
+        # 2. Get executed trades via AGENT_MEMORY_PATH
+        if AGENT_MEMORY_PATH.exists():
+            try:
+                with open(AGENT_MEMORY_PATH, "r") as f:
+                    trade_hist = json.load(f)
+                if trade_hist and isinstance(trade_hist, list):
+                    recent = trade_hist[-5:]
+                    for i, t in enumerate(recent, 1):
+                        ts = t['timestamp'][:16]
+                        sym = t['symbol']
+                        act = t['action']
+                        price = t.get('entry_price', '?')
+                        
+                        rationale_en = t['reason'].get('en', '') if isinstance(t.get('reason'), dict) else str(t.get('reason', ''))
+                        ctx = t.get('context', {})
+                        rsi = ctx.get('rsi', '?')
+                        adx = ctx.get('adx', '?')
+                        whale = ctx.get('whale_flow', '?')
+                        
+                        if t.get('outcome') == "Closed" or "close" in act.lower():
+                            status = "✅ CLOSED"
+                        else:
+                            status = "🟡 OPEN (still holding)"
+                        
+                        summary += f"[TRADE {i}] {ts} | {act} {sym} @ ${price} | {status}\n"
+                        summary += f"    Market at entry: RSI={rsi}, ADX={adx}, WhaleFlow={whale}\n"
+                        summary += f"    Rationale: {rationale_en[:400]}\n\n"
+            except Exception as e:
+                pass
+                
+        summary += "⚠️ REFLECTION MANDATE: Before ANY new action, explicitly state what you learned from the above history and how it affects this decision.\n"
+        return summary
 
 memory = TradeMemory()
 WHALE_DATA_PATH = BASE_DIR.parent / "frontend/data/whale_analysis.json" # [NEW]
