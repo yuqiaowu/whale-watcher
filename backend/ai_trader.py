@@ -284,13 +284,13 @@ Current State:
 **IMPORTANT: Review Existing Positions First!**
 Before opening new positions:
 1. Look at your floating profit/loss ("pnlPercent") for each holding.
-2. If floating profit is > 5%, you MUST output an `adjust_sl` action to move the stop loss up above entry price to lock in profits. You may also adjust `take_profit` to adapt to changing momentum. DO NOT LET A WINNING TRADE TURN INTO A LOSS.
+2. If floating profit is > 5%, you MUST output an `adjust_sl_tp` action to move the stop loss up above entry price to lock in profits. You may also adjust `take_profit` to adapt to changing momentum. DO NOT LET A WINNING TRADE TURN INTO A LOSS.
 3. For each existing position, decide ONE action:
 - `hold`: If still valid and no adjustment needed.
-- `adjust_sl`: Update `stop_loss` and/or `take_profit` parameters in `exit_plan` to trail profits or maximize gains.
-- `reduce_25`: Close 25% of the position to lock in profit.
-- `reduce_50`: Close 50% of the position to lock in profit.
-- `reduce_75`: Close 75% of the position to lock in profit.
+- `adjust_sl_tp`: Update `stop_loss` and/or `take_profit` parameters in `exit_plan` to trail profits or adapt to new resistance/support.
+- `reduce_25`: Close 25% of the position. Use this when you detect emerging risks or declining momentum, to lock in partial profit while letting the rest run.
+- `reduce_50`: Close 50% of the position. Use this when hitting a major resistance/support but the macro trend is still intact.
+- `reduce_75`: Close 75% of the position. Use this when trend is severely weakening but not fully invalidated.
 - `close_position`: Close 100% of the position if invalidated or hitting a critical resistance target.
 
 Market Regime: {{MARKET_REGIME}}
@@ -334,7 +334,7 @@ Structure:
   "actions": [
     {
       "symbol": "SOL",
-      "action": "open_long", // OPTIONS: open_long, open_short, close_position, adjust_sl, hold, reduce_25, reduce_50, reduce_75
+      "action": "open_long", // OPTIONS: open_long, open_short, close_position, adjust_sl_tp, hold, reduce_25, reduce_50, reduce_75
       "leverage": 3,
       "position_size_usd": 1000,
       "entry_reason": {

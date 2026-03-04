@@ -255,8 +255,8 @@ class OKXExecutor:
         bid_price = float(ticker['bidPx'])
 
         # --- NEW: Handle Adjust SL/TP ---
-        if action == "adjust_sl":
-            print(f"🔄 Executing Trailing Stop/Adjust SL for {symbol}...")
+        if action in ["adjust_sl", "adjust_sl_tp"]:
+            print(f"🔄 Executing Trailing Stop/Adjust SL/TP for {symbol}...")
             if self.shadow_mode:
                 state = self._load_shadow_state()
                 updated = False
