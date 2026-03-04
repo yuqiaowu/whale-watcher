@@ -1,32 +1,32 @@
-# Issue: AI Trading Autonomy & Fractional Risk Management Upgrade
+# Issue: AI交易权限解锁与量化风控(分批止盈)升级
 
-## 📌 Background & Motivation
-The AI trading system previously suffered from two major limitations that negatively impacted its execution efficiency and risk management:
+## 📌 背景与动机
+之前的 AI 交易系统在执行效率和风控管理上存在两个致命的限制：
 
-1. **The "Right-Side Breakout" Trap (Over-Constrained Entry):** 
-   The AI was frequently identifying excellent entry setups based on whale accumulation, extreme negative funding, and liquidation squeezes. However, a hardcoded Python verification layer forced a `WAIT` state if the exact 4-hour candle close hadn't mathematically broken the previous 5-candle high/low. Because LLMs lack "visual chart logic" and struggle with precise decimal comparisons, the AI often felt compelled to declare a "breakout" prematurely. The physical code block would then slap it down, resulting in a conflicting loop where the AI wanted to enter but was blocked, missing the exact left-side optimal entries it correctly identified.
+1. **“右侧突破”陷阱（过度限制的入场）：**
+   AI 经常能根据鲸鱼吸筹、极度负的资金费率和爆仓数据，精准识别出完美的左侧反转向下或向上的入场点。但是，旧系统中有一段硬编码的 Python 校验逻辑，强制要求“4小时K线收盘价必须在数学上突破前5根K线的最高/最低点”。由于大语言模型（LLM）缺乏“视觉图表逻辑”，并且不擅长进行精确的小数对比，它经常会在感觉应该入场时提前宣告“突破”。结果，物理代码无情地拦截了它的操作并强制将状态改为 `WAIT`，导致 AI 错失了本来已经正确识别的绝佳入场时机。
 
-2. **The "Rollercoaster Ride" (All-or-Nothing Exit Constraint):**
-   Once in a profitable position, the AI's action menu only allowed it to `hold`, `adjust_sl` (trail stop loss), or `close_position` (100% exit). This binary approach meant the AI could not scale out of positions (e.g., locking in partial profits at resistance while letting the rest run). Furthermore, the naming of `adjust_sl` caused the AI to forget it could also adjust the Take Profit (`take_profit`) upwards, leading to unrealized floating profits turning back into break-even or minor losses during volatility.
+2. **“过山车”困境（要么全买要么全卖）：**
+   一旦进入盈利的持仓，AI 的动作菜单只允许它执行 `hold`（持有）、`adjust_sl`（追踪止损）或 `close_position`（全仓平盘）。这种二元对立的策略意味着 AI **无法进行部分平仓**（比如在遇到阻力位时卖掉一部分锁定利润，让剩下的部分继续奔跑）。此外，`adjust_sl`（调整止损）这个命名误导了 AI，导致它忘记了其实它还可以向上调整止盈（`take_profit`）。这使得原本高达 10% 的账面浮盈，一旦遇到剧烈插针，很容易变成保本甚至小亏。
 
-## 🛠 Enhancements Deployed
+## 🛠 部署的升级方案
 
-### 1. Complete Removal of Constraints (Total Autonomy)
-- **Prompt Overhaul (`ai_trader.py`):** Completely eradicated all mentions of "Right-side Breakout", "Left Signal, Right Entry", and rules forcing the AI to strictly wait for previous high/low clearance. The AI now has 100% tactical firing rights to execute `OPEN_LONG` or `OPEN_SHORT` based on holistic data confluence.
-- **Verification Layer Removal (`ai_trader.py`):** Deleted the 40-line `Verify Right-Side Breakout` block that previously hijacked the AI's intent and forcibly overwrote `open` actions into `WAIT`. 
+### 1. 终极放权（拆除物理拦截网）
+- **Prompt 大修 (`ai_trader.py`)：** 彻底抹除了所有关于“等待右侧突破确认”或者“左侧信号右侧入场”的强制规定。AI 现在获得了 100% 的战术开火权，只要各种数据（指标、鲸鱼动向、清算）形成共振，它就可以直接下达 `OPEN_LONG` 或 `OPEN_SHORT` 指令。
+- **底层校验拆除 (`ai_trader.py`)：** 删除了底层那 40 行的 `Verify Right-Side Breakout` 拦截代码，它再也不会截胡 AI 的下单意图了。
 
-### 2. Fractional Position Reduction (Scale-Out Profit Taking)
-- **Menu Expansion (`ai_trader.py`):** Introduced three new granular commands for existing positions:
-  - `reduce_25`: Close 25% of the position when detecting emerging risks or declining momentum.
-  - `reduce_50`: Close 50% of the position when hitting major resistance/support but the macro trend survives.
-  - `reduce_75`: Close 75% of the position when the trend is severely weakening.
-- **Execution Engine Support (`okx_executor.py`):** Rewrote the OKX payload logic and Shadow State calculator to intercept `reduce_` commands. It now accurately calculates the proportional contract size (e.g., 25% of 102 contracts) to close, cleanly adjusts remaining margins, and correctly logs partial PnL.
+### 2. 分批止盈（锁定收益防抖护城河）
+- **菜单豪华扩充 (`ai_trader.py`)：** 为已有持仓的操作菜单引入了三种精细化指令：
+  - `reduce_25`: 当探测到“潜在风险”或上涨动能衰竭时，平掉 25% 锁定利润。
+  - `reduce_50`: 当价格撞倒重大阻力/支撑位，但宏观趋势并未彻底走坏时，平掉 50% 落袋为安。
+  - `reduce_75`: 当趋势出现极度衰竭但还没完全被破坏时，平掉 75% 极度防守。
+- **执行器引擎升级 (`okx_executor.py`)：** 重写了向 OKX 交易所发单和影子数据库的更新逻辑。现在，底层执行器收到 `reduce_` 的指令后，会智能算出当前持仓的确切张数（比如 102 张），精准卖掉对应的比例，并同比例调整剩余仓位的保证金，完美记录部分平仓的收益率。
 
-### 3. Renaming for Clarification (Take Profit Trailing)
-- **Menu Renamed (`ai_trader.py`, `okx_executor.py`):** Changed the `adjust_sl` action keyword to `adjust_sl_tp` across the entire stack.
-- **Explicit Instruction:** Added a direct command within the prompt explicitly telling the AI: *"Update `stop_loss` AND/OR `take_profit` parameters to trail profits or adapt to new resistance/support."* This ensures the AI actively protects floating profits instead of passively riding market waves.
+### 3. 正名与引导（追踪利润最大化）
+- **指令更名 (`ai_trader.py`, `okx_executor.py`)：** 将全网代码中的 `adjust_sl` 升级更名为 **`adjust_sl_tp`**。
+- **强制指引注入：** 在提示词中非常明确地告知 AI：“Update `stop_loss` AND/OR `take_profit` parameters to trail profits or adapt to new resistance/support.”（追踪利润，并向上调整止损/止盈）。这赋予了 AI 主动出击保护利润的清晰指令，告别被动挨打。
 
-## 🎯 Expected Outcomes
-- **Faster Entries:** The AI will enter squeeze opportunities and whale accumulations immediately without waiting for lagging candle confirmation.
-- **Smoother Equity Curve:** The AI will now secure partial profits (`reduce_50`) into strength instead of helplessly watching a 10% floating profit evaporate in a sudden crypto wick.
-- **Reduced "Log Schizophrenia":** The logs will map directly to the AI's actions without the confusing paradox of "saying it's waiting while the executor attempts to buy."
+## 🎯 预期成效
+- **入场更果断：** 取消了死板的破位限制后，面对轧空和鲸鱼疯狂吸筹，AI 可以第一时间介入。
+- **资金曲线更平滑：** 引入 `reduce_50` 一类的操作，意味着系统再也不会坐等所有利润被震荡市洗劫一空，锁利操作将变得非常频繁。
+- **消灭精神分裂日志：** 执行层和思考层现在实现了100% 同步，再也不会出现“分析说等着突破，日志却跑去开仓”的尴尬名场面了。
