@@ -283,9 +283,9 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 
 🐋 WHALE SQUEEZE (鲸鱼主导碾压):
 - Whale Net Flow strongly aligns with the intended direction (e.g., heavy accumulation for long).
-- L/S Liquidation Ratio shows extreme crowding on the opposite side (e.g., heavily shorted, L/S < 0.5 for long).
+- L/S Liquidation Ratio shows extreme massacre on the opposite side (e.g., shorts are being heavily flushed, L/S < 0.5 for long). This indicates a squeeze is actively burning fuel.
 - RSI can be NEUTRAL (40-60). A squeeze doesn't require extreme RSI to trigger.
-→ Verdict: "WHALE_SQUEEZE" — Immediate entry justified to front-run the squeeze.
+→ Verdict: "WHALE_SQUEEZE" — Immediate entry justified to ride the squeeze momentum.
 
 🛡️ 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
 
