@@ -129,12 +129,7 @@ class TradeMemory:
                         adx = ctx.get('adx', '?')
                         whale = ctx.get('whale_flow', '?')
                         
-                        if t.get('outcome') == "Closed" or "close" in act.lower():
-                            status = "✅ CLOSED"
-                        else:
-                            status = "🟡 OPEN (still holding)"
-                        
-                        summary += f"[TRADE {i}] {ts} | {act} {sym} @ ${price} | {status}\n"
+                        summary += f"[TRADE {i}] {ts} | {act} {sym} @ ${price}\n"
                         summary += f"    Market at entry: RSI={rsi}, ADX={adx}, WhaleFlow={whale}\n"
                         summary += f"    Rationale: {rationale_en[:400]}\n\n"
             except Exception as e:
