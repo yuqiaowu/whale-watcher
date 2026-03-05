@@ -68,11 +68,12 @@ class TradeMemory:
                 "leverage": 1, # Default
                 "reason": reason,
                 "context": {
-                    "rsi": market_snapshot.get('rsi_14', 50),
-                    "adx": market_snapshot.get('adx_14', 0),
-                    "whale_flow": market_snapshot.get('whale_flow', 0),
-                    "bb_width": market_snapshot.get('bb_width'),
-                    "bb_trend": market_snapshot.get('bb_trend')
+                    "rsi": market_snapshot.get('rsi_14', '?'),
+                    "adx": market_snapshot.get('adx_14', '?'),
+                    "whale_flow": market_snapshot.get('whale_flow', '?'),
+                    "funding_rate": market_snapshot.get('funding_rate', '?'),
+                    "bb_width": market_snapshot.get('bb_width_pct', '?'),
+                    "bb_trend": market_snapshot.get('bb_trend', '?')
                 },
                 "outcome": "Closed" if "close" in action.lower() else None
             }
@@ -110,7 +111,26 @@ class TradeMemory:
         except Exception as e:
             pass  # Silently skip if DB fails to load
             
-        # 2. Get executed trades via AGENT_MEMORY_PATH
+        # 2. Get Real Trade Outcomes (PnL) from executed history
+        recent_pnls = {}
+        if TRADE_HISTORY_PATH.exists():
+            try:
+                with open(TRADE_HISTORY_PATH, "r") as f:
+                    th = json.load(f)
+                    for t in th[-30:]: # scan recent history
+                        sym = t.get('symbol')
+                        action = t.get('action', '')
+                        if "Close" in action or "Reduce" in action:
+                            pnl = t.get('pnl', 0)
+                            pnl_pct = t.get('pnlPercent', 0)
+                            if sym not in recent_pnls:
+                                recent_pnls[sym] = []
+                            res_str = f"赢利" if pnl > 0 else f"亏损"
+                            recent_pnls[sym].append(f"✅ {res_str}: ${pnl} ({pnl_pct}%)")
+            except Exception:
+                pass
+                
+        # 3. Get executed trades via AGENT_MEMORY_PATH
         if AGENT_MEMORY_PATH.exists():
             try:
                 with open(AGENT_MEMORY_PATH, "r") as f:
@@ -128,9 +148,18 @@ class TradeMemory:
                         rsi = ctx.get('rsi', '?')
                         adx = ctx.get('adx', '?')
                         whale = ctx.get('whale_flow', '?')
+                        fund = ctx.get('funding_rate', '?')
+                        bb = f"{ctx.get('bb_width', '?')}% ({ctx.get('bb_trend', '?')})"
                         
                         summary += f"[TRADE {i}] {ts} | {act} {sym} @ ${price}\n"
-                        summary += f"    Market at entry: RSI={rsi}, ADX={adx}, WhaleFlow={whale}\n"
+                        summary += f"    Market at entry: RSI={rsi}, ADX={adx}, WhaleFlow={whale}, Funding={fund}, BB={bb}\n"
+                        
+                        # Inject PnL if we found any recent close for this symbol
+                        if sym in recent_pnls and len(recent_pnls[sym]) > 0:
+                            # Pop the oldest matching PNL from recent queue to pair it
+                            pnl_outcome = recent_pnls[sym].pop(0)
+                            summary += f"    Result Context: {pnl_outcome} shortly after this.\n"
+                            
                         summary += f"    Rationale: {rationale_en[:400]}\n\n"
             except Exception as e:
                 pass
