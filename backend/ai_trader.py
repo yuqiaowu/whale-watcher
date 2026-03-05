@@ -309,13 +309,13 @@ Current State:
 Before opening new positions:
 1. Look at your floating profit/loss ("pnlPercent") for each holding.
 2. DYNAMIC PROFIT TAKING: If the position is in profit and encounters technical resistance/support, or if momentum indicator (e.g. RSI, ADX) starts turning, you MUST lock in gains. Do not wait for a fixed percentage. Use `reduce_50` to secure profits, or `adjust_sl_tp` to move the stop loss past the entry price. DO NOT LET A WINNING TRADE TURN INTO A LOSS.
-3. For each existing position, decide ONE action:
-- `hold`: If still valid and no adjustment needed.
-- `adjust_sl_tp`: Update `stop_loss` and/or `take_profit` parameters in `exit_plan` to trail profits or adapt to new resistance/support.
-- `reduce_25`: Close 25% of the position. Use this when you detect emerging risks or declining momentum, to lock in partial profit while letting the rest run.
-- `reduce_50`: Close 50% of the position. Use this when hitting a major resistance/support but the macro trend is still intact.
-- `reduce_75`: Close 75% of the position. Use this when trend is severely weakening but not fully invalidated.
-- `close_position`: Close 100% of the position if invalidated or hitting a critical resistance target.
+3. For each existing position, decide ONE action. **CRITICAL: If you decide to do anything other than `hold`, YOU MUST explicitly output an action object for it in the JSON `actions` array! Just writing about it in the text analysis does NOT execute the action!**
+- `hold`: If still valid and no adjustment needed (no need to output in 'actions' array).
+- `adjust_sl_tp`: Update `stop_loss` and/or `take_profit` parameters in `exit_plan` to trail profits or adapt to new resistance/support. (Must output in 'actions')
+- `reduce_25`: Close 25% of the position. Use this when you detect emerging risks or declining momentum, to lock in partial profit while letting the rest run. (Must output in 'actions')
+- `reduce_50`: Close 50% of the position. Use this when hitting a major resistance/support but the macro trend is still intact. (Must output in 'actions')
+- `reduce_75`: Close 75% of the position. Use this when trend is severely weakening but not fully invalidated. (Must output in 'actions')
+- `close_position`: Close 100% of the position if invalidated or hitting a critical resistance target. (Must output in 'actions')
 
 Market Regime: {{MARKET_REGIME}}
 Dynamic Exposure Limits (STRICT):
@@ -373,6 +373,8 @@ Structure:
     }
   ]
 }
+*** IMPORTANT FOR `actions` ARRAY ***
+If you are adjusting an existing trade (`adjust_sl_tp`, `reduce_25`, etc.), you MUST include it in the `actions` array! You can set `leverage`: 0 and `position_size_usd`: 0 for these, but you MUST provide the updated `stop_loss` and `take_profit` in `exit_plan`.
 """
 
 # ------------------------------------------------------------------------
