@@ -265,27 +265,27 @@ Before entering any trade, you MUST evaluate whether the market is in a dangerou
 Signals of a falling knife (DO NOT go long blindly):
 - RSI < 30 AND still declining (no divergence)
 - ADX > 25 (strong directional trend — the drop has momentum)
-- NATR (Normalized ATR) is RISING or well above 30d average (high volatility)
 - Long Liquidations > Short Liquidations (retail longs being flushed — not bottomed yet)
 - Whale Token Net Flow NEGATIVE (whales still distributing, not accumulating)
-- Lower Wick Ratio < 0.1 (no rejection wicks — no buyers stepping in)
-→ Verdict: "KNIFE" — Wait for RSI divergence OR a 4H candle close with long lower wick AND whale accumulation signal before considering long.
+→ Verdict: "KNIFE" — Wait for RSI divergence or whale accumulation signal before considering long.
 
 🚀 ROCKET BLOCKING (挡火箭 — Reversal Risk):
 Signals of chasing into a vertical move (DO NOT go short blindly):
 - RSI > 70 AND still rising (momentum intact)
 - ADX > 30 (strong uptrend — shorting against momentum)
 - Short Liquidations >> Long Liquidations (fuel still being added)
-- Funding Rate > 0.02% (crowded longs, but if RSI still rising, squeeze not done)
-- Whale Stablecoin Net Flow POSITIVE and rising (institutional demand still entering)
-→ Verdict: "ROCKET" — Wait for RSI to peak + NATR spike + first 4H close below recent high before shorting.
+→ Verdict: "ROCKET" — Wait for RSI to peak before shorting.
 
 ✅ SAFE MEAN REVERSION (安全均值回归):
-- RSI extreme (>72 or <28) WITH clear divergence (price makes new high/low but RSI doesn't)
-- Lower/Upper Wick Ratio > 0.3 (rejection candles appearing)
-- Liquidations spiking but RATIO is balanced or reversing
-- NATR at peak / Vol Z-Score spike (volatility climax signal)
-→ Verdict: "SAFE_MR" — Mean reversion entry is justified with tight stop.
+- RSI is extreme (>70 or <30) WITH clear divergence
+- Rejection wicks appearing (Wick Ratio > 0.3)
+→ Verdict: "SAFE_MR" — Mean reversion entry is justified.
+
+🐋 WHALE SQUEEZE (鲸鱼主导碾压):
+- Whale Net Flow strongly aligns with the intended direction (e.g., heavy accumulation for long).
+- L/S Liquidation Ratio shows extreme crowding on the opposite side (e.g., heavily shorted, L/S < 0.5 for long).
+- RSI can be NEUTRAL (40-60). A squeeze doesn't require extreme RSI to trigger.
+→ Verdict: "WHALE_SQUEEZE" — Immediate entry justified to front-run the squeeze.
 
 🛡️ 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
 
@@ -349,8 +349,8 @@ Structure:
         "en": "Analyze Qlib top-ranked coins and Z-Score significance (statistical deviations in vol/funding)." 
     },
     "regime_safety": { 
-        "zh": "【必填】基于Section 4E评估: 1)当前RSI/ADX/NATR状态; 2)上下影线比率; 3)多空爆仓比; 4)鲸鱼净流向。最终给出明确判断: KNIFE(接飞刀风险)/ROCKET(挡火箭风险)/SAFE_MR(安全均值回归)。", 
-        "en": "【Required】Based on Section 4E: 1) RSI/ADX/NATR current state; 2) Upper/Lower Wick Ratio; 3) Liquidation long/short ratio; 4) Whale net flow direction. Conclude with explicit verdict: KNIFE / ROCKET / SAFE_MR and explain why." 
+        "zh": "【必填】基于Section 4E评估: 1)当前RSI/ADX/NATR状态; 2)上下影线比率; 3)多空爆仓比; 4)鲸鱼净流向。最终给出明确判断: KNIFE(接飞刀)/ROCKET(挡火箭)/SAFE_MR(安全均值回归)/WHALE_SQUEEZE(鲸鱼轧空)。", 
+        "en": "【Required】Based on Section 4E: 1) RSI/ADX/NATR current state; 2) Upper/Lower Wick Ratio; 3) Liquidation long/short ratio; 4) Whale net flow direction. Conclude with explicit verdict: KNIFE / ROCKET / SAFE_MR / WHALE_SQUEEZE and explain why." 
     },
     "portfolio_status": { "zh": "当前持仓风险评估", "en": "Portfolio risk check." },
     "reflection": { "zh": "AI的一句话反思", "en": "Short reflection." }
