@@ -281,13 +281,19 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 - Rejection wicks appearing (Wick Ratio > 0.3)
 → Verdict: "SAFE_MR" — Mean reversion entry is justified.
 
-🐋 WHALE SQUEEZE (鲸鱼主导碾压):
+🐋 WHALE SQUEEZE (鲸鱼轧空):
 - Whale Net Flow strongly aligns with the intended direction (e.g., heavy accumulation for long).
-- L/S Liquidation Ratio shows extreme massacre on the opposite side (e.g., shorts are being heavily flushed, L/S < 0.5 for long). This indicates a squeeze is actively burning fuel.
+- L/S Liquidation Ratio shows extreme massacre on the SHORT side (e.g., shorts are being heavily flushed, L/S < 0.5 for long). This indicates a squeeze is actively burning fuel.
 - RSI can be NEUTRAL (40-60). A squeeze doesn't require extreme RSI to trigger.
 → Verdict: "WHALE_SQUEEZE" — Immediate entry justified to ride the squeeze momentum.
 
-🛡️ 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
+� WHALE ACCUMULATION / BEAR TRAP (鲸鱼托底吸筹):
+- Price has dropped recently, but Whale Token Net Flow is POSITIVE (Whales aggressively buying the dip).
+- L/S Liquidation Ratio shows extreme LONG massacre (e.g., longs are being heavily flushed, L/S > 2.0). Retail is capitulating.
+- Funding rate is usually neutral or negative. 
+→ Verdict: "WHALE_ACCUMULATION" — Immediate entry justified to buy alongside whales during retail panic.
+
+�🛡️ 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
 
 1. **Anti-Liquidity Rush (Do not fight the cascade)**:
    - If Liquidations are **SIGNIFICANTLY LOPSIDED** (e.g., one side is 3x+ the other) OR price is moving vertically on high volume, DO NOT open a reverse trade immediately. 
@@ -349,8 +355,8 @@ Structure:
         "en": "Analyze Qlib top-ranked coins and Z-Score significance (statistical deviations in vol/funding)." 
     },
     "regime_safety": { 
-        "zh": "【必填】基于Section 4E评估: 1)当前RSI/ADX/NATR状态; 2)上下影线比率; 3)多空爆仓比; 4)鲸鱼净流向。最终给出明确判断: KNIFE(接飞刀)/ROCKET(挡火箭)/SAFE_MR(安全均值回归)/WHALE_SQUEEZE(鲸鱼轧空)。", 
-        "en": "【Required】Based on Section 4E: 1) RSI/ADX/NATR current state; 2) Upper/Lower Wick Ratio; 3) Liquidation long/short ratio; 4) Whale net flow direction. Conclude with explicit verdict: KNIFE / ROCKET / SAFE_MR / WHALE_SQUEEZE and explain why." 
+        "zh": "【必填】基于Section 4E评估: 1)当前RSI/ADX/NATR状态; 2)上下影线比率; 3)多空爆仓比; 4)鲸鱼净流向。最终给出明确判断: KNIFE(接飞刀)/ROCKET(挡火箭)/SAFE_MR(安全均值回归)/WHALE_SQUEEZE(鲸鱼轧空)/WHALE_ACCUMULATION(鲸鱼托底)", 
+        "en": "【Required】Based on Section 4E: 1) RSI/ADX/NATR current state; 2) Upper/Lower Wick Ratio; 3) Liquidation long/short ratio; 4) Whale net flow direction. Conclude with explicit verdict: KNIFE / ROCKET / SAFE_MR / WHALE_SQUEEZE / WHALE_ACCUMULATION and explain why." 
     },
     "portfolio_status": { "zh": "当前持仓风险评估", "en": "Portfolio risk check." },
     "reflection": { "zh": "AI的一句话反思", "en": "Short reflection." }
