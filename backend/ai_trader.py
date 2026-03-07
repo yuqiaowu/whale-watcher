@@ -588,11 +588,34 @@ def get_whale_data():
                     f"BBW={m.get('bb_width', 0):.3f} | Trend={m.get('bb_trend', 'FLAT')} | Funding={m.get('funding_rate', 0)*100:.4f}% | "
                     f"Stars: Buy={m.get('buy_stars',0)}/Sell={m.get('sell_stars',0)}")
 
+        # Helper: Add directional meaning to token_net_flow for AI clarity.
+        # CRITICAL: In our system, positive token_net_flow means tokens flowing INTO exchanges = DISTRIBUTION (Bearish).
+        # Negative token_net_flow means tokens flowing OUT of exchanges = ACCUMULATION (Bullish).
+        def fmt_token_flow(flow, symbol_name):
+            if flow > 0:
+                return f"{flow:,.1f} {symbol_name} [TO_EXCHANGE → 📉 DISTRIBUTION signal]"
+            elif flow < 0:
+                return f"{flow:,.1f} {symbol_name} [FROM_EXCHANGE → 📈 ACCUMULATION signal]"
+            else:
+                return f"0 {symbol_name} [NEUTRAL]"
+
+        def fmt_stable_flow(flow):
+            if flow > 0:
+                return f"${flow:,.0f} [STABLECOIN IN → 📈 Buy-power entering]"
+            elif flow < 0:
+                return f"${flow:,.0f} [STABLECOIN OUT → 📉 Capital leaving market]"
+            else:
+                return f"$0 [NEUTRAL]"
+
         # Build Context String
         ctx = "=== ETHEREUM (ETH) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
         ctx += f"- Sentiment Score: 24h={eth_stat_24h.get('sentiment_score', 0):.2f} / 7d={eth_stat_7d.get('sentiment_score', 0):.2f}\n"
-        ctx += f"- Token Net Flow: 24h={eth_stat_24h.get('token_net_flow', 0):,.1f} / 7d={eth_stat_7d.get('token_net_flow', 0):,.1f} ETH\n"
-        ctx += f"- Stablecoin Net Flow: 24h=${eth_stat_24h.get('stablecoin_net_flow', 0):,.0f} / 7d=${eth_stat_7d.get('stablecoin_net_flow', 0):,.0f}\n"
+        eth_tf_24h = eth_stat_24h.get('token_net_flow', 0)
+        eth_tf_7d = eth_stat_7d.get('token_net_flow', 0)
+        ctx += f"- Token Net Flow: 24h={fmt_token_flow(eth_tf_24h, 'ETH')} / 7d={fmt_token_flow(eth_tf_7d, 'ETH')}\n"
+        eth_sf_24h = eth_stat_24h.get('stablecoin_net_flow', 0)
+        eth_sf_7d = eth_stat_7d.get('stablecoin_net_flow', 0)
+        ctx += f"- Stablecoin Net Flow: 24h={fmt_stable_flow(eth_sf_24h)} / 7d={fmt_stable_flow(eth_sf_7d)}\n"
         ctx += f"- Technicals: {fmt_tech(eth_market)}\n"
         eth_liq_ratio = eth_liq_long / eth_liq_short if eth_liq_short > 0 else 0
         eth_liq_signal = "⚠️ LONG_FLUSH" if eth_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if eth_liq_short > eth_liq_long * 2 else "BALANCED")
@@ -600,8 +623,12 @@ def get_whale_data():
         
         ctx += "\n=== SOLANA (SOL) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
         ctx += f"- Sentiment Score: 24h={sol_stat_24h.get('sentiment_score', 0):.2f} / 7d={sol_stat_7d.get('sentiment_score', 0):.2f}\n"
-        ctx += f"- Token Net Flow: 24h={sol_stat_24h.get('token_net_flow', 0):,.1f} / 7d={sol_stat_7d.get('token_net_flow', 0):,.1f} SOL\n"
-        ctx += f"- Stablecoin Net Flow: 24h=${sol_stat_24h.get('stablecoin_net_flow', 0):,.0f} / 7d=${sol_stat_7d.get('stablecoin_net_flow', 0):,.0f}\n"
+        sol_tf_24h = sol_stat_24h.get('token_net_flow', 0)
+        sol_tf_7d = sol_stat_7d.get('token_net_flow', 0)
+        ctx += f"- Token Net Flow: 24h={fmt_token_flow(sol_tf_24h, 'SOL')} / 7d={fmt_token_flow(sol_tf_7d, 'SOL')}\n"
+        sol_sf_24h = sol_stat_24h.get('stablecoin_net_flow', 0)
+        sol_sf_7d = sol_stat_7d.get('stablecoin_net_flow', 0)
+        ctx += f"- Stablecoin Net Flow: 24h={fmt_stable_flow(sol_sf_24h)} / 7d={fmt_stable_flow(sol_sf_7d)}\n"
         ctx += f"- Technicals: {fmt_tech(sol_market)}\n"
         sol_liq_ratio = sol_liq_long / sol_liq_short if sol_liq_short > 0 else 0
         sol_liq_signal = "⚠️ LONG_FLUSH" if sol_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if sol_liq_short > sol_liq_long * 2 else "BALANCED")
