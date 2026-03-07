@@ -268,13 +268,12 @@ Identify where the crowd is trapped:
    - ONLY consider a mean-reversion SHORT when there is a massive SHORT liquidation (flushing out weak shorts) and price stabilizes. If massive LONG liquidations just occurred, liquidity is drained downwards—DO NOT chase shorts here.
 - **Liquidity Trap**: Late chasers entering at resistance (High Funding + High RSI) or at support (High Neg Funding + Low RSI).
 
-C. HYPOTHESIS OVERVIEW (Context for selection — full playbooks defined in Section 4C below)
-Consider ALL five playbooks equally. Do not default to one. Select based on the strongest evidence combination:
-1. **Trend Following**: Momentum + Accumulation + Volume confirmation.
-2. **Mean Reversion**: Extreme RSI extremes + reversal candle confirmation.
-3. **Microstructure Squeeze**: Extreme funding anomaly OR drained L/S ratio.
-4. **Narrative Divergence**: News contradicts price action.
-5. **Whale Front-Run**: Token flow direction clearly diverges from retail positioning.
+C. HYPOTHESIS PLAYBOOKS (Must choose exactly ONE in output)
+1. **TREND_FOLLOWING**: High ADX + Normal Funding + Whale Accumulation. Ride the momentum.
+2. **MEAN_REVERSION**: Extreme RSI extremes + Reversal Candle + Validated Flush. Fade the panic/greed.
+3. **MICROSTRUCTURE_SQUEEZE**: Extreme funding anomaly OR drained L/S ratio. Capitalize on traps.
+4. **NARRATIVE_DIVERGENCE**: News contradicts price action. E.g., Good News + Bad Price = Secret Accumulation.
+5. **WHALE_FRONT_RUN**: Follow smart money flow (Token Flow) when it clearly opposes retail positioning.
 
 E. REGIME SAFETY CHECK (Mandatory — Fill 'regime_safety' Field)
 Before entering any trade, you MUST evaluate whether the market is in a dangerous state using the following data signals:
@@ -333,27 +332,7 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
    - If this required stop distance makes the trade too risky (exceeds 2% of NAV risk), you MUST **reduce the position size or leverage** proportionately, OR skip the trade entirely if the reward-to-risk ratio is poor.
    - Do NOT tighten the stop loss just to increase position size. A stop based on static percentages or tight levels will be whipped out by market noise. You must give the trade room to breathe based on its true volatility.
 
-🟥 4. ANALYSIS LOGIC (The "Dolores" Engine)
-
-A. CONFLICT RESOLUTION PROTOCOL (Mandatory Review)
-When indicators disagree, follow this hierarchy:
-1. **MARKET REGIME (Priority 1)**: If Regime = BEAR, skip "Trend Following" Longs unless Whale Signal is Extreme.
-2. **WHALE REALITY (Priority 2)**: On-chain flow overrides technicals. If Price is pump but Token Flow is IN (Selling), it's a Trap.
-3. **LIQUIDATION FUEL (Priority 3)**: If L/S Ratio < 0.2, the fuel is GONE. No matter how bullish it looks, do not chase.
-4. **QLIB & TECHNICALS (Priority 4)**: Use as confirmation, never as the only entry reason.
-
-B. THE PAIN TRADE & LIQUIDITY TRAPS
-- **Crowded Longs (Trample Risk)**: Funding > 0.03% + Positive Token flow = "Exit Door is too narrow". Avoid.
-- **Drained Squeeze**: L/S < 0.2 = "No more shorts to burn". Buying here is buying the top.
-
-C. HYPOTHESIS PLAYBOOKS (Must Choose ONE in output — weight all 5 equally)
-1. **TREND_FOLLOWING**: (High ADX + Normal Funding + Token flow FROM_EXCHANGE). Ride the momentum.
-2. **MEAN_REVERSION**: (Extreme RSI + Reversal Candle + Validated Flush). Fade the panic or greed.
-3. **MICROSTRUCTURE_SQUEEZE**: (Extreme Funding Trap or Drained L/S Ratio). Capitalize on structural imbalances.
-4. **NARRATIVE_DIVERGENCE**: (News contradicts Price). Bad News + Good Price = Accumulation. Good News + Bad Price = Distribution Trap.
-5. **WHALE_FRONT_RUN**: (Token flow direction clearly opposes retail bias, e.g., tokens FROM_EXCHANGE while retail panic-sells). Follow smart money positioning.
-
-D. REGIME SAFETY CHECK (Section 4E) - [Already Defined Above]
+ 
 
 🛡️ TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
 [Existing NATR and Stop-Loss rules remain in effect...]
@@ -422,7 +401,6 @@ Structure:
     "portfolio_status": { "zh": "当前持仓风险评估", "en": "Portfolio risk check." },
     "reflection": { "zh": "AI的一句话反思", "en": "Short reflection." }
   },
-  "actions": [
   "actions": [
     /* 
        STEP 1: POSITION MAINTENANCE (MANDATORY 1:1 MAPPING)
