@@ -364,11 +364,11 @@ Current State:
 
 **🟥 5. THE PRIMARY MISSION: ACTIVE POSITION MAINTENANCE (MANDATORY FIRST)**
 Before even thinking about new trades, you MUST address your current exposure.
-1. **THE CLEANSE RULE**: Every decision cycle, you start with a "Portfolio Cleanse".
-   - Look at your `portfolio_status` below. 
-   - If a position is in a **CONFIRMED CONFLICT** (e.g., You are LONG but Whale Flow is STRONG_DUMP, or Regime is BEAR and support is broken), you **MUST** act.
-   - **VALID ACTIONS FOR CONFLICTS**: `close_position`, `reduce_50`, `reduce_75`, or `hold` (ONLY if you provide a 1-sentence "Defense of Continued Risk" in the `entry_reason`).
-   - **ZERO TOLERANCE**: Identifying a risk in text and not acting on it in the `actions` array is a **MAXIMUM SEVERITY FAILURE**.
+1. **THE 1:1 CLEANSE RULE (MANDATORY)**: Every decision cycle, your first task is a per-asset audit.
+   - **MAPPING REQUIREMENT**: For EVERY symbol listed in `{{PORTFOLIO_STATE_JSON}}`, you **MUST** provide a corresponding entry in the `actions` array. 
+   - **ZERO OMISSION**: You are NOT allowed to skip any current holding. If you hold 3 assets, the first 3 items in `actions` MUST be those 3 assets.
+   - **ASSET-SPECIFIC DEFENSE**: The `entry_reason` for a maintenance action (hold/reduce/close) must specifically address that asset's data (e.g., "SOL is conflicting with Whale Flow, but RSI is at support, so holding with tight SL"). Do NOT provide generic market summaries here.
+   - **ZERO TOLERANCE**: Identifying a risk for a specific asset in text but failing to provide a matching action entry for that EXACT symbol is a **LOGICAL INTEGRITY BREACH**.
 
 2. **THE SECONDARY MISSION: NEW ENTRIES (PRIVILEGED ACCESS)**:
    - Opening a new position is a **REWARD** for having a healthy, logically-aligned portfolio.
@@ -420,17 +420,21 @@ Structure:
     "reflection": { "zh": "AI的一句话反思", "en": "Short reflection." }
   },
   "actions": [
+  "actions": [
     /* 
-       STEP 1: POSITION MAINTENANCE (List all symbols from portfolio_status first)
-       Example: {"symbol": "SOL", "action": "reduce_50", "entry_reason": {"zh": "由于识别到鲸鱼抛售威胁，强制执行风控减仓50%...", "en": "Reduction mandated by whale dump threat..."}}
+       STEP 1: POSITION MAINTENANCE (MANDATORY 1:1 MAPPING)
+       You MUST list ONE block for EVERY symbol currently held in your portfolio.
     */
     {
-      "symbol": "POSITION_FROM_PORTFOLIO",
+      "symbol": "SOL", // Example of an active holding
       "action": "hold | adjust_sl_tp | reduce_25 | reduce_50 | reduce_75 | close_position",
-      "entry_reason": { "zh": "必须解释为什么保持或调整该仓位", "en": "Must justify maintenance action" }
+      "entry_reason": { 
+        "zh": "针对该特定资产的维护辩护：结合其RSI、鲸鱼数据、当前的盈亏状态给出独立理由...", 
+        "en": "Asset-specific defense: providing logic based on THIS symbol's unique metrics/signals." 
+      }
     },
     /* 
-       STEP 2: NEW ENTRIES (Only after Step 1 is complete)
+       STEP 2: NEW ENTRIES (Only after ALL existing positions are addressed above)
     */
     {
       "symbol": "NEW_SYMBOL",
