@@ -1161,7 +1161,7 @@ def translate_news_data(news_data):
     return news_data
 
 def main():
-    print("DEBUG: Entering whale_watcher.main()...")
+    print("DEBUG: Entering crypto_brain.main()...")
     
     # 1. Setup Directories
     base_dir = os.path.dirname(os.path.abspath(__file__))

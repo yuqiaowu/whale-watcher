@@ -414,10 +414,10 @@ def fetch_live_context_and_predict():
     
     payload = {
         "as_of": current_time,
-        "strategy": "Live Multi-Coin Ranking (Qlib Bridge)",
+        "strategy": "Live Proxy Ranking (Formula-Based)",
         "model_meta": {
-            "type": "LGBM-Ranker",
-            "source": "Live OKX + Static Normalization"
+            "type": "Heuristic Proxy (Hardcoded Formula)",
+            "source": "Live Market Data Snapshot"
         },
         "market_summary": {
            "trend": "mixed",
