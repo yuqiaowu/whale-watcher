@@ -331,38 +331,7 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
    - If this required stop distance makes the trade too risky (exceeds 2% of NAV risk), you MUST **reduce the position size or leverage** proportionately, OR skip the trade entirely if the reward-to-risk ratio is poor.
    - Do NOT tighten the stop loss just to increase position size. A stop based on static percentages or tight levels will be whipped out by market noise. You must give the trade room to breathe based on its true volatility.
 
-🟧 5. PORTFOLIO & RISK MANAGEMENT
-Current State:
-{{PORTFOLIO_STATE_JSON}}
-
-**IMPORTANT: Review Existing Positions First!**
-Before opening new positions:
-1. Look at your floating profit/loss ("pnlPercent") for each holding.
-2. DYNAMIC POSITION MANAGEMENT: If the position is in profit and encounters resistance/support, or momentum starts turning, you MUST lock in gains. Use `reduce_50` to secure profits, or `adjust_sl_tp`. DO NOT LET A WINNING TRADE TURN INTO A LOSS. You are ALSO highly encouraged to use `reduce_` actions to cut partial losses if you are in a floating loss and detect the initial thesis is weakening but you aren't ready to close it entirely.
-3. For each existing position, decide ONE action. **CRITICAL: If you decide to do anything other than `hold` (e.g. reduce risk), YOU MUST explicitly output an action object for it in the JSON `actions` array! Just writing about it in the text analysis does NOT execute the action!**
-- `hold`: If still valid and no adjustment needed (no need to output in 'actions' array).
-- `adjust_sl_tp`: Update `stop_loss` and/or `take_profit` parameters in `exit_plan` to trail profits or adapt to new resistance/support. (Must output in 'actions')
-- `reduce_25`: Close 25% of the position. Use this when you detect emerging risks or declining momentum, to lock in partial profit OR cut partial losses. (Must output in 'actions')
-- `reduce_50`: Close 50% of the position. Use this when hitting a major resistance/support, or to significantly de-risk a losing trade. (Must output in 'actions')
-- `reduce_75`: Close 75% of the position. Use this when trend is severely weakening but not fully invalidated yet. (Must output in 'actions')
-- `close_position`: Close 100% of the position if invalidated or hitting a critical resistance target. (Must output in 'actions')
-
-Market Regime: {{MARKET_REGIME}}
-Dynamic Exposure Limits (STRICT):
-- Max Total LONG Exposure: ${{MAX_LONG_LIMIT_USD}} ({{MAX_LONG_PCT}}% of Equity)
-- Max Total SHORT Exposure: ${{MAX_SHORT_LIMIT_USD}} ({{MAX_SHORT_PCT}}% of Equity)
-- Current LONG Exposure: ${{CURR_LONG_EXP_USD}}
-- Current SHORT Exposure: ${{CURR_SHORT_EXP_USD}}
-- Available LONG Room: ${{AVAILABLE_LONG_USD}}
-- Available SHORT Room: ${{AVAILABLE_SHORT_USD}}
-
-Constraints:
-- Max Open Positions: 3.
-- Max Risk Per Trade: 2% of NAV.
-- Max Leverage: 5x (Normal), 10x (High Conviction Whale Signal).
-- **DO NOT exceed the Available Room.** 
-- **SAFETY RULE**: Always keep your total exposure at least $10 BELOW the limit to account for market volatility and fees.
--🟥 4. ANALYSIS LOGIC (The "Dolores" Engine)
+🟥 4. ANALYSIS LOGIC (The "Dolores" Engine)
 
 A. CONFLICT RESOLUTION PROTOCOL (Mandatory Review)
 When indicators disagree, follow this hierarchy:
@@ -394,14 +363,19 @@ Current State:
 **IMPORTANT: Review Existing Positions First!**
 Before opening new positions:
 1. Look at your floating profit/loss ("pnlPercent") for each holding.
-2. DYNAMIC POSITION MANAGEMENT: If the position is in profit and encounters resistance/support, or momentum starts turning, you MUST lock in gains. Use `reduce_50` to secure profits, or `adjust_sl_tp`. DO NOT LET A WINNING TRADE TURN INTO A LOSS. You are ALSO highly encouraged to use `reduce_` actions to cut partial losses if you are in a floating loss and detect the initial thesis is weakening but you aren't ready to close it entirely.
-3. For each existing position, decide ONE action. **CRITICAL: If you decide to do anything other than `hold` (e.g. reduce risk), YOU MUST explicitly output an action object for it in the JSON `actions` array! Just writing about it in the text analysis does NOT execute the action!**
-- `hold`: If still valid and no adjustment needed (no need to output in 'actions' array).
-- `adjust_sl_tp`: Update `stop_loss` and/or `take_profit` parameters in `exit_plan` to trail profits or adapt to new resistance/support. (Must output in 'actions')
-- `reduce_25`: Close 25% of the position. Use this when you detect emerging risks or declining momentum, to lock in partial profit OR cut partial losses. (Must output in 'actions')
-- `reduce_50`: Close 50% of the position. Use this when hitting a major resistance/support, or to significantly de-risk a losing trade. (Must output in 'actions')
-- `reduce_75`: Close 75% of the position. Use this when trend is severely weakening but not fully invalidated yet. (Must output in 'actions')
-- `close_position`: Close 100% of the position if invalidated or hitting a critical resistance target. (Must output in 'actions')
+2. DYNAMIC POSITION MANAGEMENT: If the position is in profit and encounters resistance/support, or momentum starts turning, you MUST lock in gains. Use `reduce_50` to secure profits, or `adjust_sl_tp`. DO NOT LET A WINNING TRADE TURN INTO A LOSS.
+3. **ZERO TOLERANCE FOR TRAPS (Mandatory Action)**:
+   - If you detect a **Whale Dump Trap** (Token Inflow + Stablecoin Outflow), and you hold a **LONG**, you MUST output a `close_position` or `reduce_75` action immediately. 
+   - If you detect a **Bear Trap** (Token Outflow + Stablecoin Inflow), and you hold a **SHORT**, you MUST output a `close_position` or `reduce_75` action immediately.
+   - **Terminology Rule**: Never call "Token In + Money Out" a contradiction (矛盾). Call it **"Consistent Aggressive Distribution" (强力派发)**.
+   - **CRITICAL**: Monitoring while holding through a trap is a failure of logic. Exit immediately.
+4. For each existing position, decide ONE action. **CRITICAL: You MUST explicitly output an action object in the JSON `actions` array!**
+- `hold`: If still valid and no adjustment needed.
+- `adjust_sl_tp`: Update `stop_loss` and/or `take_profit`.
+- `reduce_25`: Close 25% to lock in partial profit or cut partial losses.
+- `reduce_50`: Close 50% to de-risk.
+- `reduce_75`: Close 75% when thesis is severely weakening.
+- `close_position`: Close 100% if invalidated or target hit.
 
 Market Regime: {{MARKET_REGIME}}
 Dynamic Exposure Limits (STRICT):
