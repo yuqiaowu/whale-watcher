@@ -208,12 +208,12 @@ This data comes from direct on-chain monitoring and exchange liquidation feeds.
 {{WHALE_CONTEXT}}
 
 **INTERPRETATION RULES (SKEPTICAL WHALE ANALYSIS):**
-1. **Accumulation vs. Dump Trap**:
-   - ✅ **REAL ACCUMULATION**: Price dropping + Token Net Flow is NEGATIVE (Whales moving tokens OUT to cold wallets) + Stablecoin Flow is POSITIVE (Dry powder moving IN) -> **BULLISH**.
-   - ❌ **EXCHANGE DUMP TRAP**: Token Net Flow is POSITIVE (Whales moving tokens INTO exchanges) + Stablecoin Flow is NEGATIVE (Liquidity leaving) -> **BEARISH/DISTRIBUTION**. Even if price is stable, this is a "Cliff Dump" setup.
+1. **Accumulation vs. Distribution**:
+   - ✅ **CONSISTENT ACCUMULATION**: Price dropping + Token Net Flow is NEGATIVE (Tokens leaving exchanges) + Stablecoin Flow is POSITIVE (Cash entering).
+   - 📉 **CONSISTENT AGGRESSIVE DISTRIBUTION**: Token Net Flow is POSITIVE (Tokens entering exchanges) + Stablecoin Flow is NEGATIVE (Cash leaving exchanges). **CRITICAL: This is a consistent and aggressive signal of whales EXITING the market.** Selling assets and immediately withdrawing cash. It is NOT a contradiction (不是矛盾).
 2. **Liquidation & "Squeeze Fuel" Trap**:
-   - 📉 **HIGH L/S RATIO (> 5.0)**: Massive Long liquidations (Retail being flushed). This is a **CLEANUP** signal. If Price stabilizes near support + Whale Flow is negative (accumulation), this is a high-conviction **BUY/LONG** entry.
-   - 📈 **LOW L/S RATIO (< 0.2)**: Massive Short liquidations (Squeeze already happened). The fuel is **DRAINED**. Entering LONG here is high risk (buying the top of the squeeze). This is a **LIQUIDITY TRAP**.
+   - 📉 **HIGH L/S RATIO (> 5.0)**: Massive Long liquidations (Retail being flushed). This is a **CLEANUP** signal. 
+   - 📈 **LOW L/S RATIO (< 0.2)**: Massive Short liquidations (Squeeze already happened). The fuel is **DRAINED**. 
 3. **The "Whale Support" Divergence**:
    - If Token Net Flow is POSITIVE (moving in) but Price doesn't drop immediately, check Liquidations. If High Short Liquidations are happening, it's a **SQUEEZE**; otherwise, it's likely a **LIMIT SELL WALL** being built by whales.
 3. **Squeeze Warning**: Negative Funding + High "Retail Pain" (Oversold RSI) -> **SHORT SQUEEZE IMMINENT**.
@@ -361,21 +361,14 @@ Current State:
 {{PORTFOLIO_STATE_JSON}}
 
 **IMPORTANT: Review Existing Positions First!**
-Before opening new positions:
-1. Look at your floating profit/loss ("pnlPercent") for each holding.
-2. DYNAMIC POSITION MANAGEMENT: If the position is in profit and encounters resistance/support, or momentum starts turning, you MUST lock in gains. Use `reduce_50` to secure profits, or `adjust_sl_tp`. DO NOT LET A WINNING TRADE TURN INTO A LOSS.
-3. **ZERO TOLERANCE FOR TRAPS (Mandatory Action)**:
-   - If you detect a **Whale Dump Trap** (Token Inflow + Stablecoin Outflow), and you hold a **LONG**, you MUST output a `close_position` or `reduce_75` action immediately. 
-   - If you detect a **Bear Trap** (Token Outflow + Stablecoin Inflow), and you hold a **SHORT**, you MUST output a `close_position` or `reduce_75` action immediately.
-   - **Terminology Rule**: Never call "Token In + Money Out" a contradiction (矛盾). Call it **"Consistent Aggressive Distribution" (强力派发)**.
-   - **CRITICAL**: Monitoring while holding through a trap is a failure of logic. Exit immediately.
-4. For each existing position, decide ONE action. **CRITICAL: You MUST explicitly output an action object in the JSON `actions` array!**
-- `hold`: If still valid and no adjustment needed.
-- `adjust_sl_tp`: Update `stop_loss` and/or `take_profit`.
-- `reduce_25`: Close 25% to lock in partial profit or cut partial losses.
-- `reduce_50`: Close 50% to de-risk.
-- `reduce_75`: Close 75% when thesis is severely weakening.
-- `close_position`: Close 100% if invalidated or target hit.
+1. **LOGICAL CONSISTENCY REQUIREMENT**: Your actions (`actions` array) MUST be logically supported by your analysis.
+   - You have **FULL AUTONOMY** to decide whether to `hold`, `reduce`, or `close_position`.
+   - However, if you explicitly identify a "Whale Distribution" or "Exhaustion Trap" in your text analysis, but choose to `hold` a large contrary position, you MUST justify why those risks are acceptable in your `reflection` or `entry_reason`. Failure to align action with risk assessment is considered a logical failure.
+2. **DYNAMIC POSITION MANAGEMENT**: Use your discretion to lock in gains or de-risk based on the latest evidence. Choose ONE action for each symbol in the `actions` array.
+- `hold`: Reasoning remains valid.
+- `adjust_sl_tp`: Trail stops or update targets.
+- `reduce_25/50/75`: Scale out based on emerging risks or target hits.
+- `close_position`: Exit when the thesis is no longer supported by reality.
 
 Market Regime: {{MARKET_REGIME}}
 Dynamic Exposure Limits (STRICT):
