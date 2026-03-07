@@ -268,11 +268,13 @@ Identify where the crowd is trapped:
    - ONLY consider a mean-reversion SHORT when there is a massive SHORT liquidation (flushing out weak shorts) and price stabilizes. If massive LONG liquidations just occurred, liquidity is drained downwards—DO NOT chase shorts here.
 - **Liquidity Trap**: Late chasers entering at resistance (High Funding + High RSI) or at support (High Neg Funding + Low RSI).
 
-C. HYPOTHESIS MENU (Generate 3 Scenarios)
-For top candidates, evaluate:
-1.  **Trend Following**: Models Align + Whale Accumulation + Normal Funding. (Go with the flow).
-2.  **Mean Reversion**: Strict RSI (<30 or >70) + Validated Liquidation Flush. (Fade the move).
-3.  **Whale Front-Run**: Massive Token Inflow detected while retail is panicking. (Bet on the Smart Money).
+C. HYPOTHESIS OVERVIEW (Context for selection — full playbooks defined in Section 4C below)
+Consider ALL five playbooks equally. Do not default to one. Select based on the strongest evidence combination:
+1. **Trend Following**: Momentum + Accumulation + Volume confirmation.
+2. **Mean Reversion**: Extreme RSI extremes + reversal candle confirmation.
+3. **Microstructure Squeeze**: Extreme funding anomaly OR drained L/S ratio.
+4. **Narrative Divergence**: News contradicts price action.
+5. **Whale Front-Run**: Token flow direction clearly diverges from retail positioning.
 
 E. REGIME SAFETY CHECK (Mandatory — Fill 'regime_safety' Field)
 Before entering any trade, you MUST evaluate whether the market is in a dangerous state using the following data signals:
@@ -282,8 +284,8 @@ Signals of a falling knife (DO NOT go long blindly):
 - RSI < 30 AND still declining (no divergence)
 - ADX > 25 (strong directional trend — the drop has momentum)
 - Long Liquidations > Short Liquidations (retail longs being flushed — not bottomed yet)
-- Whale Token Net Flow NEGATIVE (whales still distributing, not accumulating)
-→ Verdict: "KNIFE" — Wait for RSI divergence or whale accumulation signal before considering long.
+- Whale Token Net Flow **POSITIVE** [TO_EXCHANGE → DISTRIBUTION] (whales are SELLING into exchanges, not accumulating)
+→ Verdict: "KNIFE" — Wait for RSI divergence or Token Flow to turn NEGATIVE [FROM_EXCHANGE → ACCUMULATION] before considering long.
 
 🚀 ROCKET BLOCKING (挡火箭 — Reversal Risk):
 Signals of chasing into a vertical move (DO NOT go short blindly):
@@ -344,12 +346,12 @@ B. THE PAIN TRADE & LIQUIDITY TRAPS
 - **Crowded Longs (Trample Risk)**: Funding > 0.03% + Positive Token flow = "Exit Door is too narrow". Avoid.
 - **Drained Squeeze**: L/S < 0.2 = "No more shorts to burn". Buying here is buying the top.
 
-C. HYPOTHESIS PLAYBOOKS (Must Choose ONE in output)
-1. **Trend Following**: (High ADX + Normal Funding + Whale Accumulation). Ride the quantitative wave.
-2. **Mean Reversion**: (Extreme RSI + Reversal Candle + Validated Flush). Fade the panic, buy the blood.
-3. **Microstructure / Squeeze**: (Extreme Funding Trap or Drained L/S Ratio). Capitalize on forced liquidations or avoid exhausted moves.
-4. **Narrative Divergence**: (News contradicts Price). E.g., Bad News + Good Price = Secret Accumulation (Bullish). Good News + Bad Price = Distribution Trap (Bearish).
-5. **Whale Front-Run**: (Massive Token Flow opposing retail sentiment). Bet purely on the Smart Money footprint overriding current technicals.
+C. HYPOTHESIS PLAYBOOKS (Must Choose ONE in output — weight all 5 equally)
+1. **TREND_FOLLOWING**: (High ADX + Normal Funding + Token flow FROM_EXCHANGE). Ride the momentum.
+2. **MEAN_REVERSION**: (Extreme RSI + Reversal Candle + Validated Flush). Fade the panic or greed.
+3. **MICROSTRUCTURE_SQUEEZE**: (Extreme Funding Trap or Drained L/S Ratio). Capitalize on structural imbalances.
+4. **NARRATIVE_DIVERGENCE**: (News contradicts Price). Bad News + Good Price = Accumulation. Good News + Bad Price = Distribution Trap.
+5. **WHALE_FRONT_RUN**: (Token flow direction clearly opposes retail bias, e.g., tokens FROM_EXCHANGE while retail panic-sells). Follow smart money positioning.
 
 D. REGIME SAFETY CHECK (Section 4E) - [Already Defined Above]
 
