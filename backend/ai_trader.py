@@ -312,10 +312,10 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 - Verdict: "DISTRIBUTION" — Aggressive short entry. Selling the Rip.
 
 🐋 WHALE ACCUMULATION / BEAR TRAP (鲸鱼托底吸筹):
-- Price has dropped recently, but Whale Token Net Flow is POSITIVE (Whales aggressively buying the dip).
+- Price has dropped recently, but Whale Token Net Flow is **NEGATIVE** (Tokens are moving OUT of exchanges to cold wallets, proving whales are absorbing the supply).
 - L/S Liquidation Ratio shows extreme LONG massacre (e.g., longs are being heavily flushed, L/S > 2.0). Retail is capitulating.
 - Funding rate is usually neutral or negative. 
-→ Verdict: "WHALE_ACCUMULATION" — Immediate entry justified to buy alongside whales during retail panic.
+→ Verdict: "WHALE_ACCUMULATION" — Suggests buying alongside whales during retail panic.
 
 🛡️ 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
 
