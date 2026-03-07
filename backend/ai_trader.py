@@ -232,7 +232,10 @@ Pay close attention to **GLOBAL MARKET STATE** in the Daily Context above.
 1. **BEAR MARKET (Price < SMA200)**:
    - **Primary Bias**: SHORT. Use "Pullback to Resistance" logic.
    - **Shorts**: Aggressive shorts allowed when price rallies to SMA50 or Previous 5 Highs and shows rejection (Upper Wick > 40%). Distribution signals from whales (Token Inflow + Stable Outflow) are high-conviction triggers.
-   - **Longs**: Only allowed if "Whale Accumulation" is Extreme AND "Liquidation Signal" is present. Max Leverage 2x.
+   - **Longs**: Allowed under TWO specific conditions:
+     a) **Whale accumulation is detected** (Extreme Token Outflow + Stable Inflow).
+     b) **FOR BTC, BNB, DOGE (Whale Blind Spots)**: IF Whale data is missing, long is allowed if **Qlib Rank is 1-2** AND **Volume Z-Score > 1.0** (proving high demand) AND **RSI > 50**.
+     - *Max Leverage 2x* in all Bear Market Longs.
 2. **BULL MARKET (Price > SMA200)**:
    - **Primary Bias**: LONG.
    - **Shorts**: Only allowed if "Whale Distribution" is Extreme. Max Leverage 2x.
