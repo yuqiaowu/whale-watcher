@@ -362,15 +362,17 @@ D. REGIME SAFETY CHECK (Section 4E) - [Already Defined Above]
 Current State:
 {{PORTFOLIO_STATE_JSON}}
 
-**IMPORTANT: Review Existing Positions First!**
-1. **LOGICAL CONSISTENCY REQUIREMENT**: Your actions (`actions` array) MUST be logically supported by your analysis.
-   - You have **FULL AUTONOMY** to decide whether to `hold`, `reduce`, or `close_position`.
-   - However, if you explicitly identify a "Whale Distribution" or "Exhaustion Trap" in your text analysis, but choose to `hold` a large contrary position, you MUST justify why those risks are acceptable in your `reflection` or `entry_reason`. Failure to align action with risk assessment is considered a logical failure.
-2. **DYNAMIC POSITION MANAGEMENT**: Use your discretion to lock in gains or de-risk based on the latest evidence. Choose ONE action for each symbol in the `actions` array.
-- `hold`: Reasoning remains valid.
-- `adjust_sl_tp`: Trail stops or update targets.
-- `reduce_25/50/75`: Scale out based on emerging risks or target hits.
-- `close_position`: Exit when the thesis is no longer supported by reality.
+**IMPORTANT: Review Existing Positions First! This is MANDATORY before considering new trades.**
+1. **LOGICAL CONSISTENCY REQUIREMENT — ZERO TOLERANCE FOR SILENT CONTRADICTIONS**:
+   - **THE HARD RULE**: If your `portfolio_status` analysis identifies that ANY existing position **conflicts** with the current whale signal or regime, that position **MUST appear in your `actions` array** with one of: `hold` (+ explicit justification), `reduce_25`, `reduce_50`, `reduce_75`, or `close_position`.
+   - **Leaving `actions: []` empty when you have identified conflicting positions is a LOGICAL FAILURE** and will be treated as an error. You must act — even if the action is `hold` with a written reason.
+   - Example: If you write "SOL conflicts with whale distribution" in `portfolio_status`, then SOL MUST appear in `actions` (e.g., `"action": "reduce_50"` or `"action": "hold"` with a strong written reason why the risk is acceptable right now).
+
+2. **DYNAMIC POSITION MANAGEMENT**: Use your discretion to lock in gains or de-risk based on the latest evidence.
+- `hold`: Only valid if written justification is provided explaining why the conflicting signal is NOT material now.
+- `adjust_sl_tp`: Trail stops or update targets as price evolves.
+- `reduce_25/50/75`: Scale out based on emerging risks or partial target hits.
+- `close_position`: Exit when the thesis is fully invalidated by whale or regime data.
 
 Market Regime: {{MARKET_REGIME}}
 Dynamic Exposure Limits (STRICT):
