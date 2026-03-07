@@ -362,17 +362,19 @@ D. REGIME SAFETY CHECK (Section 4E) - [Already Defined Above]
 Current State:
 {{PORTFOLIO_STATE_JSON}}
 
-**IMPORTANT: Review Existing Positions First! This is MANDATORY before considering new trades.**
-1. **LOGICAL CONSISTENCY REQUIREMENT — ZERO TOLERANCE FOR SILENT CONTRADICTIONS**:
-   - **THE HARD RULE**: If your `portfolio_status` analysis identifies that ANY existing position **conflicts** with the current whale signal or regime, that position **MUST appear in your `actions` array** with one of: `hold` (+ explicit justification), `reduce_25`, `reduce_50`, `reduce_75`, or `close_position`.
-   - **Leaving `actions: []` empty when you have identified conflicting positions is a LOGICAL FAILURE** and will be treated as an error. You must act — even if the action is `hold` with a written reason.
-   - Example: If you write "SOL conflicts with whale distribution" in `portfolio_status`, then SOL MUST appear in `actions` (e.g., `"action": "reduce_50"` or `"action": "hold"` with a strong written reason why the risk is acceptable right now).
+**🟥 5. THE PRIMARY MISSION: ACTIVE POSITION MAINTENANCE (MANDATORY FIRST)**
+Before even thinking about new trades, you MUST address your current exposure.
+1. **THE CLEANSE RULE**: Every decision cycle, you start with a "Portfolio Cleanse".
+   - Look at your `portfolio_status` below. 
+   - If a position is in a **CONFIRMED CONFLICT** (e.g., You are LONG but Whale Flow is STRONG_DUMP, or Regime is BEAR and support is broken), you **MUST** act.
+   - **VALID ACTIONS FOR CONFLICTS**: `close_position`, `reduce_50`, `reduce_75`, or `hold` (ONLY if you provide a 1-sentence "Defense of Continued Risk" in the `entry_reason`).
+   - **ZERO TOLERANCE**: Identifying a risk in text and not acting on it in the `actions` array is a **MAXIMUM SEVERITY FAILURE**.
 
-2. **DYNAMIC POSITION MANAGEMENT**: Use your discretion to lock in gains or de-risk based on the latest evidence.
-- `hold`: Only valid if written justification is provided explaining why the conflicting signal is NOT material now.
-- `adjust_sl_tp`: Trail stops or update targets as price evolves.
-- `reduce_25/50/75`: Scale out based on emerging risks or partial target hits.
-- `close_position`: Exit when the thesis is fully invalidated by whale or regime data.
+2. **THE SECONDARY MISSION: NEW ENTRIES (PRIVILEGED ACCESS)**:
+   - Opening a new position is a **REWARD** for having a healthy, logically-aligned portfolio.
+   - If you have conflicts in your current positions that you aren't fixing, do NOT open new ones.
+   - All new entries MUST follow the Hypothesis Playbooks (Section 4C).
+
 
 Market Regime: {{MARKET_REGIME}}
 Dynamic Exposure Limits (STRICT):
@@ -418,29 +420,25 @@ Structure:
     "reflection": { "zh": "AI的一句话反思", "en": "Short reflection." }
   },
   "actions": [
-    // ⚠️ CRITICAL MANDATE: You MUST list actions for ALL ACTIVE POSITIONS (BNB, SOL, ETH, etc.) first.
-    // If a position conflicts with the whale signal, you MUST choose reduce/close/hold+reason.
+    /* 
+       STEP 1: POSITION MAINTENANCE (List all symbols from portfolio_status first)
+       Example: {"symbol": "SOL", "action": "reduce_50", "entry_reason": {"zh": "由于识别到鲸鱼抛售威胁，强制执行风控减仓50%...", "en": "Reduction mandated by whale dump threat..."}}
+    */
     {
-      "symbol": "SOL",
-      "action": "hold", // OPTIONS for existing: hold, adjust_sl_tp, reduce_25, reduce_50, reduce_75, close_position
-      "entry_reason": {
-        "zh": "虽然鲸鱼流向微弱，但止损尚未触发，且OI增长暗示反弹，暂持有观察。",
-        "en": "Whale flow is weak, but stop-loss not hit and OI growth suggests a bounce. Holding."
-      }
+      "symbol": "POSITION_FROM_PORTFOLIO",
+      "action": "hold | adjust_sl_tp | reduce_25 | reduce_50 | reduce_75 | close_position",
+      "entry_reason": { "zh": "必须解释为什么保持或调整该仓位", "en": "Must justify maintenance action" }
     },
-    // New trades are only listed AFTER current positions are addressed.
+    /* 
+       STEP 2: NEW ENTRIES (Only after Step 1 is complete)
+    */
     {
-      "symbol": "BTC",
-      "action": "open_long", // OPTIONS for new: open_long, open_short, monitor
+      "symbol": "NEW_SYMBOL",
+      "action": "open_long | open_short | monitor",
       "leverage": 3,
-      "position_size_usd": 1000,
-      "entry_reason": {
-        "zh": "...", "en": "..."
-      },
-      "exit_plan": {
-        "take_profit": 150, "stop_loss": 130,
-        "invalidation": { "zh": "...", "en": "..." }
-      }
+      "position_size_usd": 500,
+      "entry_reason": { "zh": "...", "en": "..." },
+      "exit_plan": { "take_profit": 150, "stop_loss": 130, "invalidation": { "zh": "...", "en": "..." } }
     }
   ]
 }
