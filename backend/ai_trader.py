@@ -369,10 +369,12 @@ B. THE PAIN TRADE & LIQUIDITY TRAPS
 - **Crowded Longs (Trample Risk)**: Funding > 0.03% + Positive Token flow = "Exit Door is too narrow". Avoid.
 - **Drained Squeeze**: L/S < 0.2 = "No more shorts to burn". Buying here is buying the top.
 
-C. HYPOTHESIS MENU (Must Choose ONE in output)
-1. **Trend Following**: (High ADX + Normal Funding + Whale Accumulation). Ride the wave.
-2. **Mean Reversion**: (Extreme RSI + Low Vol Z + High L/S Ratio). Fade the panic.
-3. **Whale Squeeze/Trap**: (Contrary Whale signal + Retail Panic). Follow the Smart Money, front-run the retail.
+C. HYPOTHESIS PLAYBOOKS (Must Choose ONE in output)
+1. **Trend Following**: (High ADX + Normal Funding + Whale Accumulation). Ride the quantitative wave.
+2. **Mean Reversion**: (Extreme RSI + Reversal Candle + Validated Flush). Fade the panic, buy the blood.
+3. **Microstructure / Squeeze**: (Extreme Funding Trap or Drained L/S Ratio). Capitalize on forced liquidations or avoid exhausted moves.
+4. **Narrative Divergence**: (News contradicts Price). E.g., Bad News + Good Price = Secret Accumulation (Bullish). Good News + Bad Price = Distribution Trap (Bearish).
+5. **Whale Front-Run**: (Massive Token Flow opposing retail sentiment). Bet purely on the Smart Money footprint overriding current technicals.
 
 D. REGIME SAFETY CHECK (Section 4E) - [Already Defined Above]
 
@@ -419,7 +421,7 @@ Structure:
     "zh": "必须是中文，综合叙述（3-4句话）。分析要求：\n1. 首先进行【叙事校验】（Section 4A），判断当前驱动力是Impulse还是已定价。\n2. 明确参考【Qlib 相对强弱排名】和【Z-Score 异常探测】，解释它们如何支持/反驳当前决策。\n3. 结合【痛苦交易】（4B）和【战场纪律】（4D），指出市场是否处于“爆仓踩踏”中，是否有足够的“燃料”支撑继续上涨/下跌。\n4. 阐明选择的【假设分析】剧本（4C）。",
     "en": "Must be in English, comprehensive narrative (3-4 sentences). Requirements:\n1. Perform Narrative vs Reality Check (4A).\n2. Explicitly reference Qlib ratings and Z-Score anomalies, explaining how they support/refute the decision.\n3. Combine Pain Trade (4B) and Tactical Discipline (4D) to identify liquidation rushes and fuel.\n4. Specify the selected Scenario (4C)."
   },
-  "hypothesis_scenario": "TREND_FOLLOWING | MEAN_REVERSION | WHALE_TRAP",
+  "hypothesis_scenario": "TREND_FOLLOWING | MEAN_REVERSION | MICROSTRUCTURE_SQUEEZE | NARRATIVE_DIVERGENCE | WHALE_FRONT_RUN",
   "contrary_signal_check": {
     "zh": "列出当前最严重的冲突数据或风险点，并解释为什么忽略/对冲它。",
     "en": "List the most significant contrary signal or risk point and justify why it doesn't invalidate the trade."
