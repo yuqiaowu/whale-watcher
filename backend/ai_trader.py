@@ -366,9 +366,12 @@ Current State:
 Before even thinking about new trades, you MUST address your current exposure.
 1. **THE 1:1 CLEANSE RULE (MANDATORY)**: Every decision cycle, your first task is a per-asset audit.
    - **MAPPING REQUIREMENT**: For EVERY symbol listed in `{{PORTFOLIO_STATE_JSON}}`, you **MUST** provide a corresponding entry in the `actions` array. 
-   - **ZERO OMISSION**: You are NOT allowed to skip any current holding. If you hold 3 assets, the first 3 items in `actions` MUST be those 3 assets.
-   - **ASSET-SPECIFIC DEFENSE**: The `entry_reason` for a maintenance action (hold/reduce/close) must specifically address that asset's data (e.g., "SOL is conflicting with Whale Flow, but RSI is at support, so holding with tight SL"). Do NOT provide generic market summaries here.
-   - **ZERO TOLERANCE**: Identifying a risk for a specific asset in text but failing to provide a matching action entry for that EXACT symbol is a **LOGICAL INTEGRITY BREACH**.
+   - **ZERO OMISSION**: You are NOT allowed to skip any current holding. If you hold BTC, DOGE, BNB, or any other asset, it MUST be listed.
+   - **ASSET-SPECIFIC DEFENSE**: 
+     - For coins WITH whale data (ETH, SOL): Defend based on Flow + Technicals.
+     - For coins WITHOUT whale data (BTC, DOGE, BNB): You **MUST** defend the position based on Technicals (RSI/ADX) + Liquidation Pain + Qlib Ranking. 
+     - "Missing data" is NOT a reason to skip an action.
+   - **ZERO TOLERANCE**: Failing to provide a matching action entry for ANY symbol in portfolio is a **LOGICAL INTEGRITY BREACH**.
 
 2. **THE SECONDARY MISSION: NEW ENTRIES (PRIVILEGED ACCESS)**:
    - Opening a new position is a **REWARD** for having a healthy, logically-aligned portfolio.
