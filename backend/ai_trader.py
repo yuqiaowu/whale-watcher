@@ -798,7 +798,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
     Risk Management Layer (The "Supervisor").
     Sanitizes and overrides AI decisions based on hard rules.
     """
-    if not decision or "actions" not in decision:
+    if not decision:
         return decision
 
     validated_actions = []
