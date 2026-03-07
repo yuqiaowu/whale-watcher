@@ -291,17 +291,19 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 - Rejection wicks appearing (Wick Ratio > 0.3)
 → Verdict: "SAFE_MR" — Mean reversion entry is justified.
 
-🐋 WHALE SQUEEZE (鲸鱼轧空):
-- Whale Net Flow strongly aligns with the intended direction (e.g., heavy accumulation for long).
-- L/S Liquidation Ratio shows extreme massacre on the SHORT side (e.g., shorts are being heavily flushed, L/S < 0.2). This indicates a squeeze is actively burning fuel.
-→ Verdict: "WHALE_SQUEEZE" — Immediate entry justified to ride the squeeze momentum.
+🐋 WHALE SQUEEZE / BUYER EXHAUSTION (鲸鱼拉高出货/买盘枯竭):
+- Whale Net Flow might look positive (tokens flowing into exchange), but it's a trap.
+- L/S Liquidation Ratio is EXTREMELY LOW (L/S < 0.2): This means shorts have already been liquidated. The "fuel" is gone. DO NOT go long here.
+- Volume Z-Score is NEGATIVE (< 0): The price move is hollow and lacks heavy buyer support.
+- Verdict: "EXHAUSTION" — High risk of a mid-air reversal. This is a setup for a SHORT, not a long.
 
 📉 WHALE DISTRIBUTION (鲸鱼高位派发 - BEAR MARKET BEST SETUP):
 - Market Regime is BEAR (Price < SMA200).
-- Price has rallied into SMA50 or Resistance, but Whale Token Net Flow is POSITIVE (Whales moving tokens into exchanges to sell).
+- Price has rallied into SMA50, Resistance, or Prev 5 Highs. 
+- Whale Token Net Flow is POSITIVE (Whales move to exchanges).
 - Technical Rejection: Upper Wick Ratio > 40%.
-- RSI is moderately high (55-70), but sentiment (Funding) is becoming overly optimistic.
-→ Verdict: "DISTRIBUTION" — High-altitude short entry.
+- Funding Rate: POSITIVE (Retail is chasing the rally, creating trample risk).
+- Verdict: "DISTRIBUTION" — Aggressive short entry. Selling the Rip.
 
 🐋 WHALE ACCUMULATION / BEAR TRAP (鲸鱼托底吸筹):
 - Price has dropped recently, but Whale Token Net Flow is POSITIVE (Whales aggressively buying the dip).
@@ -354,6 +356,60 @@ Constraints:
 - Max Leverage: 5x (Normal), 10x (High Conviction Whale Signal).
 - **DO NOT exceed the Available Room.** 
 - **SAFETY RULE**: Always keep your total exposure at least $10 BELOW the limit to account for market volatility and fees.
+-🟥 4. ANALYSIS LOGIC (The "Dolores" Engine)
+
+A. CONFLICT RESOLUTION PROTOCOL (Mandatory Review)
+When indicators disagree, follow this hierarchy:
+1. **MARKET REGIME (Priority 1)**: If Regime = BEAR, skip "Trend Following" Longs unless Whale Signal is Extreme.
+2. **WHALE REALITY (Priority 2)**: On-chain flow overrides technicals. If Price is pump but Token Flow is IN (Selling), it's a Trap.
+3. **LIQUIDATION FUEL (Priority 3)**: If L/S Ratio < 0.2, the fuel is GONE. No matter how bullish it looks, do not chase.
+4. **QLIB & TECHNICALS (Priority 4)**: Use as confirmation, never as the only entry reason.
+
+B. THE PAIN TRADE & LIQUIDITY TRAPS
+- **Crowded Longs (Trample Risk)**: Funding > 0.03% + Positive Token flow = "Exit Door is too narrow". Avoid.
+- **Drained Squeeze**: L/S < 0.2 = "No more shorts to burn". Buying here is buying the top.
+
+C. HYPOTHESIS MENU (Must Choose ONE in output)
+1. **Trend Following**: (High ADX + Normal Funding + Whale Accumulation). Ride the wave.
+2. **Mean Reversion**: (Extreme RSI + Low Vol Z + High L/S Ratio). Fade the panic.
+3. **Whale Squeeze/Trap**: (Contrary Whale signal + Retail Panic). Follow the Smart Money, front-run the retail.
+
+D. REGIME SAFETY CHECK (Section 4E) - [Already Defined Above]
+
+🛡️ TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
+[Existing NATR and Stop-Loss rules remain in effect...]
+
+🟧 5. PORTFOLIO & RISK MANAGEMENT
+Current State:
+{{PORTFOLIO_STATE_JSON}}
+
+**IMPORTANT: Review Existing Positions First!**
+Before opening new positions:
+1. Look at your floating profit/loss ("pnlPercent") for each holding.
+2. DYNAMIC POSITION MANAGEMENT: If the position is in profit and encounters resistance/support, or momentum starts turning, you MUST lock in gains. Use `reduce_50` to secure profits, or `adjust_sl_tp`. DO NOT LET A WINNING TRADE TURN INTO A LOSS. You are ALSO highly encouraged to use `reduce_` actions to cut partial losses if you are in a floating loss and detect the initial thesis is weakening but you aren't ready to close it entirely.
+3. For each existing position, decide ONE action. **CRITICAL: If you decide to do anything other than `hold` (e.g. reduce risk), YOU MUST explicitly output an action object for it in the JSON `actions` array! Just writing about it in the text analysis does NOT execute the action!**
+- `hold`: If still valid and no adjustment needed (no need to output in 'actions' array).
+- `adjust_sl_tp`: Update `stop_loss` and/or `take_profit` parameters in `exit_plan` to trail profits or adapt to new resistance/support. (Must output in 'actions')
+- `reduce_25`: Close 25% of the position. Use this when you detect emerging risks or declining momentum, to lock in partial profit OR cut partial losses. (Must output in 'actions')
+- `reduce_50`: Close 50% of the position. Use this when hitting a major resistance/support, or to significantly de-risk a losing trade. (Must output in 'actions')
+- `reduce_75`: Close 75% of the position. Use this when trend is severely weakening but not fully invalidated yet. (Must output in 'actions')
+- `close_position`: Close 100% of the position if invalidated or hitting a critical resistance target. (Must output in 'actions')
+
+Market Regime: {{MARKET_REGIME}}
+Dynamic Exposure Limits (STRICT):
+- Max Total LONG Exposure: ${{MAX_LONG_LIMIT_USD}} ({{MAX_LONG_PCT}}% of Equity)
+- Max Total SHORT Exposure: ${{MAX_SHORT_LIMIT_USD}} ({{MAX_SHORT_PCT}}% of Equity)
+- Current LONG Exposure: ${{CURR_LONG_EXP_USD}}
+- Current SHORT Exposure: ${{CURR_SHORT_EXP_USD}}
+- Available LONG Room: ${{AVAILABLE_LONG_USD}}
+- Available SHORT Room: ${{AVAILABLE_SHORT_USD}}
+
+Constraints:
+- Max Open Positions: 3.
+- Max Risk Per Trade: 2% of NAV.
+- Max Leverage: 5x (Normal), 10x (High Conviction Whale Signal).
+- **DO NOT exceed the Available Room.** 
+- **SAFETY RULE**: Always keep your total exposure at least $10 BELOW the limit to account for market volatility and fees.
 - If available room is low, consider closing existing positions first.
 
 🟫 6. OUTPUT FORMAT (JSON ONLY)
@@ -362,6 +418,11 @@ Structure:
   "analysis_summary": {
     "zh": "必须是中文，综合叙述（3-4句话）。分析要求：\n1. 首先进行【叙事校验】（Section 4A），判断当前驱动力是Impulse还是已定价。\n2. 明确参考【Qlib 相对强弱排名】和【Z-Score 异常探测】，解释它们如何支持/反驳当前决策。\n3. 结合【痛苦交易】（4B）和【战场纪律】（4D），指出市场是否处于“爆仓踩踏”中，是否有足够的“燃料”支撑继续上涨/下跌。\n4. 阐明选择的【假设分析】剧本（4C）。",
     "en": "Must be in English, comprehensive narrative (3-4 sentences). Requirements:\n1. Perform Narrative vs Reality Check (4A).\n2. Explicitly reference Qlib ratings and Z-Score anomalies, explaining how they support/refute the decision.\n3. Combine Pain Trade (4B) and Tactical Discipline (4D) to identify liquidation rushes and fuel.\n4. Specify the selected Scenario (4C)."
+  },
+  "hypothesis_scenario": "TREND_FOLLOWING | MEAN_REVERSION | WHALE_TRAP",
+  "contrary_signal_check": {
+    "zh": "列出当前最严重的冲突数据或风险点，并解释为什么忽略/对冲它。",
+    "en": "List the most significant contrary signal or risk point and justify why it doesn't invalidate the trade."
   },
   "context_analysis": {
     "technical_signal": { "zh": "技术面概括 (RSI, ADX...)", "en": "Brief technical summary." },
