@@ -235,9 +235,10 @@ class OKXExecutor:
         except Exception as e:
             print(f"⚠️ Failed to save shadow state: {e}")
 
-    def execute_trade(self, symbol, action, amount_usd, leverage, stop_loss=None, take_profit=None):
+    def execute_trade(self, symbol, action, amount_usd, leverage, stop_loss=None, take_profit=None, natr_percent=None):
         """
         Main entry point for AI Trader.
+        Includes a 'Risk Shield' Layer to enforce NATR and NAV Risk rules.
         """
         instId = f"{symbol}-USDT-SWAP"
         
@@ -253,6 +254,45 @@ class OKXExecutor:
         last_price = float(ticker['last'])
         ask_price = float(ticker['askPx'])
         bid_price = float(ticker['bidPx'])
+
+        # --- RISK SHIELD: Programmatic Enforcement of 4D Discipline ---
+        if "open" in action:
+            # A. Enforce 1.5x NATR Stop Distance
+            if natr_percent:
+                min_stop_dist = 1.5 * float(natr_percent)
+                
+                # Check current stop loss distance
+                try:
+                    sl_price = float(str(stop_loss).replace('$', '').replace(',', '')) if stop_loss and str(stop_loss) != "None" else 0
+                    if isinstance(stop_loss, str) and not stop_loss.replace('.', '', 1).isdigit(): sl_price = 0
+                except ValueError:
+                    sl_price = 0
+                
+                curr_dist_pct = abs(last_price - sl_price) / last_price * 100 if sl_price > 0 else 0
+                
+                # If SL is missing or too tight, widen it
+                if curr_dist_pct < min_stop_dist:
+                    new_dist = min_stop_dist
+                    if "long" in action: stop_loss = last_price * (1 - new_dist / 100)
+                    else: stop_loss = last_price * (1 + new_dist / 100)
+                    
+                    if curr_dist_pct > 0:
+                        print(f"🛡️ RISK SHIELD: Widening Stop for {symbol} to 1.5x NATR ({new_dist:.2f}%)")
+                    else:
+                        print(f"🛡️ RISK SHIELD: Enforcing NATR Stop ({new_dist:.2f}%) for {symbol}")
+                    curr_dist_pct = new_dist
+
+                # B. Enforce 2% NAV Risk Limit
+                # Risk = Notional * StopDist% <= Equity * 2%
+                equity = self.get_account_equity()
+                max_risk_usd = equity * 0.02
+                current_risk_usd = (curr_dist_pct / 100) * amount_usd
+                
+                if current_risk_usd > max_risk_usd and equity > 0:
+                    new_amount = max_risk_usd / (curr_dist_pct / 100)
+                    print(f"🛡️ RISK SHIELD: Downsizing {symbol} from ${amount_usd:.0f} to ${new_amount:.0f} (Risk > 2% NAV)")
+                    amount_usd = new_amount
+
 
         # --- NEW: Handle Adjust SL/TP ---
         if action in ["adjust_sl", "adjust_sl_tp"]:

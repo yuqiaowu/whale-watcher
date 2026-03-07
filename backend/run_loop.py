@@ -473,7 +473,24 @@ def main():
                         nav_history = nav_history[-150:]
                         
                     db.save_data("nav_history", nav_history)
-                    print(f"✅ NAV History Updated (${current_eq:.2f})")
+                    
+                    # --- NEW: Keep current_state in sync with Real OKX ---
+                    state = db.get_data("portfolio_state", {})
+                    state["total_equity"] = round(current_eq, 2)
+                    # Sync cash (available balance) as well
+                    try:
+                        balances = executor._request("GET", "/api/v5/account/balance")
+                        if balances.get("code") == "0" and balances.get("data"):
+                             avail = float(balances["data"][0].get("totalEq", current_eq)) # fallback to totalEq
+                             for d in balances["data"][0].get("details", []):
+                                 if d.get("ccy") == "USDT":
+                                     avail = float(d.get("availBal", avail))
+                             state["cash"] = round(avail, 2)
+                    except:
+                        state["cash"] = round(current_eq * 0.8, 2) # rough fallback
+                        
+                    db.save_data("portfolio_state", state)
+                    print(f"✅ NAV History & Portfolio State Updated (${current_eq:.2f})")
                 except Exception as e:
                     print(f"⚠️ Failed to append NAV history: {e}")
 

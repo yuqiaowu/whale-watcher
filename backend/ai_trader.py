@@ -207,11 +207,18 @@ This data comes from direct on-chain monitoring and exchange liquidation feeds.
 
 {{WHALE_CONTEXT}}
 
-**INTERPRETATION RULES:**
-1. **Accumulation Signal**: If Prices are dropping, but Token Net Flow is POSITIVE (Whales buying) + High Long Liquidations (Retail capitulating) -> **BULLISH DIVERGENCE (Buy the dip)**.
-2. **Distribution Signal**: If Prices are rising, but Token Net Flow is NEGATIVE (Whales selling) + High Short Liquidations -> **BEARISH DIVERGENCE (Sell the rip)**.
+**INTERPRETATION RULES (SKEPTICAL WHALE ANALYSIS):**
+1. **Accumulation vs. Dump Trap**:
+   - ✅ **REAL ACCUMULATION**: Price dropping + Token Net Flow is NEGATIVE (Whales moving tokens OUT to cold wallets) + Stablecoin Flow is POSITIVE (Dry powder moving IN) -> **BULLISH**.
+   - ❌ **EXCHANGE DUMP TRAP**: Token Net Flow is POSITIVE (Whales moving tokens INTO exchanges) + Stablecoin Flow is NEGATIVE (Liquidity leaving) -> **BEARISH/DISTRIBUTION**. Even if price is stable, this is a "Cliff Dump" setup.
+2. **Liquidation & "Squeeze Fuel" Trap**:
+   - 📉 **HIGH L/S RATIO (> 5.0)**: Massive Long liquidations (Retail being flushed). This is a **CLEANUP** signal. If Price stabilizes near support + Whale Flow is negative (accumulation), this is a high-conviction **BUY/LONG** entry.
+   - 📈 **LOW L/S RATIO (< 0.2)**: Massive Short liquidations (Squeeze already happened). The fuel is **DRAINED**. Entering LONG here is high risk (buying the top of the squeeze). This is a **LIQUIDITY TRAP**.
+3. **The "Whale Support" Divergence**:
+   - If Token Net Flow is POSITIVE (moving in) but Price doesn't drop immediately, check Liquidations. If High Short Liquidations are happening, it's a **SQUEEZE**; otherwise, it's likely a **LIMIT SELL WALL** being built by whales.
 3. **Squeeze Warning**: Negative Funding + High "Retail Pain" (Oversold RSI) -> **SHORT SQUEEZE IMMINENT**.
-4. **BLIND SPOT EXCEPTION (BTC, BNB, DOGE)**: We DO NOT have on-chain whale flow data for BTC, BNB, and DOGE. For these assets, you MUST evaluate setups based purely on Technical Indicators + Liquidation/Funding Flow. Do not wait for or expect Whale confirmations for these three coins.
+4. **BLIND SPOT EXCEPTION (BTC, BNB, DOGE)**: We DO NOT have on-chain whale flow data for BTC, BNB, and DOGE. For these assets, evaluate setups based purely on Technical Indicators + Liquidation/Funding Flow.
+
 
 🟦 2.1 MACRO TREND (1D TIMEFRAME)
 Use this daily context to filter 4H signals.
@@ -223,9 +230,9 @@ Use this daily context to filter 4H signals.
 🟪 2.3 MARKET REGIME (THE LAW)
 Pay close attention to **GLOBAL MARKET STATE** in the Daily Context above.
 1. **BEAR MARKET (Price < SMA200)**:
-   - **Primary Bias**: SHORT.
+   - **Primary Bias**: SHORT. Use "Pullback to Resistance" logic.
+   - **Shorts**: Aggressive shorts allowed when price rallies to SMA50 or Previous 5 Highs and shows rejection (Upper Wick > 40%). Distribution signals from whales (Token Inflow + Stable Outflow) are high-conviction triggers.
    - **Longs**: Only allowed if "Whale Accumulation" is Extreme AND "Liquidation Signal" is present. Max Leverage 2x.
-   - **Shorts**: Aggressive shorts allowed on pumps (Distribution).
 2. **BULL MARKET (Price > SMA200)**:
    - **Primary Bias**: LONG.
    - **Shorts**: Only allowed if "Whale Distribution" is Extreme. Max Leverage 2x.
@@ -246,7 +253,10 @@ For each major news item or market move, ask:
 B. THE PAIN TRADE & LIQUIDITY TRAPS
 Identify where the crowd is trapped:
 - **Short Squeeze Opportunity (For Longs)**: "Extreme Short Liquidations" or "Extreme Negative Funding" alone DO NOT justify an immediate long. To buy the bounce, RSI MUST be strictly < 30 OR you must see a clear 4H long lower wick (rejection) demonstrating support. FORBID catching falling knives at RSI 40+.
-- **Long Squeeze Opportunity (For Shorts)**: "Extreme Long Liquidations" or "Extreme Positive Funding" alone DO NOT justify an immediate short. To sell the rip, RSI MUST be strictly > 70 OR you must see a clear 4H long upper wick (rejection) demonstrating resistance. FORBID blocking rockets at RSI 60 or below.
+- **Long Squeeze Opportunity (For Shorts)**: 
+    - In BULL MARKET: RSI MUST be strictly > 70.
+    - In BEAR MARKET: RSI > 55 is sufficient IF combined with (Price near SMA50 OR Price near Prev 5 High) AND (Upper Wick > 40%). We prioritze selling the "Fake Rally".
+    - FORBID blocking "Super Rockets" (ADX > 40 and RSI > 80) unless whale distribution is massive.
 - **Reverse Liquidation Trap (MUST READ)**: 
    - ONLY consider a mean-reversion LONG when there is a massive LONG liquidation (flushing out weak retail longs) and price stabilizes. If massive SHORT liquidations just occurred, liquidity is drained upwards—DO NOT chase longs here.
    - ONLY consider a mean-reversion SHORT when there is a massive SHORT liquidation (flushing out weak shorts) and price stabilizes. If massive LONG liquidations just occurred, liquidity is drained downwards—DO NOT chase shorts here.
@@ -283,17 +293,23 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 
 🐋 WHALE SQUEEZE (鲸鱼轧空):
 - Whale Net Flow strongly aligns with the intended direction (e.g., heavy accumulation for long).
-- L/S Liquidation Ratio shows extreme massacre on the SHORT side (e.g., shorts are being heavily flushed, L/S < 0.5 for long). This indicates a squeeze is actively burning fuel.
-- RSI can be NEUTRAL (40-60). A squeeze doesn't require extreme RSI to trigger.
+- L/S Liquidation Ratio shows extreme massacre on the SHORT side (e.g., shorts are being heavily flushed, L/S < 0.2). This indicates a squeeze is actively burning fuel.
 → Verdict: "WHALE_SQUEEZE" — Immediate entry justified to ride the squeeze momentum.
 
-� WHALE ACCUMULATION / BEAR TRAP (鲸鱼托底吸筹):
+📉 WHALE DISTRIBUTION (鲸鱼高位派发 - BEAR MARKET BEST SETUP):
+- Market Regime is BEAR (Price < SMA200).
+- Price has rallied into SMA50 or Resistance, but Whale Token Net Flow is POSITIVE (Whales moving tokens into exchanges to sell).
+- Technical Rejection: Upper Wick Ratio > 40%.
+- RSI is moderately high (55-70), but sentiment (Funding) is becoming overly optimistic.
+→ Verdict: "DISTRIBUTION" — High-altitude short entry.
+
+🐋 WHALE ACCUMULATION / BEAR TRAP (鲸鱼托底吸筹):
 - Price has dropped recently, but Whale Token Net Flow is POSITIVE (Whales aggressively buying the dip).
 - L/S Liquidation Ratio shows extreme LONG massacre (e.g., longs are being heavily flushed, L/S > 2.0). Retail is capitulating.
 - Funding rate is usually neutral or negative. 
 → Verdict: "WHALE_ACCUMULATION" — Immediate entry justified to buy alongside whales during retail panic.
 
-�🛡️ 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
+🛡️ 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
 
 1. **Anti-Liquidity Rush (Do not fight the cascade)**:
    - If Liquidations are **SIGNIFICANTLY LOPSIDED** (e.g., one side is 3x+ the other) OR price is moving vertically on high volume, DO NOT open a reverse trade immediately. 
@@ -523,7 +539,12 @@ def get_whale_data():
                 else:
                     natr_str += f"(~30d Avg {natr_avg:.2f}%)"
 
-            return (f"Last 4H Close=${m.get('last_closed_close', 0):.2f} | Prev 5 High=${m.get('prev_5_high', 0):.2f} | Prev 5 Low=${m.get('prev_5_low', 0):.2f} | "
+            sma50_4h = m.get('sma_50', 0)
+            price = m.get('last_closed_close', 0)
+            dist_sma50 = ((price - sma50_4h) / sma50_4h * 100) if sma50_4h > 0 else 0
+            
+            return (f"Last 4H Close=${price:.2f} | 4H SMA50=${sma50_4h:.2f} ({dist_sma50:+.2f}%) | "
+                    f"Prev 5 High=${m.get('prev_5_high', 0):.2f} | Prev 5 Low=${m.get('prev_5_low', 0):.2f} | "
                     f"RSI={m.get('rsi_14', 50):.1f} | ADX={m.get('adx_14', 0):.1f} | "
                     f"VolRatio={m.get('vol_ratio_20', 1):.1f}x | VolZ={m.get('vol_zscore_20', 0):.2f} | "
                     f"NATR={m.get('natr_percent', 0):.2f}% | Rank={m.get('price_rank_20', 50):.0f}% | "
@@ -786,6 +807,99 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
             validated_actions.append(action)
             continue
             
+        # --- NEW Layer: Whale Dump Guard (Token vs Stable Flow) ---
+        # Prevents "Inflow to Sell" traps
+        sym_upper = symbol.upper()
+        # Extract flows from context/data if available
+        # (Assuming the logic to parse these exists or we pull from whale_data_obj)
+        s_data = whale_data_obj.get(symbol.lower(), {}).get('stats_24h', {})
+        t_flow = s_data.get('token_net_flow', 0)
+        st_flow = s_data.get('stablecoin_net_flow', 0)
+        
+        if act_type == "open_long" and t_flow > 0 and st_flow < 0:
+             reason = f"🛡️ WHALE TRAP: {symbol} has Token INFLOW (${t_flow:.0f}) but Stablecoin OUTFLOW (${st_flow:.0f}). This is an 'Exchange Dump' setup, not accumulation. REJECTED."
+             print(f"{reason}")
+             action["action"] = "REJECTED"
+             action["reason"] = reason
+             validated_actions.append(action)
+             continue
+
+        # --- NEW Layer: Liquidity Trap Guard (L/S Ratio) ---
+        # Prevents chasing squeezes that are already over
+        liq_long = s_data.get('liquidation_long_usd', 0)
+        liq_short = s_data.get('liquidation_short_usd', 1) # avoid div by zero
+        ls_ratio = liq_long / max(liq_short, 1.0)
+        
+        if act_type == "open_long" and ls_ratio < 0.1:
+             reason = f"🛡️ LIQUIDITY TRAP: {symbol} L/S Ratio is too low ({ls_ratio:.2f}). Shorts already squeezed. No more fuel to go higher. REJECTED."
+             print(f"{reason}")
+             action["action"] = "REJECTED"
+             action["reason"] = reason
+             validated_actions.append(action)
+             continue
+             
+        if act_type == "open_short" and ls_ratio > 10.0:
+             reason = f"🛡️ REVERSAL TRAP: {symbol} L/S Ratio is too high ({ls_ratio:.2f}). Longs already flushed. Expect mean-reversion bounce. REJECTED."
+             print(f"{reason}")
+             action["action"] = "REJECTED"
+             action["reason"] = reason
+             validated_actions.append(action)
+             continue
+
+        # --- NEW Layer: Volatility & Risk Refinement (NATR & 2% NAV) ---
+
+
+        # Refines size and stop_loss BEFORE exposure checks
+        sym_key = symbol.lower()
+        m_data = whale_data_obj.get(sym_key, {}).get('market', {})
+        natr = m_data.get('natr_percent', 3.0) # Default to 3% if data missing
+        entry_price = m_data.get('price', 0)
+        
+        if entry_price > 0 and act_type.startswith("open_"):
+            min_stop_dist_pct = 1.5 * natr
+            exit_plan = action.get("exit_plan", {})
+            sl_input = exit_plan.get("stop_loss")
+            
+            # 1. Price Parsing
+            try:
+                sl_price = float(str(sl_input).replace('$', '').replace(',', '')) if sl_input and str(sl_input) != "None" and not isinstance(sl_input, str) else 0
+                if isinstance(sl_input, str) and not sl_input.replace('.', '', 1).isdigit():
+                    sl_price = 0 # Handle "Dynamic..." strings
+            except ValueError:
+                sl_price = 0
+            
+            if sl_price > 0:
+                current_sl_dist_pct = abs(entry_price - sl_price) / entry_price * 100
+            else:
+                current_sl_dist_pct = 0
+                
+            # 2. Enforce Minimum Stop Distance (1.5x NATR)
+            enforced_sl_pct = max(current_sl_dist_pct, min_stop_dist_pct)
+            
+            if enforced_sl_pct > current_sl_dist_pct:
+                # Recalculate price
+                if "long" in act_type:
+                    new_sl_price = entry_price * (1 - enforced_sl_pct / 100)
+                else:
+                    new_sl_price = entry_price * (1 + enforced_sl_pct / 100)
+                
+                action["exit_plan"]["stop_loss"] = round(new_sl_price, 4)
+                if current_sl_dist_pct > 0:
+                    print(f"🛡️ RISK: Widening Stop to 1.5x NATR ({enforced_sl_pct:.2f}%) for {symbol}")
+                else:
+                    print(f"🛡️ RISK: Enforcing NATR Stop ({enforced_sl_pct:.2f}%) for {symbol}")
+            
+            # 3. NAV Risk Cap (2% Max Risk)
+            # If (Size * StopDist%) > (Equity * 2%), we MUST reduce Size.
+            max_risk_usd = equity * 0.02
+            current_risk_usd = (enforced_sl_pct / 100) * size_usd
+            
+            if current_risk_usd > max_risk_usd:
+                refined_size_usd = max_risk_usd / (enforced_sl_pct / 100)
+                print(f"🛡️ RISK: Downsizing {symbol} from ${size_usd:.0f} to ${refined_size_usd:.0f} to meet 2% NAV loss limit")
+                action["position_size_usd"] = round(refined_size_usd, 2)
+                size_usd = refined_size_usd # Update for subsequent checks
+
         # CHECK: Open Actions
         if act_type.startswith("open_"):
             # A. Position Count Limit
@@ -831,15 +945,10 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
             if raw_lev > MAX_LEVERAGE:
                 print(f"🛡️ RISK: Capping leverage for {symbol} from {raw_lev}x to {MAX_LEVERAGE}x")
                 action["leverage"] = MAX_LEVERAGE
-            # D. Mandatory Stop Loss
-            exit_plan = action.get("exit_plan", {})
-            sl = exit_plan.get("stop_loss")
-            if not sl or sl == "None":
-                action["exit_plan"]["stop_loss"] = "Dynamic: 5% from entry (Auto-Enforced)"
-                print(f"🛡️ RISK: Enforced mandatory Stop Loss for {symbol}")
-                
+            
             validated_actions.append(action)
             current_positions += 1
+
     
     decision["actions"] = validated_actions
     return decision
@@ -1030,7 +1139,12 @@ def run_agent():
             
             if is_trade and action_type != "REJECTED":
                 print(f"\n🚀 Triggering Executor for {symbol} ({action_type})...")
-                executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp)
+                
+                # Fetch NATR for the Risk Shield in Executor
+                coin_natr = whale_data_obj.get(symbol.lower(), {}).get('market', {}).get('natr_percent')
+                
+                executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp, natr_percent=coin_natr)
+
                 
                 # LOG TO MEMORY
                 try:
