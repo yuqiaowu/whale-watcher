@@ -932,17 +932,21 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
                 "Liquidation": sol_market.get("liquidation_context", "N/A")
             },
             "BTC_Context": {
-                "Price_Unclosed": btc_market.get('price_close'),
-                "Last_Closed_4H_Close": btc_market.get('last_closed_close', 0),
-                "Last_Closed_4H_High": btc_market.get('last_closed_high', 0),
-                "Last_Closed_4H_Low": btc_market.get('last_closed_low', 0),
-                "Prev_5_4H_High": btc_market.get('prev_5_high', 0),
-                "Prev_5_4H_Low": btc_market.get('prev_5_low', 0),
-                "Prev_5_4H_Closes": btc_market.get('prev_5_closes', []),
                 "RSI": f"{btc_market.get('rsi_14', 50):.1f}",
                 "MACD": f"{btc_market.get('macd_hist', 0):.4f}",
                 "ADX": f"{btc_market.get('adx_14', 0):.1f}",
-                "Liquidation": btc_market.get("liquidation_context", "N/A")
+                "Liquidation": btc_market.get("liquidation_context", "N/A"),
+                "Funding": f"{btc_market.get('funding_rate',0):.6f}"
+            },
+            "BNB_Context": {
+                "RSI": f"{data.get('bnb', {}).get('market', {}).get('rsi_14', 50):.1f}",
+                "Liquidation": data.get('bnb', {}).get('market', {}).get('liquidation_context', "N/A"),
+                "Funding": f"{data.get('bnb', {}).get('market', {}).get('funding_rate',0):.6f}"
+            },
+            "DOGE_Context": {
+                "RSI": f"{data.get('doge', {}).get('market', {}).get('rsi_14', 50):.1f}",
+                "Liquidation": data.get('doge', {}).get('market', {}).get('liquidation_context', "N/A"),
+                "Funding": f"{data.get('doge', {}).get('market', {}).get('funding_rate',0):.6f}"
             }
         }
     }
@@ -967,19 +971,18 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
              - **Signal_Bottom_Vol**: Low Price + High Volume = PANIC SELLING / WHALE ACCUMULATION -> BULLISH.
              - **Signal_Top_Vol**: High Price + High Volume = CLIMAX BUYING / WHALE DISTRIBUTION -> BEARISH.
              - **Star Rating**: 3/3 Stars means strong technical confluence.
-       - **Bullish Verification**: News says "Buy" AND Whales are Buying (Positive Flow) + ADX Rising + Signal_Bottom_Vol.
-       - **Bearish Verification**: News says "Sell" AND Whales are Selling + MACD Death Cross + Signal_Top_Vol.
-       - **TRAP WARNING**: News is Bullish BUT Whales are Selling (Exit Liquidity) -> Call this out!
-       - **TRAP WARNING**: News is Bearish BUT Whales are Buying (Accumulation) -> Call this out!
+       - **Verification (CRITICAL)**: 
+         - A high Sentiment Score MUST be supported by **NEGATIVE Token Net Flow** (Accumulation).
+         - If Token Net Flow is **POSITIVE**, it means whales are sending assets to exchanges to SELL (Distribution/Bearish), regardless of other sentiment signals.
        - **Retail Pain (Liquidations)**: Are retail traders bleeding? If Long Liqs are high, is the bottom near? If Short Liqs are high, is the top near?
-       - **For BTC**: Since we lack Whale Flow, focus purely on **Pain/Squeeze** logic (Negative Funding + High Short Liqs = Squeeze).
+       - **For Non-Whale Coins (BTC, BNB, DOGE)**: Since we lack Whale Flow, focus purely on **Pain/Squeeze** logic (Negative Funding + High Short Liqs = Squeeze potential).
 
     OUTPUT INSTRUCTIONS:
 
     - Return a JSON object with "en" and "zh" keys.
     - Content must be Markdown.
     - **Synthesize** the layers. Don't just list data.
-    - **Verdict**: For ETH, SOL, and BTC, give a final signal (EXECUTE / PROBE / OBSERVE / WAIT) based on the *confluence* of layers.
+    - **Verdict**: For EACH asset (ETH, SOL, BTC, BNB, DOGE), give a final signal (EXECUTE / PROBE / OBSERVE / WAIT) based on the *confluence* of layers.
     
     Structure:
     **🌍 Global Macro & Liquidity**: [Summary of Layer 1 & 2 combined]
