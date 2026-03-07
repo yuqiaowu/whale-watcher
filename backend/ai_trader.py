@@ -418,18 +418,27 @@ Structure:
     "reflection": { "zh": "AI的一句话反思", "en": "Short reflection." }
   },
   "actions": [
+    // ⚠️ CRITICAL MANDATE: You MUST list actions for ALL ACTIVE POSITIONS (BNB, SOL, ETH, etc.) first.
+    // If a position conflicts with the whale signal, you MUST choose reduce/close/hold+reason.
     {
       "symbol": "SOL",
-      "action": "open_long", // OPTIONS: open_long, open_short, close_position, adjust_sl_tp, hold, reduce_25, reduce_50, reduce_75
+      "action": "hold", // OPTIONS for existing: hold, adjust_sl_tp, reduce_25, reduce_50, reduce_75, close_position
+      "entry_reason": {
+        "zh": "虽然鲸鱼流向微弱，但止损尚未触发，且OI增长暗示反弹，暂持有观察。",
+        "en": "Whale flow is weak, but stop-loss not hit and OI growth suggests a bounce. Holding."
+      }
+    },
+    // New trades are only listed AFTER current positions are addressed.
+    {
+      "symbol": "BTC",
+      "action": "open_long", // OPTIONS for new: open_long, open_short, monitor
       "leverage": 3,
       "position_size_usd": 1000,
       "entry_reason": {
-        "zh": "发现鲸鱼在$135大量吸筹，且资金费率为负，存在轧空可能...",
-        "en": "Whale accumulation detected at $135 with negative funding..."
+        "zh": "...", "en": "..."
       },
       "exit_plan": {
-        "take_profit": 150,
-        "stop_loss": 130,
+        "take_profit": 150, "stop_loss": 130,
         "invalidation": { "zh": "...", "en": "..." }
       }
     }
@@ -597,17 +606,19 @@ def get_whale_data():
         # Negative token_net_flow means tokens flowing OUT of exchanges = ACCUMULATION (Bullish).
         def fmt_token_flow(flow, symbol_name):
             if flow > 0:
-                return f"{flow:,.1f} {symbol_name} [TO_EXCHANGE → 📉 DISTRIBUTION signal]"
+                sentiment = "🚨 STRONG_DUMP_THREAT" if flow > 10000 else "📉 BEARISH_FLOW"
+                return f"{flow:,.1f} {symbol_name} [TO_EXCHANGE → {sentiment}]"
             elif flow < 0:
-                return f"{flow:,.1f} {symbol_name} [FROM_EXCHANGE → 📈 ACCUMULATION signal]"
+                sentiment = "🔥 STRONG_BUY_PRESSURE" if abs(flow) > 10000 else "📈 BULLISH_FLOW"
+                return f"{flow:,.1f} {symbol_name} [FROM_EXCHANGE → {sentiment}]"
             else:
                 return f"0 {symbol_name} [NEUTRAL]"
 
         def fmt_stable_flow(flow):
             if flow > 0:
-                return f"${flow:,.0f} [STABLECOIN IN → 📈 Buy-power entering]"
+                return f"${flow:,.0f} [STABLECOIN IN → � BULLISH Buy-power entering]"
             elif flow < 0:
-                return f"${flow:,.0f} [STABLECOIN OUT → 📉 Capital leaving market]"
+                return f"${flow:,.0f} [STABLECOIN OUT → � BEARISH Capital leaving]"
             else:
                 return f"$0 [NEUTRAL]"
 
