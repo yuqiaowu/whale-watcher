@@ -199,6 +199,18 @@ class OKXDataClient:
                 # Calculate All Indicators (modifies df_input in place)
                 tech_values = add_all_indicators(df_input)
                 
+                # --- NEW: Wick Analysis (Exhaustion/Absorption) ---
+                latest = df_input.iloc[-1]
+                o, h, l, c = float(latest['open']), float(latest['high']), float(latest['low']), float(latest['close'])
+                full_range = max(h - l, 1e-9)
+                body = abs(c - o)
+                upper_shadow = h - max(o, c)
+                lower_shadow = min(o, c) - l
+                
+                tech_values["wick_ratio_lower"] = round(lower_shadow / full_range * 100, 2)
+                tech_values["wick_ratio_upper"] = round(upper_shadow / full_range * 100, 2)
+                tech_values["body_ratio"] = round(body / full_range * 100, 2)
+                
                 # Merge into metrics dict
                 metrics.update(tech_values)
                 

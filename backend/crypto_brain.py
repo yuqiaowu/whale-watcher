@@ -898,7 +898,8 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
                     "Funding": f"{eth_market.get('funding_rate',0):.6f}",
                     "OI_Delta": f"{eth_market.get('delta_oi_24h_percent',0):.2f}%"
                 },
-                "Liquidation": eth_market.get("liquidation_context", "N/A")
+                "Liquidation": eth_market.get("liquidation_context", "N/A"),
+                "Wick_Exhaustion": f"L:{eth_market.get('wick_ratio_lower',0)}% / U:{eth_market.get('wick_ratio_upper',0)}%"
             },
             "SOL_Chain": {
                  "Whale_Flow": {
@@ -929,14 +930,16 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
                     "Funding": f"{sol_market.get('funding_rate',0):.6f}",
                     "OI_Delta": f"{sol_market.get('delta_oi_24h_percent',0):.2f}%"
                 },
-                "Liquidation": sol_market.get("liquidation_context", "N/A")
+                "Liquidation": sol_market.get("liquidation_context", "N/A"),
+                "Wick_Exhaustion": f"L:{sol_market.get('wick_ratio_lower',0)}% / U:{sol_market.get('wick_ratio_upper',0)}%"
             },
             "BTC_Context": {
                 "RSI": f"{btc_market.get('rsi_14', 50):.1f}",
                 "MACD": f"{btc_market.get('macd_hist', 0):.4f}",
                 "ADX": f"{btc_market.get('adx_14', 0):.1f}",
                 "Liquidation": btc_market.get("liquidation_context", "N/A"),
-                "Funding": f"{btc_market.get('funding_rate',0):.6f}"
+                "Funding": f"{btc_market.get('funding_rate',0):.6f}",
+                "Wick_Exhaustion": f"L:{btc_market.get('wick_ratio_lower',0)}% / U:{btc_market.get('wick_ratio_upper',0)}%"
             },
             "BNB_Context": {
                 "RSI": f"{data.get('bnb', {}).get('market', {}).get('rsi_14', 50):.1f}",
@@ -971,6 +974,10 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
              - **Signal_Bottom_Vol**: Low Price + High Volume = PANIC SELLING / WHALE ACCUMULATION -> BULLISH.
              - **Signal_Top_Vol**: High Price + High Volume = CLIMAX BUYING / WHALE DISTRIBUTION -> BEARISH.
              - **Star Rating**: 3/3 Stars means strong technical confluence.
+        - **Exhaustion & Absorption (NEW)**:
+            - **Lower Wick (>30%)**: Buying pressure at the bottom. The "Invisible Hand" is catching the knife.
+            - **Upper Wick (>30%)**: Selling pressure at the top. The "Exit Door" is crowded.
+            - **Body Ratio (<20%)**: Indecision or Doji. Expect volatility compression.
        - **Verification (CRITICAL)**: 
          - A high Sentiment Score MUST be supported by **NEGATIVE Token Net Flow** (Accumulation).
          - If Token Net Flow is **POSITIVE**, it means whales are sending assets to exchanges to SELL (Distribution/Bearish), regardless of other sentiment signals.

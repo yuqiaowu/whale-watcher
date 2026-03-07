@@ -217,7 +217,11 @@ This data comes from direct on-chain monitoring and exchange liquidation feeds.
 3. **The "Whale Support" Divergence**:
    - If Token Net Flow is POSITIVE (moving in) but Price doesn't drop immediately, check Liquidations. If High Short Liquidations are happening, it's a **SQUEEZE**; otherwise, it's likely a **LIMIT SELL WALL** being built by whales.
 3. **Squeeze Warning**: Negative Funding + High "Retail Pain" (Oversold RSI) -> **SHORT SQUEEZE IMMINENT**.
-4. **BLIND SPOT EXCEPTION (BTC, BNB, DOGE)**: We DO NOT have on-chain whale flow data for BTC, BNB, and DOGE. For these assets, evaluate setups based purely on Technical Indicators + Liquidation/Funding Flow.
+4. **Wick Ratio Analysis (NEW)**:
+   - 🕯️ **Lower Wick (>30%)**: Buying pressure/Absorption at the bottom. The "Invisible Hand" is catching the knife.
+   - 🕯️ **Upper Wick (>30%)**: Selling pressure/Exhaustion at the top. The "Exit Door" is crowded.
+   - 🕯️ **Body Ratio (<20%)**: Indecision/Doji. Expect volatility compression. 
+5. **BLIND SPOT EXCEPTION (BTC, BNB, DOGE)**: We DO NOT have on-chain whale flow data for BTC, BNB, and DOGE. For these assets, evaluate setups based purely on Technical Indicators + Liquidation/Funding Flow.
 
 
 🟦 2.1 MACRO TREND (1D TIMEFRAME)
@@ -284,7 +288,7 @@ Signals of a falling knife (DO NOT go long blindly):
 - ADX > 25 (strong directional trend — the drop has momentum)
 - Long Liquidations > Short Liquidations (retail longs being flushed — not bottomed yet)
 - Whale Token Net Flow **POSITIVE** [TO_EXCHANGE → DISTRIBUTION] (whales are SELLING into exchanges, not accumulating)
-→ Verdict: "KNIFE" — Wait for RSI divergence or Token Flow to turn NEGATIVE [FROM_EXCHANGE → ACCUMULATION] before considering long.
+→ Verdict: "KNIFE" — Wait for RSI divergence, Token Flow to turn NEGATIVE [FROM_EXCHANGE → ACCUMULATION], or a **STRONG LOWER WICK (>30%)** before considering long.
 
 🚀 ROCKET BLOCKING (挡火箭 — Reversal Risk):
 Signals of chasing into a vertical move (DO NOT go short blindly):
@@ -294,14 +298,15 @@ Signals of chasing into a vertical move (DO NOT go short blindly):
 → Verdict: "ROCKET" — Wait for RSI to peak before shorting.
 
 ✅ SAFE MEAN REVERSION (安全均值回归):
-- RSI is extreme (>70 or <30) WITH clear divergence
-- Rejection wicks appearing (Wick Ratio > 0.3)
-→ Verdict: "SAFE_MR" — Mean reversion entry is justified.
+- RSI is extreme (>70 or <30) WITH clear divergence.
+- **Wick Confirmation**: Rejection wicks appearing (Lower Wick > 30% for Long, Upper Wick > 30% for Short).
+→ Verdict: "SAFE_MR" — Mean reversion entry is justified by price rejection.
 
 🐋 WHALE SQUEEZE / BUYER EXHAUSTION (鲸鱼拉高出货/买盘枯竭):
 - Whale Net Flow might look positive (tokens flowing into exchange), but it's a trap.
 - L/S Liquidation Ratio is EXTREMELY LOW (L/S < 0.2): This means shorts have already been liquidated. The "fuel" is gone. DO NOT go long here.
 - Volume Z-Score is NEGATIVE (< 0): The price move is hollow and lacks heavy buyer support.
+- **Wick Check**: Upper Wick > 30%.
 - Verdict: "EXHAUSTION" — High risk of a mid-air reversal. This is a setup for a SHORT, not a long.
 
 📉 WHALE DISTRIBUTION (鲸鱼高位派发 - BEAR MARKET BEST SETUP):
@@ -379,8 +384,8 @@ Constraints:
 Structure:
 {
   "analysis_summary": {
-    "zh": "必须是中文，综合叙述（3-4句话）。分析要求：\n1. 首先进行【叙事校验】（Section 4A），判断当前驱动力是Impulse还是已定价。\n2. 明确参考【Qlib 相对强弱排名】和【Z-Score 异常探测】，解释它们如何支持/反驳当前决策。\n3. 结合【痛苦交易】（4B）和【战场纪律】（4D），指出市场是否处于“爆仓踩踏”中，是否有足够的“燃料”支撑继续上涨/下跌。\n4. 阐明选择的【假设分析】剧本（4C）。",
-    "en": "Must be in English, comprehensive narrative (3-4 sentences). Requirements:\n1. Perform Narrative vs Reality Check (4A).\n2. Explicitly reference Qlib ratings and Z-Score anomalies, explaining how they support/refute the decision.\n3. Combine Pain Trade (4B) and Tactical Discipline (4D) to identify liquidation rushes and fuel.\n4. Specify the selected Scenario (4C)."
+    "zh": "必须是中文，按以下结构分段阐述：\n1. **【叙事校验】**：判断当前驱动力是Impulse还是已定价，识别市场主旋律。\n2. **【决策依据详情】**：综合 Technical Signal, Macro & On-Chain, Quantitative (Qlib/Z-Vol) 的交叉验证。\n3. **【痛苦交易】**：分析爆仓燃料与 L/S Ratio，识别是否处于‘踩踏’或‘衰竭’阶段。\n4. **【剧本选择】**：明确 4C 中的剧本（WHALE_FRONT_RUN 等）及选择理由。",
+    "en": "Must be in English, structured as follows:\n1. **[Narrative Validation]**: Impulse vs Priced-in.\n2. **[Decision Details]**: Cross-verification of Tech, Whale, and Quant signals.\n3. **[Pain Trade]**: Liquidation fuel and L/S Ratio analysis.\n4. **[Scenario Selection]**: Chosen Scenario (4C) and justification."
   },
   "hypothesis_scenario": "TREND_FOLLOWING | MEAN_REVERSION | MICROSTRUCTURE_SQUEEZE | NARRATIVE_DIVERGENCE | WHALE_FRONT_RUN",
   "contrary_signal_check": {
@@ -401,34 +406,34 @@ Structure:
     "portfolio_status": { "zh": "当前持仓风险评估", "en": "Portfolio risk check." },
     "reflection": { "zh": "AI的一句话反思", "en": "Short reflection." }
   },
-  "actions": [
-    /* 
-       STEP 1: POSITION MAINTENANCE (MANDATORY 1:1 MAPPING)
-       You MUST list ONE block for EVERY symbol currently held in your portfolio.
-    */
-    {
-      "symbol": "SOL", // Example of an active holding
+  "portfolio_management": {
+    "ETH": { 
       "action": "hold | adjust_sl_tp | reduce_25 | reduce_50 | reduce_75 | close_position",
-      "entry_reason": { 
-        "zh": "针对该特定资产的维护辩护：结合其RSI、鲸鱼数据、当前的盈亏状态给出独立理由...", 
-        "en": "Asset-specific defense: providing logic based on THIS symbol's unique metrics/signals." 
-      }
+      "action_logic": {
+        "zh": "针对该具体持仓的独立维护理由（必须结合该币种的鲸鱼流向与技术面偏差）。",
+        "en": "Asset-specific maintenance logic (must reference this coin's whale flow and technical divergence)."
+      },
+      "exit_plan": { "take_profit": 3500, "stop_loss": 2100 } /* Mandatory for adjust_sl_tp */
     },
-    /* 
-       STEP 2: NEW ENTRIES (Only after ALL existing positions are addressed above)
-    */
+    ... (one for EACH symbol in mandatory list)
+  },
+  "new_opportunities": [
     {
-      "symbol": "NEW_SYMBOL",
+      "symbol": "BTC",
       "action": "open_long | open_short | monitor",
       "leverage": 3,
       "position_size_usd": 500,
       "entry_reason": { "zh": "...", "en": "..." },
-      "exit_plan": { "take_profit": 150, "stop_loss": 130, "invalidation": { "zh": "...", "en": "..." } }
+      "exit_plan": { "take_profit": 120000, "stop_loss": 95000 }
     }
   ]
 }
-*** IMPORTANT FOR `actions` ARRAY ***
-If you are adjusting an existing trade (`adjust_sl_tp`, `reduce_25`, etc.), you MUST include it in the `actions` array! You can set `leverage`: 0 and `position_size_usd`: 0 for these, but you MUST provide the updated `stop_loss` and `take_profit` in `exit_plan`.
+
+*** CRITICAL LOGIC INTEGRITY RULES ***
+1. **NO SILENT RISK**: If your `regime_safety` is `KNIFE` or `WHALE_DUMP_THREAT`, all LONG positions MUST be set to `reduce_xx` or `close_position`. Set to `hold` ONLY if you provide a 3-point technical defense in `action_logic`.
+2. **MAPPING FORCE**: Your `portfolio_management` object MUST contain keys for exactly these symbols: {{MANDATORY_SYMBOLS_LIST}}.
+3. **NO GROUPING**: Do NOT group reasons like "holding all assets because...". Provide an independent `action_logic` for EACH key in `portfolio_management`.
+4. **PRECISION**: 'Action' and 'Reason' must be tightly linked. Don't say "market is risky" and then `hold` everything silently.
 """
 
 # ------------------------------------------------------------------------
@@ -836,16 +841,32 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
     MAX_LEVERAGE = 2 if is_extreme_market else 5 # Lowered base limit to 5x as agreed
     
     # --- 3. PROCESS ACTIONS ---
-    for action in decision["actions"]:
+    # Merge newly structured actions back into a flat list for legacy processing
+    raw_actions = []
+    
+    # A. Existing Portfolio
+    pm = decision.get("portfolio_management", {})
+    for symbol, data in pm.items():
+        data["symbol"] = symbol
+        raw_actions.append(data)
+        
+    # B. New Opportunities
+    raw_actions.extend(decision.get("new_opportunities", []))
+
+    for action in raw_actions:
         symbol = action.get("symbol")
         act_type = action.get("action")
+        # Ensure reasons are mapped correctly
+        action_reason = action.get("action_logic") or action.get("entry_reason") or {}
+        
         try:
             size_usd = float(str(action.get("position_size_usd", 0)).replace('$', '').replace(',', ''))
         except ValueError:
-            print(f"⚠️ Failed to parse size_usd: {action.get('position_size_usd')}, defaulting to 0")
             size_usd = 0.0
         
         if act_type == "hold":
+            # RECOGNITION: We keep 'hold' in validated_actions so users can see the logic in UI
+            validated_actions.append(action)
             continue
 
         MIN_ORDER_USD = 50.0
@@ -1068,6 +1089,15 @@ def run_agent():
     final_prompt = final_prompt.replace("{{DAILY_CONTEXT}}", combined_context)
     
     final_prompt = final_prompt.replace("{{PORTFOLIO_STATE_JSON}}", portfolio_state)
+    
+    # DYNAMIC MAPPING FORCE
+    p_state_obj = json.loads(portfolio_state)
+    active_symbols = [p["symbol"] for p in p_state_obj.get("positions", [])]
+    if not active_symbols:
+        final_prompt = final_prompt.replace("{{MANDATORY_SYMBOLS_LIST}}", "NONE (Portfolio is empty)")
+    else:
+        final_prompt = final_prompt.replace("{{MANDATORY_SYMBOLS_LIST}}", ", ".join(active_symbols))
+    
     final_prompt = final_prompt.replace("{{NEWS_CONTEXT}}", news_context)
 
     # 2.5 Inject Dynamic Risk Limits
@@ -1183,10 +1213,17 @@ def run_agent():
         print(json.dumps(decision, indent=2, ensure_ascii=False))
         
         # === NEW: EXECUTION LAYER ===
+        # Re-fetch actions from decision (which now includes validated list)
         actions = decision.get("actions", [])
+        
         for act in actions:
             symbol = act.get("symbol")
             action_type = act.get("action")
+            
+            # Logic Mapping for reason (English)
+            reason_obj = act.get("action_logic") or act.get("entry_reason") or {}
+            reason_txt = reason_obj.get("en", "Maintaining position based on trend.")
+
             try:
                 amount = float(str(act.get("position_size_usd", 0)).replace('$', '').replace(',', ''))
             except ValueError:
@@ -1201,7 +1238,7 @@ def run_agent():
             # Filter for actual executable trade actions
             is_trade = any(keyword in action_type for keyword in ["open_", "close", "adjust_sl", "reduce_"])
             
-            if is_trade and action_type != "REJECTED":
+            if is_trade and action_type != "REJECTED" and action_type != "hold":
                 print(f"\n🚀 Triggering Executor for {symbol} ({action_type})...")
                 
                 # Fetch NATR for the Risk Shield in Executor
