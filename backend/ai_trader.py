@@ -227,19 +227,22 @@ Use this daily context to filter 4H signals.
 
 {{DAILY_CONTEXT}}
 
-🟪 2.3 MARKET REGIME (THE LAW)
-Pay close attention to **GLOBAL MARKET STATE** in the Daily Context above.
-1. **BEAR MARKET (Price < SMA200)**:
-   - **Primary Bias**: SHORT. Use "Pullback to Resistance" logic.
-   - **Shorts**: Aggressive shorts allowed when price rallies to SMA50 or Previous 5 Highs and shows rejection (Upper Wick > 40%). Distribution signals from whales (Token Inflow + Stable Outflow) are high-conviction triggers.
-   - **Longs**: Allowed under TWO specific conditions:
-     a) **Whale accumulation is detected** (Extreme Token Outflow + Stable Inflow).
-     b) **FOR BTC, BNB, DOGE (Whale Blind Spots)**: IF Whale data is missing, long is allowed if **Qlib Rank is 1-2** AND **Volume Z-Score > 1.0** (proving high demand) AND **RSI > 50**.
-     - *Max Leverage 2x* in all Bear Market Longs.
-2. **BULL MARKET (Price > SMA200)**:
-   - **Primary Bias**: LONG.
-   - **Shorts**: Only allowed if "Whale Distribution" is Extreme. Max Leverage 2x.
-   - **Longs**: Aggressive longs allowed on dips (Accumulation).
+🟪 2.3 MARKET REGIME & SIGNAL WEIGHTING (THE WEIGHT MATRIX)
+Evaluate signals differently based on the environment. Do not use hard prohibitions; use the following hierarchy to weigh your evidence:
+
+1. **BEAR REGIME (Price < SMA200)**:
+   - **Weight 1 (Highest)**: **Resistance & Exhaustion**. Watch SMA50 and Prev Highs. Price rejection here combined with Positive Funding is a high-probability reversal.
+   - **Weight 2**: **Whale/Exchanges Feed**. Token Inflow in a rally confirms "Distribution" (Selling the Rip).
+   - **Weight 3**: **Volume Z-Score**. High volume rally is needed to prove "Accumulation". Low volume rally = Trap.
+   - **Decision Guidance**: Be skeptical of Longs unless strong volume/whale support exists. Be opportunistic with Shorts at resistance.
+
+2. **BULL REGIME (Price > SMA200)**:
+   - **Weight 1 (Highest)**: **Support & Momentum**. Dips to SMA50 or EMA20 are primary buying zones.
+   - **Weight 2**: **Qlib Rankings**. Follow the relative strength of top assets.
+   - **Weight 3**: **Funding Overload**. Watch for negative funding after a dip (Short Squeeze Fuel). 
+   - **Decision Guidance**: Prioritize Longs on pullbacks. Be extremely cautious with Shorts; only fade moves on massive Whale Distribution or RSI > 80.
+
+*Note: You have full autonomy. Choose your direction and leverage based on the strength of the evidence across these weights.*
 
 🟨 3. NEWS & ON-CHAIN CONTEXT (OPTIONAL)
 {{NEWS_CONTEXT}}
