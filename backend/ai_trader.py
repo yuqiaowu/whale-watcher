@@ -639,21 +639,24 @@ def get_whale_data():
         ctx += f"- Liquidation Pain (24h): Longs ${sol_liq_long:,.0f} / Shorts ${sol_liq_short:,.0f} | Ratio(L/S)={sol_liq_ratio:.2f} [{sol_liq_signal}]\n"
         
         ctx += "\n=== BITCOIN (BTC) CONTRACT DATA ===\n"
+        ctx += "⚠️ NO WHALE FLOW DATA: BTC has NO on-chain token_net_flow or stablecoin_net_flow. DO NOT invent or infer any whale flow direction for BTC. Analysis is based ONLY on Technicals + Liquidation below.\n"
         ctx += f"- Technicals: {fmt_tech(btc_market)}\n"
         btc_liq_ratio = btc_liq_long / btc_liq_short if btc_liq_short > 0 else 0
         btc_liq_signal = "⚠️ LONG_FLUSH" if btc_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if btc_liq_short > btc_liq_long * 2 else "BALANCED")
         ctx += f"- Liquidation Pain (24h): Longs ${btc_liq_long:,.0f} / Shorts ${btc_liq_short:,.0f} | Ratio(L/S)={btc_liq_ratio:.2f} [{btc_liq_signal}]\n"
-        ctx += f"- Note: Focus on Squeeze potential via Liquidation Pain + Funding Rates.\n"
+        ctx += f"- Note: Focus ONLY on Squeeze potential via Liquidation Pain + Funding Rates. No flow data available.\n"
         
         ctx += "\n=== BNB CHAIN (BNB) CONTRACT DATA ===\n"
+        ctx += "⚠️ NO WHALE FLOW DATA: BNB has NO on-chain token_net_flow or stablecoin_net_flow. DO NOT invent or infer any whale flow direction for BNB. Analysis is based ONLY on Technicals + Liquidation below.\n"
         ctx += f"- Technicals: {fmt_tech(bnb_market)}\n"
         bnb_liq_ratio = bnb_liq_long / bnb_liq_short if bnb_liq_short > 0 else 0
         bnb_liq_signal = "⚠️ LONG_FLUSH" if bnb_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if bnb_liq_short > bnb_liq_long * 2 else "BALANCED")
         ctx += f"- Liquidation Pain (24h): Longs ${bnb_liq_long:,.0f} / Shorts ${bnb_liq_short:,.0f} | Ratio(L/S)={bnb_liq_ratio:.2f} [{bnb_liq_signal}]\n"
         
         ctx += "\n=== DOGECOIN (DOGE) CONTRACT DATA ===\n"
+        ctx += "⚠️ NO WHALE FLOW DATA: DOGE has NO on-chain token_net_flow or stablecoin_net_flow. DO NOT invent or infer any whale flow direction for DOGE. Analysis is based ONLY on Technicals + Liquidation below.\n"
         ctx += f"- Technicals: {fmt_tech(doge_market)}\n"
-        ctx += f"- Liquidation Pain (24h): Longs Dropped ${doge_liq_long:,.0f} / Shorts Dropped ${doge_liq_short:,.0f}\n"
+        ctx += f"- Liquidation Pain (24h): Longs ${doge_liq_long:,.0f} / Shorts ${doge_liq_short:,.0f}\n"
         
         ctx += "\n*INSTRUCTION*: If 24h Sentiment is higher than 7d, it indicates SHARP ACCUMULATION. If 24h is significantly lower, it indicates a POTENTIAL CLIFF DUMP. Prioritize sustained 7d trends for safety.*\n"
         
