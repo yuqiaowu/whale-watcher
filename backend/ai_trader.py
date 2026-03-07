@@ -856,8 +856,9 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
     for action in raw_actions:
         symbol = action.get("symbol")
         act_type = action.get("action")
-        # Ensure reasons are mapped correctly
-        action_reason = action.get("action_logic") or action.get("entry_reason") or {}
+        # Ensure reasons are mapped correctly for frontend (Normalize action_logic -> entry_reason)
+        if not action.get("entry_reason"):
+             action["entry_reason"] = action.get("action_logic", {})
         
         try:
             size_usd = float(str(action.get("position_size_usd", 0)).replace('$', '').replace(',', ''))
