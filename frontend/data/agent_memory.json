@@ -863,5 +863,26 @@
       "bb_trend": "DOWN"
     },
     "outcome": "Closed"
+  },
+  {
+    "id": "SOL_1772914078",
+    "timestamp": "2026-03-08T04:07:58.890975",
+    "symbol": "SOL",
+    "action": "close_position",
+    "entry_price": 82.77,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u9488\u5bf9SOL\u6301\u4ed3\u7684\u72ec\u7acb\u7ef4\u62a4\uff1a\u9cb8\u9c7c\u6570\u636e\u663e\u793a\u5f3a\u70c8\u6d3e\u53d1\u5a01\u80c1\uff08\u4ee3\u5e01\u6d41\u5165\u4ea4\u6613\u6240150,613.8 SOL\uff0c\u7a33\u5b9a\u5e01\u6d41\u51fa$392,381\uff09\uff0c\u6280\u672f\u9762\u5f31\uff08RSI 37.06\uff0c\u8d8b\u52bf\u5411\u4e0b\uff0c\u4e0a\u5f71\u7ebf3%\u5356\u538b\uff09\uff0c\u6e05\u7b97\u6bd4\u6781\u9ad8\uff08L/S=100706.04\uff09\u663e\u793a\u591a\u5934\u88ab\u6781\u7aef\u6e05\u6d17\u3002\u5728WHALE_DUMP_THREAT\u4e0b\uff0c\u5fc5\u987b\u5e73\u4ed3\u4ee5\u907f\u514d\u8fdb\u4e00\u6b65\u635f\u5931\u3002",
+      "en": "Asset-specific maintenance logic for SOL: Whale data shows strong distribution threat (token inflow 150,613.8 SOL to exchanges, stablecoin outflow -$392,381), technicals weak (RSI 37.06, trend down, upper wick 3% selling), liquidation ratio extremely high (L/S=100706.04) showing extreme long flush. Under WHALE_DUMP_THREAT, must close position to avoid further losses."
+    },
+    "context": {
+      "rsi": 37.1517800491393,
+      "adx": 19.751699971293906,
+      "whale_flow": "?",
+      "funding_rate": -8.28999663318e-05,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": "Closed"
   }
 ]
