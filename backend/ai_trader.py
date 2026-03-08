@@ -211,17 +211,20 @@ This data comes from direct on-chain monitoring and exchange liquidation feeds.
 1. **Accumulation vs. Distribution**:
    - ✅ **CONSISTENT ACCUMULATION**: Price dropping + Token Net Flow is NEGATIVE (Tokens leaving exchanges) + Stablecoin Flow is POSITIVE (Cash entering).
    - 📉 **CONSISTENT AGGRESSIVE DISTRIBUTION**: Token Net Flow is POSITIVE (Tokens entering exchanges) + Stablecoin Flow is NEGATIVE (Cash leaving exchanges). **CRITICAL: This is a consistent and aggressive signal of whales EXITING the market.** Selling assets and immediately withdrawing cash. It is NOT a contradiction (不是矛盾).
-2. **Liquidation & "Squeeze Fuel" Trap**:
-   - 📉 **HIGH L/S RATIO (> 5.0)**: Massive Long liquidations (Retail being flushed). This is a **CLEANUP** signal. 
-   - 📈 **LOW L/S RATIO (< 0.2)**: Massive Short liquidations (Squeeze already happened). The fuel is **DRAINED**. 
+2. **Liquidation & "Squeeze Fuel" Trap (L/S RATIO RULES)**:
+   - **L/S Ratio** = (24h Long Liquidation USD) / (24h Short Liquidation USD).
+   - 📉 **LEVERAGE FLUSH (L/S > 5.0)**: Massive Long liquidations. Retail is being forced out. Good for finding a bottom IF it stabilizes.
+   - 📉 **ULTRA-EXTREME L/S (> 50.0) [DANGER ZONE]**: The "Long Liquidity" is completely drained. Sellers are physically exhausted. **FORBID opening new Shorts**; expect a sharp "Dead Cat Bounce" or mean reversion.
+   - 📈 **SQUEEZE PIN (L/S < 0.2)**: Massive Short liquidations. The squeeze has already happened.
+   - 📈 **ULTRA-EXTREME L/S (< 0.02) [DANGER ZONE]**: The "Short Liquidity" is completely drained. Buyers are exhausted. **FORBID opening new Longs**; expect a "Blow-off Top" or reversal.
 3. **The "Whale Support" Divergence**:
-   - If Token Net Flow is POSITIVE (moving in) but Price doesn't drop immediately, check Liquidations. If High Short Liquidations are happening, it's a **SQUEEZE**; otherwise, it's likely a **LIMIT SELL WALL** being built by whales.
-3. **Squeeze Warning**: Negative Funding + High "Retail Pain" (Oversold RSI) -> **SHORT SQUEEZE IMMINENT**.
+   - If Token Net Flow is POSITIVE (moving in) but Price doesn't drop immediately, check L/S Ratio. If L/S is very low (< 0.2), it's a **SQUEEZE**; otherwise, it's likely a **LIMIT SELL WALL**.
+3. **Squeeze Warning**: Negative Funding + Low L/S (< 0.2) + Oversold RSI -> **SHORT SQUEEZE ALREADY HAPPENING/ENDING**.
 4. **Wick Ratio Analysis (NEW)**:
-   - 🕯️ **Lower Wick (>30%)**: Buying pressure/Absorption at the bottom. The "Invisible Hand" is catching the knife.
-   - 🕯️ **Upper Wick (>30%)**: Selling pressure/Exhaustion at the top. The "Exit Door" is crowded.
+   - 🕯️ **Lower Wick (>30%)**: Buying pressure/Absorption at the bottom.
+   - 🕯️ **Upper Wick (>30%)**: Selling pressure/Exhaustion at the top.
    - 🕯️ **Body Ratio (<20%)**: Indecision/Doji. Expect volatility compression. 
-5. **BLIND SPOT EXCEPTION (BTC, BNB, DOGE)**: We DO NOT have on-chain whale flow data for BTC, BNB, and DOGE. For these assets, evaluate setups based purely on Technical Indicators + Liquidation/Funding Flow.
+5. **BLIND SPOT EXCEPTION (BTC, BNB, DOGE)**: We DO NOT have on-chain whale flow data. Use L/S Ratio + Funding Z-Score as the primary "Truth Layer".
 
 
 🟦 2.1 MACRO TREND (1D TIMEFRAME)
@@ -262,66 +265,51 @@ For each major news item or market move, ask:
 
 B. THE PAIN TRADE & LIQUIDITY TRAPS
 Identify where the crowd is trapped:
-- **Short Squeeze Opportunity (For Longs)**: "Extreme Short Liquidations" or "Extreme Negative Funding" alone DO NOT justify an immediate long. To buy the bounce, RSI MUST be strictly < 30 OR you must see a clear 4H long lower wick (rejection) demonstrating support. FORBID catching falling knives at RSI 40+.
-- **Long Squeeze Opportunity (For Shorts)**: 
-    - In BULL MARKET: RSI MUST be strictly > 70.
-    - In BEAR MARKET: RSI > 55 is sufficient IF combined with (Price near SMA50 OR Price near Prev 5 High) AND (Upper Wick > 40%). We prioritze selling the "Fake Rally".
-    - FORBID blocking "Super Rockets" (ADX > 40 and RSI > 80) unless whale distribution is massive.
+- **Mean-Reversion LONG Rule**: RSI MUST be strictly < 30 AND (L/S Ratio > 10.0 OR Lower Wick > 30%).
+- **Mean-Reversion SHORT Rule**: 
+    - In BEAR MARKET: RSI > 55 AND (L/S Ratio < 0.1 OR Upper Wick > 40%).
+- **THE UNTOUCHABLE ZONE (RED LINE)**:
+   - **IF L/S Ratio > 50.0**: YOU ARE FORBIDDEN from opening new SHORT positions. The downward fuel is completely drained.
+   - **IF L/S Ratio < 0.02**: YOU ARE FORBIDDEN from opening new LONG positions. The upward fuel is completely drained.
 - **Reverse Liquidation Trap (MUST READ)**: 
-   - ONLY consider a mean-reversion LONG when there is a massive LONG liquidation (flushing out weak retail longs) and price stabilizes. If massive SHORT liquidations just occurred, liquidity is drained upwards—DO NOT chase longs here.
-   - ONLY consider a mean-reversion SHORT when there is a massive SHORT liquidation (flushing out weak shorts) and price stabilizes. If massive LONG liquidations just occurred, liquidity is drained downwards—DO NOT chase shorts here.
+   - ONLY consider a mean-reversion LONG when L/S > 5.0 (flushing weak longs) and price stabilizes.
+   - ONLY consider a mean-reversion SHORT when L/S < 0.2 (flushing weak shorts) and price stabilizes.
 - **Liquidity Trap**: Late chasers entering at resistance (High Funding + High RSI) or at support (High Neg Funding + Low RSI).
 
 C. HYPOTHESIS PLAYBOOKS (Must choose exactly ONE in output)
 1. **TREND_FOLLOWING**: High ADX + Normal Funding + Whale Accumulation. Ride the momentum.
-2. **MEAN_REVERSION**: Extreme RSI extremes + Reversal Candle + Validated Flush. Fade the panic/greed.
+2. **MEAN_REVERSION**: Extreme RSI extremes + Reversal Candle + Validated Flush (High/Low L/S). Fade the panic/greed.
 3. **MICROSTRUCTURE_SQUEEZE**: Extreme funding anomaly OR drained L/S ratio. Capitalize on traps.
 4. **NARRATIVE_DIVERGENCE**: News contradicts price action. E.g., Good News + Bad Price = Secret Accumulation.
 5. **WHALE_FRONT_RUN**: Follow smart money flow (Token Flow) when it clearly opposes retail positioning.
 
 E. REGIME SAFETY CHECK (Mandatory — Fill 'regime_safety' Field)
-Before entering any trade, you MUST evaluate whether the market is in a dangerous state using the following data signals:
+Before entering any trade, evaluate the market state using L/S Ratio feeds:
 
 🔪 FALLING KNIFE (接飞刀 — Left-side Entry Risk):
-Signals of a falling knife (DO NOT go long blindly):
-- RSI < 30 AND still declining (no divergence)
-- ADX > 25 (strong directional trend — the drop has momentum)
-- Long Liquidations > Short Liquidations (retail longs being flushed — not bottomed yet)
-- Whale Token Net Flow **POSITIVE** [TO_EXCHANGE → DISTRIBUTION] (whales are SELLING into exchanges, not accumulating)
-→ Verdict: "KNIFE" — Wait for RSI divergence, Token Flow to turn NEGATIVE [FROM_EXCHANGE → ACCUMULATION], or a **STRONG LOWER WICK (>30%)** before considering long.
+- RSI < 30 AND L/S Ratio is high but NOT yet > 50 (still has room to fall).
+- Verdict: "KNIFE" — Wait for L/S > 50, Token Flow to turn NEGATIVE [ACCUMULATION], or a **STRONG LOWER WICK (>30%)**.
 
 🚀 ROCKET BLOCKING (挡火箭 — Reversal Risk):
-Signals of chasing into a vertical move (DO NOT go short blindly):
-- RSI > 70 AND still rising (momentum intact)
-- ADX > 30 (strong uptrend — shorting against momentum)
-- Short Liquidations >> Long Liquidations (fuel still being added)
-→ Verdict: "ROCKET" — Wait for RSI to peak before shorting.
+- RSI > 70 AND L/S Ratio is low but NOT yet < 0.02.
+- Verdict: "ROCKET" — Wait for L/S < 0.02 or Strong Upper Wick.
 
 ✅ SAFE MEAN REVERSION (安全均值回归):
-- RSI is extreme (>70 or <30) WITH clear divergence.
-- **Wick Confirmation**: Rejection wicks appearing (Lower Wick > 30% for Long, Upper Wick > 30% for Short).
-→ Verdict: "SAFE_MR" — Mean reversion entry is justified by price rejection.
+- RSI is extreme WITH clear rejection wicks appearing (Lower Wick > 30% for Long, Upper Wick > 30% for Short).
+- Verdict: "SAFE_MR" — Mean reversion entry is justified by price rejection.
 
-🐋 WHALE SQUEEZE / BUYER EXHAUSTION (鲸鱼拉高出货/买盘枯竭):
-- Whale Net Flow might look positive (tokens flowing into exchange), but it's a trap.
-- L/S Liquidation Ratio is EXTREMELY LOW (L/S < 0.2): This means shorts have already been liquidated. The "fuel" is gone. DO NOT go long here.
-- Volume Z-Score is NEGATIVE (< 0): The price move is hollow and lacks heavy buyer support.
-- **Wick Check**: Upper Wick > 30%.
-- Verdict: "EXHAUSTION" — High risk of a mid-air reversal. This is a setup for a SHORT, not a long.
+🐋 WHALE SQUEEZE / BUYER EXHAUSTION (买盘枯竭):
+- L/S Liquidation Ratio is EXTREMELY LOW (L/S < 0.02): Buyers exhausted.
+- Volume Z-Score is NEGATIVE (< 0): Hollow price move.
+- Verdict: "EXHAUSTION" — High risk of reversal. Setup for SHORT.
 
-📉 WHALE DISTRIBUTION (鲸鱼高位派发 - BEAR MARKET BEST SETUP):
-- Market Regime is BEAR (Price < SMA200).
-- Price has rallied into SMA50, Resistance, or Prev 5 Highs. 
-- Whale Token Net Flow is POSITIVE (Whales move to exchanges).
-- Technical Rejection: Upper Wick Ratio > 40%.
-- Funding Rate: POSITIVE (Retail is chasing the rally, creating trample risk).
+📉 WHALE DISTRIBUTION (鲸鱼高位派发):
+- BEAR MARKET + Price at Resistance + Upper Wick > 40% + L/S < 0.2.
 - Verdict: "DISTRIBUTION" — Aggressive short entry. Selling the Rip.
 
 🐋 WHALE ACCUMULATION / BEAR TRAP (鲸鱼托底吸筹):
-- Price has dropped recently, but Whale Token Net Flow is **NEGATIVE** (Tokens are moving OUT of exchanges to cold wallets, proving whales are absorbing the supply).
-- L/S Liquidation Ratio shows extreme LONG massacre (e.g., longs are being heavily flushed, L/S > 2.0). Retail is capitulating.
-- Funding rate is usually neutral or negative. 
-→ Verdict: "WHALE_ACCUMULATION" — Suggests buying alongside whales during retail panic.
+- Price drop + Whale Token Net Flow is NEGATIVE + L/S > 5.0.
+- Verdict: "WHALE_ACCUMULATION" — Buy alongside whales during retail panic.
 
 🛡️ 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
 
