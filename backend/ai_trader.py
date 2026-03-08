@@ -1195,12 +1195,11 @@ def run_agent():
                 print(f"🤔 Dolores is thinking... (Attempt {attempt+1}/{MAX_RETRIES}, Timeout: 120s)")
                 
                 response = client.chat.completions.create(
-                    model="deepseek-chat",
+                    model="deepseek-reasoner",
                     messages=[
                         {"role": "system", "content": final_prompt},
                         {"role": "user", "content": "Analyze the market reality (Whales vs Retail). Detect traps. Generate trading actions."}
                     ],
-                    temperature=0.1,
                     response_format={"type": "json_object"},
                     timeout=120
                 )
