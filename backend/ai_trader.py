@@ -840,10 +840,39 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
     is_extreme_market = (fear_index < 20) or (fear_index > 80)
     MAX_LEVERAGE = 2 if is_extreme_market else 5 # Lowered base limit to 5x as agreed
     
-    # --- 3. PROCESS ACTIONS ---
     # Merge newly structured actions back into a flat list for legacy processing
     raw_actions = []
     
+    # --- 1.2 PORTFOLIO INTEGRITY CHECK (FILL MISSING) ---
+    # Ensure every open position has a corresponding entry in portfolio_management
+    try:
+        open_positions = executor.get_all_positions()
+        pm = decision.get("portfolio_management", {})
+        if not isinstance(pm, dict):
+            pm = {}
+            decision["portfolio_management"] = pm
+            
+        for pos in open_positions:
+            sym = pos["symbol"]
+            # Case-insensitive match check
+            found = False
+            for pm_sym in pm.keys():
+                if pm_sym.upper() == sym.upper():
+                    found = True
+                    break
+            
+            if not found:
+                print(f"🛡️ INTEGRITY: AI missed {sym} in portfolio_management. Auto-filling 'hold'.")
+                pm[sym] = {
+                    "action": "hold",
+                    "action_logic": {
+                        "zh": "系统补丁：AI未返回该持仓指令，默认维持当前状态以规避逻辑空缺风险。",
+                        "en": "System Patch: AI missed this symbol in response. Auto-filling 'hold' to ensure constant monitoring."
+                    }
+                }
+    except Exception as e:
+        print(f"⚠️ Portfolio Integrity Check Failed: {e}")
+
     # A. Existing Portfolio
     pm = decision.get("portfolio_management", {})
     for symbol, data in pm.items():
