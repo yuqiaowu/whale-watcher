@@ -211,12 +211,16 @@ This data comes from direct on-chain monitoring and exchange liquidation feeds.
 1. **Accumulation vs. Distribution**:
    - ✅ **CONSISTENT ACCUMULATION**: Price dropping + Token Net Flow is NEGATIVE (Tokens leaving exchanges) + Stablecoin Flow is POSITIVE (Cash entering).
    - 📉 **CONSISTENT AGGRESSIVE DISTRIBUTION**: Token Net Flow is POSITIVE (Tokens entering exchanges) + Stablecoin Flow is NEGATIVE (Cash leaving exchanges). **CRITICAL: This is a consistent and aggressive signal of whales EXITING the market.** Selling assets and immediately withdrawing cash. It is NOT a contradiction (不是矛盾).
-2. **Liquidation & "Squeeze Fuel" Trap (L/S RATIO RULES)**:
-   - **L/S Ratio** = (24h Long Liquidation USD) / (24h Short Liquidation USD).
-   - 📉 **LEVERAGE FLUSH (L/S > 5.0)**: Massive Long liquidations. Retail is being forced out. Good for finding a bottom IF it stabilizes.
-   - 📉 **ULTRA-EXTREME L/S (> 50.0) [DANGER ZONE]**: The "Long Liquidity" is completely drained. Sellers are physically exhausted. **FORBID opening new Shorts**; expect a sharp "Dead Cat Bounce" or mean reversion.
-   - 📈 **SQUEEZE PIN (L/S < 0.2)**: Massive Short liquidations. The squeeze has already happened.
-   - 📈 **ULTRA-EXTREME L/S (< 0.02) [DANGER ZONE]**: The "Short Liquidity" is completely drained. Buyers are exhausted. **FORBID opening new Longs**; expect a "Blow-off Top" or reversal.
+2. **Liquidation & "Squeeze Fuel" Trap (Liq_LS_Ratio RULES)**:
+   - **Liq_LS_Ratio (爆仓比)** = (24h Long Liquidation USD) / (24h Short Liquidation USD).
+   - 📉 **LEVERAGE FLUSH (Liq_LS_Ratio > 5.0)**: Massive Long liquidations. Retail is being forced out. Good for finding a bottom IF it stabilizes.
+   - 📉 **ULTRA-EXTREME Liq_LS_Ratio (> 50.0) [DANGER ZONE]**: The "Long Liquidity" is completely drained. Sellers are physically exhausted. **FORBID opening new Shorts**; expect a sharp "Dead Cat Bounce" or mean reversion.
+   - 📈 **SQUEEZE PIN (Liq_LS_Ratio < 0.2)**: Massive Short liquidations. The squeeze has already happened.
+   - 📈 **ULTRA-EXTREME Liq_LS_Ratio (< 0.02) [DANGER ZONE]**: The "Short Liquidity" is completely drained. Buyers are exhausted. **FORBID opening new Longs**; expect a "Blow-off Top" or reversal.
+3. **Whale Sentiment vs. Market Pain (DIFFERENTIATION)**:
+   - **Whale_LS_Ratio (鲸鱼持仓比)**: Measures *current* positioning of top traders. (High = Whales are LONG).
+   - **Liq_LS_Ratio (爆仓比)**: Measures *past* events/pain. (Extremely High = Market Bottom due to long flush).
+   - If Whale_LS_Ratio is RISING while price is flat/falling, it is **ACCUMULATION**.
 3. **The "Whale Support" Divergence**:
    - If Token Net Flow is POSITIVE (moving in) but Price doesn't drop immediately, check L/S Ratio. If L/S is very low (< 0.2), it's a **SQUEEZE**; otherwise, it's likely a **LIMIT SELL WALL**.
 3. **Squeeze Warning**: Negative Funding + Low L/S (< 0.2) + Oversold RSI -> **SHORT SQUEEZE ALREADY HAPPENING/ENDING**.
@@ -224,7 +228,12 @@ This data comes from direct on-chain monitoring and exchange liquidation feeds.
    - 🕯️ **Lower Wick (>30%)**: Buying pressure/Absorption at the bottom.
    - 🕯️ **Upper Wick (>30%)**: Selling pressure/Exhaustion at the top.
    - 🕯️ **Body Ratio (<20%)**: Indecision/Doji. Expect volatility compression. 
-5. **BLIND SPOT EXCEPTION (BTC, BNB, DOGE)**: We DO NOT have on-chain whale flow data. Use L/S Ratio + Funding Z-Score as the primary "Truth Layer".
+5. **DATA SOURCE EXCEPTION (BTC, BNB, DOGE)**: These coins use **OKX Rubik Whale Data** (Whale_LS_Ratio & Top Trader Sentiment) instead of on-chain flow. 
+   - **Whale_LS_Ratio (Account) > 1.2**: Strong Whale Long Bias (Accumulation).
+   - **Whale_LS_Ratio (Account) < 0.8**: Strong Whale Short Bias (Distribution).
+   - **Top Trader Sentiment > 0.6**: Aggressive Bullish positioning by major players.
+   - **Top Trader Sentiment < 0.4**: Aggressive Bearish positioning.
+   - Use these as the 'Truth Layer' for these coins.
 
 
 🟦 2.1 MACRO TREND (1D TIMEFRAME)
@@ -626,22 +635,33 @@ def get_whale_data():
         ctx += f"- Liquidation Pain (24h): Longs ${sol_liq_long:,.0f} / Shorts ${sol_liq_short:,.0f} | Ratio(L/S)={sol_liq_ratio:.2f} [{sol_liq_signal}]\n"
         
         ctx += "\n=== BITCOIN (BTC) CONTRACT DATA ===\n"
-        ctx += "⚠️ NO WHALE FLOW DATA: BTC has NO on-chain token_net_flow or stablecoin_net_flow. DO NOT invent or infer any whale flow direction for BTC. Analysis is based ONLY on Technicals + Liquidation below.\n"
+        btc_ls = btc_market.get("whale_ls_ratio", 0)
+        btc_pos = btc_market.get("whale_pos_ratio", 0)
+        btc_sent = btc_market.get("top_trader_sentiment", 0.5)
+        ctx += f"- OKX Whale L/S Ratio: Account={btc_ls:.2f} / Position={btc_pos:.2f}\n"
+        ctx += f"- OKX Top Trader Sentiment: {btc_sent:.2f} (Whale Bias: {'Bullish' if btc_sent > 0.5 else 'Bearish' if btc_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Technicals: {fmt_tech(btc_market)}\n"
         btc_liq_ratio = btc_liq_long / btc_liq_short if btc_liq_short > 0 else 0
         btc_liq_signal = "⚠️ LONG_FLUSH" if btc_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if btc_liq_short > btc_liq_long * 2 else "BALANCED")
         ctx += f"- Liquidation Pain (24h): Longs ${btc_liq_long:,.0f} / Shorts ${btc_liq_short:,.0f} | Ratio(L/S)={btc_liq_ratio:.2f} [{btc_liq_signal}]\n"
-        ctx += f"- Note: Focus ONLY on Squeeze potential via Liquidation Pain + Funding Rates. No flow data available.\n"
         
         ctx += "\n=== BNB CHAIN (BNB) CONTRACT DATA ===\n"
-        ctx += "⚠️ NO WHALE FLOW DATA: BNB has NO on-chain token_net_flow or stablecoin_net_flow. DO NOT invent or infer any whale flow direction for BNB. Analysis is based ONLY on Technicals + Liquidation below.\n"
+        bnb_ls = bnb_market.get("whale_ls_ratio", 0)
+        bnb_pos = bnb_market.get("whale_pos_ratio", 0)
+        bnb_sent = bnb_market.get("top_trader_sentiment", 0.5)
+        ctx += f"- OKX Whale L/S Ratio: Account={bnb_ls:.2f} / Position={bnb_pos:.2f}\n"
+        ctx += f"- OKX Top Trader Sentiment: {bnb_sent:.2f} (Whale Bias: {'Bullish' if bnb_sent > 0.5 else 'Bearish' if bnb_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Technicals: {fmt_tech(bnb_market)}\n"
         bnb_liq_ratio = bnb_liq_long / bnb_liq_short if bnb_liq_short > 0 else 0
         bnb_liq_signal = "⚠️ LONG_FLUSH" if bnb_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if bnb_liq_short > bnb_liq_long * 2 else "BALANCED")
         ctx += f"- Liquidation Pain (24h): Longs ${bnb_liq_long:,.0f} / Shorts ${bnb_liq_short:,.0f} | Ratio(L/S)={bnb_liq_ratio:.2f} [{bnb_liq_signal}]\n"
         
         ctx += "\n=== DOGECOIN (DOGE) CONTRACT DATA ===\n"
-        ctx += "⚠️ NO WHALE FLOW DATA: DOGE has NO on-chain token_net_flow or stablecoin_net_flow. DO NOT invent or infer any whale flow direction for DOGE. Analysis is based ONLY on Technicals + Liquidation below.\n"
+        doge_ls = doge_market.get("whale_ls_ratio", 0)
+        doge_pos = doge_market.get("whale_pos_ratio", 0)
+        doge_sent = doge_market.get("top_trader_sentiment", 0.5)
+        ctx += f"- OKX Whale L/S Ratio: Account={doge_ls:.2f} / Position={doge_pos:.2f}\n"
+        ctx += f"- OKX Top Trader Sentiment: {doge_sent:.2f} (Whale Bias: {'Bullish' if doge_sent > 0.5 else 'Bearish' if doge_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Technicals: {fmt_tech(doge_market)}\n"
         ctx += f"- Liquidation Pain (24h): Longs ${doge_liq_long:,.0f} / Shorts ${doge_liq_short:,.0f}\n"
         

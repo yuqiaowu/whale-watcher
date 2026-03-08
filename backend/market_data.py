@@ -301,7 +301,23 @@ class OKXDataClient:
                 metrics["volume_avg_30d"] = avg_vol
                 if avg_vol > 0:
                     metrics["volume_ratio"] = metrics["volume_24h"] / avg_vol
-                    
+        
+        # 7. Whale Sentiment (Rubik)
+        # Whale L/S Account Ratio
+        ls_data = self._request("GET", "/api/v5/rubik/stat/contracts/long-short-account-ratio-contract-top-trader", {"instId": inst_id})
+        if ls_data:
+            metrics["whale_ls_ratio"] = float(ls_data[0][1])
+            
+        # Whale L/S Position Ratio
+        pos_data = self._request("GET", "/api/v5/rubik/stat/contracts/long-short-position-ratio-contract-top-trader", {"instId": inst_id})
+        if pos_data:
+            metrics["whale_pos_ratio"] = float(pos_data[0][1])
+
+        # Top Trader Sentiment (General) - Requires ccy
+        sentiment_data = self._request("GET", "/api/v5/rubik/stat/contracts/top-trader-sentiment-index", {"ccy": symbol})
+        if sentiment_data:
+            metrics["top_trader_sentiment"] = float(sentiment_data[0][1])
+
         return metrics
 
     def fetch_liquidation_data(self, uly="ETH-USDT", inst_type="SWAP"):

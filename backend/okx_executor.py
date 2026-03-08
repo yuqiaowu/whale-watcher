@@ -385,24 +385,38 @@ class OKXExecutor:
                  state = self._load_shadow_state()
                  for p in state["positions"]:
                      if p["symbol"] == symbol and (target_pos_side == "net" or p["type"] == target_pos_side):
-                          full_sz = float(p["size"])
-                          sz = max(1, int(full_sz * percent_to_close)) if full_sz >= 1 else full_sz * percent_to_close
-                          target_pos_side = p["type"]
-                          print(f"🔍 [SHADOW] Auto-detected position size for {action}: {sz} out of {full_sz} contracts")
-                          break
+                           full_sz = float(p["size"])
+                           if percent_to_close == 1.0:
+                               sz = full_sz
+                           else:
+                               # Round to Lot Size if possible, otherwise use truncation with precision
+                               info = self.get_instrument_info(instId)
+                               lotSz = info["lotSz"] if info else 1
+                               sz = self.round_step_size(full_sz * percent_to_close, lotSz)
+                           
+                           target_pos_side = p["type"]
+                           print(f"🔍 [SHADOW] Auto-detected position size for {action}: {sz} out of {full_sz} contracts")
+                           break
              else:
                   # Real Mode: Fetch actual position from OKX to ensure full/partial closure
                  raw_res = self._request("GET", f"/api/v5/account/positions?instId={instId}")
                  if raw_res.get("code") == "0" and raw_res.get("data"):
-                      for p in raw_res["data"]:
-                           # Match by position side (long/short/net) AND ensure it has a size > 0
-                           if p.get("posSide") == target_pos_side or target_pos_side == "net":
-                               if float(p.get("pos", 0)) != 0:
-                                   full_sz = abs(float(p["pos"]))
-                                   sz = max(1, int(full_sz * percent_to_close)) if full_sz >= 1 else full_sz * percent_to_close
-                                   target_pos_side = p.get("posSide")
-                                   print(f"🔍 [REAL] Auto-detected position size for {action}: {sz} out of {full_sz} contracts ({target_pos_side})")
-                                   break
+                       for p in raw_res["data"]:
+                            # Match by position side (long/short/net) AND ensure it has a size > 0
+                            if p.get("posSide") == target_pos_side or target_pos_side == "net":
+                                if float(p.get("pos", 0)) != 0:
+                                    full_sz = abs(float(p["pos"]))
+                                    
+                                    if percent_to_close == 1.0:
+                                        sz = full_sz
+                                    else:
+                                        info = self.get_instrument_info(instId)
+                                        lotSz = info["lotSz"] if info else 1
+                                        sz = self.round_step_size(full_sz * percent_to_close, lotSz)
+                                        
+                                    target_pos_side = p.get("posSide")
+                                    print(f"🔍 [REAL] Auto-detected position size for {action}: {sz} out of {full_sz} contracts ({target_pos_side})")
+                                    break
 
         if sz <= 0:
             print(f"⚠️ Calculated size is 0 for ${amount_usd}. Minimum not met?")
