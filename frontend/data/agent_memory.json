@@ -926,5 +926,26 @@
       "bb_trend": "DOWN"
     },
     "outcome": "Closed"
+  },
+  {
+    "id": "DOGE_1772971839",
+    "timestamp": "2026-03-08T20:10:39.776045",
+    "symbol": "DOGE",
+    "action": "close_position",
+    "entry_price": 0.08927,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u9488\u5bf9DOGE\u6301\u4ed3\uff1a\u5728\u718a\u5e02\u4e2d\uff0cDOGE\u7684Qlib\u6392\u540d\u6700\u5dee\uff08\u7b2c5\u540d\uff09\uff0c\u6280\u672f\u9762\u8d85\u5356\u4f46\u672a\u6781\u7aef\uff08RSI 38.6\uff09\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\u663e\u793a\u96f6\u552e\u7a7a\u5934\u62e5\u6324\uff0c\u4f46\u7206\u4ed3\u6bd44.56\u4e0d\u663e\u8457\uff0c\u4e14\u65e0\u94fe\u4e0a\u9cb8\u9c7c\u6570\u636e\u786e\u8ba4\u3002OKX\u9cb8\u9c7c\u6301\u4ed3\u6bd4\u663e\u793a\u591a\u5934\u504f\u5411\uff0c\u4f46\u7f3a\u4e4f\u5f3a\u4fe1\u53f7\u3002\u6839\u636e\u5386\u53f2\u6559\u8bad\uff0c\u5728\u4e0d\u786e\u5b9a\u6027\u9ad8\u65f6\u5173\u95ed\u4ed3\u4f4d\u4ee5\u51cf\u5c11\u98ce\u9669\u3002",
+      "en": "Asset-specific maintenance logic for DOGE: In bear market, DOGE has worst Qlib rank (5th), technically oversold but not extreme (RSI 38.6), negative funding shows retail short crowded, but L/S ratio 4.56 not significant, and no on-chain whale data confirmation. OKX whale L/S ratio shows long bias, but lacks strong signals. Based on lessons learned, close position to reduce risk amid high uncertainty."
+    },
+    "context": {
+      "rsi": 38.57962809021856,
+      "adx": 12.22315850128699,
+      "whale_flow": "?",
+      "funding_rate": -6.84375726935e-05,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": "Closed"
   }
 ]
