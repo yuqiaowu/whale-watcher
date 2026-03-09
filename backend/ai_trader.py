@@ -501,7 +501,7 @@ def get_whale_data():
         eth_pos = eth_market.get("whale_pos_ratio", 0)
         eth_sent = eth_market.get("top_trader_sentiment", 0.5)
         # NOTE: 持仓L/S比 = Who is holding long vs short positions (>1=more longs, <1=more shorts)
-        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={eth_ls:.2f} (>1 more longs, <1 more shorts) / Position Size Ratio={eth_pos:.2f}\n"
+        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={eth_ls:.2f} / Position Size Ratio={eth_pos:.2f}\n"
         ctx += f"- OKX Top Trader Sentiment: {eth_sent:.2f} (Whale Bias: {'Bullish' if eth_sent > 0.5 else 'Bearish' if eth_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Sentiment Score: 24h={eth_stat_24h.get('sentiment_score', 0):.2f} / 7d={eth_stat_7d.get('sentiment_score', 0):.2f}\n"
         eth_tf_24h = eth_stat_24h.get('token_net_flow', 0)
@@ -520,7 +520,7 @@ def get_whale_data():
         sol_ls = sol_market.get("whale_ls_ratio", 0)
         sol_pos = sol_market.get("whale_pos_ratio", 0)
         sol_sent = sol_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={sol_ls:.2f} (>1 more longs, <1 more shorts) / Position Size Ratio={sol_pos:.2f}\n"
+        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={sol_ls:.2f} / Position Size Ratio={sol_pos:.2f}\n"
         ctx += f"- OKX Top Trader Sentiment: {sol_sent:.2f} (Whale Bias: {'Bullish' if sol_sent > 0.5 else 'Bearish' if sol_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Sentiment Score: 24h={sol_stat_24h.get('sentiment_score', 0):.2f} / 7d={sol_stat_7d.get('sentiment_score', 0):.2f}\n"
         sol_tf_24h = sol_stat_24h.get('token_net_flow', 0)
@@ -538,7 +538,7 @@ def get_whale_data():
         btc_ls = btc_market.get("whale_ls_ratio", 0)
         btc_pos = btc_market.get("whale_pos_ratio", 0)
         btc_sent = btc_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={btc_ls:.2f} (>1 more longs, <1 more shorts) / Position Size Ratio={btc_pos:.2f}\n"
+        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={btc_ls:.2f} / Position Size Ratio={btc_pos:.2f}\n"
         ctx += f"- OKX Top Trader Sentiment: {btc_sent:.2f} (Whale Bias: {'Bullish' if btc_sent > 0.5 else 'Bearish' if btc_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Technicals: {fmt_tech(btc_market)}\n"
         btc_liq_ratio = btc_liq_long / btc_liq_short if btc_liq_short > 0 else 0
@@ -549,7 +549,7 @@ def get_whale_data():
         bnb_ls = bnb_market.get("whale_ls_ratio", 0)
         bnb_pos = bnb_market.get("whale_pos_ratio", 0)
         bnb_sent = bnb_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={bnb_ls:.2f} (>1 more longs, <1 more shorts) / Position Size Ratio={bnb_pos:.2f}\n"
+        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={bnb_ls:.2f} / Position Size Ratio={bnb_pos:.2f}\n"
         ctx += f"- OKX Top Trader Sentiment: {bnb_sent:.2f} (Whale Bias: {'Bullish' if bnb_sent > 0.5 else 'Bearish' if bnb_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Technicals: {fmt_tech(bnb_market)}\n"
         bnb_liq_ratio = bnb_liq_long / bnb_liq_short if bnb_liq_short > 0 else 0
@@ -625,7 +625,7 @@ def get_news_context():
             source_news = news_items.get(source_key, {}).get("items", [])
             all_news.extend(source_news[:3])  # Take top 3 from each source
         
-        news_str = "Latest News (CRITICAL: For EACH item, you MUST assess: [PRICE_IN] already reflected in price, [FERMENTING] still unfolding/not priced, or [FADING] impact fading):\n"
+        news_str = "Latest News (For each item, assess whether it is PRICE_IN, FERMENTING, or FADING — use your own judgment):\n"
         if all_news:
             for item in all_news[:10]:  # Show max 10 total general news
                 sentiment = item.get('sentiment', 'Neutral')
@@ -635,15 +635,11 @@ def get_news_context():
                 summary_short = summary[:120].replace('\n', ' ') if summary else ''
                 news_str += f"- [{sentiment}] {item.get('title')} ({published})\n"
                 if summary_short:
-                    news_str += f"  → {summary_short}...\n"
+                    news_str += f"  \u2192 {summary_short}...\n"
         else:
             news_str += "No recent news available.\n"
 
-        news_str += "\n[NEWS ANALYSIS INSTRUCTION] For each news item above, judge:\n"
-        news_str += "  * PRICE_IN: If it's old news (>12h) OR price already moved significantly in response → label PRICE_IN, no further impact expected.\n"
-        news_str += "  * FERMENTING: If news is <6h old AND price hasn't fully reacted yet → label FERMENTING, may still drive further movement.\n"
-        news_str += "  * FADING: If news was bullish/bearish but price reversed → narrative is dying, contrarian opportunity.\n"
-        news_str += "  Incorporate this assessment into your [Narrative Validation] section.\n"
+        news_str += "\n[NEWS ANALYSIS INSTRUCTION] Incorporate your news assessment (PRICE_IN / FERMENTING / FADING) into the [Narrative Validation] section of your analysis.\n"
             
         # Combine Calendar + News
         final_news_context = f"{calendar_str}\n{news_str}" if calendar_str else news_str
