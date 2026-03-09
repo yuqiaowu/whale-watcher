@@ -769,7 +769,12 @@ class OKXExecutor:
         """
         if self.shadow_mode:
             state = self._load_shadow_state()
-            return state.get("total_equity", 0.0)
+            # If total_equity is 0 but cash exists, fallback to cash
+            eq = state.get("total_equity", 0.0)
+            cash = state.get("cash", 0.0)
+            if eq <= 0 and cash > 0:
+                return cash
+            return eq
             
         # Get total balance
         res = self._request("GET", "/api/v5/account/balance")

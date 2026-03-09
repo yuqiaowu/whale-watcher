@@ -266,7 +266,7 @@ Current State:
 **THE PRIMARY MISSION: ACTIVE POSITION MAINTENANCE (MANDATORY FIRST)**
 Before even thinking about new trades, you MUST address your current exposure.
 1. **THE 1:1 CLEANSE RULE (MANDATORY)**: Every decision cycle, your first task is a per-asset audit.
-   - **MAPPING REQUIREMENT**: For EVERY symbol listed in `{{PORTFOLIO_STATE_JSON}}`, you **MUST** provide a corresponding entry in the `actions` array. 
+   - **MAPPING REQUIREMENT**: For EVERY symbol listed in `{{PORTFOLIO_STATE_JSON}}`, you **MUST** provide a corresponding entry in the `portfolio_management` object. 
    - **ZERO OMISSION**: You are NOT allowed to skip any current holding. If you hold BTC, DOGE, BNB, or any other asset, it MUST be listed.
    - **ASSET-SPECIFIC DEFENSE**: 
      - For coins WITH whale data (ETH, SOL): Defend based on Flow + Technicals.
@@ -274,7 +274,12 @@ Before even thinking about new trades, you MUST address your current exposure.
      - "Missing data" is NOT a reason to skip an action.
    - **ZERO TOLERANCE**: Failing to provide a matching action entry for ANY symbol in portfolio is a **LOGICAL INTEGRITY BREACH**.
 
-2. **THE SECONDARY MISSION: NEW ENTRIES (PRIVILEGED ACCESS)**:
+2. **THE TRACKED ASSET AUDIT (MANDATORY)**:
+   - Even if you don't hold them, you **MUST** evaluate the current state of ALL FIVE core assets: **BTC, ETH, SOL, BNB, DOGE**.
+   - If an asset is NOT currently in your portfolio, it **MUST** appear in either `portfolio_management` (if you are opening a position) or `new_opportunities` (as `monitor`, `open_long`, or `open_short`).
+   - You are not allowed to ignore SOL or DOGE just because you aren't trading them. Provide a brief `monitor` reason for each tracked asset not traded.
+
+3. **THE SECONDARY MISSION: NEW ENTRIES (PRIVILEGED ACCESS)**:
    - Opening a new position is a **REWARD** for having a healthy, logically-aligned portfolio.
    - If you have conflicts in your current positions that you aren't fixing, do NOT open new ones.
    - All new entries MUST follow the Hypothesis Playbooks (Section 4C).
@@ -802,10 +807,11 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
             
         for pos in open_positions:
             sym = pos["symbol"]
-            # Case-insensitive match check
+            # Case-insensitive robust match check
             found = False
             for pm_sym in pm.keys():
-                if pm_sym.upper() == sym.upper():
+                # Matches if equal, starts with (BTC vs BTC-USDT), or is a substring
+                if pm_sym.upper() == sym.upper() or sym.upper().startswith(pm_sym.upper() + "-") or pm_sym.upper() in sym.upper():
                     found = True
                     break
             
