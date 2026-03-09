@@ -204,6 +204,11 @@ You will receive a JSON payload containing:
 🟪 2.2 WHALE & LIQUIDATION REALITY
 This data comes from direct on-chain monitoring and exchange liquidation feeds.
 
+DATA GLOSSARY (Definitions only — interpret values yourself):
+- [持仓L/S比] = The ratio of large trader ACCOUNTS holding Long vs Short positions (Account Ratio), and the ratio of Long vs Short POSITION SIZE in USD (Position Size Ratio). These measure current market positioning — who is betting which direction right now.
+- [爆仓L/S比] = The ratio of FORCIBLY LIQUIDATED Long USD / Forcibly Liquidated Short USD. This is NOT about who is holding positions. It measures which side got force-closed by the exchange due to margin depletion. A high ratio means more longs were blown out. A low ratio means more shorts were blown out.
+- These are TWO COMPLETELY DIFFERENT METRICS. 持仓L/S比 tells you where money is positioned. 爆仓L/S比 tells you who is suffering the most pain from forced exits.
+
 {{WHALE_CONTEXT}}
 
 
