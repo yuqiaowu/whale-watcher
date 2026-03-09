@@ -241,12 +241,16 @@ Who is trapped and where is the forced exit?
 
 **4C. GENERATE 3 SCENARIOS — Then Pick the Best**
 Before committing, explicitly consider all three:
-1. **TREND_FOLLOWING**: Current momentum continues — what do technicals + Qlib say?
-2. **MEAN_REVERSION / SQUEEZE**: Extreme reached — which side gets hunted next?
-3. **WHALE_FRONT_RUN / NARRATIVE_DIVERGENCE**: What are whales doing vs. what retail believes?
+1. **TREND_FOLLOWING**: High Qlib Score + Positive Momentum + Normal Funding → go with the flow.
+   - Trigger: Price above SMA50, RSI 45-65, whale flow in same direction, funding near 0%.
+2. **MEAN_REVERSION**: Extreme technical or sentiment readings → fade the move.
+   - Trigger: RSI >75 or <25, extreme funding (>0.05% or <-0.05%), reversal candle patterns.
+3. **MICROSTRUCTURE_SQUEEZE / WHALE_FRONT_RUN**: Passive liquidity event or institutional flow divergence.
+   - Squeeze Trigger: Crowded side (per 持仓L/S比) + adverse funding + price holding key level → forced covering incoming.
+   - Whale Trigger: On-chain flow contradicts price action (e.g., tokens leaving exchange while price drops = accumulation).
 
 Score each scenario by: (Signal Strength) × (Data Confluence) × (Risk/Reward).
-Choose the highest-scoring one. State WHY you rejected the other two.
+Choose the highest-scoring one. **Explicitly state why you rejected the other two.**
 
 HYPOTHESIS OPTIONS:
 1. **TREND_FOLLOWING**: Ride the momentum based on flow and technicals.
