@@ -219,10 +219,7 @@ Use this daily context to filter 4H signals.
 
 {{DAILY_CONTEXT}}
 
-🟪 2.3 MARKET ENVIRONMENT
-{{DAILY_CONTEXT}}
-
-🟨 3. NEWS & ON-CHAIN CONTEXT (OPTIONAL)
+ 3. NEWS & ON-CHAIN CONTEXT (OPTIONAL)
 {{NEWS_CONTEXT}}
 
 🟥 4. ANALYSIS FRAMEWORK (Execute in Order)
@@ -262,7 +259,7 @@ HYPOTHESIS OPTIONS:
 Current State:
 {{PORTFOLIO_STATE_JSON}}
 
-**🟥 5. THE PRIMARY MISSION: ACTIVE POSITION MAINTENANCE (MANDATORY FIRST)**
+**THE PRIMARY MISSION: ACTIVE POSITION MAINTENANCE (MANDATORY FIRST)**
 Before even thinking about new trades, you MUST address your current exposure.
 1. **THE 1:1 CLEANSE RULE (MANDATORY)**: Every decision cycle, your first task is a per-asset audit.
    - **MAPPING REQUIREMENT**: For EVERY symbol listed in `{{PORTFOLIO_STATE_JSON}}`, you **MUST** provide a corresponding entry in the `actions` array. 
@@ -316,8 +313,8 @@ Structure:
         "en": "Analyze Qlib top-ranked coins and Z-Score significance (statistical deviations in vol/funding)." 
     },
     "regime_safety": { 
-        "zh": "【必填】基于Section 4E评估: 1)当前RSI/ADX/NATR状态; 2)上下影线比率; 3)多空爆仓比; 4)鲸鱼净流向。最终给出明确判断: KNIFE(接飞刀)/ROCKET(挡火箭)/SAFE_MR(安全均值回归)/WHALE_SQUEEZE(鲸鱼轧空)/WHALE_ACCUMULATION(鲸鱼托底)", 
-        "en": "【Required】Based on Section 4E: 1) RSI/ADX/NATR current state; 2) Upper/Lower Wick Ratio; 3) Liquidation long/short ratio; 4) Whale net flow direction. Conclude with explicit verdict: KNIFE / ROCKET / SAFE_MR / WHALE_SQUEEZE / WHALE_ACCUMULATION and explain why." 
+        "zh": "【必填】基于Section 4B（痛苦交易）评估: 1)当前RSI/ADX/NATR状态; 2)上下影线比率; 3)多空爆仓比; 4)鲸鱼净流向。最终给出明确判断: KNIFE(接飞刀)/ROCKET(挡火箭)/SAFE_MR(安全均值回归)/WHALE_SQUEEZE(鲸鱼轧空)/WHALE_ACCUMULATION(鲸鱼托底)", 
+        "en": "【Required】Based on Section 4B (Pain Trade): 1) RSI/ADX/NATR current state; 2) Upper/Lower Wick Ratio; 3) Liquidation long/short ratio; 4) Whale net flow direction. Conclude with explicit verdict: KNIFE / ROCKET / SAFE_MR / WHALE_SQUEEZE / WHALE_ACCUMULATION and explain why." 
     },
     "portfolio_status": { "zh": "当前持仓风险评估", "en": "Portfolio risk check." }
   },
