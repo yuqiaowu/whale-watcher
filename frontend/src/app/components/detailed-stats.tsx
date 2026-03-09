@@ -148,7 +148,7 @@ export function DetailedStats({ data }: { data?: any }) {
   const japanBadge = isYenWeak
     ? (t.detailedStats.status.weakYen ?? '弱势日元 (Risk On)')
     : (t.detailedStats.japanBadge);
-  const japanBadgeColor = isYenWeak ? "bg-[#FF3131]/20 text-[#FF3131]" : "bg-[#39FF14]/20 text-[#39FF14]";
+  const japanBadgeColor = isYenWeak ? "bg-[#39FF14]/20 text-[#39FF14]" : "bg-[#FF3131]/20 text-[#FF3131]";
   const yenChangeSentiment = isYenWeak
     ? (t.detailedStats.devaluation ?? '贬值')
     : (t.detailedStats.appreciation ?? '升值');
