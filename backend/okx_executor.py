@@ -627,7 +627,9 @@ class OKXExecutor:
                 # Approx exposure = Size (contracts) * EntryPrice * CtVal ?? 
                 # Or just stored size_usd? Stored `size_usd` is margin * leverage roughly.
                 # Let's use stored size_usd for simplicity
-                if p["type"] == "long": exposure['long'] += p.get("size_usd", 0)
+                # Defensive check: shadow positions might use 'type' or 'side'
+                pos_type = p.get("type", p.get("side", "long"))
+                if pos_type == "long": exposure['long'] += p.get("size_usd", 0)
                 else: exposure['short'] += p.get("size_usd", 0)
             return exposure
 
@@ -679,13 +681,13 @@ class OKXExecutor:
                     "symbol": p["symbol"],
                     "instId": instId,
                     "leverage": p["leverage"],
-                    "type": p["type"],
+                    "type": p.get("type", p.get("side", "long")),
                     "entryPrice": entry_price,
                     "currentPrice": current_price,
                     "pnl": float(f"{pnl_amt:.2f}"),
                     "pnlPercent": float(f"{pnl_pct:.2f}"),
                     "amount": size, # contracts
-                    "margin": p["margin"],
+                    "margin": p.get("margin", 0),
                     "stopLoss": p.get("stop_loss"),    # Return None if missing, Frontend handles '---'
                     "takeProfit": p.get("take_profit"), # Return None if missing
                     "name": p["symbol"] # Simple fallback

@@ -291,8 +291,7 @@ Structure:
         "zh": "【必填】基于Section 4E评估: 1)当前RSI/ADX/NATR状态; 2)上下影线比率; 3)多空爆仓比; 4)鲸鱼净流向。最终给出明确判断: KNIFE(接飞刀)/ROCKET(挡火箭)/SAFE_MR(安全均值回归)/WHALE_SQUEEZE(鲸鱼轧空)/WHALE_ACCUMULATION(鲸鱼托底)", 
         "en": "【Required】Based on Section 4E: 1) RSI/ADX/NATR current state; 2) Upper/Lower Wick Ratio; 3) Liquidation long/short ratio; 4) Whale net flow direction. Conclude with explicit verdict: KNIFE / ROCKET / SAFE_MR / WHALE_SQUEEZE / WHALE_ACCUMULATION and explain why." 
     },
-    "portfolio_status": { "zh": "当前持仓风险评估", "en": "Portfolio risk check." },
-    "reflection": { "zh": "AI的一句话反思", "en": "Short reflection." }
+    "portfolio_status": { "zh": "当前持仓风险评估", "en": "Portfolio risk check." }
   },
   "portfolio_management": {
     "ETH": { 
@@ -1017,8 +1016,8 @@ def run_agent():
     
     final_prompt = final_prompt.replace("{{WHALE_CONTEXT}}", whale_context)
     
-    # Add Daily Context + MEMORY INJECTION
-    memory_context = memory.get_recent_performance()
+    # Add Daily Context + MEMORY INJECTION (DISABLED)
+    memory_context = "" # memory.get_recent_performance()
     daily_context = get_daily_context_summary()
     
     # Combined Context
@@ -1191,7 +1190,7 @@ def run_agent():
                     # Add reason string for text logs
                     reason_txt = entry_reason.get('en', 'Driven by whale accumulation.')
                     
-                    memory.log_trade(symbol, action_type, amount, entry_reason, market_snapshot)
+                    # memory.log_trade(symbol, action_type, amount, entry_reason, market_snapshot)
                     
                     # 🔔 SEND NOTIFICATION (Telegram/Discord)
                     notify_trade_execution(
