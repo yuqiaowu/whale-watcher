@@ -512,9 +512,7 @@ def get_whale_data():
         ctx += f"- Stablecoin Net Flow: 24h={fmt_stable_flow(eth_sf_24h)} / 7d={fmt_stable_flow(eth_sf_7d)}\n"
         ctx += f"- Technicals: {fmt_tech(eth_market)}\n"
         eth_liq_ratio = eth_liq_long / eth_liq_short if eth_liq_short > 0 else 0
-        eth_liq_signal = "⚠️ LONG_FLUSH" if eth_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if eth_liq_short > eth_liq_long * 2 else "BALANCED")
-        # NOTE: 爆仓L/S比 = LIQUIDATION ratio (DIFFERENT from 持仓比!). <1 means more SHORTS are being liquidated (short squeeze). >2 means longs are being flushed.
-        ctx += f"- [爆仓L/S比 ⚠️DIFFERENT FROM 持仓比] Liquidated Longs ${eth_liq_long:,.0f} / Liquidated Shorts ${eth_liq_short:,.0f} | Liq-Ratio(Long/Short)={eth_liq_ratio:.2f} [{eth_liq_signal}]\n"
+        ctx += f"- [爆仓L/S比] Liquidated Longs ${eth_liq_long:,.0f} / Liquidated Shorts ${eth_liq_short:,.0f} | Liq-Ratio(Long/Short)={eth_liq_ratio:.2f}\n"
         
         ctx += "\n=== SOLANA (SOL) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
         sol_ls = sol_market.get("whale_ls_ratio", 0)
@@ -531,8 +529,7 @@ def get_whale_data():
         ctx += f"- Stablecoin Net Flow: 24h={fmt_stable_flow(sol_sf_24h)} / 7d={fmt_stable_flow(sol_sf_7d)}\n"
         ctx += f"- Technicals: {fmt_tech(sol_market)}\n"
         sol_liq_ratio = sol_liq_long / sol_liq_short if sol_liq_short > 0 else 0
-        sol_liq_signal = "⚠️ LONG_FLUSH" if sol_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if sol_liq_short > sol_liq_long * 2 else "BALANCED")
-        ctx += f"- [爆仓L/S比 ⚠️DIFFERENT FROM 持仓比] Liquidated Longs ${sol_liq_long:,.0f} / Liquidated Shorts ${sol_liq_short:,.0f} | Liq-Ratio(Long/Short)={sol_liq_ratio:.2f} [{sol_liq_signal}]\n"
+        ctx += f"- [爆仓L/S比] Liquidated Longs ${sol_liq_long:,.0f} / Liquidated Shorts ${sol_liq_short:,.0f} | Liq-Ratio(Long/Short)={sol_liq_ratio:.2f}\n"
         
         ctx += "\n=== BITCOIN (BTC) CONTRACT DATA ===\n"
         btc_ls = btc_market.get("whale_ls_ratio", 0)
@@ -542,8 +539,7 @@ def get_whale_data():
         ctx += f"- OKX Top Trader Sentiment: {btc_sent:.2f} (Whale Bias: {'Bullish' if btc_sent > 0.5 else 'Bearish' if btc_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Technicals: {fmt_tech(btc_market)}\n"
         btc_liq_ratio = btc_liq_long / btc_liq_short if btc_liq_short > 0 else 0
-        btc_liq_signal = "⚠️ LONG_FLUSH" if btc_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if btc_liq_short > btc_liq_long * 2 else "BALANCED")
-        ctx += f"- [爆仓L/S比 ⚠️DIFFERENT FROM 持仓比] Liquidated Longs ${btc_liq_long:,.0f} / Liquidated Shorts ${btc_liq_short:,.0f} | Liq-Ratio(Long/Short)={btc_liq_ratio:.2f} [{btc_liq_signal}]\n"
+        ctx += f"- [爆仓L/S比] Liquidated Longs ${btc_liq_long:,.0f} / Liquidated Shorts ${btc_liq_short:,.0f} | Liq-Ratio(Long/Short)={btc_liq_ratio:.2f}\n"
         
         ctx += "\n=== BNB CHAIN (BNB) CONTRACT DATA ===\n"
         bnb_ls = bnb_market.get("whale_ls_ratio", 0)
@@ -553,19 +549,19 @@ def get_whale_data():
         ctx += f"- OKX Top Trader Sentiment: {bnb_sent:.2f} (Whale Bias: {'Bullish' if bnb_sent > 0.5 else 'Bearish' if bnb_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Technicals: {fmt_tech(bnb_market)}\n"
         bnb_liq_ratio = bnb_liq_long / bnb_liq_short if bnb_liq_short > 0 else 0
-        bnb_liq_signal = "⚠️ LONG_FLUSH" if bnb_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if bnb_liq_short > bnb_liq_long * 2 else "BALANCED")
-        ctx += f"- [爆仓L/S比 ⚠️DIFFERENT FROM 持仓比] Liquidated Longs ${bnb_liq_long:,.0f} / Liquidated Shorts ${bnb_liq_short:,.0f} | Liq-Ratio(Long/Short)={bnb_liq_ratio:.2f} [{bnb_liq_signal}]\n"
+        ctx += f"- [爆仓L/S比] Liquidated Longs ${bnb_liq_long:,.0f} / Liquidated Shorts ${bnb_liq_short:,.0f} | Liq-Ratio(Long/Short)={bnb_liq_ratio:.2f}\n"
         
         ctx += "\n=== DOGECOIN (DOGE) CONTRACT DATA ===\n"
         doge_ls = doge_market.get("whale_ls_ratio", 0)
         doge_pos = doge_market.get("whale_pos_ratio", 0)
         doge_sent = doge_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- OKX Whale L/S Ratio: Account={doge_ls:.2f} / Position={doge_pos:.2f}\n"
-        ctx += f"- OKX Top Trader Sentiment: {doge_sent:.2f} (Whale Bias: {'Bullish' if doge_sent > 0.5 else 'Bearish' if doge_sent < 0.5 else 'Neutral'})\n"
+        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={doge_ls:.2f} / Position Size Ratio={doge_pos:.2f}\n"
+        ctx += f"- OKX Top Trader Sentiment: {doge_sent:.2f}\n"
         ctx += f"- Technicals: {fmt_tech(doge_market)}\n"
-        ctx += f"- Liquidation Pain (24h): Longs ${doge_liq_long:,.0f} / Shorts ${doge_liq_short:,.0f}\n"
+        doge_liq_ratio = doge_liq_long / doge_liq_short if doge_liq_short > 0 else 0
+        ctx += f"- [爆仓L/S比] Liquidated Longs ${doge_liq_long:,.0f} / Liquidated Shorts ${doge_liq_short:,.0f} | Liq-Ratio(Long/Short)={doge_liq_ratio:.2f}\n"
         
-        ctx += "\n*INSTRUCTION*: If 24h Sentiment is higher than 7d, it indicates SHARP ACCUMULATION. If 24h is significantly lower, it indicates a POTENTIAL CLIFF DUMP. Prioritize sustained 7d trends for safety.*\n"
+        ctx += "\n*INSTRUCTION*: Compare 24h vs 7d Sentiment Scores and Token/Stablecoin flows for each asset and draw your own conclusions.*\n"
         
         # Add Macro Context (New Layer)
         macro = data.get("macro", {})
