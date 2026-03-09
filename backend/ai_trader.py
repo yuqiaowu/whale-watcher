@@ -500,7 +500,8 @@ def get_whale_data():
         eth_ls = eth_market.get("whale_ls_ratio", 0)
         eth_pos = eth_market.get("whale_pos_ratio", 0)
         eth_sent = eth_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- OKX Whale L/S Ratio: Account={eth_ls:.2f} / Position={eth_pos:.2f}\n"
+        # NOTE: 持仓L/S比 = Who is holding long vs short positions (>1=more longs, <1=more shorts)
+        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={eth_ls:.2f} (>1 more longs, <1 more shorts) / Position Size Ratio={eth_pos:.2f}\n"
         ctx += f"- OKX Top Trader Sentiment: {eth_sent:.2f} (Whale Bias: {'Bullish' if eth_sent > 0.5 else 'Bearish' if eth_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Sentiment Score: 24h={eth_stat_24h.get('sentiment_score', 0):.2f} / 7d={eth_stat_7d.get('sentiment_score', 0):.2f}\n"
         eth_tf_24h = eth_stat_24h.get('token_net_flow', 0)
@@ -512,13 +513,14 @@ def get_whale_data():
         ctx += f"- Technicals: {fmt_tech(eth_market)}\n"
         eth_liq_ratio = eth_liq_long / eth_liq_short if eth_liq_short > 0 else 0
         eth_liq_signal = "⚠️ LONG_FLUSH" if eth_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if eth_liq_short > eth_liq_long * 2 else "BALANCED")
-        ctx += f"- Liquidation Pain (24h): Longs ${eth_liq_long:,.0f} / Shorts ${eth_liq_short:,.0f} | Ratio(L/S)={eth_liq_ratio:.2f} [{eth_liq_signal}]\n"
+        # NOTE: 爆仓L/S比 = LIQUIDATION ratio (DIFFERENT from 持仓比!). <1 means more SHORTS are being liquidated (short squeeze). >2 means longs are being flushed.
+        ctx += f"- [爆仓L/S比 ⚠️DIFFERENT FROM 持仓比] Liquidated Longs ${eth_liq_long:,.0f} / Liquidated Shorts ${eth_liq_short:,.0f} | Liq-Ratio(Long/Short)={eth_liq_ratio:.2f} [{eth_liq_signal}]\n"
         
         ctx += "\n=== SOLANA (SOL) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
         sol_ls = sol_market.get("whale_ls_ratio", 0)
         sol_pos = sol_market.get("whale_pos_ratio", 0)
         sol_sent = sol_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- OKX Whale L/S Ratio: Account={sol_ls:.2f} / Position={sol_pos:.2f}\n"
+        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={sol_ls:.2f} (>1 more longs, <1 more shorts) / Position Size Ratio={sol_pos:.2f}\n"
         ctx += f"- OKX Top Trader Sentiment: {sol_sent:.2f} (Whale Bias: {'Bullish' if sol_sent > 0.5 else 'Bearish' if sol_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Sentiment Score: 24h={sol_stat_24h.get('sentiment_score', 0):.2f} / 7d={sol_stat_7d.get('sentiment_score', 0):.2f}\n"
         sol_tf_24h = sol_stat_24h.get('token_net_flow', 0)
@@ -530,29 +532,29 @@ def get_whale_data():
         ctx += f"- Technicals: {fmt_tech(sol_market)}\n"
         sol_liq_ratio = sol_liq_long / sol_liq_short if sol_liq_short > 0 else 0
         sol_liq_signal = "⚠️ LONG_FLUSH" if sol_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if sol_liq_short > sol_liq_long * 2 else "BALANCED")
-        ctx += f"- Liquidation Pain (24h): Longs ${sol_liq_long:,.0f} / Shorts ${sol_liq_short:,.0f} | Ratio(L/S)={sol_liq_ratio:.2f} [{sol_liq_signal}]\n"
+        ctx += f"- [爆仓L/S比 ⚠️DIFFERENT FROM 持仓比] Liquidated Longs ${sol_liq_long:,.0f} / Liquidated Shorts ${sol_liq_short:,.0f} | Liq-Ratio(Long/Short)={sol_liq_ratio:.2f} [{sol_liq_signal}]\n"
         
         ctx += "\n=== BITCOIN (BTC) CONTRACT DATA ===\n"
         btc_ls = btc_market.get("whale_ls_ratio", 0)
         btc_pos = btc_market.get("whale_pos_ratio", 0)
         btc_sent = btc_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- OKX Whale L/S Ratio: Account={btc_ls:.2f} / Position={btc_pos:.2f}\n"
+        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={btc_ls:.2f} (>1 more longs, <1 more shorts) / Position Size Ratio={btc_pos:.2f}\n"
         ctx += f"- OKX Top Trader Sentiment: {btc_sent:.2f} (Whale Bias: {'Bullish' if btc_sent > 0.5 else 'Bearish' if btc_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Technicals: {fmt_tech(btc_market)}\n"
         btc_liq_ratio = btc_liq_long / btc_liq_short if btc_liq_short > 0 else 0
         btc_liq_signal = "⚠️ LONG_FLUSH" if btc_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if btc_liq_short > btc_liq_long * 2 else "BALANCED")
-        ctx += f"- Liquidation Pain (24h): Longs ${btc_liq_long:,.0f} / Shorts ${btc_liq_short:,.0f} | Ratio(L/S)={btc_liq_ratio:.2f} [{btc_liq_signal}]\n"
+        ctx += f"- [爆仓L/S比 ⚠️DIFFERENT FROM 持仓比] Liquidated Longs ${btc_liq_long:,.0f} / Liquidated Shorts ${btc_liq_short:,.0f} | Liq-Ratio(Long/Short)={btc_liq_ratio:.2f} [{btc_liq_signal}]\n"
         
         ctx += "\n=== BNB CHAIN (BNB) CONTRACT DATA ===\n"
         bnb_ls = bnb_market.get("whale_ls_ratio", 0)
         bnb_pos = bnb_market.get("whale_pos_ratio", 0)
         bnb_sent = bnb_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- OKX Whale L/S Ratio: Account={bnb_ls:.2f} / Position={bnb_pos:.2f}\n"
+        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={bnb_ls:.2f} (>1 more longs, <1 more shorts) / Position Size Ratio={bnb_pos:.2f}\n"
         ctx += f"- OKX Top Trader Sentiment: {bnb_sent:.2f} (Whale Bias: {'Bullish' if bnb_sent > 0.5 else 'Bearish' if bnb_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Technicals: {fmt_tech(bnb_market)}\n"
         bnb_liq_ratio = bnb_liq_long / bnb_liq_short if bnb_liq_short > 0 else 0
         bnb_liq_signal = "⚠️ LONG_FLUSH" if bnb_liq_ratio > 2 else ("🎯 SHORT_SQUEEZE" if bnb_liq_short > bnb_liq_long * 2 else "BALANCED")
-        ctx += f"- Liquidation Pain (24h): Longs ${bnb_liq_long:,.0f} / Shorts ${bnb_liq_short:,.0f} | Ratio(L/S)={bnb_liq_ratio:.2f} [{bnb_liq_signal}]\n"
+        ctx += f"- [爆仓L/S比 ⚠️DIFFERENT FROM 持仓比] Liquidated Longs ${bnb_liq_long:,.0f} / Liquidated Shorts ${bnb_liq_short:,.0f} | Liq-Ratio(Long/Short)={bnb_liq_ratio:.2f} [{bnb_liq_signal}]\n"
         
         ctx += "\n=== DOGECOIN (DOGE) CONTRACT DATA ===\n"
         doge_ls = doge_market.get("whale_ls_ratio", 0)
@@ -623,18 +625,31 @@ def get_news_context():
             source_news = news_items.get(source_key, {}).get("items", [])
             all_news.extend(source_news[:3])  # Take top 3 from each source
         
-        news_str = "Latest News:\n"
+        news_str = "Latest News (CRITICAL: For EACH item, you MUST assess: [PRICE_IN] already reflected in price, [FERMENTING] still unfolding/not priced, or [FADING] impact fading):\n"
         if all_news:
-            for item in all_news[:8]:  # Show max 8 total general news
-                news_str += f"- {item.get('title')} ({item.get('published', 'N/A')})\n"
+            for item in all_news[:10]:  # Show max 10 total general news
+                sentiment = item.get('sentiment', 'Neutral')
+                published = item.get('published', 'N/A')
+                summary = item.get('summary_cn') or item.get('summary', '')
+                # Truncate summary to keep the prompt lean
+                summary_short = summary[:120].replace('\n', ' ') if summary else ''
+                news_str += f"- [{sentiment}] {item.get('title')} ({published})\n"
+                if summary_short:
+                    news_str += f"  → {summary_short}...\n"
         else:
             news_str += "No recent news available.\n"
+
+        news_str += "\n[NEWS ANALYSIS INSTRUCTION] For each news item above, judge:\n"
+        news_str += "  * PRICE_IN: If it's old news (>12h) OR price already moved significantly in response → label PRICE_IN, no further impact expected.\n"
+        news_str += "  * FERMENTING: If news is <6h old AND price hasn't fully reacted yet → label FERMENTING, may still drive further movement.\n"
+        news_str += "  * FADING: If news was bullish/bearish but price reversed → narrative is dying, contrarian opportunity.\n"
+        news_str += "  Incorporate this assessment into your [Narrative Validation] section.\n"
             
         # Combine Calendar + News
         final_news_context = f"{calendar_str}\n{news_str}" if calendar_str else news_str
             
         # 3. Fear & Greed
-        fng = data.get("fear_greed", {}).get("latest") or {}
+        fng = data.get("fear_greed", {}).get("latest") or data.get("fear_greed", {})
         fng_str = f"\nFear & Greed Index: {fng.get('value')} ({fng.get('classification')})\n"
         
         return final_news_context + fng_str
