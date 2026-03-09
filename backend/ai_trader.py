@@ -474,35 +474,31 @@ def get_whale_data():
                     f"BBW={m.get('bb_width', 0):.3f} | Trend={m.get('bb_trend', 'FLAT')} | Funding={m.get('funding_rate', 0)*100:.4f}% | "
                     f"Stars: Buy={m.get('buy_stars',0)}/Sell={m.get('sell_stars',0)}")
 
-        # Helper: Add directional meaning to token_net_flow for AI clarity.
-        # CRITICAL: In our system, positive token_net_flow means tokens flowing INTO exchanges = DISTRIBUTION (Bearish).
-        # Negative token_net_flow means tokens flowing OUT of exchanges = ACCUMULATION (Bullish).
+        # Token net flow: positive = tokens moving INTO exchange, negative = tokens moving OUT of exchange
         def fmt_token_flow(flow, symbol_name):
             if flow > 0:
-                sentiment = "🚨 STRONG_DUMP_THREAT" if flow > 10000 else "📉 BEARISH_FLOW"
-                return f"{flow:,.1f} {symbol_name} [TO_EXCHANGE → {sentiment}]"
+                return f"{flow:,.1f} {symbol_name} [TO_EXCHANGE]"
             elif flow < 0:
-                sentiment = "🔥 STRONG_BUY_PRESSURE" if abs(flow) > 10000 else "📈 BULLISH_FLOW"
-                return f"{flow:,.1f} {symbol_name} [FROM_EXCHANGE → {sentiment}]"
+                return f"{flow:,.1f} {symbol_name} [FROM_EXCHANGE]"
             else:
-                return f"0 {symbol_name} [NEUTRAL]"
+                return f"0 {symbol_name}"
 
+        # Stablecoin net flow: positive = stablecoins flowing IN, negative = flowing OUT
         def fmt_stable_flow(flow):
             if flow > 0:
-                return f"${flow:,.0f} [STABLECOIN IN → � BULLISH Buy-power entering]"
+                return f"${flow:,.0f} [STABLECOIN IN]"
             elif flow < 0:
-                return f"${flow:,.0f} [STABLECOIN OUT → � BEARISH Capital leaving]"
+                return f"${flow:,.0f} [STABLECOIN OUT]"
             else:
-                return f"$0 [NEUTRAL]"
+                return f"$0"
 
         # Build Context String
         ctx = "=== ETHEREUM (ETH) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
         eth_ls = eth_market.get("whale_ls_ratio", 0)
         eth_pos = eth_market.get("whale_pos_ratio", 0)
         eth_sent = eth_market.get("top_trader_sentiment", 0.5)
-        # NOTE: 持仓L/S比 = Who is holding long vs short positions (>1=more longs, <1=more shorts)
         ctx += f"- [持仓L/S比] OKX Whale Account Ratio={eth_ls:.2f} / Position Size Ratio={eth_pos:.2f}\n"
-        ctx += f"- OKX Top Trader Sentiment: {eth_sent:.2f} (Whale Bias: {'Bullish' if eth_sent > 0.5 else 'Bearish' if eth_sent < 0.5 else 'Neutral'})\n"
+        ctx += f"- OKX Top Trader Sentiment: {eth_sent:.2f}\n"
         ctx += f"- Sentiment Score: 24h={eth_stat_24h.get('sentiment_score', 0):.2f} / 7d={eth_stat_7d.get('sentiment_score', 0):.2f}\n"
         eth_tf_24h = eth_stat_24h.get('token_net_flow', 0)
         eth_tf_7d = eth_stat_7d.get('token_net_flow', 0)
@@ -519,7 +515,7 @@ def get_whale_data():
         sol_pos = sol_market.get("whale_pos_ratio", 0)
         sol_sent = sol_market.get("top_trader_sentiment", 0.5)
         ctx += f"- [持仓L/S比] OKX Whale Account Ratio={sol_ls:.2f} / Position Size Ratio={sol_pos:.2f}\n"
-        ctx += f"- OKX Top Trader Sentiment: {sol_sent:.2f} (Whale Bias: {'Bullish' if sol_sent > 0.5 else 'Bearish' if sol_sent < 0.5 else 'Neutral'})\n"
+        ctx += f"- OKX Top Trader Sentiment: {sol_sent:.2f}\n"
         ctx += f"- Sentiment Score: 24h={sol_stat_24h.get('sentiment_score', 0):.2f} / 7d={sol_stat_7d.get('sentiment_score', 0):.2f}\n"
         sol_tf_24h = sol_stat_24h.get('token_net_flow', 0)
         sol_tf_7d = sol_stat_7d.get('token_net_flow', 0)
@@ -536,7 +532,7 @@ def get_whale_data():
         btc_pos = btc_market.get("whale_pos_ratio", 0)
         btc_sent = btc_market.get("top_trader_sentiment", 0.5)
         ctx += f"- [持仓L/S比] OKX Whale Account Ratio={btc_ls:.2f} / Position Size Ratio={btc_pos:.2f}\n"
-        ctx += f"- OKX Top Trader Sentiment: {btc_sent:.2f} (Whale Bias: {'Bullish' if btc_sent > 0.5 else 'Bearish' if btc_sent < 0.5 else 'Neutral'})\n"
+        ctx += f"- OKX Top Trader Sentiment: {btc_sent:.2f}\n"
         ctx += f"- Technicals: {fmt_tech(btc_market)}\n"
         btc_liq_ratio = btc_liq_long / btc_liq_short if btc_liq_short > 0 else 0
         ctx += f"- [爆仓L/S比] Liquidated Longs ${btc_liq_long:,.0f} / Liquidated Shorts ${btc_liq_short:,.0f} | Liq-Ratio(Long/Short)={btc_liq_ratio:.2f}\n"
@@ -546,7 +542,7 @@ def get_whale_data():
         bnb_pos = bnb_market.get("whale_pos_ratio", 0)
         bnb_sent = bnb_market.get("top_trader_sentiment", 0.5)
         ctx += f"- [持仓L/S比] OKX Whale Account Ratio={bnb_ls:.2f} / Position Size Ratio={bnb_pos:.2f}\n"
-        ctx += f"- OKX Top Trader Sentiment: {bnb_sent:.2f} (Whale Bias: {'Bullish' if bnb_sent > 0.5 else 'Bearish' if bnb_sent < 0.5 else 'Neutral'})\n"
+        ctx += f"- OKX Top Trader Sentiment: {bnb_sent:.2f}\n"
         ctx += f"- Technicals: {fmt_tech(bnb_market)}\n"
         bnb_liq_ratio = bnb_liq_long / bnb_liq_short if bnb_liq_short > 0 else 0
         ctx += f"- [爆仓L/S比] Liquidated Longs ${bnb_liq_long:,.0f} / Liquidated Shorts ${bnb_liq_short:,.0f} | Liq-Ratio(Long/Short)={bnb_liq_ratio:.2f}\n"
