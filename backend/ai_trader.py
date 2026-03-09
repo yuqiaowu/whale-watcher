@@ -225,8 +225,31 @@ Use this daily context to filter 4H signals.
 🟨 3. NEWS & ON-CHAIN CONTEXT (OPTIONAL)
 {{NEWS_CONTEXT}}
 
-🟥 4. ANALYSIS & HYPOTHESIS
-Use the provided data to detect market traps and identify your trading hypothesis.
+🟥 4. ANALYSIS FRAMEWORK (Execute in Order)
+
+**4A. NARRATIVE VS REALITY CHECK (Do this FIRST)**
+For each major market move or news item, ask:
+- **Impulse**: Is this a NEW driver that changes the thesis? (Price moves WITH the news/data)
+- **Priced In**: Is this old news? (Price fades or ignores good news = distribution)
+- **Divergence**: Good data + falling price = Hidden Accumulation (Bullish). Bad data + rising price = Distribution (Bearish).
+
+**4B. THE PAIN TRADE (Locate the Trap)**
+Who is trapped and where is the forced exit?
+- Look at 持仓L/S比: Who is the crowded side right now?
+- Look at 爆仓L/S比: Who is currently being forced out?
+- If crowded long + funding high + price stalling → LONG SQUEEZE DANGER
+- If crowded short + funding negative + price holding → SHORT SQUEEZE OPPORTUNITY
+- If longs already flushed (high liq ratio) → flush may be ending, reversal possible
+- If shorts already squeezed (low liq ratio) → squeeze may be ending, pullback possible
+
+**4C. GENERATE 3 SCENARIOS — Then Pick the Best**
+Before committing, explicitly consider all three:
+1. **TREND_FOLLOWING**: Current momentum continues — what do technicals + Qlib say?
+2. **MEAN_REVERSION / SQUEEZE**: Extreme reached — which side gets hunted next?
+3. **WHALE_FRONT_RUN / NARRATIVE_DIVERGENCE**: What are whales doing vs. what retail believes?
+
+Score each scenario by: (Signal Strength) × (Data Confluence) × (Risk/Reward).
+Choose the highest-scoring one. State WHY you rejected the other two.
 
 HYPOTHESIS OPTIONS:
 1. **TREND_FOLLOWING**: Ride the momentum based on flow and technicals.
@@ -316,7 +339,14 @@ Structure:
       "leverage": 3,
       "position_size_usd": 500,
       "entry_reason": { "zh": "...", "en": "..." },
-      "exit_plan": { "take_profit": 120000, "stop_loss": 95000 }
+      "exit_plan": {
+        "take_profit": 120000,
+        "stop_loss": 95000,
+        "invalidation": {
+          "zh": "明确描述：什么情况发生时，说明你的判断是错的，应该立即离场（例如：若价格收回X以上/以下，或鲸鱼流向反转，则多/空论点失效）",
+          "en": "Clearly state: under what condition your thesis is WRONG and you must exit immediately (e.g., if price reclaims X, or whale flow reverses, the long/short thesis is invalidated)"
+        }
+      }
     }
   ]
 }
@@ -324,6 +354,8 @@ Structure:
 *** LOGIC INTEGRITY RULES ***
 1. **MAPPING FORCE**: Your `portfolio_management` object MUST contain keys for exactly these symbols: {{MANDATORY_SYMBOLS_LIST}}.
 2. **NO GROUPING**: Provide an independent `action_logic` for EACH key in `portfolio_management`.
+3. **SCENARIO DISCIPLINE**: The `hypothesis_scenario` you select MUST be consistent with the direction of actions in `new_opportunities`. If you choose MICROSTRUCTURE_SQUEEZE but open no longs, explain the contradiction explicitly.
+4. **INVALIDATION REQUIRED**: Every `open_long` or `open_short` action MUST include a non-empty `invalidation` in its `exit_plan`. Vague answers like 'if market changes' are NOT acceptable.
 """
 
 # ------------------------------------------------------------------------
