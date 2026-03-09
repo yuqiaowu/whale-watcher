@@ -141,11 +141,39 @@ export function DetailedStats({ data }: { data?: any }) {
     return statusStr;
   };
 
+  // Dynamic Yen badge: if USD/JPY went UP => yen weakened (devaluation); if DOWN => yen strengthened (appreciation)
+  const japanTrend = data?.macro?.japan_macro?.trend ?? '';
+  const japanChange = data?.macro?.japan_macro?.change_5d_pct;
+  const isYenWeak = japanTrend.toLowerCase().includes('weakness') || (typeof japanChange === 'number' && japanChange > 0);
+  const japanBadge = isYenWeak
+    ? (t.detailedStats.status.weakYen ?? '弱势日元 (Risk On)')
+    : (t.detailedStats.japanBadge);
+  const japanBadgeColor = isYenWeak ? "bg-[#FF3131]/20 text-[#FF3131]" : "bg-[#39FF14]/20 text-[#39FF14]";
+  const yenChangeSentiment = isYenWeak
+    ? (t.detailedStats.devaluation ?? '贬值')
+    : (t.detailedStats.appreciation ?? '升值');
+
+  // Dynamic Fed badge: based on actual trend from backend
+  const fedTrend = data?.macro?.fed_futures?.trend ?? '';
+  const fedTrendLower = fedTrend.toLowerCase();
+  const isFedDovish = fedTrendLower.includes('dovish');
+  const isFedHawkish = fedTrendLower.includes('hawkish');
+  const fedBadge = isFedDovish
+    ? t.detailedStats.status.dovish
+    : isFedHawkish
+      ? t.detailedStats.status.hawkish
+      : t.detailedStats.status.neutral;
+  const fedBadgeColor = isFedDovish
+    ? "bg-[#39FF14]/20 text-[#39FF14]"   // Dovish → green (bullish for liquidity)
+    : isFedHawkish
+      ? "bg-[#FF3131]/20 text-[#FF3131]" // Hawkish → red (bearish)
+      : "bg-[#3B82F6]/20 text-[#60A5FA]"; // Neutral → blue
+
   const stats = [
     {
       title: t.detailedStats.fedTitle,
-      badge: t.detailedStats.fedBadge,
-      badgeColor: "bg-[#3B82F6]/20 text-[#60A5FA]",
+      badge: fedBadge,
+      badgeColor: fedBadgeColor,
       items: [
         { label: t.detailedStats.impliedRate, value: data?.macro?.fed_futures?.implied_rate ? `${data.macro.fed_futures.implied_rate}%` : "--" },
         { label: t.detailedStats.range, value: translateMacroStatus(data?.macro?.fed_futures?.trend), highlight: true },
@@ -155,12 +183,12 @@ export function DetailedStats({ data }: { data?: any }) {
     },
     {
       title: t.detailedStats.japanTitle,
-      badge: t.detailedStats.japanBadge,
-      badgeColor: "bg-[#FF3131]/20 text-[#FF3131]",
+      badge: japanBadge,
+      badgeColor: japanBadgeColor,
       items: [
         { label: t.detailedStats.price, value: data?.macro?.japan_macro?.price ? `${data.macro.japan_macro.price}` : "--" },
-        { label: t.detailedStats.range, value: translateMacroStatus(data?.macro?.japan_macro?.trend), highlight: true },
-        { label: t.detailedStats.change5d, value: data?.macro?.japan_macro?.change_5d_pct ? `${data.macro.japan_macro.change_5d_pct}%` : "--", sentiment: t.detailedStats.appreciation }
+        { label: t.detailedStats.range, value: translateMacroStatus(japanTrend), highlight: true },
+        { label: t.detailedStats.change5d, value: typeof japanChange === 'number' ? `${japanChange}%` : "--", sentiment: yenChangeSentiment }
       ]
     },
     {
