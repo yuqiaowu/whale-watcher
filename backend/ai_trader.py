@@ -201,42 +201,10 @@ You will receive a JSON payload containing:
 
 {{QLIB_JSON_PAYLOAD}}
 
-🟪 2.2 WHALE & LIQUIDATION REALITY (THE TRUTH LAYER)
+🟪 2.2 WHALE & LIQUIDATION REALITY
 This data comes from direct on-chain monitoring and exchange liquidation feeds.
-**IT OVERRIDES PURE TECHNICALS.**
 
 {{WHALE_CONTEXT}}
-
-**INTERPRETATION RULES (SKEPTICAL WHALE ANALYSIS):**
-1. **Accumulation vs. Distribution**:
-   - ✅ **CONSISTENT ACCUMULATION**: Price dropping + Token Net Flow is NEGATIVE (Tokens leaving exchanges) + Stablecoin Flow is POSITIVE (Cash entering).
-   - 📉 **CONSISTENT AGGRESSIVE DISTRIBUTION**: Token Net Flow is POSITIVE (Tokens entering exchanges) + Stablecoin Flow is NEGATIVE (Cash leaving exchanges). **CRITICAL: This is a consistent and aggressive signal of whales EXITING the market.** Selling assets and immediately withdrawing cash. It is NOT a contradiction (不是矛盾).
-2. **Liquidation & "Squeeze Fuel" Trap (Liq_LS_Ratio RULES)**:
-   - **Liq_LS_Ratio (爆仓比)** = (24h Long Liquidation USD) / (24h Short Liquidation USD).
-   - 📉 **LEVERAGE FLUSH (Liq_LS_Ratio > 5.0)**: Massive Long liquidations. Retail is being forced out. Good for finding a bottom IF it stabilizes.
-   - 📉 **ULTRA-EXTREME Liq_LS_Ratio (> 50.0) [DANGER ZONE]**: The "Long Liquidity" is completely drained. Sellers are physically exhausted. **FORBID opening new Shorts**; expect a sharp "Dead Cat Bounce" or mean reversion.
-   - 📈 **SQUEEZE PIN (Liq_LS_Ratio < 0.2)**: Massive Short liquidations. The squeeze has already happened.
-   - 📈 **ULTRA-EXTREME Liq_LS_Ratio (< 0.02) [DANGER ZONE]**: The "Short Liquidity" is completely drained. Buyers are exhausted. **FORBID opening new Longs**; expect a "Blow-off Top" or reversal.
-3. **Market Correlation & Relative Strength (GLOBAL FILTER)**:
-   - **Global Correlation**: Crypto moves as a pack. If BTC or BNB has an ULTRA-EXTREME Liq_LS_Ratio (> 50.0), it is a MARKET-WIDE reversal warning. **FORBID opening any new shorts on ANY asset** (including ETH/SOL), even if they look "weak", because they will be dragged up by the global bounce.
-   - **Relative Strength Support**: If major coins like BTC/BNB are in a massive flush (high Liq_LS), and **ETH's Liq_LS is LOW/BALANCED (<1.5)**, this is NOT a sign of "safe to short". It is a sign of **STRENGTH and SUPPORT**. It means the weak hands in ETH are already gone, and whales are holding the floor. DO NOT short ETH in this divergence.
-4. **Whale Sentiment vs. Market Pain (DIFFERENTIATION)**:
-   - **Whale_LS_Ratio (鲸鱼持仓比)**: Measures *current* positioning of top traders. (High = Whales are LONG).
-   - **Liq_LS_Ratio (爆仓比)**: Measures *past* events/pain. (Extremely High = Market Bottom due to long flush).
-   - If Whale_LS_Ratio is RISING while price is flat/falling, it is **ACCUMULATION**.
-3. **The "Whale Support" Divergence**:
-   - If Token Net Flow is POSITIVE (moving in) but Price doesn't drop immediately, check L/S Ratio. If L/S is very low (< 0.2), it's a **SQUEEZE**; otherwise, it's likely a **LIMIT SELL WALL**.
-3. **Squeeze Warning**: Negative Funding + Low L/S (< 0.2) + Oversold RSI -> **SHORT SQUEEZE ALREADY HAPPENING/ENDING**.
-4. **Wick Ratio Analysis (NEW)**:
-   - 🕯️ **Lower Wick (>30%)**: Buying pressure/Absorption at the bottom.
-   - 🕯️ **Upper Wick (>30%)**: Selling pressure/Exhaustion at the top.
-   - 🕯️ **Body Ratio (<20%)**: Indecision/Doji. Expect volatility compression. 
-5. **DATA SOURCE EXCEPTION (BTC, BNB, DOGE)**: These coins use **OKX Rubik Whale Data** (Whale_LS_Ratio & Top Trader Sentiment) instead of on-chain flow. 
-   - **Whale_LS_Ratio (Account) > 1.2**: Strong Whale Long Bias (Accumulation).
-   - **Whale_LS_Ratio (Account) < 0.8**: Strong Whale Short Bias (Distribution).
-   - **Top Trader Sentiment > 0.6**: Aggressive Bullish positioning by major players.
-   - **Top Trader Sentiment < 0.4**: Aggressive Bearish positioning.
-   - Use these as the 'Truth Layer' for these coins.
 
 
 🟦 2.1 MACRO TREND (1D TIMEFRAME)
@@ -246,101 +214,21 @@ Use this daily context to filter 4H signals.
 
 {{DAILY_CONTEXT}}
 
-🟪 2.3 MARKET REGIME & SIGNAL WEIGHTING (THE WEIGHT MATRIX)
-Evaluate signals differently based on the environment. Do not use hard prohibitions; use the following hierarchy to weigh your evidence:
-
-1. **BEAR REGIME (Price < SMA200)**:
-   - **Weight 1 (Highest)**: **Resistance & Exhaustion**. Watch SMA50 and Prev Highs. Price rejection here combined with Positive Funding is a high-probability reversal.
-   - **Weight 2**: **Whale/Exchanges Feed**. Token Inflow in a rally confirms "Distribution" (Selling the Rip).
-   - **Weight 3**: **Volume Z-Score**. High volume rally is needed to prove "Accumulation". Low volume rally = Trap.
-   - **Decision Guidance**: Be skeptical of Longs unless strong volume/whale support exists. Be opportunistic with Shorts at resistance.
-
-2. **BULL REGIME (Price > SMA200)**:
-   - **Weight 1 (Highest)**: **Support & Momentum**. Dips to SMA50 or EMA20 are primary buying zones.
-   - **Weight 2**: **Qlib Rankings**. Follow the relative strength of top assets.
-   - **Weight 3**: **Funding Overload**. Watch for negative funding after a dip (Short Squeeze Fuel). 
-   - **Decision Guidance**: Prioritize Longs on pullbacks. Be extremely cautious with Shorts; only fade moves on massive Whale Distribution or RSI > 80.
-
-*Note: You have full autonomy. Choose your direction and leverage based on the strength of the evidence across these weights.*
+🟪 2.3 MARKET ENVIRONMENT
+{{DAILY_CONTEXT}}
 
 🟨 3. NEWS & ON-CHAIN CONTEXT (OPTIONAL)
 {{NEWS_CONTEXT}}
 
-🟥 4. ANALYSIS LOGIC (The "Dolores" Method)
+🟥 4. ANALYSIS & HYPOTHESIS
+Use the provided data to detect market traps and identify your trading hypothesis.
 
-A. NARRATIVE VS REALITY CHECK (Crucial Step)
-For each major news item or market move, ask:
-- **Impulse**: Is this a NEW driver that changes the thesis? (Price moves WITH news).
-- **Priced In**: Is this old news? (Price fades or ignores good news).
-- **Divergence**: Good News + Bad Price = Distribution (Bearish). Bad News + Good Price = Accumulation (Whale Trap - Bullish).
-- Compare "Retail News" vs "Whale Reality" (On-chain flow). If they disagree, follow the Whales.
-
-B. THE PAIN TRADE & LIQUIDITY TRAPS
-Identify where the crowd is trapped:
-- **Mean-Reversion LONG Rule**: RSI MUST be strictly < 30 AND (L/S Ratio > 10.0 OR Lower Wick > 30%).
-- **Mean-Reversion SHORT Rule**: 
-    - In BEAR MARKET: RSI > 55 AND (L/S Ratio < 0.1 OR Upper Wick > 40%).
-- **THE UNTOUCHABLE ZONE (RED LINE)**:
-   - **IF L/S Ratio > 50.0**: YOU ARE FORBIDDEN from opening new SHORT positions. The downward fuel is completely drained.
-   - **IF L/S Ratio < 0.02**: YOU ARE FORBIDDEN from opening new LONG positions. The upward fuel is completely drained.
-- **Reverse Liquidation Trap (MUST READ)**: 
-   - ONLY consider a mean-reversion LONG when L/S > 5.0 (flushing weak longs) and price stabilizes.
-   - ONLY consider a mean-reversion SHORT when L/S < 0.2 (flushing weak shorts) and price stabilizes.
-- **Liquidity Trap**: Late chasers entering at resistance (High Funding + High RSI) or at support (High Neg Funding + Low RSI).
-
-C. HYPOTHESIS PLAYBOOKS (Must choose exactly ONE in output)
-1. **TREND_FOLLOWING**: High ADX + Normal Funding + Whale Accumulation. Ride the momentum.
-2. **MEAN_REVERSION**: Extreme RSI extremes + Reversal Candle + Validated Flush (High/Low L/S). Fade the panic/greed.
-3. **MICROSTRUCTURE_SQUEEZE**: Extreme funding anomaly OR drained L/S ratio. Capitalize on traps.
-4. **NARRATIVE_DIVERGENCE**: News contradicts price action. E.g., Good News + Bad Price = Secret Accumulation.
-5. **WHALE_FRONT_RUN**: Follow smart money flow (Token Flow) when it clearly opposes retail positioning.
-
-E. REGIME SAFETY CHECK (Mandatory — Fill 'regime_safety' Field)
-Before entering any trade, evaluate the market state using L/S Ratio feeds:
-
-🔪 FALLING KNIFE (接飞刀 — Left-side Entry Risk):
-- RSI < 30 AND L/S Ratio is high but NOT yet > 50 (still has room to fall).
-- Verdict: "KNIFE" — Wait for L/S > 50, Token Flow to turn NEGATIVE [ACCUMULATION], or a **STRONG LOWER WICK (>30%)**.
-
-🚀 ROCKET BLOCKING (挡火箭 — Reversal Risk):
-- RSI > 70 AND L/S Ratio is low but NOT yet < 0.02.
-- Verdict: "ROCKET" — Wait for L/S < 0.02 or Strong Upper Wick.
-
-✅ SAFE MEAN REVERSION (安全均值回归):
-- RSI is extreme WITH clear rejection wicks appearing (Lower Wick > 30% for Long, Upper Wick > 30% for Short).
-- Verdict: "SAFE_MR" — Mean reversion entry is justified by price rejection.
-
-🐋 WHALE SQUEEZE / BUYER EXHAUSTION (买盘枯竭):
-- L/S Liquidation Ratio is EXTREMELY LOW (L/S < 0.02): Buyers exhausted.
-- Volume Z-Score is NEGATIVE (< 0): Hollow price move.
-- Verdict: "EXHAUSTION" — High risk of reversal. Setup for SHORT.
-
-📉 WHALE DISTRIBUTION (鲸鱼高位派发):
-- BEAR MARKET + Price at Resistance + Upper Wick > 40% + L/S < 0.2.
-- Verdict: "DISTRIBUTION" — Aggressive short entry. Selling the Rip.
-
-🐋 WHALE ACCUMULATION / BEAR TRAP (鲸鱼托底吸筹):
-- Price drop + Whale Token Net Flow is NEGATIVE + L/S > 5.0.
-- Verdict: "WHALE_ACCUMULATION" — Buy alongside whales during retail panic.
-
-🛡️ 4D. TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
-
-1. **Anti-Liquidity Rush (Do not fight the cascade)**:
-   - If Liquidations are **SIGNIFICANTLY LOPSIDED** (e.g., one side is 3x+ the other) OR price is moving vertically on high volume, DO NOT open a reverse trade immediately. 
-   - Treat these liquidations as **FUEL** for the current move. Acknowledge that the move is likely to overshoot. Wait for the liquidation spike to plateau or a 4H candle to close with a long wick before considering a reversal.
-2. **Funding Trap Check**:
-   - Before going LONG: Funding Rate should ideally be flat or negative (Retail is fearful/shorting). If Funding is high (>0.03%), the long is crowded and dangerous.
-   - Before going SHORT: Funding Rate should ideally be flat or positive (Retail is greedy/longing). If Funding is very negative (<-0.01%), the short is crowded and prone to a squeeze.
-3. **Volatility-Based Stop-Loss Rule (NATR) & Conviction**:
-   - Before placing any order, calculate: Stop Distance % = |entry_price - stop_loss| / entry_price × 100
-   - **MANDATORY**: The Stop Distance % MUST be at least **1.5 × NATR** (Normalized ATR) of the asset. For example, if NATR is 2.5%, your stop loss must be at least 3.75% away from entry.
-   - If this required stop distance makes the trade too risky (exceeds 2% of NAV risk), you MUST **reduce the position size or leverage** proportionately, OR skip the trade entirely if the reward-to-risk ratio is poor.
-   - Do NOT tighten the stop loss just to increase position size. A stop based on static percentages or tight levels will be whipped out by market noise. You must give the trade room to breathe based on its true volatility.
-
- 
-
-🛡️ TACTICAL DISCIPLINE (THE BATTLEFIELD RULES - MUST OBEY)
-[Existing NATR and Stop-Loss rules remain in effect...]
+HYPOTHESIS OPTIONS:
+1. **TREND_FOLLOWING**: Ride the momentum based on flow and technicals.
+2. **MEAN_REVERSION**: Trade reversals when price and data reach extremes.
+3. **MICROSTRUCTURE_SQUEEZE**: Capitalize on liquidity traps and funding anomalies.
+4. **NARRATIVE_DIVERGENCE**: When data contradicts price action (e.g., Hidden Accumulation).
+5. **WHALE_FRONT_RUN**: Align with institutional flow.
 
 🟧 5. PORTFOLIO & RISK MANAGEMENT
 Current State:
@@ -429,11 +317,9 @@ Structure:
   ]
 }
 
-*** CRITICAL LOGIC INTEGRITY RULES ***
-1. **NO SILENT RISK**: If your `regime_safety` is `KNIFE` or `WHALE_DUMP_THREAT`, all LONG positions MUST be set to `reduce_xx` or `close_position`. Set to `hold` ONLY if you provide a 3-point technical defense in `action_logic`.
-2. **MAPPING FORCE**: Your `portfolio_management` object MUST contain keys for exactly these symbols: {{MANDATORY_SYMBOLS_LIST}}.
-3. **NO GROUPING**: Do NOT group reasons like "holding all assets because...". Provide an independent `action_logic` for EACH key in `portfolio_management`.
-4. **PRECISION**: 'Action' and 'Reason' must be tightly linked. Don't say "market is risky" and then `hold` everything silently.
+*** LOGIC INTEGRITY RULES ***
+1. **MAPPING FORCE**: Your `portfolio_management` object MUST contain keys for exactly these symbols: {{MANDATORY_SYMBOLS_LIST}}.
+2. **NO GROUPING**: Provide an independent `action_logic` for EACH key in `portfolio_management`.
 """
 
 # ------------------------------------------------------------------------
@@ -712,7 +598,7 @@ def get_news_context():
     """
     Fetch news and on-chain context from the global snapshot.
     """
-    snapshot_path = BASE_DIR / "global_onchain_news_snapshot.json"
+    snapshot_path = DATA_DIR / "global_onchain_news_snapshot.json"
     if not snapshot_path.exists():
         return "No news data available."
         
