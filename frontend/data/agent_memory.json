@@ -1,25 +1,5 @@
 [
   {
-    "id": "ETH_1771848202",
-    "timestamp": "2026-02-23T20:03:22.945905",
-    "symbol": "ETH",
-    "action": "open_short",
-    "entry_price": 1913.45,
-    "leverage": 1,
-    "reason": {
-      "zh": "\u5f00\u7acbETH\u7a7a\u5934\u4ed3\u4f4d\u3002\u7406\u7531\uff1a\u9cb8\u9c7c\u6301\u7eed\u6d41\u51fa\uff087\u5929-460\u4e07ETH\uff09\u663e\u793a\u51fa\u8d27\uff0c\u4ef7\u683c\u4f4e\u4e8eSMA200\u4e14\u8d8b\u52bf\u4e0b\u884c\uff0c\u8d1f\u8d44\u91d1\u8d39\u7387-0.0128%\u4f46\u4e0d\u591f\u6781\u7aef\uff0c\u5c5e\u4e8e\u718a\u5e02\u4e0b\u8ddf\u968f\u9cb8\u9c7c\u51fa\u8d27\u7684\u987a\u52bf\u4ea4\u6613\u3002",
-      "en": "Open ETH short position. Reason: Whale outflow (7d -4.6M ETH) indicates distribution, price below SMA200 with downtrend, negative funding -0.0128% but not extreme, fits bear market trend-following with whale distribution."
-    },
-    "context": {
-      "rsi": 42.37354150861298,
-      "adx": 26.286111186558053,
-      "whale_flow": 0,
-      "bb_width": 0.06935403937095752,
-      "bb_trend": "DOWN"
-    },
-    "outcome": null
-  },
-  {
     "id": "BTC_1771862882",
     "timestamp": "2026-02-24T00:08:02.458353",
     "symbol": "BTC",
@@ -1010,5 +990,26 @@
       "bb_trend": "DOWN"
     },
     "outcome": null
+  },
+  {
+    "id": "ETH_1773058371",
+    "timestamp": "2026-03-09T20:12:51.028871",
+    "symbol": "ETH",
+    "action": "close_position",
+    "entry_price": 1995.53,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u9488\u5bf9 ETH \u6301\u4ed3\u7684\u72ec\u7acb\u7ef4\u62a4\uff1a\u9cb8\u9c7c\u6570\u636e\u663e\u793a\u4ee3\u5e01\u51c0\u6d41\u51fa\uff08\u79ef\u7d2f\uff09\uff0c24h \u60c5\u7eea\u5f97\u5206\u9ad8\u4e8e 7d \u8868\u660e\u6025\u5267\u79ef\u7d2f\uff0c\u8fd9\u4e0e\u718a\u5e02\u7a7a\u5934\u5934\u5bf8\u51b2\u7a81\u3002\u6280\u672f\u9762\u867d\u504f\u7a7a\uff0c\u4f46\u9cb8\u9c7c\u4fe1\u53f7\u4f18\u5148\uff0c\u9075\u5faa WHALE_FRONT_RUN \u5267\u672c\u5173\u95ed\u5934\u5bf8\u4ee5\u964d\u4f4e\u98ce\u9669\u3002",
+      "en": "Asset-specific maintenance for ETH: Whale data shows token net outflow (accumulation), 24h sentiment higher than 7d indicating sharp accumulation, conflicting with bearish short position. Technicals are bearish, but whale signal takes precedence, following WHALE_FRONT_RUN scenario to close position and reduce risk."
+    },
+    "context": {
+      "rsi": 51.312723874868276,
+      "adx": 15.786763959179897,
+      "whale_flow": "?",
+      "funding_rate": 8.3909631767e-06,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": "Closed"
   }
 ]
