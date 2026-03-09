@@ -838,9 +838,11 @@ import news_fetcher
 
 # ... (keep existing imports)
 
-def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fear_greed, news_data, macro_data, btc_market=None, btc_analysis=None):
+def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fear_greed, news_data, macro_data, btc_market=None, btc_analysis=None, bnb_market=None, doge_market=None):
     # Default dicts if None
     if btc_market is None: btc_market = {}
+    if bnb_market is None: bnb_market = {}
+    if doge_market is None: doge_market = {}
     if btc_analysis is None: btc_analysis = {"stats_24h": {}}
     if fear_greed is None: fear_greed = {"value": "50", "value_classification": "Neutral"}
     """
@@ -942,14 +944,14 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
                 "Wick_Exhaustion": f"L:{btc_market.get('wick_ratio_lower',0)}% / U:{btc_market.get('wick_ratio_upper',0)}%"
             },
             "BNB_Context": {
-                "RSI": f"{data.get('bnb', {}).get('market', {}).get('rsi_14', 50):.1f}",
-                "Liquidation": data.get('bnb', {}).get('market', {}).get('liquidation_context', "N/A"),
-                "Funding": f"{data.get('bnb', {}).get('market', {}).get('funding_rate',0):.6f}"
+                "RSI": f"{bnb_market.get('rsi_14', 50):.1f}",
+                "Liquidation": bnb_market.get('liquidation_context', "N/A"),
+                "Funding": f"{bnb_market.get('funding_rate',0):.6f}"
             },
             "DOGE_Context": {
-                "RSI": f"{data.get('doge', {}).get('market', {}).get('rsi_14', 50):.1f}",
-                "Liquidation": data.get('doge', {}).get('market', {}).get('liquidation_context', "N/A"),
-                "Funding": f"{data.get('doge', {}).get('market', {}).get('funding_rate',0):.6f}"
+                "RSI": f"{doge_market.get('rsi_14', 50):.1f}",
+                "Liquidation": doge_market.get('liquidation_context', "N/A"),
+                "Funding": f"{doge_market.get('funding_rate',0):.6f}"
             }
         }
     }
@@ -1362,7 +1364,9 @@ def main():
             fear_greed, 
             news_data, macro_data,
             btc_market=btc_market,
-            btc_analysis=btc_analysis
+            btc_analysis=btc_analysis,
+            bnb_market=bnb_market,
+            doge_market=doge_market
         )
         
         # Sanitize AI Summary (Ensure values are strings, not dicts)

@@ -606,11 +606,12 @@ def get_news_context():
             data = json.load(f)
             
         # 1. News - Collect from all available sources
-        news_dict = data.get("news", {})
+        news_root = data.get("news", {})
+        news_items = news_root.get("items", {})
         all_news = []
         
         # Calendar (Economic Data) - High Priority
-        calendar_news = news_dict.get("calendar", {}).get("items", [])
+        calendar_news = news_items.get("calendar", {}).get("items", [])
         calendar_str = ""
         if calendar_news:
             calendar_str = "Economic Calendar (This Week):\n"
@@ -619,7 +620,7 @@ def get_news_context():
         
         # General News
         for source_key in ["macro", "bitcoin", "ethereum", "general"]:
-            source_news = news_dict.get(source_key, {}).get("items", [])
+            source_news = news_items.get(source_key, {}).get("items", [])
             all_news.extend(source_news[:3])  # Take top 3 from each source
         
         news_str = "Latest News:\n"
