@@ -217,7 +217,10 @@ This data comes from direct on-chain monitoring and exchange liquidation feeds.
    - 📉 **ULTRA-EXTREME Liq_LS_Ratio (> 50.0) [DANGER ZONE]**: The "Long Liquidity" is completely drained. Sellers are physically exhausted. **FORBID opening new Shorts**; expect a sharp "Dead Cat Bounce" or mean reversion.
    - 📈 **SQUEEZE PIN (Liq_LS_Ratio < 0.2)**: Massive Short liquidations. The squeeze has already happened.
    - 📈 **ULTRA-EXTREME Liq_LS_Ratio (< 0.02) [DANGER ZONE]**: The "Short Liquidity" is completely drained. Buyers are exhausted. **FORBID opening new Longs**; expect a "Blow-off Top" or reversal.
-3. **Whale Sentiment vs. Market Pain (DIFFERENTIATION)**:
+3. **Market Correlation & Relative Strength (GLOBAL FILTER)**:
+   - **Global Correlation**: Crypto moves as a pack. If BTC or BNB has an ULTRA-EXTREME Liq_LS_Ratio (> 50.0), it is a MARKET-WIDE reversal warning. **FORBID opening any new shorts on ANY asset** (including ETH/SOL), even if they look "weak", because they will be dragged up by the global bounce.
+   - **Relative Strength Support**: If major coins like BTC/BNB are in a massive flush (high Liq_LS), and **ETH's Liq_LS is LOW/BALANCED (<1.5)**, this is NOT a sign of "safe to short". It is a sign of **STRENGTH and SUPPORT**. It means the weak hands in ETH are already gone, and whales are holding the floor. DO NOT short ETH in this divergence.
+4. **Whale Sentiment vs. Market Pain (DIFFERENTIATION)**:
    - **Whale_LS_Ratio (鲸鱼持仓比)**: Measures *current* positioning of top traders. (High = Whales are LONG).
    - **Liq_LS_Ratio (爆仓比)**: Measures *past* events/pain. (Extremely High = Market Bottom due to long flush).
    - If Whale_LS_Ratio is RISING while price is flat/falling, it is **ACCUMULATION**.
@@ -609,6 +612,11 @@ def get_whale_data():
 
         # Build Context String
         ctx = "=== ETHEREUM (ETH) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
+        eth_ls = eth_market.get("whale_ls_ratio", 0)
+        eth_pos = eth_market.get("whale_pos_ratio", 0)
+        eth_sent = eth_market.get("top_trader_sentiment", 0.5)
+        ctx += f"- OKX Whale L/S Ratio: Account={eth_ls:.2f} / Position={eth_pos:.2f}\n"
+        ctx += f"- OKX Top Trader Sentiment: {eth_sent:.2f} (Whale Bias: {'Bullish' if eth_sent > 0.5 else 'Bearish' if eth_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Sentiment Score: 24h={eth_stat_24h.get('sentiment_score', 0):.2f} / 7d={eth_stat_7d.get('sentiment_score', 0):.2f}\n"
         eth_tf_24h = eth_stat_24h.get('token_net_flow', 0)
         eth_tf_7d = eth_stat_7d.get('token_net_flow', 0)
@@ -622,6 +630,11 @@ def get_whale_data():
         ctx += f"- Liquidation Pain (24h): Longs ${eth_liq_long:,.0f} / Shorts ${eth_liq_short:,.0f} | Ratio(L/S)={eth_liq_ratio:.2f} [{eth_liq_signal}]\n"
         
         ctx += "\n=== SOLANA (SOL) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
+        sol_ls = sol_market.get("whale_ls_ratio", 0)
+        sol_pos = sol_market.get("whale_pos_ratio", 0)
+        sol_sent = sol_market.get("top_trader_sentiment", 0.5)
+        ctx += f"- OKX Whale L/S Ratio: Account={sol_ls:.2f} / Position={sol_pos:.2f}\n"
+        ctx += f"- OKX Top Trader Sentiment: {sol_sent:.2f} (Whale Bias: {'Bullish' if sol_sent > 0.5 else 'Bearish' if sol_sent < 0.5 else 'Neutral'})\n"
         ctx += f"- Sentiment Score: 24h={sol_stat_24h.get('sentiment_score', 0):.2f} / 7d={sol_stat_7d.get('sentiment_score', 0):.2f}\n"
         sol_tf_24h = sol_stat_24h.get('token_net_flow', 0)
         sol_tf_7d = sol_stat_7d.get('token_net_flow', 0)
