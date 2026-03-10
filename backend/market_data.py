@@ -211,6 +211,12 @@ class OKXDataClient:
                 tech_values["wick_ratio_upper"] = round(upper_shadow / full_range * 100, 2)
                 tech_values["body_ratio"] = round(body / full_range * 100, 2)
                 
+                # --- ALIASES for Compatibility (e.g. ai_trader.py) ---
+                # ai_trader.py expects 'upper_wick_ratio' (ratio 0-1) because it multiplies by 100.
+                # Our native values are percentages (0-100).
+                tech_values["upper_wick_ratio"] = tech_values["wick_ratio_upper"] / 100.0
+                tech_values["lower_wick_ratio"] = tech_values["wick_ratio_lower"] / 100.0
+                
                 # Merge into metrics dict
                 metrics.update(tech_values)
                 

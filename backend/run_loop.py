@@ -60,8 +60,12 @@ def init_data_files():
         db.save_data("trade_history", [])
         print("✅ Initialized trade_history in DB")
         
-    # 3. Agent Decision Log
-    log = db.get_data("agent_decision_log")
+    # 3. Agent Decision Log (agent_decisions is the new primary)
+    log = db.get_data("agent_decisions")
+    if not log:
+        # Fallback to check old log
+        log = db.get_data("agent_decision_log")
+        
     if not log:
         dummy_log = [{
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -77,8 +81,10 @@ def init_data_files():
                 "reflection": {"zh": "就绪", "en": "Ready."}
             }
         }]
+        # Initialize both for compatibility
+        db.save_data("agent_decisions", dummy_log)
         db.save_data("agent_decision_log", dummy_log)
-        print("✅ Initialized agent_decision_log in DB")
+        print("✅ Initialized agent_decisions (and log) in DB")
 
     # 4. NAV History
     nav = db.get_data("nav_history", [])
@@ -313,7 +319,12 @@ def get_trade_history():
 @app.route('/api/agent-decision', methods=['GET'])
 def get_agent_decisions():
     try:
-        decisions = db.get_data("agent_decision_log", [])
+        # User requested to pull from 'agent_decisions' collection (online source)
+        decisions = db.get_data("agent_decisions", [])
+        if not decisions:
+             # Fallback to local log if online is empty
+             decisions = db.get_data("agent_decision_log", [])
+             
         if isinstance(decisions, list):
             return jsonify(decisions[:10]) # First 10 (Newest first)
         else:

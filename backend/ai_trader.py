@@ -315,8 +315,14 @@ Structure:
     "en": "List the most significant contrary signal or risk point and justify why it doesn't invalidate the trade."
   },
   "context_analysis": {
-    "technical_signal": { "zh": "技术面概括 (RSI, ADX...)", "en": "Brief technical summary." },
-    "macro_onchain": { "zh": "鲸鱼数据与资金费率分析", "en": "Whale flow & funding analysis." },
+    "technical_signal": { 
+        "zh": "【重要】必须明确提及：1) 上影线/下影线比率 (Wick Ratio) 以判断抛压/托底; 2) RSI 与 ADX 状态; 3) 均线乖离率。", 
+        "en": "【IMPORTANT】Must explicitly mention: 1) Upper/Lower Wick Ratio to judge selling pressure/support; 2) RSI & ADX status; 3) SMA deviation." 
+    },
+    "macro_onchain": { 
+        "zh": "【重要】必须明确提及：1) 24h爆仓数据 (Liquidation Data) 及多空爆仓比; 2) 鲸鱼净流入/流出; 3) 资金费率。", 
+        "en": "【IMPORTANT】Must explicitly mention: 1) 24h Liquidation Data & Long/Short Liquidation Ratio; 2) Whale Net Inflow/Outflow; 3) Funding Rate." 
+    },
     "quantitative_analysis": { 
         "zh": "分析 Qlib 排名靠前的币种及 Z-Score 的异常显著性（如成交量或资金费率的统计偏差）。", 
         "en": "Analyze Qlib top-ranked coins and Z-Score significance (statistical deviations in vol/funding)." 
@@ -1204,7 +1210,8 @@ def run_agent():
         # Save decision log
         try:
             from db_client import db
-            history = db.get_data("agent_decision_log", [])
+            # Use 'agent_decisions' (online collection) instead of local log
+            history = db.get_data("agent_decisions", [])
             if not isinstance(history, list):
                 history = [history] if history else []
         except Exception as e:
@@ -1220,9 +1227,11 @@ def run_agent():
         history.insert(0, decision)
         history = history[:50]
         
-        print(f"💾 Saving decision log to DB")
+        print(f"💾 Saving decision log to DB (agent_decisions)")
         try:
             from db_client import db
+            db.save_data("agent_decisions", history)
+            # Backup to local log just in case
             db.save_data("agent_decision_log", history)
             print("✅ Decision Log Saved Successfully!")
         except Exception as e:
