@@ -235,7 +235,7 @@ class OKXExecutor:
         except Exception as e:
             print(f"⚠️ Failed to save shadow state: {e}")
 
-    def execute_trade(self, symbol, action, amount_usd, leverage, stop_loss=None, take_profit=None, natr_percent=None):
+    def execute_trade(self, symbol, action, amount_usd, leverage, stop_loss=None, take_profit=None, natr_percent=None, pos_side=None):
         """
         Main entry point for AI Trader.
         Includes a 'Risk Shield' Layer to enforce NATR and NAV Risk rules.
@@ -243,7 +243,11 @@ class OKXExecutor:
         instId = f"{symbol}-USDT-SWAP"
         
         # Determine strict posSide for Dual Mode
-        target_pos_side = "long" if "long" in action else "short" if "short" in action else "net"
+        # Use explicit pos_side if provided, otherwise detect from action name
+        if pos_side:
+            target_pos_side = pos_side
+        else:
+            target_pos_side = "long" if "long" in action else "short" if "short" in action else "net"
         
         # 1. Get Ticker (Ask/Bid)
         ticker = self.get_market_ticker(instId)
@@ -301,7 +305,7 @@ class OKXExecutor:
                 state = self._load_shadow_state()
                 updated = False
                 for p in state["positions"]:
-                    if p["symbol"] == symbol:
+                    if p["symbol"] == symbol and (p.get("type") == target_pos_side or target_pos_side == "net"):
                         if stop_loss: p["stop_loss"] = stop_loss
                         if take_profit: p["take_profit"] = take_profit
                         updated = True
@@ -335,6 +339,10 @@ class OKXExecutor:
                     success_id = None
                     for pos in pos_res["data"]:
                         pos_side = pos.get("posSide", "net")
+                        
+                        # Filter by targeted side if specified
+                        if target_pos_side != "net" and pos_side != target_pos_side:
+                            continue
                         if pos_side == "net":
                             sz_val = float(pos.get("pos", 0))
                             side = "sell" if sz_val > 0 else "buy"

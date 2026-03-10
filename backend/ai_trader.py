@@ -306,8 +306,8 @@ Constraints:
 Structure:
 {
   "analysis_summary": {
-    "zh": "必须是中文，按以下结构分段阐述：\n1. **【叙事校验】**：判断当前驱动力是Impulse还是已定价，识别市场主旋律。\n2. **【决策依据详情】**：综合 Technical Signal, Macro & On-Chain, Quantitative (Qlib/Z-Vol) 的交叉验证。\n3. **【痛苦交易】**：分析爆仓燃料与 L/S Ratio，识别是否处于‘踩踏’或‘衰竭’阶段。\n4. **【剧本选择】**：明确 4C 中的剧本（WHALE_FRONT_RUN 等）及选择理由。",
-    "en": "Must be in English, structured as follows:\n1. **[Narrative Validation]**: Impulse vs Priced-in.\n2. **[Decision Details]**: Cross-verification of Tech, Whale, and Quant signals.\n3. **[Pain Trade]**: Liquidation fuel and L/S Ratio analysis.\n4. **[Scenario Selection]**: Chosen Scenario (4C) and justification."
+    "zh": "必须是中文，按以下结构分段阐述：\n1. [叙事校验]：判断当前驱动力是Impulse还是已定价，识别市场主旋律。\n2. [决策依据详情]：综合 Technical Signal, Macro & On-Chain, Quantitative (Qlib/Z-Vol) 的交叉验证。\n3. [痛苦交易]：分析爆仓燃料与 L/S Ratio，识别是否处于‘踩踏’或‘衰竭’阶段。\n4. [剧本选择]：明确 4C 中的剧本（WHALE_FRONT_RUN 等）及选择理由。",
+    "en": "Must be in English, structured as follows:\n1. [Narrative Validation]: Impulse vs Priced-in.\n2. [Decision Details]: Cross-verification of Tech, Whale, and Quant signals.\n3. [Pain Trade]: Liquidation fuel and L/S Ratio analysis.\n4. [Scenario Selection]: Chosen Scenario (4C) and justification."
   },
   "hypothesis_scenario": "TREND_FOLLOWING | MEAN_REVERSION | MICROSTRUCTURE_SQUEEZE | NARRATIVE_DIVERGENCE | WHALE_FRONT_RUN",
   "contrary_signal_check": {
@@ -327,17 +327,18 @@ Structure:
     },
     "portfolio_status": { "zh": "当前持仓风险评估", "en": "Portfolio risk check." }
   },
-  "portfolio_management": {
-    "ETH": { 
+  "portfolio_management": [
+    { 
+      "symbol": "ETH",
+      "side": "long | short",
       "action": "hold | adjust_sl_tp | reduce_25 | reduce_50 | reduce_75 | close_position",
       "action_logic": {
-        "zh": "针对该具体持仓的独立维护理由（必须结合该币种的鲸鱼流向与技术面偏差）。",
-        "en": "Asset-specific maintenance logic (must reference this coin's whale flow and technical divergence)."
+        "zh": "针对该具体持仓的独立维护理由（必须基于该特定仓位的盈亏与当前风险对冲需求）。",
+        "en": "Asset-specific maintenance logic (must reference this specific position's PnL and hedging needs)."
       },
       "exit_plan": { "take_profit": 3500, "stop_loss": 2100 } /* Mandatory for adjust_sl_tp */
-    },
-    ... (one for EACH symbol in mandatory list)
-  },
+    }
+  ],
   "new_opportunities": [
     {
       "symbol": "BTC",
@@ -358,10 +359,16 @@ Structure:
 }
 
 *** LOGIC INTEGRITY RULES ***
-1. **MAPPING FORCE**: Your `portfolio_management` object MUST contain keys for exactly these symbols: {{MANDATORY_SYMBOLS_LIST}}.
-2. **NO GROUPING**: Provide an independent `action_logic` for EACH key in `portfolio_management`.
+1. **MAPPING FORCE**: Your `portfolio_management` list MUST contain exactly one entry for EVERY position listed in: {{MANDATORY_SYMBOLS_LIST}}.
+2. **HEDGE AWARENESS**: If you hold both LONG and SHORT for the same coin, you MUST provide TWO entries in `portfolio_management`, specifying the correct `side` for each.
+3. **NO GROUPING**: Provide an independent `action_logic` for EACH entry in `portfolio_management`.
 3. **SCENARIO DISCIPLINE**: The `hypothesis_scenario` you select MUST be consistent with the direction of actions in `new_opportunities`. If you choose MICROSTRUCTURE_SQUEEZE but open no longs, explain the contradiction explicitly.
 4. **INVALIDATION REQUIRED**: Every `open_long` or `open_short` action MUST include a non-empty `invalidation` in its `exit_plan`. Vague answers like 'if market changes' are NOT acceptable.
+
+*** STYLE GUIDELINES ***
+- **CLEAN TEXT**: Avoid redundant nested bolding like `** 【Header】 **`. Use simple brackets `[Header]` for section titles.
+- **READABILITY**: Use clear spacing and avoid excessive Markdown symbols that clutter the raw JSON output or the final UI display.
+- **NO CHATTER**: Do not include any text outside the JSON structure.
 """
 
 # ------------------------------------------------------------------------
@@ -793,45 +800,54 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
     is_extreme_market = (fear_index < 20) or (fear_index > 80)
     MAX_LEVERAGE = 2 if is_extreme_market else 5 # Lowered base limit to 5x as agreed
     
-    # Merge newly structured actions back into a flat list for legacy processing
+    # Merge actions into a flat list
     raw_actions = []
     
     # --- 1.2 PORTFOLIO INTEGRITY CHECK (FILL MISSING) ---
     # Ensure every open position has a corresponding entry in portfolio_management
     try:
         open_positions = executor.get_all_positions()
-        pm = decision.get("portfolio_management", {})
-        if not isinstance(pm, dict):
-            pm = {}
-            decision["portfolio_management"] = pm
+        pm_list = decision.get("portfolio_management", [])
+        if not isinstance(pm_list, list):
+            pm_list = []
+            decision["portfolio_management"] = pm_list
             
         for pos in open_positions:
             sym = pos["symbol"]
-            # Case-insensitive robust match check
-            found = False
-            for pm_sym in pm.keys():
-                # Matches if equal, starts with (BTC vs BTC-USDT), or is a substring
-                if pm_sym.upper() == sym.upper() or sym.upper().startswith(pm_sym.upper() + "-") or pm_sym.upper() in sym.upper():
-                    found = True
+            side = pos.get("type", "net")
+            
+            # Robust match check: match by symbol AND side
+            found_entry = None
+            for entry in pm_list:
+                pm_sym = entry.get("symbol", "")
+                pm_side = entry.get("side", "")
+                
+                symbol_match = (pm_sym.upper() == sym.upper() or sym.upper().startswith(pm_sym.upper() + "-") or pm_sym.upper() in sym.upper())
+                side_match = (pm_side.lower() == side.lower() or side == "net")
+                
+                if symbol_match and side_match:
+                    found_entry = entry
                     break
             
-            if not found:
-                print(f"🛡️ INTEGRITY: AI missed {sym} in portfolio_management. Auto-filling 'hold'.")
-                pm[sym] = {
+            if not found_entry:
+                print(f"🛡️ INTEGRITY: AI missed {sym} ({side}) in portfolio_management. Auto-filling 'hold'.")
+                new_entry = {
+                    "symbol": sym,
+                    "side": side,
                     "action": "hold",
                     "action_logic": {
-                        "zh": "系统补丁：AI未返回该持仓指令，默认维持当前状态以规避逻辑空缺风险。",
-                        "en": "System Patch: AI missed this symbol in response. Auto-filling 'hold' to ensure constant monitoring."
+                        "zh": f"系统补丁：AI未返回该{side}持仓指令，默认维持当前状态以规避逻辑空缺风险。",
+                        "en": f"System Patch: AI missed this {side} position in response. Auto-filling 'hold' to ensure constant monitoring."
                     }
                 }
+                pm_list.append(new_entry)
     except Exception as e:
         print(f"⚠️ Portfolio Integrity Check Failed: {e}")
 
     # A. Existing Portfolio
-    pm = decision.get("portfolio_management", {})
-    for symbol, data in pm.items():
-        data["symbol"] = symbol
-        raw_actions.append(data)
+    pm_list = decision.get("portfolio_management", [])
+    for entry in pm_list:
+        raw_actions.append(entry)
         
     # B. New Opportunities
     raw_actions.extend(decision.get("new_opportunities", []))
@@ -1076,11 +1092,11 @@ def run_agent():
     
     # DYNAMIC MAPPING FORCE
     p_state_obj = json.loads(portfolio_state)
-    active_symbols = [p["symbol"] for p in p_state_obj.get("positions", [])]
-    if not active_symbols:
+    active_positions = [f"{p['symbol']} ({p['side']})" for p in p_state_obj.get("positions", [])]
+    if not active_positions:
         final_prompt = final_prompt.replace("{{MANDATORY_SYMBOLS_LIST}}", "NONE (Portfolio is empty)")
     else:
-        final_prompt = final_prompt.replace("{{MANDATORY_SYMBOLS_LIST}}", ", ".join(active_symbols))
+        final_prompt = final_prompt.replace("{{MANDATORY_SYMBOLS_LIST}}", ", ".join(active_positions))
     
     final_prompt = final_prompt.replace("{{NEWS_CONTEXT}}", news_context)
 
@@ -1227,7 +1243,7 @@ def run_agent():
                 # Fetch NATR for the Risk Shield in Executor
                 coin_natr = whale_data_obj.get(symbol.lower(), {}).get('market', {}).get('natr_percent')
                 
-                executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp, natr_percent=coin_natr)
+                executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp, natr_percent=coin_natr, pos_side=act.get("side"))
 
                 
                 # LOG TO MEMORY
