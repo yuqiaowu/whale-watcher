@@ -822,7 +822,10 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
                 pm_sym = entry.get("symbol", "")
                 pm_side = entry.get("side", "")
                 
-                symbol_match = (pm_sym.upper() == sym.upper() or sym.upper().startswith(pm_sym.upper() + "-") or pm_sym.upper() in sym.upper())
+                pm_sym_clean = pm_sym.split('(')[0].strip().upper()
+                sym_clean = sym.upper()
+                
+                symbol_match = (pm_sym_clean == sym_clean or sym_clean.startswith(pm_sym_clean + "-") or pm_sym_clean in sym_clean)
                 side_match = (pm_side.lower() == side.lower() or side == "net")
                 
                 if symbol_match and side_match:
@@ -888,7 +891,8 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
             continue
             
         # TRACKING: Adjust SL
-        if act_type == "adjust_sl":
+        # TRACKING: Adjust SL/TP
+        if "adjust_sl" in act_type:
             validated_actions.append(action)
             continue
             
@@ -1033,6 +1037,14 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
             
             validated_actions.append(action)
             current_positions += 1
+        elif act_type.startswith("reduce_"):
+             # Reduced exposure for existing position
+             validated_actions.append(action)
+        else:
+            # For any other portfolio management actions that fell through (e.g. adjust_sl variants)
+            # but ensure they are actually in validated_actions if they weren't caught by 'hold'/'close'/'adjust_sl'
+            if action not in validated_actions:
+                validated_actions.append(action)
 
     
     decision["actions"] = validated_actions
