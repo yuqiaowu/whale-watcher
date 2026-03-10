@@ -303,17 +303,17 @@ class OKXDataClient:
                     metrics["volume_ratio"] = metrics["volume_24h"] / avg_vol
         
         # 7. Whale Sentiment (Rubik)
-        # Whale L/S Account Ratio (Requires ccy)
-        ls_data = self._request("GET", "/api/v5/rubik/stat/contracts/long-short-account-ratio-contract-top-trader", {"ccy": symbol})
+        # Whale L/S Account Ratio - requires instId in SWAP format (e.g. BTC-USDT-SWAP)
+        ls_data = self._request("GET", "/api/v5/rubik/stat/contracts/long-short-account-ratio-contract-top-trader", {"instId": inst_id})
         if ls_data:
             metrics["whale_ls_ratio"] = float(ls_data[0][1])
             
-        # Whale L/S Position Ratio (Requires ccy)
-        pos_data = self._request("GET", "/api/v5/rubik/stat/contracts/long-short-position-ratio-contract-top-trader", {"ccy": symbol})
+        # Whale L/S Position Ratio - requires instId in SWAP format
+        pos_data = self._request("GET", "/api/v5/rubik/stat/contracts/long-short-position-ratio-contract-top-trader", {"instId": inst_id})
         if pos_data:
             metrics["whale_pos_ratio"] = float(pos_data[0][1])
 
-        # Top Trader Sentiment (General) - Requires ccy
+        # Top Trader Sentiment (General) - Requires ccy (base currency only, e.g. BTC)
         sentiment_data = self._request("GET", "/api/v5/rubik/stat/contracts/top-trader-sentiment-index", {"ccy": symbol})
         if sentiment_data:
             metrics["top_trader_sentiment"] = float(sentiment_data[0][1])
