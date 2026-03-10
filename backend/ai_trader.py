@@ -1178,10 +1178,20 @@ def run_agent():
                     # memory.log_trade(symbol, action_type, amount, entry_reason, market_snapshot)
                     
                     # 🔔 SEND NOTIFICATION (Telegram/Discord)
+                    # For reduce actions, position_size_usd is 0 (executor fetches real size dynamically)
+                    # So we display the percentage instead
+                    if action_type.startswith("reduce_"):
+                        pct = action_type.split("_")[-1]  # e.g. "25" from "reduce_25"
+                        size_display = f"{pct}% of position"
+                    elif "close" in action_type and amount == 0:
+                        size_display = "ALL"
+                    else:
+                        size_display = f"${amount} ({leverage}x)"
+
                     notify_trade_execution(
                         symbol=symbol,
                         action=action_type,
-                        size=f"ALL" if "close" in action_type and amount == 0 else f"${amount} ({leverage}x)",
+                        size=size_display,
                         entry_price="MARKET", # Execution is market/limit based on executor
                         sl=sl,
                         tp=tp,
