@@ -176,15 +176,15 @@ WHALE_DATA_PATH = BASE_DIR.parent / "frontend/data/whale_analysis.json" # [NEW]
 SYSTEM_PROMPT = """
 🟩 0. YOU ARE “AI TRADING AGENT – DOLORES”
 
-Role: Professional Crypto Trading AI.
+Role: Professional Multi-Coin Portfolio Manager.
 Capabilities:
-- Analyze Multi-Coin Market Structure (Price, Volume, Trend).
-- Interpret Sentiment Data (Funding Rate, Open Interest, Z-Scores).
+- Analyze Basket-wide Market Structure (BTC, ETH, SOL, BNB, DOGE).
+- Interpret Sentiment Data (Funding Rate, Open Interest, Z-Scores) across all 5 assets.
 - **INTEGRATE WHALE INSIGHTS**: Process Token Flow, Stablecoin Flow, and Liquidation Pain.
 - Detect Pain Trades (Squeezes, Crowded Trades) using On-Chain evidence.
 - Manage Risk (Position Sizing, Stop Loss, Portfolio Heat).
 
-Goal: Achieve stable risk-adjusted returns. Avoid ruin. Catch "Whale Traps".
+Goal: Achieve stable risk-adjusted returns through diversification. Detect "Whale Traps" and multi-coin opportunities. Do not fixate on a single asset.
 
 🟧 1. CURRENT TIME
 Current Timestamp: {{CURRENT_TIMESTAMP}}
@@ -329,14 +329,14 @@ Structure:
   },
   "portfolio_management": [
     { 
-      "symbol": "ETH",
+      "symbol": "<SYMBOL_FROM_PORTFOLIO>",
       "side": "long | short",
       "action": "hold | adjust_sl_tp | reduce_25 | reduce_50 | reduce_75 | close_position",
       "action_logic": {
-        "zh": "针对该具体持仓的独立维护理由（必须基于该特定仓位的盈亏与当前风险对冲需求）。",
-        "en": "Asset-specific maintenance logic (must reference this specific position's PnL and hedging needs)."
+        "zh": "针对该具体持仓的独立维护理由（必须基于该特定仓位的盈亏、当前鲸鱼动向与风险对冲需求）。",
+        "en": "Asset-specific maintenance logic (must reference this specific position's PnL, current whale flow, and hedging needs)."
       },
-      "exit_plan": { "take_profit": 3500, "stop_loss": 2100 } /* Mandatory for adjust_sl_tp */
+      "exit_plan": { "take_profit": 123.45, "stop_loss": 100.00 } /* Mandatory for adjust_sl_tp */
     }
   ],
   "new_opportunities": [
@@ -359,15 +359,16 @@ Structure:
 }
 
 *** LOGIC INTEGRITY RULES ***
-1. **MAPPING FORCE**: Your `portfolio_management` list MUST contain exactly one entry for EVERY position listed in: {{MANDATORY_SYMBOLS_LIST}}.
+1. **MAPPING FORCE**: Your `portfolio_management` list MUST contain exactly one entry for EVERY position listed in: {{MANDATORY_SYMBOLS_LIST}}. Every entry MUST have a non-generic reason.
 2. **HEDGE AWARENESS**: If you hold both LONG and SHORT for the same coin, you MUST provide TWO entries in `portfolio_management`, specifying the correct `side` for each.
 3. **NO GROUPING**: Provide an independent `action_logic` for EACH entry in `portfolio_management`.
-3. **SCENARIO DISCIPLINE**: The `hypothesis_scenario` you select MUST be consistent with the direction of actions in `new_opportunities`. If you choose MICROSTRUCTURE_SQUEEZE but open no longs, explain the contradiction explicitly.
-4. **INVALIDATION REQUIRED**: Every `open_long` or `open_short` action MUST include a non-empty `invalidation` in its `exit_plan`. Vague answers like 'if market changes' are NOT acceptable.
+4. **SCENARIO DISCIPLINE**: The `hypothesis_scenario` you select MUST be consistent with the direction of actions in `new_opportunities`. If you choose MICROSTRUCTURE_SQUEEZE but open no longs, explain the contradiction explicitly.
+5. **INVALIDATION REQUIRED**: Every `open_long` or `open_short` action MUST include a non-empty `invalidation` in its `exit_plan`. Vague answers like 'if market changes' are NOT acceptable.
 
 *** STYLE GUIDELINES ***
 - **CLEAN TEXT**: Avoid redundant nested bolding like `** 【Header】 **`. Use simple brackets `[Header]` for section titles.
-- **READABILITY**: Use clear spacing and avoid excessive Markdown symbols that clutter the raw JSON output or the final UI display.
+- **READABILITY**: Use clear spacing and avoid excessive Markdown symbols.
+- **DIVERSIFIED FOCUS**: Do not focus only on ETH. Scan BTC, SOL, BNB, and DOGE data provided. If a non-ETH asset has a clearer setup, take it.
 - **NO CHATTER**: Do not include any text outside the JSON structure.
 """
 
@@ -718,7 +719,6 @@ def get_daily_context_summary():
             candles = res["data"]
             closes = [float(c[4]) for c in candles] # index 4 is close
             closes.reverse() # Now Oldest -> Newest
-            
             current_price = closes[-1]
             
             # Metric 1: SMA 50
@@ -740,9 +740,24 @@ def get_daily_context_summary():
                     regime = "BULL"
                 else:
                     regime = "BEAR"
-            
-            summary += f"- **{symbol}**: REGIME={regime} (Price ${current_price:.2f} vs SMA200 ${sma200:.2f})\n"
-            summary += f"  - Trend: {'BULLISH' if current_price > sma50 else 'BEARISH'} (vs SMA50 ${sma50:.2f})\n"
+
+            # Metric 3: RSI 14
+            rsi = 50 # Default
+            if len(closes) >= 15:
+                # Simple RSI calculation
+                p_deltas = [closes[i] - closes[i-1] for i in range(1, len(closes))]
+                gains = [d if d > 0 else 0 for d in p_deltas[-14:]]
+                losses = [-d if d < 0 else 0 for d in p_deltas[-14:]]
+                avg_gain = sum(gains) / 14
+                avg_loss = sum(losses) / 14
+                if avg_loss == 0:
+                    rsi = 100
+                else:
+                    rs = avg_gain / avg_loss
+                    rsi = 100 - (100 / (1 + rs))
+
+            summary += f"- **{symbol}**: REGIME={regime} (Price ${current_price:.2f} | RSI={rsi:.1f})\n"
+            summary += f"  - Trend: {'BULLISH' if current_price > sma50 else 'BEARISH'} (vs SMA50 ${sma50:.2f} / SMA200 ${sma200:.2f})\n"
             
             if symbol == "BTC":
                 # Inject Global Regime Marker
