@@ -628,147 +628,41 @@ def get_whale_data():
         ctx += f"- VIX: {liq.get('vix', {}).get('price', 0)} (Trend: {liq.get('vix', {}).get('trend', 'Neutral')})\n"
         ctx += f"- DXY: {liq.get('dxy', {}).get('price', 0)} (Trend: {liq.get('dxy', {}).get('trend', 'Neutral')})\n"
         
-        # Add AI Narrative from Crypto Brain
-        ai_narrative = data.get("ai_summary", {}).get("en", "")
-        if ai_narrative:
-            ctx += f"\n=== UPSTREAM AI ANALYSIS ===\n{ai_narrative[:500]}...\n"
+        # Add Daily Macro Trend (Derived from Brain's market data)
+        # Brain's market_data.py now provides regime_1d, sma50_1d, sma200_1d
+        daily_ctx = "=== 1D MACRO TREND & REGIME (Aggregated) ===\n"
+        for sym in ["BTC", "ETH", "SOL", "BNB", "DOGE"]:
+            s_obj = data.get(sym.lower(), {})
+            m_data = s_obj.get("market", {}) if "market" in s_obj else s_obj
             
-        return ctx, data
-        
+            p = m_data.get("price", 0)
+            rsi_1d = m_data.get("rsi_1d", 50.0)
+            regime = m_data.get("regime_1d", "NEUTRAL")
+            sma50 = m_data.get("sma50_1d", 0)
+            sma200 = m_data.get("sma200_1d", 0)
+            
+            daily_ctx += f"- {sym}: Price ${p:,.2f} | REGIME={regime} (RSI_1D={rsi_1d:.1f})\n"
+            daily_ctx += f"  - Trend: {'BULLISH' if p > sma50 else 'BEARISH'} (vs SMA50 ${sma50:.2f} / SMA200 ${sma200:.2f})\n"
+            
+            if sym == "BTC":
+                # Inject Global Regime Marker for Risk Shield Logic
+                daily_ctx += f"  - **GLOBAL MARKET STATE**: {regime} MARKET\n"
+            
+        # Add News context from the same data obj
+        news_root = data.get("news", {})
+        news_items = news_root.get("items", {})
+        news_str = "\n=== NEWS & SENTIMENT ===\n"
+        for source in ["macro", "bitcoin", "ethereum", "general"]:
+            items = news_items.get(source, {}).get("items", [])
+            for item in items[:2]:
+                news_str += f"- [{source.upper()}] {item.get('title')} ({item.get('published','N/A')})\n"
+
+        # Final Combined String
+        return full_ctx, data
     except Exception as e:
         return f"Error reading whale data: {e}", {}
 
-def get_news_context():
-    """
-    Fetch news and on-chain context from the global snapshot.
-    """
-    snapshot_path = DATA_DIR / "global_onchain_news_snapshot.json"
-    if not snapshot_path.exists():
-        return "No news data available."
-        
-    try:
-        with open(snapshot_path, "r") as f:
-            data = json.load(f)
-            
-        # 1. News - Collect from all available sources
-        news_root = data.get("news", {})
-        news_items = news_root.get("items", {})
-        all_news = []
-        
-        # Calendar (Economic Data) - High Priority
-        calendar_news = news_items.get("calendar", {}).get("items", [])
-        calendar_str = ""
-        if calendar_news:
-            calendar_str = "Economic Calendar (This Week):\n"
-            for item in calendar_news[:5]:
-                calendar_str += f"- {item.get('title')} [{item.get('published')}]\n"
-        
-        # General News
-        for source_key in ["macro", "bitcoin", "ethereum", "general"]:
-            source_news = news_items.get(source_key, {}).get("items", [])
-            all_news.extend(source_news[:3])  # Take top 3 from each source
-        
-        news_str = "Latest News (For each item, assess whether it is PRICE_IN, FERMENTING, or FADING — use your own judgment):\n"
-        if all_news:
-            for item in all_news[:10]:  # Show max 10 total general news
-                sentiment = item.get('sentiment', 'Neutral')
-                published = item.get('published', 'N/A')
-                summary = item.get('summary_cn') or item.get('summary', '')
-                # Truncate summary to keep the prompt lean
-                summary_short = summary[:120].replace('\n', ' ') if summary else ''
-                news_str += f"- [{sentiment}] {item.get('title')} ({published})\n"
-                if summary_short:
-                    news_str += f"  \u2192 {summary_short}...\n"
-        else:
-            news_str += "No recent news available.\n"
-
-        news_str += "\n[NEWS ANALYSIS INSTRUCTION] Incorporate your news assessment (PRICE_IN / FERMENTING / FADING) into the [Narrative Validation] section of your analysis.\n"
-            
-        # Combine Calendar + News
-        final_news_context = f"{calendar_str}\n{news_str}" if calendar_str else news_str
-            
-        # 3. Fear & Greed
-        fng = data.get("fear_greed", {}).get("latest") or data.get("fear_greed", {})
-        fng_str = f"\nFear & Greed Index: {fng.get('value')} ({fng.get('classification')})\n"
-        
-        return final_news_context + fng_str
-        
-    except Exception as e:
-        return f"Error reading news data: {e}"
-
-def get_daily_context_summary():
-    """
-    Fetch 1D candles directly from OKX to calculate SMA200 and determine Market Regime.
-    """
-    import requests
-    summary = "=== 1D MACRO TREND & REGIME ===\n"
-    coins = ["BTC", "ETH", "SOL", "BNB", "DOGE"]
-    
-    for symbol in coins:
-        try:
-            instId = f"{symbol}-USDT-SWAP"
-            # Fetch 300 candles for SMA200
-            url = f"https://www.okx.com/api/v5/market/candles?instId={instId}&bar=1D&limit=300"
-            res = requests.get(url, timeout=(5, 10)).json()
-            
-            if res["code"] != "0" or not res["data"]:
-                continue
-                
-            # Data is Newest -> Oldest
-            # We need Oldest -> Newest for pandas rolling, but we can do it manually or simply list logic
-            candles = res["data"]
-            closes = [float(c[4]) for c in candles] # index 4 is close
-            closes.reverse() # Now Oldest -> Newest
-            current_price = closes[-1]
-            
-            # Metric 1: SMA 50
-            if len(closes) >= 50:
-                sma50 = sum(closes[-50:]) / 50
-            else:
-                sma50 = current_price
-                
-            # Metric 2: SMA 200 (The King of Trend)
-            if len(closes) >= 200:
-                sma200 = sum(closes[-200:]) / 200
-            else:
-                sma200 = 0 # Not enough data
-            
-            # Determine Regime
-            regime = "NEUTRAL"
-            if sma200 > 0:
-                if current_price > sma200:
-                    regime = "BULL"
-                else:
-                    regime = "BEAR"
-
-            # Metric 3: RSI 14
-            rsi = 50 # Default
-            if len(closes) >= 15:
-                # Simple RSI calculation
-                p_deltas = [closes[i] - closes[i-1] for i in range(1, len(closes))]
-                gains = [d if d > 0 else 0 for d in p_deltas[-14:]]
-                losses = [-d if d < 0 else 0 for d in p_deltas[-14:]]
-                avg_gain = sum(gains) / 14
-                avg_loss = sum(losses) / 14
-                if avg_loss == 0:
-                    rsi = 100
-                else:
-                    rs = avg_gain / avg_loss
-                    rsi = 100 - (100 / (1 + rs))
-
-            summary += f"- **{symbol}**: REGIME={regime} (Price ${current_price:.2f} | RSI={rsi:.1f})\n"
-            summary += f"  - Trend: {'BULLISH' if current_price > sma50 else 'BEARISH'} (vs SMA50 ${sma50:.2f} / SMA200 ${sma200:.2f})\n"
-            
-            if symbol == "BTC":
-                # Inject Global Regime Marker
-                summary += f"  - **GLOBAL MARKET STATE**: {regime} MARKET\n"
-
-        except Exception as e:
-            print(f"Error fetching 1D context for {symbol}: {e}")
-            
-    return summary
-
-def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_index, executor):
+def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_index, executor):
     """
     Risk Management Layer (The "Supervisor").
     Sanitizes and overrides AI decisions based on hard rules.
@@ -792,9 +686,9 @@ def validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_
     # C. Market Regime (Parse from Context string)
     # Default to NEUTRAL if not found
     regime = "NEUTRAL"
-    if "GLOBAL MARKET STATE: BULL" in daily_context:
+    if "GLOBAL MARKET STATE: BULL" in whale_context:
         regime = "BULL"
-    elif "GLOBAL MARKET STATE: BEAR" in daily_context:
+    elif "GLOBAL MARKET STATE: BEAR" in whale_context:
         regime = "BEAR"
         
     print(f"🛡️ RISK: State={regime} | Pos={current_positions} | Equity=${equity:.0f} | LongExp=${current_long_exposure:.0f} | ShortExp=${current_short_exposure:.0f}")
@@ -1091,47 +985,47 @@ def run_agent():
     qlib_payload_str = json.dumps(qlib_payload_obj, indent=2)
 
     # 2. Prepare Prompt
-    portfolio_state = get_portfolio_state(executor)
-    news_context = get_news_context()
+    # All necessary context is built into the final_prompt via whale_context
+    # and other injections.
     
-    # NEW: Get Whale Data
+    # 2. Get Analysis Context (Consolidated from Brain)
     whale_context, whale_data_obj = get_whale_data()
     
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # Extract sub-contexts from whale_data_obj if needed, but get_whale_data already returns the string
+    news_context = "" # News is now part of whale_context or injected separately
     
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     final_prompt = SYSTEM_PROMPT.replace("{{CURRENT_TIMESTAMP}}", current_time)
     
-    # Precise Qlib Injection with Warning
+    # Precise Qlib Injection
     qlib_block = f"[[ QLIB ANALYSIS PAYLOAD ]]\n{qlib_payload_str}\n{qlib_stale_warning}"
     final_prompt = final_prompt.replace("{{QLIB_JSON_PAYLOAD}}", qlib_block)
     
+    # Inject Consolidated Context
     final_prompt = final_prompt.replace("{{WHALE_CONTEXT}}", whale_context)
     
-    # Add Daily Context + MEMORY INJECTION (DISABLED)
-    memory_context = "" # memory.get_recent_performance()
-    daily_context = get_daily_context_summary()
-    
-    # Combined Context
-    combined_context = f"{daily_context}\n\n{memory_context}"
-    final_prompt = final_prompt.replace("{{DAILY_CONTEXT}}", combined_context)
-    
+    # Portfolio State
+    portfolio_state = get_portfolio_state(executor)
     final_prompt = final_prompt.replace("{{PORTFOLIO_STATE_JSON}}", portfolio_state)
     
     # DYNAMIC MAPPING FORCE
     p_state_obj = json.loads(portfolio_state)
     active_positions = [f"{p['symbol']} ({p['side']})" for p in p_state_obj.get("positions", [])]
     if not active_positions:
-        final_prompt = final_prompt.replace("{{MANDATORY_SYMBOLS_LIST}}", "NONE (Portfolio is empty)")
+        mapping_list = "NONE (Portfolio is empty)"
     else:
-        final_prompt = final_prompt.replace("{{MANDATORY_SYMBOLS_LIST}}", ", ".join(active_positions))
+        mapping_list = ", ".join(active_positions)
+    final_prompt = final_prompt.replace("{{MANDATORY_SYMBOLS_LIST}}", mapping_list)
     
-    final_prompt = final_prompt.replace("{{NEWS_CONTEXT}}", news_context)
+    # Clean up redundant tags (optional, but safer)
+    final_prompt = final_prompt.replace("{{NEWS_CONTEXT}}", "Injected in Whale Context above.")
+    final_prompt = final_prompt.replace("{{DAILY_CONTEXT}}", "Injected in Whale Context above.")
 
     # 2.5 Inject Dynamic Risk Limits
     # Determine Regime
     regime = "NEUTRAL"
-    if "GLOBAL MARKET STATE: BULL" in daily_context: regime = "BULL"
-    elif "GLOBAL MARKET STATE: BEAR" in daily_context: regime = "BEAR"
+    if "GLOBAL MARKET STATE: BULL" in whale_context: regime = "BULL"
+    elif "GLOBAL MARKET STATE: BEAR" in whale_context: regime = "BEAR"
 
     # Define Caps (Sync with validate_and_enforce_decision)
     if regime == "BULL":
@@ -1233,7 +1127,7 @@ def run_agent():
                     time.sleep(wait_time)
         
         # Validate & Enforce
-        decision = validate_and_enforce_decision(decision, whale_data_obj, daily_context, fear_index, executor)
+        decision = validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_index, executor)
             
         print("\n💡 Dolores' Decision:")
         print(json.dumps(decision, indent=2, ensure_ascii=False))

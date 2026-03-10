@@ -318,6 +318,34 @@ class OKXDataClient:
         if sentiment_data:
             metrics["top_trader_sentiment"] = float(sentiment_data[0][1])
 
+        # 7. 1D Macro Context (SMA50, SMA200, Regime)
+        try:
+            # Fetch 300 1D candles
+            data_1d = self._request("GET", "/api/v5/market/candles", {"instId": inst_id, "bar": "1D", "limit": "300"})
+            if data_1d and len(data_1d) >= 200:
+                # [ts, o, h, l, c, vol, volCcy, ...] index 4 is close
+                closes_1d = [float(c[4]) for c in data_1d]
+                closes_1d.reverse() # Oldest -> Newest
+                
+                curr_p = closes_1d[-1]
+                sma50_1d = sum(closes_1d[-50:]) / 50
+                sma200_1d = sum(closes_1d[-200:]) / 200
+                
+                metrics["sma50_1d"] = sma50_1d
+                metrics["sma200_1d"] = sma200_1d
+                metrics["regime_1d"] = "BULL" if curr_p > sma200_1d else "BEAR"
+                
+                # RSI 1D
+                prices_arr = np.array(closes_1d)
+                metrics["rsi_1d"] = self.calculate_rsi(prices_arr, period=14)
+            else:
+                metrics["sma200_1d"] = 0
+                metrics["regime_1d"] = "NEUTRAL"
+                metrics["rsi_1d"] = 50.0
+        except Exception as e:
+            print(f"Error calcing 1D metrics for {symbol}: {e}")
+            metrics["regime_1d"] = "NEUTRAL"
+
         return metrics
 
     def fetch_liquidation_data(self, uly="ETH-USDT", inst_type="SWAP"):
