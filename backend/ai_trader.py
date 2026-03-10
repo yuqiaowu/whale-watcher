@@ -201,13 +201,15 @@ You will receive a JSON payload containing:
 
 {{QLIB_JSON_PAYLOAD}}
 
-🟪 2.2 WHALE & LIQUIDATION REALITY
+🟪 2.2 WHALE & LIQUIDATION REALITY (数据实况)
 This data comes from direct on-chain monitoring and exchange liquidation feeds.
 
-DATA GLOSSARY (Definitions only — interpret values yourself):
-- [持仓L/S比] = The ratio of large trader ACCOUNTS holding Long vs Short positions (Account Ratio), and the ratio of Long vs Short POSITION SIZE in USD (Position Size Ratio). These measure current market positioning — who is betting which direction right now.
-- [爆仓L/S比] = The ratio of FORCIBLY LIQUIDATED Long USD / Forcibly Liquidated Short USD. This is NOT about who is holding positions. It measures which side got force-closed by the exchange due to margin depletion. A high ratio means more longs were blown out. A low ratio means more shorts were blown out.
-- These are TWO COMPLETELY DIFFERENT METRICS. 持仓L/S比 tells you where money is positioned. 爆仓L/S比 tells you who is suffering the most pain from forced exits.
+DATA GLOSSARY (指标释义):
+- [持仓L/S比]: 大户账户数多空比与持仓量多空比。反映资金博弈分布。
+- [24h爆仓量分布]: 过去24小时内多单与空单的强平金额。
+- [爆仓多空比]: 多单爆仓金额 / 空单爆仓金额。高于1表示多头受压显著。
+- [鲸鱼流向]: 仅限 ETH/SOL。 tokens leaving exchange = accumulation (bullish). tokens entering = distribution (bearish).
+- 对于 BTC/BNB/DOGE，由于尚未接入链上监控，请重点分析其 [交易所情绪] (OKX Top Trader Sentiment) 和 [24h爆仓量分布]。
 
 {{WHALE_CONTEXT}}
 
@@ -230,14 +232,14 @@ For each major market move or news item, ask:
 - **Priced In**: Is this old news? (Price fades or ignores good news = distribution)
 - **Divergence**: Good data + falling price = Hidden Accumulation (Bullish). Bad data + rising price = Distribution (Bearish).
 
-**4B. THE PAIN TRADE (Locate the Trap)**
+**4B. THE PAIN TRADE (痛苦交易 - 定位陷阱)**
 Who is trapped and where is the forced exit?
-- Look at 持仓L/S比: Who is the crowded side right now?
-- Look at 爆仓L/S比: Who is currently being forced out?
-- If crowded long + funding high + price stalling → LONG SQUEEZE DANGER
-- If crowded short + funding negative + price holding → SHORT SQUEEZE OPPORTUNITY
-- If longs already flushed (high liq ratio) → flush may be ending, reversal possible
-- If shorts already squeezed (low liq ratio) → squeeze may be ending, pullback possible
+- Look at [持仓L/S比]: 哪一方目前最拥挤？
+- Look at [24h爆仓量分布]: 哪一方正在遭受强平痛苦？
+- If crowded long + funding high + price stalling → ⚠️ LONG SQUEEZE DANGER (多头挤压风险)
+- If crowded short + funding negative + price holding → 🚀 SHORT SQUEEZE OPPORTUNITY (空头轧空机会)
+- If longs already flushed (high liq ratio) → 抛压可能衰竭，转折点接近
+- If shorts already squeezed (low liq ratio) → 冲高动能可能衰竭，回调接近
 
 **4C. GENERATE 3 SCENARIOS — Then Pick the Best**
 Before committing, explicitly consider all three:
@@ -518,14 +520,14 @@ def get_whale_data():
             funding_val = m.get('funding_rate')
             funding_str = f"{funding_val*100:.4f}%" if funding_val is not None else "N/A"
 
-            return (f"Last 4H Close=${f(price_val, '.2f')} | 4H SMA50=${f(sma50_val, '.2f')} ({dist_sma50}) | "
-                    f"Prev 5 High=${f(m.get('prev_5_high'), '.2f')} | Prev 5 Low=${f(m.get('prev_5_low'), '.2f')} | "
-                    f"RSI={f(m.get('rsi_14'))} | ADX={f(m.get('adx_14'))} | "
-                    f"VolRatio={f(m.get('vol_ratio_20'))}x | VolZ={f(m.get('vol_zscore_20'))} | "
-                    f"NATR={f(m.get('natr_percent'), '.2f')}% | Rank={f(m.get('price_rank_20'), '.0f')}% | "
-                    f"Wick:Up={u_wick_str}/Down={l_wick_str} | "
-                    f"BBW={f(m.get('bb_width'), '.3f')} | Trend={m.get('bb_trend', 'N/A')} | Funding={funding_str} | "
-                    f"Stars: Buy={f(m.get('buy_stars',0), '.0f')}/Sell={f(m.get('sell_stars',0), '.0f')}")
+            return (f"4小时收盘价=${f(price_val, '.2f')} | 4小时SMA50=${f(sma50_val, '.2f')} (偏离度:{dist_sma50}) | "
+                    f"前5根K线高点=${f(m.get('prev_5_high'), '.2f')} | 前5根K线低点=${f(m.get('prev_5_low'), '.2f')} | "
+                    f"RSI(14)={f(m.get('rsi_14'))} | ADX(14)={f(m.get('adx_14'))} | "
+                    f"成交量比率={f(m.get('vol_ratio_20'))}x | 成交量Z-Score={f(m.get('vol_zscore_20'))} | "
+                    f"NATR波动率={f(m.get('natr_percent'), '.2f')}% | 20周期价格排名={f(m.get('price_rank_20'), '.0f')}% | "
+                    f"影线比率(Candle Wicks): 上影线(Upper)={u_wick_str} / 下影线(Lower)={l_wick_str} | "
+                    f"布林带宽度={f(m.get('bb_width'), '.3f')} | 趋势={m.get('bb_trend', 'N/A')} | 资金费率(Funding)={funding_str} | "
+                    f"技术面评分: 买入星级={f(m.get('buy_stars',0), '.0f')}/3, 卖出星级={f(m.get('sell_stars',0), '.0f')}/3")
 
         # Token net flow: positive = tokens moving INTO exchange, negative = tokens moving OUT of exchange
         def fmt_token_flow(flow, symbol_name):
@@ -546,69 +548,72 @@ def get_whale_data():
                 return f"$0"
 
         # Build Context String
-        ctx = "=== ETHEREUM (ETH) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
+        ctx = "=== 以太坊 (ETH) 鲸鱼数据分析 (对比 24h 与 7d 趋势) ===\n"
         eth_ls = eth_market.get("whale_ls_ratio", 0)
         eth_pos = eth_market.get("whale_pos_ratio", 0)
         eth_sent = eth_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={eth_ls:.2f} / Position Size Ratio={eth_pos:.2f}\n"
-        ctx += f"- OKX Top Trader Sentiment: {eth_sent:.2f}\n"
-        ctx += f"- Sentiment Score: 24h={eth_stat_24h.get('sentiment_score', 0):.2f} / 7d={eth_stat_7d.get('sentiment_score', 0):.2f}\n"
+        ctx += f"- [持仓L/S比] OKX大户账户数比={eth_ls:.2f} / 持仓量比={eth_pos:.2f}\n"
+        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {eth_sent:.2f}\n"
+        ctx += f"- [鲸鱼评分] 综合情绪分: 24h={eth_stat_24h.get('sentiment_score', 0):.2f} / 7d={eth_stat_7d.get('sentiment_score', 0):.2f}\n"
         eth_tf_24h = eth_stat_24h.get('token_net_flow', 0)
         eth_tf_7d = eth_stat_7d.get('token_net_flow', 0)
-        ctx += f"- Token Net Flow: 24h={fmt_token_flow(eth_tf_24h, 'ETH')} / 7d={fmt_token_flow(eth_tf_7d, 'ETH')}\n"
+        ctx += f"- [鲸鱼代币流向] 代币净流向: 24h={fmt_token_flow(eth_tf_24h, 'ETH')} / 7d={fmt_token_flow(eth_tf_7d, 'ETH')}\n"
         eth_sf_24h = eth_stat_24h.get('stablecoin_net_flow', 0)
         eth_sf_7d = eth_stat_7d.get('stablecoin_net_flow', 0)
-        ctx += f"- Stablecoin Net Flow: 24h={fmt_stable_flow(eth_sf_24h)} / 7d={fmt_stable_flow(eth_sf_7d)}\n"
-        ctx += f"- Technicals: {fmt_tech(eth_market)}\n"
+        ctx += f"- [鲸鱼资金流向] 稳定币净流向: 24h={fmt_stable_flow(eth_sf_24h)} / 7d={fmt_stable_flow(eth_sf_7d)}\n"
+        ctx += f"- [技术指标详情] {fmt_tech(eth_market)}\n"
         eth_liq_ratio = eth_liq_long / eth_liq_short if eth_liq_short > 0 else 0
-        ctx += f"- [爆仓L/S比] Liquidated Longs ${eth_liq_long:,.0f} / Liquidated Shorts ${eth_liq_short:,.0f} | Liq-Ratio(Long/Short)={eth_liq_ratio:.2f}\n"
+        ctx += f"- [24h爆仓量分布] 多单爆仓=${eth_liq_long:,.0f} / 空单爆仓=${eth_liq_short:,.0f} | 爆仓多空比={eth_liq_ratio:.2f}\n"
         
-        ctx += "\n=== SOLANA (SOL) WHALE DATA (Compare 24h vs 7d Trends) ===\n"
+        ctx += "\n=== 索拉纳 (SOL) 鲸鱼数据分析 (对比 24h 与 7d 趋势) ===\n"
         sol_ls = sol_market.get("whale_ls_ratio", 0)
         sol_pos = sol_market.get("whale_pos_ratio", 0)
         sol_sent = sol_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={sol_ls:.2f} / Position Size Ratio={sol_pos:.2f}\n"
-        ctx += f"- OKX Top Trader Sentiment: {sol_sent:.2f}\n"
-        ctx += f"- Sentiment Score: 24h={sol_stat_24h.get('sentiment_score', 0):.2f} / 7d={sol_stat_7d.get('sentiment_score', 0):.2f}\n"
+        ctx += f"- [持仓L/S比] OKX大户账户数比={sol_ls:.2f} / 持仓量比={sol_pos:.2f}\n"
+        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {sol_sent:.2f}\n"
+        ctx += f"- [鲸鱼评分] 综合情绪分: 24h={sol_stat_24h.get('sentiment_score', 0):.2f} / 7d={sol_stat_7d.get('sentiment_score', 0):.2f}\n"
         sol_tf_24h = sol_stat_24h.get('token_net_flow', 0)
         sol_tf_7d = sol_stat_7d.get('token_net_flow', 0)
-        ctx += f"- Token Net Flow: 24h={fmt_token_flow(sol_tf_24h, 'SOL')} / 7d={fmt_token_flow(sol_tf_7d, 'SOL')}\n"
+        ctx += f"- [鲸鱼代币流向] 代币净流向: 24h={fmt_token_flow(sol_tf_24h, 'SOL')} / 7d={fmt_token_flow(sol_tf_7d, 'SOL')}\n"
         sol_sf_24h = sol_stat_24h.get('stablecoin_net_flow', 0)
         sol_sf_7d = sol_stat_7d.get('stablecoin_net_flow', 0)
-        ctx += f"- Stablecoin Net Flow: 24h={fmt_stable_flow(sol_sf_24h)} / 7d={fmt_stable_flow(sol_sf_7d)}\n"
-        ctx += f"- Technicals: {fmt_tech(sol_market)}\n"
+        ctx += f"- [鲸鱼资金流向] 稳定币净流向: 24h={fmt_stable_flow(sol_sf_24h)} / 7d={fmt_stable_flow(sol_sf_7d)}\n"
+        ctx += f"- [技术指标详情] {fmt_tech(sol_market)}\n"
         sol_liq_ratio = sol_liq_long / sol_liq_short if sol_liq_short > 0 else 0
-        ctx += f"- [爆仓L/S比] Liquidated Longs ${sol_liq_long:,.0f} / Liquidated Shorts ${sol_liq_short:,.0f} | Liq-Ratio(Long/Short)={sol_liq_ratio:.2f}\n"
+        ctx += f"- [24h爆仓量分布] 多单爆仓=${sol_liq_long:,.0f} / 空单爆仓=${sol_liq_short:,.0f} | 爆仓多空比={sol_liq_ratio:.2f}\n"
         
-        ctx += "\n=== BITCOIN (BTC) CONTRACT DATA ===\n"
+        ctx += "\n=== 比特币 (BTC) 合约数据 ===\n"
         btc_ls = btc_market.get("whale_ls_ratio", 0)
         btc_pos = btc_market.get("whale_pos_ratio", 0)
         btc_sent = btc_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={btc_ls:.2f} / Position Size Ratio={btc_pos:.2f}\n"
-        ctx += f"- OKX Top Trader Sentiment: {btc_sent:.2f}\n"
-        ctx += f"- Technicals: {fmt_tech(btc_market)}\n"
+        ctx += f"- [持仓L/S比] OKX大户账户数比={btc_ls:.2f} / 持仓量比={btc_pos:.2f}\n"
+        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {btc_sent:.2f}\n"
+        ctx += f"- [技术指标详情] {fmt_tech(btc_market)}\n"
         btc_liq_ratio = btc_liq_long / btc_liq_short if btc_liq_short > 0 else 0
-        ctx += f"- [爆仓L/S比] Liquidated Longs ${btc_liq_long:,.0f} / Liquidated Shorts ${btc_liq_short:,.0f} | Liq-Ratio(Long/Short)={btc_liq_ratio:.2f}\n"
-        
-        ctx += "\n=== BNB CHAIN (BNB) CONTRACT DATA ===\n"
+        ctx += f"- [24h爆仓量分布] 多单爆仓=${btc_liq_long:,.0f} / 空单爆仓=${btc_liq_short:,.0f} | 爆仓多空比={btc_liq_ratio:.2f}\n"
+        ctx += f"注：BTC 目前仅支持交易所鲸鱼数据，不支持实时链上大额转账流向分析。\n"
+
+        ctx += "\n=== 币安币 (BNB) 合约数据 ===\n"
         bnb_ls = bnb_market.get("whale_ls_ratio", 0)
         bnb_pos = bnb_market.get("whale_pos_ratio", 0)
         bnb_sent = bnb_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={bnb_ls:.2f} / Position Size Ratio={bnb_pos:.2f}\n"
-        ctx += f"- OKX Top Trader Sentiment: {bnb_sent:.2f}\n"
-        ctx += f"- Technicals: {fmt_tech(bnb_market)}\n"
+        ctx += f"- [持仓L/S比] OKX大户账户数比={bnb_ls:.2f} / 持仓量比={bnb_pos:.2f}\n"
+        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {bnb_sent:.2f}\n"
+        ctx += f"- [技术指标详情] {fmt_tech(bnb_market)}\n"
         bnb_liq_ratio = bnb_liq_long / bnb_liq_short if bnb_liq_short > 0 else 0
-        ctx += f"- [爆仓L/S比] Liquidated Longs ${bnb_liq_long:,.0f} / Liquidated Shorts ${bnb_liq_short:,.0f} | Liq-Ratio(Long/Short)={bnb_liq_ratio:.2f}\n"
-        
-        ctx += "\n=== DOGECOIN (DOGE) CONTRACT DATA ===\n"
+        ctx += f"- [24h爆仓量分布] 多单爆仓=${bnb_liq_long:,.0f} / 空单爆仓=${bnb_liq_short:,.0f} | 爆仓多空比={bnb_liq_ratio:.2f}\n"
+        ctx += f"注：BNB 目前仅支持交易所鲸鱼数据，不支持 BSC 链上实时大额转账流向分析。\n"
+
+        ctx += "\n=== 狗狗币 (DOGE) 合约数据 ===\n"
         doge_ls = doge_market.get("whale_ls_ratio", 0)
         doge_pos = doge_market.get("whale_pos_ratio", 0)
         doge_sent = doge_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX Whale Account Ratio={doge_ls:.2f} / Position Size Ratio={doge_pos:.2f}\n"
-        ctx += f"- OKX Top Trader Sentiment: {doge_sent:.2f}\n"
-        ctx += f"- Technicals: {fmt_tech(doge_market)}\n"
+        ctx += f"- [持仓L/S比] OKX大户账户数比={doge_ls:.2f} / 持仓量比={doge_pos:.2f}\n"
+        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {doge_sent:.2f}\n"
+        ctx += f"- [技术指标详情] {fmt_tech(doge_market)}\n"
         doge_liq_ratio = doge_liq_long / doge_liq_short if doge_liq_short > 0 else 0
-        ctx += f"- [爆仓L/S比] Liquidated Longs ${doge_liq_long:,.0f} / Liquidated Shorts ${doge_liq_short:,.0f} | Liq-Ratio(Long/Short)={doge_liq_ratio:.2f}\n"
+        ctx += f"- [24h爆仓量分布] 多单爆仓=${doge_liq_long:,.0f} / 空单爆仓=${doge_liq_short:,.0f} | 爆仓多空比={doge_liq_ratio:.2f}\n"
+        ctx += f"注：DOGE 目前仅支持交易所鲸鱼数据，不支持实时链上大额转账流向分析。\n"
         
         ctx += "\n*INSTRUCTION*: Compare 24h vs 7d Sentiment Scores and Token/Stablecoin flows for each asset and draw your own conclusions.*\n"
         
