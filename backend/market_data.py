@@ -125,16 +125,26 @@ class OKXDataClient:
         inst_id = f"{symbol}-USDT-SWAP"
         metrics = {
             "symbol": symbol,
-            "price": 0,
-            "rsi_4h": 50.0, # Default Neutral
-            "volume_24h": 0,
-            "volume_avg_30d": 0,
-            "volume_ratio": 0,
-            "oi_now": 0,
-            "oi_avg_30d": 0, 
-            "delta_oi_24h_percent": 0,
-            "funding_rate": 0,
-            "funding_rate_status": "NEUTRAL"
+            "price": None,
+            "rsi_4h": None,
+            "rsi_14": None,
+            "volume_24h": None,
+            "volume_avg_30d": None,
+            "volume_ratio": None,
+            "oi_now": None,
+            "oi_avg_30d": None, 
+            "delta_oi_24h_percent": None,
+            "funding_rate": None,
+            "funding_rate_status": "DATA_MISSING",
+            "upper_wick_ratio": None,
+            "lower_wick_ratio": None,
+            "wick_ratio_upper": None,
+            "wick_ratio_lower": None,
+            "adx_14": None,
+            "macd_hist": None,
+            "bb_width": None,
+            "natr_percent": None,
+            "liquidation_context": "N/A (Data Error)"
         }
 
         # 1. Ticker (Price & Current Volume)

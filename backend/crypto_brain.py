@@ -724,7 +724,15 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
     if bnb_market is None: bnb_market = {}
     if doge_market is None: doge_market = {}
     if btc_analysis is None: btc_analysis = {"stats_24h": {}}
-    if fear_greed is None: fear_greed = {"value": "50", "value_classification": "Neutral"}
+    if fear_greed is None: fear_greed = {"value": "N/A", "value_classification": "N/A"}
+
+    # Helper for missing data
+    def f(val, fmt=".1f", default="N/A"):
+        if val is None: return default
+        try:
+            return format(float(val), fmt)
+        except:
+            return default
     """
     Generate the V2 Strategy Narrative (Tri-Layer Analysis).
     Combines:
@@ -739,7 +747,7 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
 
     prompt_data = {
         "Layer1_Macro_Liquidity": {
-            "BTC_Fear_Greed": f"{fear_greed['value']} ({fear_greed['value_classification']})",
+            "BTC_Fear_Greed": f"{fear_greed.get('value', 'N/A')} ({fear_greed.get('value_classification', 'N/A')})",
             "Fed_Futures": macro_data.get('fed_futures'),
             "Japan_Carrier_Trade": macro_data.get('japan_macro'),
             "Global_Liquidity": macro_data.get('liquidity_monitor')
@@ -752,86 +760,165 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
         },
         "Layer3_Whale_Reality": {
             "ETH_Chain": {
-                "Whale_Flow": {
-                    "Sentiment_Score": eth_data["stats_7d"]["sentiment_score"],
-                    "Confidence": eth_data["stats_7d"]["confidence_score"],
-                    "Net_Flow_Tokens": f"{eth_data['stats_7d']['token_net_flow']:,.0f}",
-                    "Net_Flow_Stablecoin": f"${eth_data['stats_7d']['stablecoin_net_flow']:,.0f}",
+                "Whale_Reality": {
+                    "Sentiment_Score": f(eth_data.get("stats_7d", {}).get("sentiment_score")),
+                    "Confidence": f(eth_data.get("stats_7d", {}).get("confidence_score")),
+                    "Net_Flow_Tokens": f(eth_data.get('stats_7d', {}).get('token_net_flow'), ',.0f'),
+                    "Net_Flow_Stablecoin": f(eth_data.get('stats_7d', {}).get('stablecoin_net_flow'), ',.0f', default="$N/A"),
+                    "L/S_Account_Ratio": f(eth_market.get('whale_ls_ratio'), '.2f'),
+                    "L/S_Position_Ratio": f(eth_market.get('whale_pos_ratio'), '.2f')
                 },
                 "Market_Technicals": {
                     "Price_Unclosed": eth_market.get('price_close'),
-                    "Last_Closed_4H_Close": eth_market.get('last_closed_close', 0),
-                    "Last_Closed_4H_High": eth_market.get('last_closed_high', 0),
-                    "Last_Closed_4H_Low": eth_market.get('last_closed_low', 0),
-                    "Prev_5_4H_High": eth_market.get('prev_5_high', 0),
-                    "Prev_5_4H_Low": eth_market.get('prev_5_low', 0),
+                    "Last_Closed_4H_Close": f(eth_market.get('last_closed_close'), '.2f'),
+                    "Last_Closed_4H_High": f(eth_market.get('last_closed_high'), '.2f'),
+                    "Last_Closed_4H_Low": f(eth_market.get('last_closed_low'), '.2f'),
+                    "Prev_5_4H_High": f(eth_market.get('prev_5_high'), '.2f'),
+                    "Prev_5_4H_Low": f(eth_market.get('prev_5_low'), '.2f'),
                     "Prev_5_4H_Closes": eth_market.get('prev_5_closes', []),
-                    "Price_Rank": f"{eth_market.get('price_rank_20', 50):.1f}/100",
-                    "Vol_Ratio": f"{eth_market.get('vol_ratio_20', 1):.2f}x",
-                    "Buy_Stars": f"{eth_market.get('buy_stars', 0)}/3",
-                    "Sell_Stars": f"{eth_market.get('sell_stars', 0)}/3",
-                    "Signal_Bottom_Vol": eth_market.get('signal_low_high_vol', False),
-                    "Signal_Top_Vol": eth_market.get('signal_high_high_vol', False),
-                    "RSI_14": f"{eth_market.get('rsi_14', 50):.1f}",
-                    "MACD_Hist": f"{eth_market.get('macd_hist', 0):.4f}",
-                    "ADX": f"{eth_market.get('adx_14', 0):.1f}",
-                    "Bollinger_Width": f"{eth_market.get('bb_width', 0):.3f}",
-                    "ATR_Percent": f"{eth_market.get('natr_percent', 0):.2f}%",
-                    "Funding": f"{eth_market.get('funding_rate',0):.6f}",
-                    "OI_Delta": f"{eth_market.get('delta_oi_24h_percent',0):.2f}%"
+                     "Price_Rank": f"{f(eth_market.get('price_rank_20'), '.1f')}/100",
+                    "Vol_Ratio": f"{f(eth_market.get('vol_ratio_20'), '.2f')}x",
+                    "Buy_Stars": f"{f(eth_market.get('buy_stars', 0), '.0f')}/3",
+                    "Sell_Stars": f"{f(eth_market.get('sell_stars', 0), '.0f')}/3",
+                    "Signal_Bottom_Vol": eth_market.get('signal_low_high_vol', "N/A"),
+                    "Signal_Top_Vol": eth_market.get('signal_high_high_vol', "N/A"),
+                    "RSI_14": f(eth_market.get('rsi_14')),
+                    "MACD_Hist": f(eth_market.get('macd_hist'), '.4f'),
+                    "ADX": f(eth_market.get('adx_14')),
+                    "Bollinger_Width": f(eth_market.get('bb_width'), '.3f'),
+                    "ATR_Percent": f"{f(eth_market.get('natr_percent'), '.2f')}%",
+                    "Funding": f(eth_market.get('funding_rate'), '.6f'),
+                    "OI_Delta": f"{f(eth_market.get('delta_oi_24h_percent'), '.2f')}%"
                 },
                 "Liquidation": eth_market.get("liquidation_context", "N/A"),
-                "Wick_Exhaustion": f"L:{eth_market.get('wick_ratio_lower',0)}% / U:{eth_market.get('wick_ratio_upper',0)}%"
+                "Wick_Exhaustion": f"L:{f(eth_market.get('wick_ratio_lower'))}% / U:{f(eth_market.get('wick_ratio_upper'))}%"
             },
             "SOL_Chain": {
-                 "Whale_Flow": {
-                    "Sentiment_Score": sol_data["stats_7d"]["sentiment_score"],
-                    "Confidence": sol_data["stats_7d"]["confidence_score"],
-                    "Net_Flow_Tokens": f"{sol_data['stats_7d']['token_net_flow']:,.0f}",
-                    "Net_Flow_Stablecoin": f"${sol_data['stats_7d']['stablecoin_net_flow']:,.0f}",
+                 "Whale_Reality": {
+                    "Sentiment_Score": f(sol_data.get("stats_7d", {}).get("sentiment_score")),
+                    "Confidence": f(sol_data.get("stats_7d", {}).get("confidence_score")),
+                    "Net_Flow_Tokens": f(sol_data.get('stats_7d', {}).get('token_net_flow'), ',.0f'),
+                    "Net_Flow_Stablecoin": f(sol_data.get('stats_7d', {}).get('stablecoin_net_flow'), ',.0f', default="$N/A"),
+                    "L/S_Account_Ratio": f(sol_market.get('whale_ls_ratio'), '.2f'),
+                    "L/S_Position_Ratio": f(sol_market.get('whale_pos_ratio'), '.2f')
                 },
                 "Market_Technicals": {
                     "Price_Unclosed": sol_market.get('price_close'),
-                    "Last_Closed_4H_Close": sol_market.get('last_closed_close', 0),
-                    "Last_Closed_4H_High": sol_market.get('last_closed_high', 0),
-                    "Last_Closed_4H_Low": sol_market.get('last_closed_low', 0),
-                    "Prev_5_4H_High": sol_market.get('prev_5_high', 0),
-                    "Prev_5_4H_Low": sol_market.get('prev_5_low', 0),
+                    "Last_Closed_4H_Close": f(sol_market.get('last_closed_close'), '.2f'),
+                    "Last_Closed_4H_High": f(sol_market.get('last_closed_high'), '.2f'),
+                    "Last_Closed_4H_Low": f(sol_market.get('last_closed_low'), '.2f'),
+                    "Prev_5_4H_High": f(sol_market.get('prev_5_high'), '.2f'),
+                    "Prev_5_4H_Low": f(sol_market.get('prev_5_low'), '.2f'),
                     "Prev_5_4H_Closes": sol_market.get('prev_5_closes', []),
-                    "Price_Rank": f"{sol_market.get('price_rank_20', 50):.1f}/100",
-                    "Vol_Ratio": f"{sol_market.get('vol_ratio_20', 1):.2f}x",
-                    "Buy_Stars": f"{sol_market.get('buy_stars', 0)}/3",
-                    "Sell_Stars": f"{sol_market.get('sell_stars', 0)}/3",
-                    "Signal_Bottom_Vol": sol_market.get('signal_low_high_vol', False),
-                    "Signal_Top_Vol": sol_market.get('signal_high_high_vol', False),
-                    "RSI_14": f"{sol_market.get('rsi_14', 50):.1f}",
-                    "MACD_Hist": f"{sol_market.get('macd_hist', 0):.4f}",
-                    "ADX": f"{sol_market.get('adx_14', 0):.1f}",
-                    "Bollinger_Width": f"{sol_market.get('bb_width', 0):.3f}",
-                    "ATR_Percent": f"{sol_market.get('natr_percent', 0):.2f}%",
-                    "Funding": f"{sol_market.get('funding_rate',0):.6f}",
-                    "OI_Delta": f"{sol_market.get('delta_oi_24h_percent',0):.2f}%"
+                     "Price_Rank": f"{f(sol_market.get('price_rank_20'), '.1f')}/100",
+                    "Vol_Ratio": f"{f(sol_market.get('vol_ratio_20'), '.2f')}x",
+                    "Buy_Stars": f"{f(sol_market.get('buy_stars', 0), '.0f')}/3",
+                    "Sell_Stars": f"{f(sol_market.get('sell_stars', 0), '.0f')}/3",
+                    "Signal_Bottom_Vol": sol_market.get('signal_low_high_vol', "N/A"),
+                    "Signal_Top_Vol": sol_market.get('signal_high_high_vol', "N/A"),
+                    "RSI_14": f(sol_market.get('rsi_14')),
+                    "MACD_Hist": f(sol_market.get('macd_hist'), '.4f'),
+                    "ADX": f(sol_market.get('adx_14')),
+                    "Bollinger_Width": f(sol_market.get('bb_width'), '.3f'),
+                    "ATR_Percent": f"{f(sol_market.get('natr_percent'), '.2f')}%",
+                    "Funding": f(sol_market.get('funding_rate'), '.6f'),
+                    "OI_Delta": f"{f(sol_market.get('delta_oi_24h_percent'), '.2f')}%"
                 },
                 "Liquidation": sol_market.get("liquidation_context", "N/A"),
-                "Wick_Exhaustion": f"L:{sol_market.get('wick_ratio_lower',0)}% / U:{sol_market.get('wick_ratio_upper',0)}%"
+                "Wick_Exhaustion": f"L:{f(sol_market.get('wick_ratio_lower'))}% / U:{f(sol_market.get('wick_ratio_upper'))}%"
             },
             "BTC_Context": {
-                "RSI": f"{btc_market.get('rsi_14', 50):.1f}",
-                "MACD": f"{btc_market.get('macd_hist', 0):.4f}",
-                "ADX": f"{btc_market.get('adx_14', 0):.1f}",
+                "Whale_Reality": {
+                    "L/S_Account_Ratio": f(btc_market.get('whale_ls_ratio'), '.2f'),
+                    "L/S_Position_Ratio": f(btc_market.get('whale_pos_ratio'), '.2f'),
+                    "Top_Sentiment": f(btc_market.get('top_trader_sentiment'), '.2f')
+                },
+                "Market_Technicals": {
+                    "Price_Unclosed": btc_market.get('price_close'),
+                    "Last_Closed_4H_Close": f(btc_market.get('last_closed_close'), '.2f'),
+                    "Last_Closed_4H_High": f(btc_market.get('last_closed_high'), '.2f'),
+                    "Last_Closed_4H_Low": f(btc_market.get('last_closed_low'), '.2f'),
+                    "Prev_5_4H_High": f(btc_market.get('prev_5_high'), '.2f'),
+                    "Prev_5_4H_Low": f(btc_market.get('prev_5_low'), '.2f'),
+                    "Prev_5_4H_Closes": btc_market.get('prev_5_closes', []),
+                    "Price_Rank": f"{f(btc_market.get('price_rank_20'), '.1f')}/100",
+                    "Vol_Ratio": f"{f(btc_market.get('vol_ratio_20'), '.2f')}x",
+                    "Buy_Stars": f"{f(btc_market.get('buy_stars', 0), '.0f')}/3",
+                    "Sell_Stars": f"{f(btc_market.get('sell_stars', 0), '.0f')}/3",
+                    "Signal_Bottom_Vol": btc_market.get('signal_low_high_vol', "N/A"),
+                    "Signal_Top_Vol": btc_market.get('signal_high_high_vol', "N/A"),
+                    "RSI_14": f(btc_market.get('rsi_14')),
+                    "MACD_Hist": f(btc_market.get('macd_hist'), '.4f'),
+                    "ADX": f(btc_market.get('adx_14')),
+                    "Bollinger_Width": f(btc_market.get('bb_width'), '.3f'),
+                    "ATR_Percent": f"{f(btc_market.get('natr_percent'), '.2f')}%",
+                    "Funding": f(btc_market.get('funding_rate'), '.6f'),
+                    "OI_Delta": f"{f(btc_market.get('delta_oi_24h_percent'), '.2f')}%"
+                },
                 "Liquidation": btc_market.get("liquidation_context", "N/A"),
-                "Funding": f"{btc_market.get('funding_rate',0):.6f}",
-                "Wick_Exhaustion": f"L:{btc_market.get('wick_ratio_lower',0)}% / U:{btc_market.get('wick_ratio_upper',0)}%"
+                "Wick_Exhaustion": f"L:{f(btc_market.get('wick_ratio_lower'))}% / U:{f(btc_market.get('wick_ratio_upper'))}%"
             },
             "BNB_Context": {
-                "RSI": f"{bnb_market.get('rsi_14', 50):.1f}",
+                "Whale_Reality": {
+                    "L/S_Account_Ratio": f(bnb_market.get('whale_ls_ratio'), '.2f'),
+                    "L/S_Position_Ratio": f(bnb_market.get('whale_pos_ratio'), '.2f'),
+                    "Top_Sentiment": f(bnb_market.get('top_trader_sentiment'), '.2f')
+                },
+                "Market_Technicals": {
+                    "Price_Unclosed": bnb_market.get('price_close'),
+                    "Last_Closed_4H_Close": f(bnb_market.get('last_closed_close'), '.2f'),
+                    "Last_Closed_4H_High": f(bnb_market.get('last_closed_high'), '.2f'),
+                    "Last_Closed_4H_Low": f(bnb_market.get('last_closed_low'), '.2f'),
+                    "Prev_5_4H_High": f(bnb_market.get('prev_5_high'), '.2f'),
+                    "Prev_5_4H_Low": f(bnb_market.get('prev_5_low'), '.2f'),
+                    "Prev_5_4H_Closes": bnb_market.get('prev_5_closes', []),
+                    "Price_Rank": f"{f(bnb_market.get('price_rank_20'), '.1f')}/100",
+                    "Vol_Ratio": f"{f(bnb_market.get('vol_ratio_20'), '.2f')}x",
+                    "Buy_Stars": f"{f(bnb_market.get('buy_stars', 0), '.0f')}/3",
+                    "Sell_Stars": f"{f(bnb_market.get('sell_stars', 0), '.0f')}/3",
+                    "Signal_Bottom_Vol": bnb_market.get('signal_low_high_vol', "N/A"),
+                    "Signal_Top_Vol": bnb_market.get('signal_high_high_vol', "N/A"),
+                    "RSI_14": f(bnb_market.get('rsi_14')),
+                    "MACD_Hist": f(bnb_market.get('macd_hist'), '.4f'),
+                    "ADX": f(bnb_market.get('adx_14')),
+                    "Bollinger_Width": f(bnb_market.get('bb_width'), '.3f'),
+                    "ATR_Percent": f"{f(bnb_market.get('natr_percent'), '.2f')}%",
+                    "Funding": f(bnb_market.get('funding_rate'), '.6f'),
+                    "OI_Delta": f"{f(bnb_market.get('delta_oi_24h_percent'), '.2f')}%"
+                },
                 "Liquidation": bnb_market.get('liquidation_context', "N/A"),
-                "Funding": f"{bnb_market.get('funding_rate',0):.6f}"
+                "Wick_Exhaustion": f"L:{f(bnb_market.get('wick_ratio_lower'))}% / U:{f(bnb_market.get('wick_ratio_upper'))}%"
             },
             "DOGE_Context": {
-                "RSI": f"{doge_market.get('rsi_14', 50):.1f}",
+                "Whale_Reality": {
+                    "L/S_Account_Ratio": f(doge_market.get('whale_ls_ratio'), '.2f'),
+                    "L/S_Position_Ratio": f(doge_market.get('whale_pos_ratio'), '.2f'),
+                    "Top_Sentiment": f(doge_market.get('top_trader_sentiment'), '.2f')
+                },
+                "Market_Technicals": {
+                    "Price_Unclosed": doge_market.get('price_close'),
+                    "Last_Closed_4H_Close": f(doge_market.get('last_closed_close'), '.2f'),
+                    "Last_Closed_4H_High": f(doge_market.get('last_closed_high'), '.2f'),
+                    "Last_Closed_4H_Low": f(doge_market.get('last_closed_low'), '.2f'),
+                    "Prev_5_4H_High": f(doge_market.get('prev_5_high'), '.2f'),
+                    "Prev_5_4H_Low": f(doge_market.get('prev_5_low'), '.2f'),
+                    "Prev_5_4H_Closes": doge_market.get('prev_5_closes', []),
+                    "Price_Rank": f"{f(doge_market.get('price_rank_20'), '.1f')}/100",
+                    "Vol_Ratio": f"{f(doge_market.get('vol_ratio_20'), '.2f')}x",
+                    "Buy_Stars": f"{f(doge_market.get('buy_stars', 0), '.0f')}/3",
+                    "Sell_Stars": f"{f(doge_market.get('sell_stars', 0), '.0f')}/3",
+                    "Signal_Bottom_Vol": doge_market.get('signal_low_high_vol', "N/A"),
+                    "Signal_Top_Vol": doge_market.get('signal_high_high_vol', "N/A"),
+                    "RSI_14": f(doge_market.get('rsi_14')),
+                    "MACD_Hist": f(doge_market.get('macd_hist'), '.4f'),
+                    "ADX": f(doge_market.get('adx_14')),
+                    "Bollinger_Width": f(doge_market.get('bb_width'), '.3f'),
+                    "ATR_Percent": f"{f(doge_market.get('natr_percent'), '.2f')}%",
+                    "Funding": f(doge_market.get('funding_rate'), '.6f'),
+                    "OI_Delta": f"{f(doge_market.get('delta_oi_24h_percent'), '.2f')}%"
+                },
                 "Liquidation": doge_market.get('liquidation_context', "N/A"),
-                "Funding": f"{doge_market.get('funding_rate',0):.6f}"
+                "Wick_Exhaustion": f"L:{f(doge_market.get('wick_ratio_lower'))}% / U:{f(doge_market.get('wick_ratio_upper'))}%"
             }
         }
     }
@@ -1176,12 +1263,12 @@ def main():
             "timeframe": "4h",
             "action_signal": "NEUTRAL",
             "stats_24h": {
-                "sentiment_score": 0,
-                "token_net_flow": 0,
-                "stablecoin_net_flow": 0,
+                "sentiment_score": None,
+                "token_net_flow": None,
+                "stablecoin_net_flow": None,
                 "liquidation_long_usd": liq_data.get("long_vol_usd", 0),
                 "liquidation_short_usd": liq_data.get("short_vol_usd", 0),
-                "leverage_ratio": 0
+                "leverage_ratio": None
             }
         }
 
@@ -1235,9 +1322,9 @@ def main():
     ai_summary = {"en": "AI disabled or failed.", "zh": "AI 分析暂时不可用。"}
     try:
         print("\n=== GENERATING AI TRI-LAYER ANALYSIS ===")
-        # Note: Updated function signature. We pass btc_market but others are just implicit in the data struct if we wanted
-        # Ideally we should pass all, but let's stick to core 3 for "Narrative" to avoid token overflow
-        # AI Trader (Dolores) will read the FULL JSON anyway, so we don't strictly need them here in the summary generator.
+        # DEBUG: Print prompt data to verify contents
+        # print(json.dumps(prompt_data, indent=2)) 
+        
         raw_ai_summary = generate_comparative_summary(
             eth_analysis, sol_analysis, 
             eth_market, sol_market, 
@@ -1250,13 +1337,17 @@ def main():
         )
         
         # Sanitize AI Summary (Ensure values are strings, not dicts)
-        ai_summary = {}
-        for key, val in raw_ai_summary.items():
-            if isinstance(val, dict):
-                # If LLM returns a dict (e.g. nested JSON), try to extract text or dump it
-                ai_summary[key] = val.get("content", val.get("text", str(val)))
-            else:
-                ai_summary[key] = str(val)
+        ai_summary = {"en": "AI failed to respond.", "zh": "AI 分析失败。"}
+        if raw_ai_summary and isinstance(raw_ai_summary, dict):
+            ai_summary = {}
+            for key, val in raw_ai_summary.items():
+                if isinstance(val, dict):
+                    # If LLM returns a dict (e.g. nested JSON), try to extract text or dump it
+                    ai_summary[key] = val.get("content", val.get("text", str(val)))
+                else:
+                    ai_summary[key] = str(val)
+        else:
+            print("⚠️ AI Summary generation returned None or invalid format.")
                 
     except Exception as e:
         print(f"AI Generation Error: {e}")
@@ -1323,8 +1414,8 @@ def main():
             "display_time": datetime.now().strftime("%H:%M"),
             "whale_count": current_stats.get("whale_count", 0),
             "total_volume": current_stats.get("total_volume", 0),
-            "stablecoin_net_flow": current_stats.get("stablecoin_net_flow", 0),
-            "token_net_flow": current_stats.get("token_net_flow", 0),
+            "stablecoin_net_flow": current_stats.get("stablecoin_net_flow", "N/A") if current_stats.get("stablecoin_net_flow") is None else current_stats.get("stablecoin_net_flow"),
+            "token_net_flow": current_stats.get("token_net_flow", "N/A") if current_stats.get("token_net_flow") is None else current_stats.get("token_net_flow"),
             "avg_tx_size": current_stats.get("avg_tx_size", 0),
             "liquidation_long_usd": current_stats.get("liquidation_long_usd", 0),
             "liquidation_short_usd": current_stats.get("liquidation_short_usd", 0),

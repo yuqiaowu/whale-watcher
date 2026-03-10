@@ -496,40 +496,36 @@ def get_whale_data():
         def fmt_tech(m):
             if not m: return "No Tech Data"
             
-            natr_str = f"Volatility(NATR)={m.get('natr_percent', 0):.2f}%"
-            hist = m.get('history_60d', [])
-            if len(hist) >= 2:
-                curr_natr = hist[-1].get('natr', 0)
-                prev_natr = hist[-2].get('natr', 0)
-                if curr_natr > prev_natr:
-                    natr_str += "[Rising]"
-                elif curr_natr < prev_natr:
-                    natr_str += "[Falling]"
-                else:
-                    natr_str += "[Flat]"
-                    
-            natr_avg = m.get('natr_avg_30d', 0)
-            if natr_avg > 0:
-                natr_val = m.get('natr_percent', 0)
-                if natr_val > natr_avg * 1.1:
-                    natr_str += f"(>30d Avg {natr_avg:.2f}%)"
-                elif natr_val < natr_avg * 0.9:
-                    natr_str += f"(<30d Avg {natr_avg:.2f}%)"
-                else:
-                    natr_str += f"(~30d Avg {natr_avg:.2f}%)"
+            def f(val, fmt=".1f", default="N/A"):
+                if val is None: return default
+                try:
+                    return format(float(val), fmt)
+                except:
+                    return default
 
-            sma50_4h = m.get('sma_50', 0)
-            price = m.get('last_closed_close', 0)
-            dist_sma50 = ((price - sma50_4h) / sma50_4h * 100) if sma50_4h > 0 else 0
-            
-            return (f"Last 4H Close=${price:.2f} | 4H SMA50=${sma50_4h:.2f} ({dist_sma50:+.2f}%) | "
-                    f"Prev 5 High=${m.get('prev_5_high', 0):.2f} | Prev 5 Low=${m.get('prev_5_low', 0):.2f} | "
-                    f"RSI={m.get('rsi_14', 50):.1f} | ADX={m.get('adx_14', 0):.1f} | "
-                    f"VolRatio={m.get('vol_ratio_20', 1):.1f}x | VolZ={m.get('vol_zscore_20', 0):.2f} | "
-                    f"NATR={m.get('natr_percent', 0):.2f}% | Rank={m.get('price_rank_20', 50):.0f}% | "
-                    f"Wick:Up={m.get('upper_wick_ratio',0)*100:.0f}%/Down={m.get('lower_wick_ratio',0)*100:.0f}% | "
-                    f"BBW={m.get('bb_width', 0):.3f} | Trend={m.get('bb_trend', 'FLAT')} | Funding={m.get('funding_rate', 0)*100:.4f}% | "
-                    f"Stars: Buy={m.get('buy_stars',0)}/Sell={m.get('sell_stars',0)}")
+            price_val = m.get('last_closed_close')
+            sma50_val = m.get('sma_50')
+            dist_sma50 = "N/A"
+            if price_val is not None and sma50_val is not None and sma50_val > 0:
+                dist_sma50 = f"{( (price_val - sma50_val) / sma50_val * 100):+.2f}%"
+
+            # Formatting wicks separately as they need *100
+            u_wick = m.get('upper_wick_ratio')
+            l_wick = m.get('lower_wick_ratio')
+            u_wick_str = f"{u_wick*100:.0f}%" if u_wick is not None else "N/A"
+            l_wick_str = f"{l_wick*100:.0f}%" if l_wick is not None else "N/A"
+
+            funding_val = m.get('funding_rate')
+            funding_str = f"{funding_val*100:.4f}%" if funding_val is not None else "N/A"
+
+            return (f"Last 4H Close=${f(price_val, '.2f')} | 4H SMA50=${f(sma50_val, '.2f')} ({dist_sma50}) | "
+                    f"Prev 5 High=${f(m.get('prev_5_high'), '.2f')} | Prev 5 Low=${f(m.get('prev_5_low'), '.2f')} | "
+                    f"RSI={f(m.get('rsi_14'))} | ADX={f(m.get('adx_14'))} | "
+                    f"VolRatio={f(m.get('vol_ratio_20'))}x | VolZ={f(m.get('vol_zscore_20'))} | "
+                    f"NATR={f(m.get('natr_percent'), '.2f')}% | Rank={f(m.get('price_rank_20'), '.0f')}% | "
+                    f"Wick:Up={u_wick_str}/Down={l_wick_str} | "
+                    f"BBW={f(m.get('bb_width'), '.3f')} | Trend={m.get('bb_trend', 'N/A')} | Funding={funding_str} | "
+                    f"Stars: Buy={f(m.get('buy_stars',0), '.0f')}/Sell={f(m.get('sell_stars',0), '.0f')}")
 
         # Token net flow: positive = tokens moving INTO exchange, negative = tokens moving OUT of exchange
         def fmt_token_flow(flow, symbol_name):
