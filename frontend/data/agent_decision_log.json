@@ -1,6 +1,222 @@
 [
   {
     "analysis_summary": {
+      "zh": "1. [\u53d9\u4e8b\u6821\u9a8c]\uff1a\u5f53\u524d\u5e02\u573a\u9a71\u52a8\u529b\u4e3a\u6df7\u5408\u578b\uff0c\u65e0\u660e\u663e\u65b0\u53d9\u4e8b\u63a8\u52a8\u3002BNB\u3001DOGE\u3001BTC\u7684Qlib\u8bc4\u5206\u9886\u5148\uff0c\u4f46\u8d44\u91d1\u8d39\u7387\u4e0e\u6301\u4ed3L/S\u6bd4\u663e\u793a\u5e02\u573a\u60c5\u7eea\u5206\u5316\uff0c\u5df2\u90e8\u5206\u5b9a\u4ef7\u3002\u4e3b\u65cb\u5f8b\u4e3a\u9707\u8361\u6574\u7406\uff0c\u7b49\u5f85\u65b9\u5411\u7a81\u7834\u3002\n2. [\u51b3\u7b56\u4f9d\u636e\u8be6\u60c5]\uff1a\u7efc\u5408\u6280\u672f\u4fe1\u53f7\uff08RSI\u4e2d\u6027\u504f\u5f3a\uff0c\u4f46\u65e0\u8d85\u4e70\u8d85\u5356\uff09\u3001\u5b8f\u89c2\u94fe\u4e0a\uff08\u7f3a\u4e4f\u9cb8\u9c7c\u6570\u636e\uff0c\u4f9d\u8d56\u7206\u4ed3\u5206\u5e03\u4e0e\u8d44\u91d1\u8d39\u7387\uff09\u3001\u91cf\u5316\uff08Qlib\u6392\u540dBNB/DOGE/BTC\u524d\u4e09\uff0c\u4f46Z-Score\u663e\u793a\u6210\u4ea4\u91cf\u4f4e\u8ff7\uff09\u4ea4\u53c9\u9a8c\u8bc1\uff0c\u5e02\u573a\u5904\u4e8e\u4f4e\u6ce2\u52a8\u7b49\u5f85\u671f\u3002\n3. [\u75db\u82e6\u4ea4\u6613]\uff1a\u57fa\u4e8e\u73b0\u6709\u6301\u4ed3L/S\u6bd4\u4e0e\u7206\u4ed3\u6570\u636e\u7f3a\u5931\uff0c\u65e0\u6cd5\u7cbe\u786e\u8bc6\u522b\u62e5\u6324\u4fa7\u3002\u4f46\u4ece\u8d44\u91d1\u8d39\u7387\u770b\uff0cDOGE\u6b63\u8d39\u7387\uff080.0100%\uff09\u6697\u793a\u591a\u5934\u7565\u62e5\u6324\uff0cBTC\u8d1f\u8d39\u7387\uff08-0.0034%\uff09\u6697\u793a\u7a7a\u5934\u7565\u62e5\u6324\uff0c\u4f46\u5747\u672a\u8fbe\u6781\u7aef\uff0c\u75db\u82e6\u4ea4\u6613\u98ce\u9669\u4e2d\u7b49\u3002\n4. [\u5267\u672c\u9009\u62e9]\uff1a\u9009\u62e9MEAN_REVERSION\uff0c\u56e0\u5f53\u524d\u6301\u4ed3DOGE\u4e0eSOL\u5747\u4e3a\u7a7a\u5934\uff0c\u800c\u6280\u672f\u9762RSI\u4e2d\u6027\uff0856.73\u300152.38\uff09\uff0c\u4ef7\u683c\u672a\u7834\u5173\u952e\u4f4d\uff0c\u5b58\u5728\u5c0f\u5e45\u56de\u8c03\u673a\u4f1a\u4ee5\u9501\u5b9a\u76c8\u5229\uff0c\u4e14\u65e0\u5f3a\u8d8b\u52bf\u4fe1\u53f7\u652f\u6301\u8d8b\u52bf\u8ddf\u968f\u3002",
+      "en": "1. [Narrative Validation]: Current market drivers are mixed, with no clear new narrative. BNB, DOGE, and BTC lead in Qlib scores, but funding rates and L/S ratios show divided sentiment, partially priced in. The main theme is consolidation awaiting breakout.\n2. [Decision Details]: Cross-verification of technical signals (RSI neutral-bullish, no overbought/oversold), macro on-chain (lack of whale data, relying on liquidation distribution and funding rates), and quantitative (Qlib ranks BNB/DOGE/BTC top three, but Z-Scores show low volume) indicates a low-volatility waiting period.\n3. [Pain Trade]: Due to missing L/S ratio and liquidation data, crowded sides cannot be precisely identified. From funding rates, DOGE positive (0.0100%) suggests slight long crowding, BTC negative (-0.0034%) suggests slight short crowding, but neither extreme, pain trade risk is moderate.\n4. [Scenario Selection]: Choose MEAN_REVERSION, as current positions in DOGE and SOL are short, with RSI neutral (56.73, 52.38), price not breaking key levels, offering small pullback opportunities to lock profits, and no strong trend signals for trend following."
+    },
+    "hypothesis_scenario": "MEAN_REVERSION",
+    "contrary_signal_check": {
+      "zh": "\u6700\u4e25\u91cd\u7684\u51b2\u7a81\u6570\u636e\uff1aBNB\u6392\u540d\u7b2c\u4e00\uff08Qlib\u5f97\u52060.0798\uff09\u4e14RSI 57.2\u504f\u5f3a\uff0c\u6697\u793a\u4e0a\u6da8\u6f5c\u529b\uff0c\u4e0e\u5f53\u524d\u7a7a\u5934\u6301\u4ed3\u65b9\u5411\u51b2\u7a81\u3002\u5ffd\u7565\u7406\u7531\uff1aBNB\u65e0\u6301\u4ed3\uff0c\u4e14\u5176\u8d44\u91d1\u8d39\u7387\u8d1f\u503c\uff08-0.0030%\uff09\u548c\u6210\u4ea4\u91cfZ-Score\u6781\u4f4e\uff08-2.01\uff09\u663e\u793a\u4e70\u76d8\u4e4f\u529b\uff0c\u4e0a\u6da8\u52a8\u80fd\u4e0d\u8db3\uff0c\u4f18\u5148\u7ba1\u7406\u73b0\u6709\u98ce\u9669\u3002",
+      "en": "Most significant contrary signal: BNB ranks first (Qlib score 0.0798) with RSI 57.2 bullish, suggesting upside potential, conflicting with current short positions. Justification for ignoring: BNB is not held, and its negative funding rate (-0.0030%) and very low volume Z-Score (-2.01) indicate weak buying pressure and insufficient momentum, prioritizing existing risk management."
+    },
+    "context_analysis": {
+      "technical_signal": {
+        "zh": "\u3010\u91cd\u8981\u30111) \u4e0a\u5f71\u7ebf/\u4e0b\u5f71\u7ebf\u6bd4\u7387\uff1a\u6570\u636e\u7f3a\u5931\uff0c\u65e0\u6cd5\u5224\u65ad\uff1b2) RSI\u4e0eADX\u72b6\u6001\uff1aDOGE RSI 56.73\uff08\u4e2d\u6027\u504f\u5f3a\uff09\uff0cSOL RSI 52.38\uff08\u4e2d\u6027\uff09\uff0c\u5747\u65e0\u8d85\u4e70\u8d85\u5356\uff0cADX\u6570\u636e\u7f3a\u5931\uff1b3) \u5747\u7ebf\u4e56\u79bb\u7387\uff1a\u4ef7\u683c\u6570\u636e\u672a\u63d0\u4f9b\uff0c\u65e0\u6cd5\u8ba1\u7b97\u3002",
+        "en": "\u3010IMPORTANT\u30111) Upper/Lower Wick Ratio: Data missing, cannot judge; 2) RSI & ADX status: DOGE RSI 56.73 (neutral-bullish), SOL RSI 52.38 (neutral), no overbought/oversold, ADX data missing; 3) SMA deviation: Price data not provided, cannot calculate."
+      },
+      "macro_onchain": {
+        "zh": "\u3010\u91cd\u8981\u30111) 24h\u7206\u4ed3\u6570\u636e\uff1a\u6570\u636e\u7f3a\u5931\uff0c\u65e0\u6cd5\u5206\u6790\u591a\u7a7a\u7206\u4ed3\u6bd4\uff1b2) \u9cb8\u9c7c\u51c0\u6d41\u5165/\u6d41\u51fa\uff1a\u4ec5ETH/SOL\u6709\u6570\u636e\uff0c\u4f46\u5f53\u524d\u7f3a\u5931\uff0cBTC/BNB/DOGE\u65e0\u6570\u636e\uff1b3) \u8d44\u91d1\u8d39\u7387\uff1aDOGE 0.0100%\uff08\u6b63\uff0c\u591a\u5934\u7565\u62e5\u6324\uff09\uff0cBTC -0.0034%\uff08\u8d1f\uff0c\u7a7a\u5934\u7565\u62e5\u6324\uff09\uff0cETH 0.0069%\uff08\u6b63\uff09\uff0cSOL -0.0000%\uff08\u4e2d\u6027\uff09\uff0cBNB -0.0030%\uff08\u8d1f\uff09\u3002",
+        "en": "\u3010IMPORTANT\u30111) 24h Liquidation Data: Data missing, cannot analyze long/short liquidation ratio; 2) Whale Net Inflow/Outflow: Only ETH/SOL have data, but currently missing, BTC/BNB/DOGE no data; 3) Funding Rate: DOGE 0.0100% (positive, slight long crowding), BTC -0.0034% (negative, slight short crowding), ETH 0.0069% (positive), SOL -0.0000% (neutral), BNB -0.0030% (negative)."
+      },
+      "quantitative_analysis": {
+        "zh": "\u5206\u6790Qlib\u6392\u540d\uff1aBNB\uff080.0798\uff09\u7b2c\u4e00\uff0cDOGE\uff080.069\uff09\u7b2c\u4e8c\uff0cBTC\uff080.0652\uff09\u7b2c\u4e09\uff0c\u663e\u793a\u76f8\u5bf9\u5f3a\u52bf\u3002Z-Score\u5f02\u5e38\uff1a\u6210\u4ea4\u91cfZ-Score\u5168\u4e3a\u8d1f\u503c\uff08BNB -2.01\uff0cDOGE -1.14\uff0cBTC -1.54\uff0cETH -1.72\uff0cSOL -1.99\uff09\uff0c\u8868\u660e\u6210\u4ea4\u91cf\u663e\u8457\u4f4e\u4e8e\u5e73\u5747\u6c34\u5e73\uff0c\u5e02\u573a\u53c2\u4e0e\u5ea6\u4f4e\u3002",
+        "en": "Analyze Qlib ranking: BNB (0.0798) first, DOGE (0.069) second, BTC (0.0652) third, showing relative strength. Z-Score significance: Volume Z-Scores all negative (BNB -2.01, DOGE -1.14, BTC -1.54, ETH -1.72, SOL -1.99), indicating volume significantly below average, low market participation."
+      },
+      "regime_safety": {
+        "zh": "\u3010\u5fc5\u586b\u3011\u57fa\u4e8e\u75db\u82e6\u4ea4\u6613\u8bc4\u4f30\uff1a1) RSI/ADX/NATR\u72b6\u6001\uff1aRSI\u4e2d\u6027\uff0cADX\u7f3a\u5931\uff0cNATR\u7f3a\u5931\uff1b2) \u4e0a\u4e0b\u5f71\u7ebf\u6bd4\u7387\uff1a\u7f3a\u5931\uff1b3) \u591a\u7a7a\u7206\u4ed3\u6bd4\uff1a\u7f3a\u5931\uff1b4) \u9cb8\u9c7c\u51c0\u6d41\u5411\uff1a\u7f3a\u5931\u3002\u6700\u7ec8\u5224\u65ad\uff1aSAFE_MR\uff08\u5b89\u5168\u5747\u503c\u56de\u5f52\uff09\uff0c\u56e0\u6301\u4ed3\u7a7a\u5934RSI\u672a\u8d85\u5356\uff0c\u4ef7\u683c\u672a\u7834\u4f4d\uff0c\u5e02\u573a\u4f4e\u6210\u4ea4\u91cf\u4e0b\u5c0f\u5e45\u56de\u8c03\u6982\u7387\u9ad8\uff0c\u98ce\u9669\u53ef\u63a7\u3002",
+        "en": "\u3010Required\u3011Based on Pain Trade: 1) RSI/ADX/NATR state: RSI neutral, ADX missing, NATR missing; 2) Upper/Lower Wick Ratio: missing; 3) Liquidation long/short ratio: missing; 4) Whale net flow direction: missing. Final verdict: SAFE_MR (Safe Mean Reversion), as short positions have RSI not oversold, price not broken, high probability of small pullback in low-volume market, risk manageable."
+      },
+      "portfolio_status": {
+        "zh": "\u5f53\u524d\u6301\u4ed3\u98ce\u9669\u8bc4\u4f30\uff1a\u6301\u6709DOGE\u7a7a\u5934\uff08\u76c8\u522912.84%\uff09\u548cSOL\u7a7a\u5934\uff08\u76c8\u52298.99%\uff09\uff0c\u603b\u7a7a\u5934\u66b4\u9732$915\uff0c\u4f4e\u4e8e\u9650\u984d$1855\uff0c\u98ce\u9669\u9002\u4e2d\u3002\u9700\u9632\u8303\u4f4e\u6210\u4ea4\u91cf\u4e0b\u7684\u7a81\u7136\u6ce2\u52a8\u3002",
+        "en": "Portfolio risk check: Holding DOGE short (profit 12.84%) and SOL short (profit 8.99%), total short exposure $915, below limit $1855, risk moderate. Need to guard against sudden volatility in low-volume conditions."
+      }
+    },
+    "portfolio_management": [
+      {
+        "symbol": "DOGE",
+        "side": "short",
+        "action": "adjust_sl_tp",
+        "action_logic": {
+          "zh": "\u9488\u5bf9DOGE\u7a7a\u5934\u6301\u4ed3\uff1a\u5f53\u524d\u76c8\u522912.84%\uff0cRSI 56.73\u4e2d\u6027\u504f\u5f3a\uff0c\u8d44\u91d1\u8d39\u7387\u6b63\uff080.0100%\uff09\u6697\u793a\u591a\u5934\u7565\u62e5\u6324\uff0c\u4f46\u6210\u4ea4\u91cf\u4f4e\u8ff7\uff08vol_z -1.14\uff09\u3002\u4e3a\u9501\u5b9a\u76c8\u5229\u5e76\u9632\u8303\u53cd\u5f39\uff0c\u8c03\u6574\u6b62\u76c8\u6b62\u635f\uff0c\u57fa\u4e8e\u5747\u503c\u56de\u5f52\u903b\u8f91\u3002",
+          "en": "For DOGE short position: Current profit 12.84%, RSI 56.73 neutral-bullish, funding rate positive (0.0100%) suggests slight long crowding, but volume low (vol_z -1.14). To lock profits and guard against bounce, adjust take-profit and stop-loss based on mean reversion logic."
+        },
+        "exit_plan": {
+          "take_profit": 0.092,
+          "stop_loss": 0.097
+        },
+        "entry_reason": {
+          "zh": "\u9488\u5bf9DOGE\u7a7a\u5934\u6301\u4ed3\uff1a\u5f53\u524d\u76c8\u522912.84%\uff0cRSI 56.73\u4e2d\u6027\u504f\u5f3a\uff0c\u8d44\u91d1\u8d39\u7387\u6b63\uff080.0100%\uff09\u6697\u793a\u591a\u5934\u7565\u62e5\u6324\uff0c\u4f46\u6210\u4ea4\u91cf\u4f4e\u8ff7\uff08vol_z -1.14\uff09\u3002\u4e3a\u9501\u5b9a\u76c8\u5229\u5e76\u9632\u8303\u53cd\u5f39\uff0c\u8c03\u6574\u6b62\u76c8\u6b62\u635f\uff0c\u57fa\u4e8e\u5747\u503c\u56de\u5f52\u903b\u8f91\u3002",
+          "en": "For DOGE short position: Current profit 12.84%, RSI 56.73 neutral-bullish, funding rate positive (0.0100%) suggests slight long crowding, but volume low (vol_z -1.14). To lock profits and guard against bounce, adjust take-profit and stop-loss based on mean reversion logic."
+        }
+      },
+      {
+        "symbol": "SOL",
+        "side": "short",
+        "action": "adjust_sl_tp",
+        "action_logic": {
+          "zh": "\u9488\u5bf9SOL\u7a7a\u5934\u6301\u4ed3\uff1a\u5f53\u524d\u76c8\u52298.99%\uff0cRSI 52.38\u4e2d\u6027\uff0c\u8d44\u91d1\u8d39\u7387\u4e2d\u6027\uff08-0.0000%\uff09\uff0c\u6210\u4ea4\u91cf\u6781\u4f4e\uff08vol_z -1.99\uff09\u3002\u4ef7\u683c\u672a\u7834\u5173\u952e\u4f4d\uff0c\u5e02\u573a\u7f3a\u4e4f\u65b9\u5411\uff0c\u8c03\u6574\u6b62\u76c8\u6b62\u635f\u4ee5\u7ba1\u7406\u98ce\u9669\uff0c\u57fa\u4e8e\u4f4e\u6ce2\u52a8\u73af\u5883\u3002",
+          "en": "For SOL short position: Current profit 8.99%, RSI 52.38 neutral, funding rate neutral (-0.0000%), volume very low (vol_z -1.99). Price not breaking key levels, market lacks direction, adjust take-profit and stop-loss to manage risk based on low-volatility environment."
+        },
+        "exit_plan": {
+          "take_profit": 84.5,
+          "stop_loss": 87.5
+        },
+        "entry_reason": {
+          "zh": "\u9488\u5bf9SOL\u7a7a\u5934\u6301\u4ed3\uff1a\u5f53\u524d\u76c8\u52298.99%\uff0cRSI 52.38\u4e2d\u6027\uff0c\u8d44\u91d1\u8d39\u7387\u4e2d\u6027\uff08-0.0000%\uff09\uff0c\u6210\u4ea4\u91cf\u6781\u4f4e\uff08vol_z -1.99\uff09\u3002\u4ef7\u683c\u672a\u7834\u5173\u952e\u4f4d\uff0c\u5e02\u573a\u7f3a\u4e4f\u65b9\u5411\uff0c\u8c03\u6574\u6b62\u76c8\u6b62\u635f\u4ee5\u7ba1\u7406\u98ce\u9669\uff0c\u57fa\u4e8e\u4f4e\u6ce2\u52a8\u73af\u5883\u3002",
+          "en": "For SOL short position: Current profit 8.99%, RSI 52.38 neutral, funding rate neutral (-0.0000%), volume very low (vol_z -1.99). Price not breaking key levels, market lacks direction, adjust take-profit and stop-loss to manage risk based on low-volatility environment."
+        }
+      }
+    ],
+    "new_opportunities": [
+      {
+        "symbol": "BTC",
+        "action": "monitor",
+        "leverage": 0,
+        "position_size_usd": 0,
+        "entry_reason": {
+          "zh": "BTC\u6392\u540d\u7b2c\u4e09\uff08Qlib\u5f97\u52060.0652\uff09\uff0cRSI 56.05\u4e2d\u6027\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\uff08-0.0034%\uff09\u6697\u793a\u7a7a\u5934\u7565\u62e5\u6324\uff0c\u4f46\u6210\u4ea4\u91cf\u4f4e\u8ff7\uff08vol_z -1.54\uff09\u3002\u65e0\u660e\u786e\u7a81\u7834\u4fe1\u53f7\uff0c\u7b49\u5f85\u66f4\u6e05\u6670\u8d8b\u52bf\u6216\u9cb8\u9c7c\u6570\u636e\u3002",
+          "en": "BTC ranks third (Qlib score 0.0652), RSI 56.05 neutral, funding rate negative (-0.0034%) suggests slight short crowding, but volume low (vol_z -1.54). No clear breakout signals, awaiting clearer trend or whale data."
+        },
+        "exit_plan": {
+          "take_profit": 0,
+          "stop_loss": 0,
+          "invalidation": {
+            "zh": "\u4e0d\u9002\u7528\uff0c\u56e0\u4ec5\u76d1\u63a7\u3002",
+            "en": "Not applicable, as only monitoring."
+          }
+        }
+      },
+      {
+        "symbol": "ETH",
+        "action": "monitor",
+        "leverage": 0,
+        "position_size_usd": 0,
+        "entry_reason": {
+          "zh": "ETH\u6392\u540d\u7b2c\u56db\uff08Qlib\u5f97\u52060.0392\uff09\uff0cRSI 53.78\u4e2d\u6027\uff0c\u8d44\u91d1\u8d39\u7387\u6b63\uff080.0069%\uff09\uff0c\u6210\u4ea4\u91cf\u4f4e\u8ff7\uff08vol_z -1.72\uff09\u3002\u9cb8\u9c7c\u6570\u636e\u7f3a\u5931\uff0c\u6280\u672f\u9762\u5e73\u6de1\uff0c\u65e0\u4ea4\u6613\u4fe1\u53f7\u3002",
+          "en": "ETH ranks fourth (Qlib score 0.0392), RSI 53.78 neutral, funding rate positive (0.0069%), volume low (vol_z -1.72). Whale data missing, technicals flat, no trade signals."
+        },
+        "exit_plan": {
+          "take_profit": 0,
+          "stop_loss": 0,
+          "invalidation": {
+            "zh": "\u4e0d\u9002\u7528\uff0c\u56e0\u4ec5\u76d1\u63a7\u3002",
+            "en": "Not applicable, as only monitoring."
+          }
+        }
+      },
+      {
+        "symbol": "BNB",
+        "action": "monitor",
+        "leverage": 0,
+        "position_size_usd": 0,
+        "entry_reason": {
+          "zh": "BNB\u6392\u540d\u7b2c\u4e00\uff08Qlib\u5f97\u52060.0798\uff09\uff0cRSI 57.2\u504f\u5f3a\uff0c\u4f46\u8d44\u91d1\u8d39\u7387\u8d1f\uff08-0.0030%\uff09\u548c\u6210\u4ea4\u91cf\u6781\u4f4e\uff08vol_z -2.01\uff09\u663e\u793a\u4e70\u76d8\u4e0d\u8db3\u3002\u65e0\u9cb8\u9c7c\u6570\u636e\uff0c\u7b49\u5f85\u653e\u91cf\u786e\u8ba4\u3002",
+          "en": "BNB ranks first (Qlib score 0.0798), RSI 57.2 bullish, but negative funding rate (-0.0030%) and very low volume (vol_z -2.01) indicate weak buying. No whale data, awaiting volume confirmation."
+        },
+        "exit_plan": {
+          "take_profit": 0,
+          "stop_loss": 0,
+          "invalidation": {
+            "zh": "\u4e0d\u9002\u7528\uff0c\u56e0\u4ec5\u76d1\u63a7\u3002",
+            "en": "Not applicable, as only monitoring."
+          }
+        }
+      }
+    ],
+    "actions": [
+      {
+        "symbol": "DOGE",
+        "side": "short",
+        "action": "adjust_sl_tp",
+        "action_logic": {
+          "zh": "\u9488\u5bf9DOGE\u7a7a\u5934\u6301\u4ed3\uff1a\u5f53\u524d\u76c8\u522912.84%\uff0cRSI 56.73\u4e2d\u6027\u504f\u5f3a\uff0c\u8d44\u91d1\u8d39\u7387\u6b63\uff080.0100%\uff09\u6697\u793a\u591a\u5934\u7565\u62e5\u6324\uff0c\u4f46\u6210\u4ea4\u91cf\u4f4e\u8ff7\uff08vol_z -1.14\uff09\u3002\u4e3a\u9501\u5b9a\u76c8\u5229\u5e76\u9632\u8303\u53cd\u5f39\uff0c\u8c03\u6574\u6b62\u76c8\u6b62\u635f\uff0c\u57fa\u4e8e\u5747\u503c\u56de\u5f52\u903b\u8f91\u3002",
+          "en": "For DOGE short position: Current profit 12.84%, RSI 56.73 neutral-bullish, funding rate positive (0.0100%) suggests slight long crowding, but volume low (vol_z -1.14). To lock profits and guard against bounce, adjust take-profit and stop-loss based on mean reversion logic."
+        },
+        "exit_plan": {
+          "take_profit": 0.092,
+          "stop_loss": 0.097
+        },
+        "entry_reason": {
+          "zh": "\u9488\u5bf9DOGE\u7a7a\u5934\u6301\u4ed3\uff1a\u5f53\u524d\u76c8\u522912.84%\uff0cRSI 56.73\u4e2d\u6027\u504f\u5f3a\uff0c\u8d44\u91d1\u8d39\u7387\u6b63\uff080.0100%\uff09\u6697\u793a\u591a\u5934\u7565\u62e5\u6324\uff0c\u4f46\u6210\u4ea4\u91cf\u4f4e\u8ff7\uff08vol_z -1.14\uff09\u3002\u4e3a\u9501\u5b9a\u76c8\u5229\u5e76\u9632\u8303\u53cd\u5f39\uff0c\u8c03\u6574\u6b62\u76c8\u6b62\u635f\uff0c\u57fa\u4e8e\u5747\u503c\u56de\u5f52\u903b\u8f91\u3002",
+          "en": "For DOGE short position: Current profit 12.84%, RSI 56.73 neutral-bullish, funding rate positive (0.0100%) suggests slight long crowding, but volume low (vol_z -1.14). To lock profits and guard against bounce, adjust take-profit and stop-loss based on mean reversion logic."
+        }
+      },
+      {
+        "symbol": "SOL",
+        "side": "short",
+        "action": "adjust_sl_tp",
+        "action_logic": {
+          "zh": "\u9488\u5bf9SOL\u7a7a\u5934\u6301\u4ed3\uff1a\u5f53\u524d\u76c8\u52298.99%\uff0cRSI 52.38\u4e2d\u6027\uff0c\u8d44\u91d1\u8d39\u7387\u4e2d\u6027\uff08-0.0000%\uff09\uff0c\u6210\u4ea4\u91cf\u6781\u4f4e\uff08vol_z -1.99\uff09\u3002\u4ef7\u683c\u672a\u7834\u5173\u952e\u4f4d\uff0c\u5e02\u573a\u7f3a\u4e4f\u65b9\u5411\uff0c\u8c03\u6574\u6b62\u76c8\u6b62\u635f\u4ee5\u7ba1\u7406\u98ce\u9669\uff0c\u57fa\u4e8e\u4f4e\u6ce2\u52a8\u73af\u5883\u3002",
+          "en": "For SOL short position: Current profit 8.99%, RSI 52.38 neutral, funding rate neutral (-0.0000%), volume very low (vol_z -1.99). Price not breaking key levels, market lacks direction, adjust take-profit and stop-loss to manage risk based on low-volatility environment."
+        },
+        "exit_plan": {
+          "take_profit": 84.5,
+          "stop_loss": 87.5
+        },
+        "entry_reason": {
+          "zh": "\u9488\u5bf9SOL\u7a7a\u5934\u6301\u4ed3\uff1a\u5f53\u524d\u76c8\u52298.99%\uff0cRSI 52.38\u4e2d\u6027\uff0c\u8d44\u91d1\u8d39\u7387\u4e2d\u6027\uff08-0.0000%\uff09\uff0c\u6210\u4ea4\u91cf\u6781\u4f4e\uff08vol_z -1.99\uff09\u3002\u4ef7\u683c\u672a\u7834\u5173\u952e\u4f4d\uff0c\u5e02\u573a\u7f3a\u4e4f\u65b9\u5411\uff0c\u8c03\u6574\u6b62\u76c8\u6b62\u635f\u4ee5\u7ba1\u7406\u98ce\u9669\uff0c\u57fa\u4e8e\u4f4e\u6ce2\u52a8\u73af\u5883\u3002",
+          "en": "For SOL short position: Current profit 8.99%, RSI 52.38 neutral, funding rate neutral (-0.0000%), volume very low (vol_z -1.99). Price not breaking key levels, market lacks direction, adjust take-profit and stop-loss to manage risk based on low-volatility environment."
+        }
+      },
+      {
+        "symbol": "BTC",
+        "action": "monitor",
+        "leverage": 0,
+        "position_size_usd": 0,
+        "entry_reason": {
+          "zh": "BTC\u6392\u540d\u7b2c\u4e09\uff08Qlib\u5f97\u52060.0652\uff09\uff0cRSI 56.05\u4e2d\u6027\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\uff08-0.0034%\uff09\u6697\u793a\u7a7a\u5934\u7565\u62e5\u6324\uff0c\u4f46\u6210\u4ea4\u91cf\u4f4e\u8ff7\uff08vol_z -1.54\uff09\u3002\u65e0\u660e\u786e\u7a81\u7834\u4fe1\u53f7\uff0c\u7b49\u5f85\u66f4\u6e05\u6670\u8d8b\u52bf\u6216\u9cb8\u9c7c\u6570\u636e\u3002",
+          "en": "BTC ranks third (Qlib score 0.0652), RSI 56.05 neutral, funding rate negative (-0.0034%) suggests slight short crowding, but volume low (vol_z -1.54). No clear breakout signals, awaiting clearer trend or whale data."
+        },
+        "exit_plan": {
+          "take_profit": 0,
+          "stop_loss": 0,
+          "invalidation": {
+            "zh": "\u4e0d\u9002\u7528\uff0c\u56e0\u4ec5\u76d1\u63a7\u3002",
+            "en": "Not applicable, as only monitoring."
+          }
+        }
+      },
+      {
+        "symbol": "ETH",
+        "action": "monitor",
+        "leverage": 0,
+        "position_size_usd": 0,
+        "entry_reason": {
+          "zh": "ETH\u6392\u540d\u7b2c\u56db\uff08Qlib\u5f97\u52060.0392\uff09\uff0cRSI 53.78\u4e2d\u6027\uff0c\u8d44\u91d1\u8d39\u7387\u6b63\uff080.0069%\uff09\uff0c\u6210\u4ea4\u91cf\u4f4e\u8ff7\uff08vol_z -1.72\uff09\u3002\u9cb8\u9c7c\u6570\u636e\u7f3a\u5931\uff0c\u6280\u672f\u9762\u5e73\u6de1\uff0c\u65e0\u4ea4\u6613\u4fe1\u53f7\u3002",
+          "en": "ETH ranks fourth (Qlib score 0.0392), RSI 53.78 neutral, funding rate positive (0.0069%), volume low (vol_z -1.72). Whale data missing, technicals flat, no trade signals."
+        },
+        "exit_plan": {
+          "take_profit": 0,
+          "stop_loss": 0,
+          "invalidation": {
+            "zh": "\u4e0d\u9002\u7528\uff0c\u56e0\u4ec5\u76d1\u63a7\u3002",
+            "en": "Not applicable, as only monitoring."
+          }
+        }
+      },
+      {
+        "symbol": "BNB",
+        "action": "monitor",
+        "leverage": 0,
+        "position_size_usd": 0,
+        "entry_reason": {
+          "zh": "BNB\u6392\u540d\u7b2c\u4e00\uff08Qlib\u5f97\u52060.0798\uff09\uff0cRSI 57.2\u504f\u5f3a\uff0c\u4f46\u8d44\u91d1\u8d39\u7387\u8d1f\uff08-0.0030%\uff09\u548c\u6210\u4ea4\u91cf\u6781\u4f4e\uff08vol_z -2.01\uff09\u663e\u793a\u4e70\u76d8\u4e0d\u8db3\u3002\u65e0\u9cb8\u9c7c\u6570\u636e\uff0c\u7b49\u5f85\u653e\u91cf\u786e\u8ba4\u3002",
+          "en": "BNB ranks first (Qlib score 0.0798), RSI 57.2 bullish, but negative funding rate (-0.0030%) and very low volume (vol_z -2.01) indicate weak buying. No whale data, awaiting volume confirmation."
+        },
+        "exit_plan": {
+          "take_profit": 0,
+          "stop_loss": 0,
+          "invalidation": {
+            "zh": "\u4e0d\u9002\u7528\uff0c\u56e0\u4ec5\u76d1\u63a7\u3002",
+            "en": "Not applicable, as only monitoring."
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-03-11 08:08:32"
+  },
+  {
+    "analysis_summary": {
       "zh": "1. [\u53d9\u4e8b\u6821\u9a8c]\uff1a\u5f53\u524d\u5e02\u573a\u9a71\u52a8\u529b\u4e3a\u6df7\u5408\u578b\uff0c\u65e0\u660e\u663e\u5355\u4e00\u53d9\u4e8b\u4e3b\u5bfc\u3002DOGE\u51ed\u501f\u9ad8Qlib\u8bc4\u5206\u4e0e\u6b63\u8d44\u91d1\u8d39\u7387\u6392\u540d\u7b2c\u4e00\uff0c\u4f46\u8d44\u91d1\u8d39\u7387Z-Score\u504f\u9ad8\uff081.34\uff09\u663e\u793a\u96f6\u552e\u591a\u5934\u8fc7\u70ed\uff0c\u53ef\u80fd\u5df2\u5b9a\u4ef7\u3002BTC\u3001BNB\u8d44\u91d1\u8d39\u7387Z-Score\u4e3a\u8d1f\uff08-0.71\u3001-0.63\uff09\uff0c\u8868\u660e\u673a\u6784/\u9cb8\u9c7c\u53ef\u80fd\u6301\u8c28\u614e\u6001\u5ea6\uff0c\u4e0eDOGE\u7684\u96f6\u552e\u72c2\u70ed\u5f62\u6210\u5206\u6b67\u3002\u6574\u4f53\u5e02\u573a\u5904\u4e8e\u9707\u8361\u6574\u7406\u9636\u6bb5\uff0c\u65e0\u91cd\u5927\u65b0\u95fb\u51b2\u51fb\uff0c\u5c5e\u4e8e\u5df2\u5b9a\u4ef7\u73af\u5883\u3002\n2. [\u51b3\u7b56\u4f9d\u636e\u8be6\u60c5]\uff1aTechnical Signal\uff1aDOGE RSI 58.21\u63a5\u8fd1\u8d85\u4e70\u4f46\u672a\u6781\u7aef\uff0cBTC/BNB RSI 57-58\u663e\u793a\u4e2d\u6027\u504f\u5f3a\u3002Macro & On-Chain\uff1a\u9cb8\u9c7c\u6570\u636e\u7f3a\u5931\uff0c\u4f46\u57fa\u4e8eQlib\u6392\u540d\u4e0e\u8d44\u91d1\u8d39\u7387Z-Score\u4ea4\u53c9\u9a8c\u8bc1\uff0cDOGE\u96f6\u552e\u591a\u5934\u62e5\u6324\uff08\u8d44\u91d1\u8d39\u7387Z-Score 1.34\uff09\u800cBTC/BNB\u673a\u6784\u504f\u7a7a\uff08\u8d1fZ-Score\uff09\uff0c\u6697\u793a\u6f5c\u5728\u5747\u503c\u56de\u5f52\u538b\u529b\u3002Quantitative\uff1aDOGE Qlib\u8bc4\u52060.1119\u6700\u9ad8\uff0c\u4f46Z-Vol -1.1\u663e\u793a\u6210\u4ea4\u91cf\u4f4e\u8ff7\uff0c\u53ef\u80fd\u7f3a\u4e4f\u6301\u7eed\u4e0a\u6da8\u52a8\u80fd\uff1bSOL\u6392\u540d\u6700\u5dee\uff080.0468\uff09\u4e14\u8d44\u91d1\u8d39\u7387Z-Score 1.24\u504f\u9ad8\uff0c\u4e0e\u5f31\u52bf\u4ef7\u683c\u5f62\u6210\u770b\u8dcc\u80cc\u79bb\u3002\n3. [\u75db\u82e6\u4ea4\u6613]\uff1a\u7206\u4ed3\u6570\u636e\u7f3a\u5931\uff0c\u4f46\u901a\u8fc7\u8d44\u91d1\u8d39\u7387Z-Score\u63a8\u65ad\uff1aDOGE\u3001ETH\u3001SOL\u8d44\u91d1\u8d39\u7387Z-Score\u5747>1.2\uff0c\u8868\u660e\u96f6\u552e\u591a\u5934\u4ed3\u4f4d\u62e5\u6324\uff0c\u82e5\u4ef7\u683c\u56de\u8c03\u53ef\u80fd\u89e6\u53d1\u591a\u5934\u6324\u538b\uff08Long Squeeze\uff09\u3002BTC\u3001BNB\u8d44\u91d1\u8d39\u7387Z-Score\u4e3a\u8d1f\uff0c\u7a7a\u5934\u4ed3\u4f4d\u76f8\u5bf9\u8f83\u591a\uff0c\u4f46\u672a\u8fbe\u6781\u7aef\u6c34\u5e73\uff0c\u6324\u538b\u98ce\u9669\u8f83\u4f4e\u3002\u5f53\u524d\u6700\u75db\u82e6\u65b9\u4e3aDOGE/ETH/SOL\u7684\u96f6\u552e\u591a\u5934\uff0c\u5904\u4e8e\u2018\u8e29\u8e0f\u2019\u98ce\u9669\u9636\u6bb5\u3002\n4. [\u5267\u672c\u9009\u62e9]\uff1a\u9009\u62e9MEAN_REVERSION\uff0c\u7406\u7531\uff1aDOGE\u4f5c\u4e3aQlib\u6392\u540d\u7b2c\u4e00\u4f46\u8d44\u91d1\u8d39\u7387Z-Score\u504f\u9ad8\uff081.34\uff09\uff0c\u663e\u793a\u96f6\u552e\u8fc7\u70ed\u4e0e\u673a\u6784\u8c28\u614e\uff08BTC/BNB\u8d1fZ-Score\uff09\u7684\u80cc\u79bb\uff0c\u7b26\u5408\u5747\u503c\u56de\u5f52\u89e6\u53d1\u6761\u4ef6\uff08\u6781\u7aef\u8d44\u91d1\u8d39\u7387+\u4ef7\u683c\u505c\u6ede\uff09\u3002\u540c\u65f6\uff0c\u5f53\u524d\u6301\u4ed3DOGE\u4e0eSOL\u5747\u4e3a\u7a7a\u5934\uff0c\u4e0e\u5267\u672c\u65b9\u5411\u4e00\u81f4\uff0c\u53ef\u5bf9\u51b2\u6f5c\u5728\u56de\u8c03\u98ce\u9669\u3002",
       "en": "1. [Narrative Validation]: The current market driver is mixed with no dominant single narrative. DOGE ranks first with high Qlib score and positive funding, but its high funding Z-Score (1.34) indicates overheated retail longs, likely priced in. BTC and BNB show negative funding Z-Scores (-0.71, -0.63), suggesting institutional/whale caution, diverging from DOGE's retail frenzy. The overall market is in consolidation with no major news shocks, representing a priced-in environment.\n2. [Decision Details]: Technical Signal: DOGE RSI 58.21 near overbought but not extreme; BTC/BNB RSI 57-58 show neutral strength. Macro & On-Chain: Whale data missing, but cross-verification of Qlib ranking and funding Z-Scores indicates DOGE retail long crowding (funding Z-Score 1.34) vs. BTC/BNB institutional bearishness (negative Z-Scores), hinting at mean reversion pressure. Quantitative: DOGE has highest Qlib score (0.1119) but low Z-Vol (-1.1) suggests weak volume momentum; SOL ranks worst (0.0468) with high funding Z-Score (1.24), forming a bearish divergence with weak price.\n3. [Pain Trade]: Liquidation data missing, but inferred from funding Z-Scores: DOGE, ETH, SOL have funding Z-Scores >1.2, indicating crowded retail long positions, risking a Long Squeeze if price retraces. BTC and BNB have negative funding Z-Scores, with relatively more shorts but not extreme, lower squeeze risk. The most painful side is retail longs in DOGE/ETH/SOL, in a 'crowded' risk phase.\n4. [Scenario Selection]: Chosen MEAN_REVERSION, rationale: DOGE as top Qlib rank but with high funding Z-Score (1.34) shows divergence between retail overheating and institutional caution (BTC/BNB negative Z-Scores), meeting mean reversion triggers (extreme funding + price stall). Current short positions in DOGE and SOL align with this scenario, hedging potential pullback risks."
     },
