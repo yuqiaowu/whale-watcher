@@ -209,8 +209,11 @@ DATA GLOSSARY (指标释义):
 - [24h爆仓量分布]: 过去24小时内多单与空单的强平金额。
 - [爆仓多空比]: 多单爆仓金额 / 空单爆仓金额。高于1表示多头受压显著。
 - [技术指标详情]: 包含 [均线乖离率]、[RSI/ADX 状态]、[上影线/下影线比率]、[波动率 NATR] 等。
-- [鲸鱼流向]: 仅限 ETH/SOL。 tokens leaving exchange = accumulation (bullish). tokens entering = distribution (bearish)。对于 BTC/BNB/DOGE 显示为 N/A。
-- 对于 BTC/BNB/DOGE，由于尚未接入链上监控，请重点分析其 [交易所情绪] (OKX Top Trader Sentiment) 和 [24h爆仓量分布]。
+- [鲸鱼代币流向]: 巨鲸往交易所充提**加密资产(如ETH/SOL)**的净值。(仅限ETH/SOL)
+  ⚠️必读逻辑⚠️：代币流入(正数/TO_EXCHANGE) = 巨鲸提币到交易所准备抛售，是**看跌(Bearish/利空)**！代币流出(负数) = 流通盘减少囤积，是**看涨(Bullish/利多)**！
+- [鲸鱼资金流向]: 巨鲸往交易所充提**稳定币(USDT/USDC)**的净值。(仅限ETH/SOL)
+  ⚠️必读逻辑⚠️：稳定币流入(正数/IN) = 准备抄底购买，是**看涨(Bullish/利多)**！稳定币流出(负数) = 资金撤出，是**看跌(Bearish/利空)**！
+- 对于 BTC/BNB/DOGE，由于尚未接入链上监控，流向均显示 N/A，请忽略流向，重点分析其 [交易所情绪] (OKX Top Trader Sentiment) 和 [24h爆仓量分布]。
 
 {{WHALE_CONTEXT}}
 
