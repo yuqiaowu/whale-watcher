@@ -1,8 +1,5 @@
 Traceback (most recent call last):
-  File "/Users/yuqiaowu/Desktop/第一个链上项目/鲸鱼监控/backend/crypto_brain.py", line 1359, in main
-    raw_ai_summary = generate_comparative_summary(
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/yuqiaowu/Desktop/第一个链上项目/鲸鱼监控/backend/crypto_brain.py", line 945, in generate_comparative_summary
-    "RSI": f"{data.get('bnb', {}).get('market', {}).get('rsi_14', 50):.1f}",
-              ^^^^
-NameError: name 'data' is not defined
+  File "/Users/yuqiaowu/Desktop/第一个链上项目/鲸鱼监控/backend/crypto_brain.py", line 1374, in main
+    for key, val in raw_ai_summary.items():
+                    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'items'
