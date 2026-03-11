@@ -832,10 +832,12 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
         # --- NEW Layer: Liquidity Trap Guard (L/S Ratio) ---
         # Prevents chasing squeezes that are already over
         liq_long = s_data.get('liquidation_long_usd', 0)
-        liq_short = s_data.get('liquidation_short_usd', 1) # avoid div by zero
-        ls_ratio = liq_long / max(liq_short, 1.0)
+        liq_short = s_data.get('liquidation_short_usd', 0)
         
-        if act_type == "open_long" and ls_ratio < 0.1:
+        # Only check ratio if we have actual data to avoid false '0.00' traps on missing data
+        if act_type == "open_long" and liq_short > 0 and liq_long >= 0:
+            ls_ratio = liq_long / liq_short
+            if ls_ratio < 0.1:
              reason = f"🛡️ LIQUIDITY TRAP: {symbol} L/S Ratio is too low ({ls_ratio:.2f}). Shorts already squeezed. No more fuel to go higher. REJECTED."
              print(f"{reason}")
              action["action"] = "REJECTED"
