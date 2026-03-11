@@ -1266,8 +1266,8 @@ def main():
                 "sentiment_score": None,
                 "token_net_flow": None,
                 "stablecoin_net_flow": None,
-                "liquidation_long_usd": liq_data.get("long_vol_usd", 0),
-                "liquidation_short_usd": liq_data.get("short_vol_usd", 0),
+                "liquidation_long_usd": liq_data.get("long_vol_usd", None),
+                "liquidation_short_usd": liq_data.get("short_vol_usd", None),
                 "leverage_ratio": None
             }
         }
@@ -1277,17 +1277,21 @@ def main():
     doge_analysis = create_dummy_analysis(doge_liquidation) # NEW
     
     # Inject Liquidation Data into Stats (for JSON Output)
-    eth_analysis["stats_24h"]["liquidation_long_usd"] = eth_liquidation.get("long_vol_usd", 0)
-    eth_analysis["stats_24h"]["liquidation_short_usd"] = eth_liquidation.get("short_vol_usd", 0)
-    eth_analysis["stats_24h"]["leverage_ratio"] = eth_market.get("oi_now", 0)
+    eth_analysis["stats_24h"]["liquidation_long_usd"] = eth_liquidation.get("long_vol_usd", None)
+    eth_analysis["stats_24h"]["liquidation_short_usd"] = eth_liquidation.get("short_vol_usd", None)
+    eth_analysis["stats_24h"]["leverage_ratio"] = eth_market.get("oi_now", None)
     
-    sol_analysis["stats_24h"]["liquidation_long_usd"] = sol_liquidation.get("long_vol_usd", 0)
-    sol_analysis["stats_24h"]["liquidation_short_usd"] = sol_liquidation.get("short_vol_usd", 0)
-    sol_analysis["stats_24h"]["leverage_ratio"] = sol_market.get("oi_now", 0)
+    sol_analysis["stats_24h"]["liquidation_long_usd"] = sol_liquidation.get("long_vol_usd", None)
+    sol_analysis["stats_24h"]["liquidation_short_usd"] = sol_liquidation.get("short_vol_usd", None)
+    sol_analysis["stats_24h"]["leverage_ratio"] = sol_market.get("oi_now", None)
     
     # Inject Liquidation Data into Market Dicts (for AI Prompt)
     def fmt_liq(d):
-        return f"Long Liquidation: ${d.get('long_vol_usd',0):,.0f}, Short Liquidation: ${d.get('short_vol_usd',0):,.0f}"
+        long_liq = d.get('long_vol_usd', None)
+        short_liq = d.get('short_vol_usd', None)
+        long_str = f"${long_liq:,.0f}" if long_liq is not None else "N/A"
+        short_str = f"${short_liq:,.0f}" if short_liq is not None else "N/A"
+        return f"Long Liquidation: {long_str}, Short Liquidation: {short_str}"
         
     eth_market["liquidation_context"] = fmt_liq(eth_liquidation)
     sol_market["liquidation_context"] = fmt_liq(sol_liquidation)
@@ -1417,9 +1421,9 @@ def main():
             "stablecoin_net_flow": current_stats.get("stablecoin_net_flow", "N/A") if current_stats.get("stablecoin_net_flow") is None else current_stats.get("stablecoin_net_flow"),
             "token_net_flow": current_stats.get("token_net_flow", "N/A") if current_stats.get("token_net_flow") is None else current_stats.get("token_net_flow"),
             "avg_tx_size": current_stats.get("avg_tx_size", 0),
-            "liquidation_long_usd": current_stats.get("liquidation_long_usd", 0),
-            "liquidation_short_usd": current_stats.get("liquidation_short_usd", 0),
-            "leverage_ratio": current_stats.get("leverage_ratio", 0)
+            "liquidation_long_usd": current_stats.get("liquidation_long_usd", None),
+            "liquidation_short_usd": current_stats.get("liquidation_short_usd", None),
+            "leverage_ratio": current_stats.get("leverage_ratio", None)
         }
         
         hist.append(entry)

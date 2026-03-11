@@ -208,7 +208,8 @@ DATA GLOSSARY (指标释义):
 - [持仓L/S比]: 大户账户数多空比与持仓量多空比。反映资金博弈分布。
 - [24h爆仓量分布]: 过去24小时内多单与空单的强平金额。
 - [爆仓多空比]: 多单爆仓金额 / 空单爆仓金额。高于1表示多头受压显著。
-- [鲸鱼流向]: 仅限 ETH/SOL。 tokens leaving exchange = accumulation (bullish). tokens entering = distribution (bearish).
+- [技术指标详情]: 包含 [均线乖离率]、[RSI/ADX 状态]、[上影线/下影线比率]、[波动率 NATR] 等。
+- [鲸鱼流向]: 仅限 ETH/SOL。 tokens leaving exchange = accumulation (bullish). tokens entering = distribution (bearish)。对于 BTC/BNB/DOGE 显示为 N/A。
 - 对于 BTC/BNB/DOGE，由于尚未接入链上监控，请重点分析其 [交易所情绪] (OKX Top Trader Sentiment) 和 [24h爆仓量分布]。
 
 {{WHALE_CONTEXT}}
@@ -478,33 +479,33 @@ def get_whale_data():
         doge_stat = data.get("doge", {}).get("stats_24h", {})
         
         # Extract Liquidation Data (if available)
-        eth_liq_long = eth_stat_24h.get("liquidation_long_usd", 0)
-        eth_liq_short = eth_stat_24h.get("liquidation_short_usd", 0)
-        sol_liq_long = sol_stat_24h.get("liquidation_long_usd", 0)
-        sol_liq_short = sol_stat_24h.get("liquidation_short_usd", 0)
-        btc_liq_long = btc_stat.get("liquidation_long_usd", 0)
-        btc_liq_short = btc_stat.get("liquidation_short_usd", 0)
-        bnb_liq_long = bnb_stat.get("liquidation_long_usd", 0)
-        bnb_liq_short = bnb_stat.get("liquidation_short_usd", 0)
-        doge_liq_long = doge_stat.get("liquidation_long_usd", 0)
-        doge_liq_short = doge_stat.get("liquidation_short_usd", 0)
+        eth_liq_long = eth_stat_24h.get("liquidation_long_usd")
+        eth_liq_short = eth_stat_24h.get("liquidation_short_usd")
+        sol_liq_long = sol_stat_24h.get("liquidation_long_usd")
+        sol_liq_short = sol_stat_24h.get("liquidation_short_usd")
+        btc_liq_long = btc_stat.get("liquidation_long_usd")
+        btc_liq_short = btc_stat.get("liquidation_short_usd")
+        bnb_liq_long = bnb_stat.get("liquidation_long_usd")
+        bnb_liq_short = bnb_stat.get("liquidation_short_usd")
+        doge_liq_long = doge_stat.get("liquidation_long_usd")
+        doge_liq_short = doge_stat.get("liquidation_short_usd")
         
         eth_market = data.get("eth", {}).get("market", {})
         sol_market = data.get("sol", {}).get("market", {})
         btc_market = data.get("btc", {}).get("market", {})
         bnb_market = data.get("bnb", {}).get("market", {}) 
         doge_market = data.get("doge", {}).get("market", {})
-        
+        # Helper to format any value
+        def f(val, fmt=".1f", default="N/A"):
+            if val is None or val == "N/A": return default
+            try:
+                return format(float(val), fmt)
+            except:
+                return default
+
         # Helper to format tech
         def fmt_tech(m):
             if not m: return "No Tech Data"
-            
-            def f(val, fmt=".1f", default="N/A"):
-                if val is None: return default
-                try:
-                    return format(float(val), fmt)
-                except:
-                    return default
 
             price_val = m.get('last_closed_close')
             sma50_val = m.get('sma_50')
@@ -522,96 +523,127 @@ def get_whale_data():
             funding_str = f"{funding_val*100:.4f}%" if funding_val is not None else "N/A"
 
             return (f"[4小时收盘价] ${f(price_val, '.2f')} | [均线乖离率] 4小时SMA50=${f(sma50_val, '.2f')} (偏离度:{dist_sma50}) | "
-                    f"RSI(14)={f(m.get('rsi_14'))} | ADX(14)={f(m.get('adx_14'))} | "
+                    f"[RSI/ADX/MACD] RSI(14)={f(m.get('rsi_14'))} | ADX={f(m.get('adx_14'))} | MACD={f(m.get('macd_hist'), '.4f')} | "
+                    f"[波动率 NATR] {f(m.get('natr_percent'), '.2f')}% | "
                     f"[上影线/下影线比率] 上影线(Upper)={u_wick_str} / 下影线(Lower)={l_wick_str} | "
-                    f"[成交量比率] {f(m.get('vol_ratio_20'))}x | [量化排名] {f(m.get('price_rank_20'), '.0f')}% | "
+                    f"[成交量与持仓(OI)] 成交量比率={f(m.get('vol_ratio_20'))}x | 24h OI变化={f(m.get('delta_oi_24h_percent'), '.2f')}% | "
+                    f"[量化排名] {f(m.get('price_rank_20'), '.1f')}/100 | "
                     f"[资金费率] {funding_str} | [布林带] 宽度={f(m.get('bb_width'), '.3f')}, 趋势={m.get('bb_trend', 'N/A')} | "
                     f"[技术评分] 买入星级={f(m.get('buy_stars',0), '.0f')}/3, 卖出星级={f(m.get('sell_stars',0), '.0f')}/3")
 
         # Token net flow: positive = tokens moving INTO exchange, negative = tokens moving OUT of exchange
         def fmt_token_flow(flow, symbol_name):
-            if flow > 0:
-                return f"{flow:,.1f} {symbol_name} [TO_EXCHANGE]"
-            elif flow < 0:
-                return f"{flow:,.1f} {symbol_name} [FROM_EXCHANGE]"
-            else:
-                return f"0 {symbol_name}"
+            if flow is None or flow == "N/A":
+                return "N/A"
+            try:
+                flow_val = float(flow)
+                if flow_val > 0:
+                    return f"{flow_val:,.1f} {symbol_name} [TO_EXCHANGE]"
+                elif flow_val < 0:
+                    return f"{flow_val:,.1f} {symbol_name} [FROM_EXCHANGE]"
+                else:
+                    return f"0 {symbol_name}"
+            except:
+                return "N/A"
 
         # Stablecoin net flow: positive = stablecoins flowing IN, negative = flowing OUT
         def fmt_stable_flow(flow):
-            if flow > 0:
-                return f"${flow:,.0f} [STABLECOIN IN]"
-            elif flow < 0:
-                return f"${flow:,.0f} [STABLECOIN OUT]"
-            else:
-                return f"$0"
+            if flow is None or flow == "N/A":
+                return "N/A"
+            try:
+                flow_val = float(flow)
+                if flow_val > 0:
+                    return f"${flow_val:,.0f} [STABLECOIN IN]"
+                elif flow_val < 0:
+                    return f"${flow_val:,.0f} [STABLECOIN OUT]"
+                else:
+                    return f"$0"
+            except:
+                return "N/A"
 
         # Build Context String
         ctx = "=== 以太坊 (ETH) 鲸鱼数据分析 (对比 24h 与 7d 趋势) ===\n"
-        eth_ls = eth_market.get("whale_ls_ratio", 0)
-        eth_pos = eth_market.get("whale_pos_ratio", 0)
-        eth_sent = eth_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX大户账户数比={eth_ls:.2f} / 持仓量比={eth_pos:.2f}\n"
-        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {eth_sent:.2f}\n"
-        ctx += f"- [鲸鱼评分] 综合情绪分: 24h={eth_stat_24h.get('sentiment_score', 0):.2f} / 7d={eth_stat_7d.get('sentiment_score', 0):.2f}\n"
+        eth_ls = eth_market.get("whale_ls_ratio")
+        eth_pos = eth_market.get("whale_pos_ratio")
+        eth_sent = eth_market.get("top_trader_sentiment")
+        ctx += f"- [持仓L/S比] OKX大户账户数比={f(eth_ls, '.2f')} / 持仓量比={f(eth_pos, '.2f')}\n"
+        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {f(eth_sent, '.2f')}\n"
+        eth_score_24h = eth_stat_24h.get('sentiment_score')
+        eth_score_7d = eth_stat_7d.get('sentiment_score')
+        ctx += f"- [鲸鱼评分] 综合情绪分: 24h={f(eth_score_24h, '.2f')} / 7d={f(eth_score_7d, '.2f')}\n"
         eth_tf_24h = eth_stat_24h.get('token_net_flow', 0)
         eth_tf_7d = eth_stat_7d.get('token_net_flow', 0)
         ctx += f"- [鲸鱼代币流向] 代币净流向: 24h={fmt_token_flow(eth_tf_24h, 'ETH')} / 7d={fmt_token_flow(eth_tf_7d, 'ETH')}\n"
-        eth_sf_24h = eth_stat_24h.get('stablecoin_net_flow', 0)
-        eth_sf_7d = eth_stat_7d.get('stablecoin_net_flow', 0)
+        eth_sf_24h = eth_stat_24h.get('stablecoin_net_flow')
+        eth_sf_7d = eth_stat_7d.get('stablecoin_net_flow')
         ctx += f"- [鲸鱼资金流向] 稳定币净流向: 24h={fmt_stable_flow(eth_sf_24h)} / 7d={fmt_stable_flow(eth_sf_7d)}\n"
         ctx += f"- [技术指标详情] {fmt_tech(eth_market)}\n"
-        eth_liq_ratio = eth_liq_long / eth_liq_short if eth_liq_short > 0 else 0
-        ctx += f"- [24h爆仓量分布] 多单爆仓=${eth_liq_long:,.0f} / 空单爆仓=${eth_liq_short:,.0f} | 爆仓多空比={eth_liq_ratio:.2f}\n"
+        eth_liq_ratio = eth_liq_long / eth_liq_short if (eth_liq_long and eth_liq_short and eth_liq_short > 0) else 0
+        ctx += f"- [24h爆仓量分布] 多单爆仓=${f(eth_liq_long, ',.0f')} / 空单爆仓=${f(eth_liq_short, ',.0f')} | 爆仓多空比={f(eth_liq_ratio, '.2f')}\n"
         
         ctx += "\n=== 索拉纳 (SOL) 鲸鱼数据分析 (对比 24h 与 7d 趋势) ===\n"
-        sol_ls = sol_market.get("whale_ls_ratio", 0)
-        sol_pos = sol_market.get("whale_pos_ratio", 0)
-        sol_sent = sol_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX大户账户数比={sol_ls:.2f} / 持仓量比={sol_pos:.2f}\n"
-        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {sol_sent:.2f}\n"
-        ctx += f"- [鲸鱼评分] 综合情绪分: 24h={sol_stat_24h.get('sentiment_score', 0):.2f} / 7d={sol_stat_7d.get('sentiment_score', 0):.2f}\n"
-        sol_tf_24h = sol_stat_24h.get('token_net_flow', 0)
-        sol_tf_7d = sol_stat_7d.get('token_net_flow', 0)
+        sol_ls = sol_market.get("whale_ls_ratio")
+        sol_pos = sol_market.get("whale_pos_ratio")
+        sol_sent = sol_market.get("top_trader_sentiment")
+        ctx += f"- [持仓L/S比] OKX大户账户数比={f(sol_ls, '.2f')} / 持仓量比={f(sol_pos, '.2f')}\n"
+        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {f(sol_sent, '.2f')}\n"
+        sol_score_24h = sol_stat_24h.get('sentiment_score')
+        sol_score_7d = sol_stat_7d.get('sentiment_score')
+        ctx += f"- [鲸鱼评分] 综合情绪分: 24h={f(sol_score_24h, '.2f')} / 7d={f(sol_score_7d, '.2f')}\n"
+        sol_tf_24h = sol_stat_24h.get('token_net_flow')
+        sol_tf_7d = sol_stat_7d.get('token_net_flow')
         ctx += f"- [鲸鱼代币流向] 代币净流向: 24h={fmt_token_flow(sol_tf_24h, 'SOL')} / 7d={fmt_token_flow(sol_tf_7d, 'SOL')}\n"
-        sol_sf_24h = sol_stat_24h.get('stablecoin_net_flow', 0)
-        sol_sf_7d = sol_stat_7d.get('stablecoin_net_flow', 0)
+        sol_sf_24h = sol_stat_24h.get('stablecoin_net_flow')
+        sol_sf_7d = sol_stat_7d.get('stablecoin_net_flow')
         ctx += f"- [鲸鱼资金流向] 稳定币净流向: 24h={fmt_stable_flow(sol_sf_24h)} / 7d={fmt_stable_flow(sol_sf_7d)}\n"
         ctx += f"- [技术指标详情] {fmt_tech(sol_market)}\n"
-        sol_liq_ratio = sol_liq_long / sol_liq_short if sol_liq_short > 0 else 0
-        ctx += f"- [24h爆仓量分布] 多单爆仓=${sol_liq_long:,.0f} / 空单爆仓=${sol_liq_short:,.0f} | 爆仓多空比={sol_liq_ratio:.2f}\n"
-        
-        ctx += "\n=== 比特币 (BTC) 合约数据 ===\n"
+        sol_liq_ratio = sol_liq_long / sol_liq_short if (sol_liq_long and sol_liq_short and sol_liq_short > 0) else 0
+        ctx += f"- [24h爆仓量分布] 多单爆仓=${f(sol_liq_long, ',.0f')} / 空单爆仓=${f(sol_liq_short, ',.0f')} | 爆仓多空比={f(sol_liq_ratio, '.2f')}\n"
+        # [BTC] Notes on data source
+        ctx += "\n=== 比特币 (BTC) 交易所大户数据分析 ===\n"
         btc_ls = btc_market.get("whale_ls_ratio", 0)
         btc_pos = btc_market.get("whale_pos_ratio", 0)
         btc_sent = btc_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX大户账户数比={btc_ls:.2f} / 持仓量比={btc_pos:.2f}\n"
-        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {btc_sent:.2f}\n"
+        ctx += f"- [持仓L/S比] OKX大户账户数比={f(btc_ls, '.2f')} / 持仓量比={f(btc_pos, '.2f')}\n"
+        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {f(btc_sent, '.2f')}\n"
+        ctx += f"- [提示] BTC 目前主要依赖交易所大户持仓与爆仓痛点分析，实时链上流向数据暂不适用 (显示为 N/A)。\n"
+        ctx += f"- [鲸鱼评分] 综合情绪分: N/A\n"
+        ctx += f"- [鲸鱼代币流向] 代币净流向: N/A\n"
+        ctx += f"- [鲸鱼资金流向] 稳定币净流向: N/A\n"
         ctx += f"- [技术指标详情] {fmt_tech(btc_market)}\n"
-        btc_liq_ratio = btc_liq_long / btc_liq_short if btc_liq_short > 0 else 0
-        ctx += f"- [24h爆仓量分布] 多单爆仓=${btc_liq_long:,.0f} / 空单爆仓=${btc_liq_short:,.0f} | 爆仓多空比={btc_liq_ratio:.2f}\n"
+        btc_liq_ratio = btc_liq_long / btc_liq_short if (btc_liq_long and btc_liq_short and btc_liq_short > 0) else 0
+        ctx += f"- [24h爆仓量分布] 多单爆仓=${f(btc_liq_long, ',.0f')} / 空单爆仓=${f(btc_liq_short, ',.0f')} | 爆仓多空比={f(btc_liq_ratio, '.2f')}\n"
         ctx += f"注：BTC 目前仅支持交易所鲸鱼数据，不支持实时链上大额转账流向分析。\n"
-
-        ctx += "\n=== 币安币 (BNB) 合约数据 ===\n"
+        # [BNB] Notes on data source
+        ctx += "\n=== 币安币 (BNB) 交易所大户数据分析 ===\n"
         bnb_ls = bnb_market.get("whale_ls_ratio", 0)
         bnb_pos = bnb_market.get("whale_pos_ratio", 0)
         bnb_sent = bnb_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX大户账户数比={bnb_ls:.2f} / 持仓量比={bnb_pos:.2f}\n"
-        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {bnb_sent:.2f}\n"
+        ctx += f"- [持仓L/S比] OKX大户账户数比={f(bnb_ls, '.2f')} / 持仓量比={f(bnb_pos, '.2f')}\n"
+        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {f(bnb_sent, '.2f')}\n"
+        ctx += f"- [提示] BNB 目前主要依赖交易所大户持仓分析，实时链上转账扫描暂未上线 (显示为 N/A)。\n"
+        ctx += f"- [鲸鱼评分] 综合情绪分: N/A\n"
+        ctx += f"- [鲸鱼代币流向] 代币净流向: N/A\n"
+        ctx += f"- [鲸鱼资金流向] 稳定币净流向: N/A\n"
         ctx += f"- [技术指标详情] {fmt_tech(bnb_market)}\n"
-        bnb_liq_ratio = bnb_liq_long / bnb_liq_short if bnb_liq_short > 0 else 0
-        ctx += f"- [24h爆仓量分布] 多单爆仓=${bnb_liq_long:,.0f} / 空单爆仓=${bnb_liq_short:,.0f} | 爆仓多空比={bnb_liq_ratio:.2f}\n"
+        bnb_liq_ratio = bnb_liq_long / bnb_liq_short if (bnb_liq_long and bnb_liq_short and bnb_liq_short > 0) else 0
+        ctx += f"- [24h爆仓量分布] 多单爆仓=${f(bnb_liq_long, ',.0f')} / 空单爆仓=${f(bnb_liq_short, ',.0f')} | 爆仓多空比={f(bnb_liq_ratio, '.2f')}\n"
         ctx += f"注：BNB 目前仅支持交易所鲸鱼数据，不支持 BSC 链上实时大额转账流向分析。\n"
 
-        ctx += "\n=== 狗狗币 (DOGE) 合约数据 ===\n"
+        # [DOGE] Notes on data source
+        ctx += "\n=== 狗狗币 (DOGE) 交易所大户数据分析 ===\n"
         doge_ls = doge_market.get("whale_ls_ratio", 0)
         doge_pos = doge_market.get("whale_pos_ratio", 0)
         doge_sent = doge_market.get("top_trader_sentiment", 0.5)
-        ctx += f"- [持仓L/S比] OKX大户账户数比={doge_ls:.2f} / 持仓量比={doge_pos:.2f}\n"
-        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {doge_sent:.2f}\n"
+        ctx += f"- [持仓L/S比] OKX大户账户数比={f(doge_ls, '.2f')} / 持仓量比={f(doge_pos, '.2f')}\n"
+        ctx += f"- [交易所情绪] OKX 精英交易员情绪指数: {f(doge_sent, '.2f')}\n"
+        ctx += f"- [提示] DOGE 目前主要依赖交易所大户持仓分析，实时链上转账扫描暂未上线 (显示为 N/A)。\n"
+        ctx += f"- [鲸鱼评分] 综合情绪分: N/A\n"
+        ctx += f"- [鲸鱼代币流向] 代币净流向: N/A\n"
+        ctx += f"- [鲸鱼资金流向] 稳定币净流向: N/A\n"
         ctx += f"- [技术指标详情] {fmt_tech(doge_market)}\n"
-        doge_liq_ratio = doge_liq_long / doge_liq_short if doge_liq_short > 0 else 0
-        ctx += f"- [24h爆仓量分布] 多单爆仓=${doge_liq_long:,.0f} / 空单爆仓=${doge_liq_short:,.0f} | 爆仓多空比={doge_liq_ratio:.2f}\n"
+        doge_liq_ratio = doge_liq_long / doge_liq_short if (doge_liq_long and doge_liq_short and doge_liq_short > 0) else 0
+        ctx += f"- [24h爆仓量分布] 多单爆仓=${f(doge_liq_long, ',.0f')} / 空单爆仓=${f(doge_liq_short, ',.0f')} | 爆仓多空比={f(doge_liq_ratio, '.2f')}\n"
         ctx += f"注：DOGE 目前仅支持交易所鲸鱼数据，不支持实时链上大额转账流向分析。\n"
         
         ctx += "\n*INSTRUCTION*: Compare 24h vs 7d Sentiment Scores and Token/Stablecoin flows for each asset and draw your own conclusions.*\n"
@@ -664,6 +696,7 @@ def get_whale_data():
                 news_str += f"- [{source.upper()}] {item.get('title')} ({item.get('published','N/A')})\n"
 
         # Final Combined String
+        full_ctx = ctx + "\n" + daily_ctx + "\n" + news_str
         return full_ctx, data
     except Exception as e:
         return f"Error reading whale data: {e}", {}
@@ -815,13 +848,16 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
         # Prevents "Inflow to Sell" traps
         sym_upper = symbol.upper()
         # Extract flows from context/data if available
-        # (Assuming the logic to parse these exists or we pull from whale_data_obj)
         s_data = whale_data_obj.get(symbol.lower(), {}).get('stats_24h', {})
-        t_flow = s_data.get('token_net_flow', 0)
-        st_flow = s_data.get('stablecoin_net_flow', 0)
+        t_flow = s_data.get('token_net_flow')
+        st_flow = s_data.get('stablecoin_net_flow')
         
-        if act_type == "open_long" and t_flow > 0 and st_flow < 0:
-             reason = f"🛡️ WHALE TRAP: {symbol} has Token INFLOW (${t_flow:.0f}) but Stablecoin OUTFLOW (${st_flow:.0f}). This is an 'Exchange Dump' setup, not accumulation. REJECTED."
+        # Guard against None values
+        t_flow_val = float(t_flow) if t_flow is not None and t_flow != "N/A" else 0.0
+        st_flow_val = float(st_flow) if st_flow is not None and st_flow != "N/A" else 0.0
+        
+        if act_type == "open_long" and t_flow_val > 0 and st_flow_val < 0:
+             reason = f"🛡️ WHALE TRAP: {symbol} has Token INFLOW (${t_flow_val:.0f}) but Stablecoin OUTFLOW (${st_flow_val:.0f}). This is an 'Exchange Dump' setup, not accumulation. REJECTED."
              print(f"{reason}")
              action["action"] = "REJECTED"
              action["reason"] = reason
@@ -830,12 +866,16 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
 
         # --- NEW Layer: Liquidity Trap Guard (L/S Ratio) ---
         # Prevents chasing squeezes that are already over
-        liq_long = s_data.get('liquidation_long_usd', 0)
-        liq_short = s_data.get('liquidation_short_usd', 0)
+        liq_long = s_data.get('liquidation_long_usd')
+        liq_short = s_data.get('liquidation_short_usd')
         
-        # Only check ratio if we have actual data to avoid false '0.00' traps on missing data
-        if act_type == "open_long" and liq_short > 0 and liq_long >= 0:
-            ls_ratio = liq_long / liq_short
+        liq_long_val = float(liq_long) if liq_long is not None and liq_long != "N/A" else 0.0
+        liq_short_val = float(liq_short) if liq_short is not None and liq_short != "N/A" else 0.0
+        
+        # Calculate ls_ratio safely
+        ls_ratio = (liq_long_val / liq_short_val) if liq_short_val > 0 else 1.0
+
+        if act_type == "open_long" and liq_short_val > 0 and liq_long_val >= 0:
             if ls_ratio < 0.1:
              reason = f"🛡️ LIQUIDITY TRAP: {symbol} L/S Ratio is too low ({ls_ratio:.2f}). Shorts already squeezed. No more fuel to go higher. REJECTED."
              print(f"{reason}")
@@ -844,7 +884,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
              validated_actions.append(action)
              continue
              
-        if act_type == "open_short" and ls_ratio > 10.0:
+        if act_type == "open_short" and liq_short_val > 0 and ls_ratio > 10.0:
              reason = f"🛡️ REVERSAL TRAP: {symbol} L/S Ratio is too high ({ls_ratio:.2f}). Longs already flushed. Expect mean-reversion bounce. REJECTED."
              print(f"{reason}")
              action["action"] = "REJECTED"
