@@ -382,6 +382,16 @@ class OKXDataClient:
             if not data:
                 return {"long_vol_usd": 0, "short_vol_usd": 0}
             
+            # Contract Multipliers (ctVal) on OKX
+            CT_VAL_MAP = {
+                "BTC-USDT": 0.01,
+                "ETH-USDT": 0.1,
+                "BNB-USDT": 0.01,
+                "SOL-USDT": 1.0,
+                "DOGE-USDT": 1000.0
+            }
+            ct_val = CT_VAL_MAP.get(uly, 1.0)
+            
             # Data structure: data is list of objects with 'details'
             long_liq = 0.0
             short_liq = 0.0
@@ -399,7 +409,8 @@ class OKXDataClient:
                         pos_side = order.get("posSide")
                         sz = float(order.get("sz", 0))
                         price = float(order.get("bkPx", 0))
-                        vol_usd = sz * price # Approx value
+                        # USD Value = Number of Contracts * Contract Value * Price
+                        vol_usd = sz * ct_val * price 
                         
                         if pos_side == "long":
                             long_liq += vol_usd
