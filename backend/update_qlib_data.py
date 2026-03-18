@@ -151,7 +151,7 @@ def fetch_and_process_missing_data(start_date):
             try:
                 oi_data = client._request("GET", "/api/v5/rubik/stat/contracts/open-interest-history", {"instId": inst_id, "period": "4H", "limit": "100"})
                 if oi_data and isinstance(oi_data, list):
-                    df_oi = pd.DataFrame(oi_data, columns=['ts', 'oi', 'oiCcy'])
+                    df_oi = pd.DataFrame(oi_data, columns=['ts', 'oi', 'oiCcy', 'oiUsd'])
                     df_oi['datetime'] = pd.to_datetime(df_oi['ts'].astype(int), unit='ms')
                     df_oi['oi'] = df_oi['oi'].astype(float)
                     df_oi = df_oi.sort_values('datetime')
