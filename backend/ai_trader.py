@@ -685,16 +685,23 @@ def get_whale_data():
         liq = macro.get("liquidity_monitor", {})
         
         ctx += "\n=== GLOBAL MACRO CONTEXT (CRITICAL) ===\n"
-        ctx += f"- Fed Futures Rate: {(fed or {}).get('implied_rate', 0)}% (Trend: {(fed or {}).get('trend', 'Neutral')})\n"
+        fed_rate = (fed or {}).get('implied_rate')
+        ctx += f"- Fed Futures Rate: {f'{fed_rate}%' if fed_rate is not None else 'N/A'} (Trend: {(fed or {}).get('trend', 'N/A')})\n"
         if fed and 'change_5d_bps' in fed:
              ctx += f"  * 5d Change: {fed['change_5d_bps']} bps\n"
         
-        ctx += f"- USD/JPY: {(japan or {}).get('price', 0)} (Trend: {(japan or {}).get('trend', 'Neutral')})\n"
+        jpy_price = (japan or {}).get('price')
+        ctx += f"- USD/JPY: {jpy_price if jpy_price is not None else 'N/A'} (Trend: {(japan or {}).get('trend', 'N/A')})\n"
         if japan and 'change_5d_pct' in japan:
              ctx += f"  * 5d Change: {japan['change_5d_pct']}%\n"
              
-        ctx += f"- VIX: {(liq.get('vix') or {}).get('price', 0)} (Trend: {(liq.get('vix') or {}).get('trend', 'Neutral')})\n"
-        ctx += f"- DXY: {(liq.get('dxy') or {}).get('price', 0)} (Trend: {(liq.get('dxy') or {}).get('trend', 'Neutral')})\n"
+        vix_price = (liq.get('vix') or {}).get('price')
+        vix_trend = (liq.get('vix') or {}).get('trend', 'N/A')
+        ctx += f"- VIX: {vix_price if vix_price is not None else 'N/A'} (Trend: {vix_trend})\n"
+        
+        dxy_price = (liq.get('dxy') or {}).get('price')
+        dxy_trend = (liq.get('dxy') or {}).get('trend', 'N/A')
+        ctx += f"- DXY: {dxy_price if dxy_price is not None else 'N/A'} (Trend: {dxy_trend})\n"
         
         # Add Daily Macro Trend (Derived from Brain's market data)
         # Brain's market_data.py now provides regime_1d, sma50_1d, sma200_1d
