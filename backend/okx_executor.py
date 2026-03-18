@@ -836,16 +836,34 @@ class OKXExecutor:
         new_records = []
 
         # 3. Process OKX Orders -> Frontend Format
+        # Pre-process all orders into a map of (symbol, posSide) -> [filled orders] 
+        # to find open times.
+        open_time_map = {}
+        for ord in okx_orders:
+            sym = ord["instId"].split("-")[0]
+            pos_side = ord["posSide"]
+            side = ord["side"]
+            ts_ms = int(ord.get("uTime", 0))
+            t_str = datetime.datetime.fromtimestamp(ts_ms/1000).strftime("%Y-%m-%d %H:%M:%S")
+            
+            # Determine if this is likely an "OPEN" order
+            # OKX: side=buy, posSide=long -> Open Long
+            # OKX: side=sell, posSide=short -> Open Short
+            is_open = False
+            if pos_side == "long" and side == "buy": is_open = True
+            elif pos_side == "short" and side == "sell": is_open = True
+            
+            if is_open:
+                key = (sym, pos_side)
+                if key not in open_time_map: open_time_map[key] = []
+                open_time_map[key].append({"time": t_str, "ts": ts_ms})
+
         for ord in okx_orders:
             # We only care about orders that REDUCED position (Closing trades)
-            # Typically check 'reduceOnly' or side vs posSide.
-            # Simplified: If raw side != posSide (e.g. buy short, sell long) -> Close?
-            # Better: Check PnL. Only closing orders have realized PnL in fills?
-            # OKX Orders History endpoint has 'pnl' field for the order.
-            
             pnl = float(ord.get("pnl", 0))
             if pnl == 0 and ord.get("reduceOnly") != "true":
-                # Probably an opening order, skip (we only show closed trades in history usually)
+                # Check if it was a manual close or something? 
+                # Usually closing orders have pnl != 0.
                 continue
 
             # ID unique to this order
@@ -855,9 +873,6 @@ class OKXExecutor:
 
             # Format
             symbol = ord["instId"].split("-")[0]
-            # Map side: buy + long = Open? buy + short = Close?
-            # OKX: side=buy, posSide=long -> Open Long
-            # OKX: side=sell, posSide=long -> Close Long
             side = ord["side"]
             posSide = ord["posSide"]
             
@@ -871,22 +886,9 @@ class OKXExecutor:
 
             # Avg Price
             avg_px = float(ord.get("avgPx", 0))
-            
-            # For a closed order, avgPx is exitPrice.
-            # Entry price is harder to get from just order history (need positions history).
-            # We can approximate or just leave entryPrice same as exit if unknown, or 0.
-            # Wait, user wants to see PnL.
-            # OKX Order JSON has `pnl` (Realized PnL).
-            
-            # Calculate approx entry price using PnL formula if valid?
-            # PnL = (Exit - Entry) * Size * ContractVal
-            # We have PnL, Exit, Size. Can solve for Entry.
-            # But we need ContractVal.
-            
             sz = float(ord.get("sz", 0)) # Contracts
             
             # Attempt to get Entry Price
-            # If PnL is available, perfect.
             entry_px = 0.0
             
             # Fetch instrument info for calc
@@ -895,14 +897,9 @@ class OKXExecutor:
             ctVal = info["ctVal"] if info else 0.01
 
             if sz > 0 and ctVal > 0:
-                # PnL = (Exit - Entry) * sz * ctVal (Long)
-                # Entry = Exit - (PnL / (sz * ctVal))
                 if trade_type == "long": # Sell to close
-                    # Order is 'sell'
                     entry_px = avg_px - (pnl / (sz * ctVal))
                 else: # Buy to close short
-                    # PnL = (Entry - Exit) * sz * ctVal
-                    # Entry = (PnL / (sz * ctVal)) + Exit
                     entry_px = (pnl / (sz * ctVal)) + avg_px
             
             # Calculate %
@@ -918,21 +915,34 @@ class OKXExecutor:
                     pnl_percent = 0.0
 
             # Time
-            # uTime is unix ms
             ts_ms = int(ord.get("uTime", 0))
             exit_time_str = datetime.datetime.fromtimestamp(ts_ms/1000).strftime("%Y-%m-%d %H:%M:%S")
+
+            # FIND ENTRY TIME
+            entry_time_str = "---"
+            key = (symbol, posSide)
+            if key in open_time_map:
+                # Find the most recent open order BEFORE this exit order
+                best_match = None
+                for open_ord in open_time_map[key]:
+                    if open_ord["ts"] < ts_ms:
+                        if best_match is None or open_ord["ts"] > best_match["ts"]:
+                            best_match = open_ord
+                
+                if best_match:
+                    entry_time_str = best_match["time"]
 
             record = {
                 "id": trade_id,
                 "symbol": symbol,
                 "type": trade_type,
-                "entryPrice": float(f"{entry_px:.4f}"),
+                "entryPrice": float(f"{entry_px:.2f}"),
                 "exitPrice": avg_px,
                 "amount": sz,
                 "leverage": int(float(ord.get("lever", 1))),
                 "pnl": float(f"{pnl:.2f}"),
                 "pnlPercent": float(f"{pnl_percent:.2f}"),
-                "entryTime": "---", # Hard to know exact open time from close order
+                "entryTime": entry_time_str,
                 "exitTime": exit_time_str,
                 "reason": "OKX Real Trade"
             }
