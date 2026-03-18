@@ -196,7 +196,6 @@ You will receive a JSON payload containing:
 - `market_data`: 
     - **Technical**: RSI (14), MACD Hist, ATR, Bollinger Width, Momentum.
     - **Sentiment**: Funding Rate, Funding Z-Score, OI Change, OI RSI.
-    - **Correlation**: BTC Correlation (btc_corr_24h).
     - **Volatility**: Normalized ATR (natr_14).
 
 {{QLIB_JSON_PAYLOAD}}
@@ -558,8 +557,7 @@ def get_whale_data():
                     f"[上影线/下影线比率] 上影线(Upper)={u_wick_str} / 下影线(Lower)={l_wick_str} | "
                     f"[成交量与持仓(OI)] 成交量比率={f(m.get('vol_ratio_20'))}x | 24h OI变化={f(m.get('delta_oi_24h_percent'), '.2f')}% | "
                     f"[量化排名] {f(m.get('price_rank_20'), '.1f')}/100 | "
-                    f"[资金费率] {funding_str} | [布林带] 宽度={f(m.get('bb_width'), '.3f')}, 趋势={m.get('bb_trend', 'N/A')} | "
-                    f"[技术评分] 买入星级={f(m.get('buy_stars',0), '.0f')}/3, 卖出星级={f(m.get('sell_stars',0), '.0f')}/3")
+                    f"[资金费率] {funding_str} | [布林带] 宽度={f(m.get('bb_width'), '.3f')}, 趋势={m.get('bb_trend', 'N/A')}")
 
         # Token net flow: positive = tokens moving INTO exchange, negative = tokens moving OUT of exchange
         def fmt_token_flow(flow, symbol_name):
