@@ -261,5 +261,47 @@
       "bb_trend": "DOWN"
     },
     "outcome": null
+  },
+  {
+    "id": "ETH_1773853343",
+    "timestamp": "2026-03-19T01:02:23.699825",
+    "symbol": "ETH",
+    "action": "adjust_sl_tp",
+    "entry_price": 0,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c2173 > 2100\uff0c\u8d44\u91d1\u8d39\u73870.0089%\uff08\u6b63\uff0c\u975e\u8d1f\uff09\uff0cRSI 41.29\uff08>30\u4e14\u4ece\u4f4e\u70b9\u53cd\u5f39\uff1f\u6570\u636e\u672a\u663e\u793a\u5386\u53f2\uff0c\u4f46\u5f53\u524d>30\uff09\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\u7406\u7531\uff1aETH Qlib\u6392\u540d\u7b2c\u4e00\uff080.3485\uff09\uff0c\u76f8\u5bf9\u5f3a\u5ea6\u652f\u6491\uff1b\u4f46\u8d44\u91d1\u8d39\u7387Z-Score 155.2%\u663e\u793a\u591a\u5934\u62e5\u6324\uff0c\u9700\u6536\u7d27\u6b62\u635f\u4ee5\u7ba1\u7406\u98ce\u9669\u3002",
+      "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' Current data: price 2173 > 2100, funding rate 0.0089% (positive, not negative), RSI 41.29 (>30 and rebounding? history not shown, but current >30), red line not triggered. Additional reasoning: ETH Qlib rank 1 (0.3485) supports relative strength; but funding Z-score 155.2% indicates crowded longs, requiring tighter stop-loss to manage risk."
+    },
+    "context": {
+      "rsi": "?",
+      "adx": "?",
+      "whale_flow": "?",
+      "funding_rate": "?",
+      "bb_width": "?",
+      "bb_trend": "?"
+    },
+    "outcome": null
+  },
+  {
+    "id": "SOL_1773853345",
+    "timestamp": "2026-03-19T01:02:25.217768",
+    "symbol": "SOL",
+    "action": "open_long",
+    "entry_price": 0,
+    "leverage": 1,
+    "reason": {
+      "zh": "SOL\u8d44\u91d1\u8d39\u7387Z-Score -147.2%\uff08\u6781\u8d1f\uff0c\u7a7a\u5934\u62e5\u6324\uff09\uff0c\u5b58\u5728\u7a7a\u5934\u8f67\u7a7a\u673a\u4f1a\uff1bQlib\u6392\u540d\u7b2c\u4e09\uff080.0927\uff09\u6709\u76f8\u5bf9\u5f3a\u5ea6\uff1b\u6280\u672f\u9762\u8d85\u5356\uff08RSI 38.99\uff09\u63d0\u4f9b\u53cd\u5f39\u6f5c\u529b\u3002\u7b26\u5408NARRATIVE_DIVERGENCE\u5267\u672c\uff08\u5e02\u573a\u4e0b\u8dcc\u4e2d\u7a7a\u5934\u8fc7\u5ea6\u62e5\u6324\uff09\u3002",
+      "en": "SOL funding Z-score -147.2% (extremely negative, crowded shorts), short squeeze opportunity; Qlib rank 3 (0.0927) shows relative strength; technicals oversold (RSI 38.99) offer bounce potential. Aligns with NARRATIVE_DIVERGENCE scenario (shorts overly crowded in market decline)."
+    },
+    "context": {
+      "rsi": "?",
+      "adx": "?",
+      "whale_flow": "?",
+      "funding_rate": "?",
+      "bb_width": "?",
+      "bb_trend": "?"
+    },
+    "outcome": null
   }
 ]
