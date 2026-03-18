@@ -126,13 +126,63 @@ def fetch_and_process_missing_data(start_date):
         df_feats['buy_stars'] = 0
         df_feats['sell_stars'] = 0
         
-        # Funding & OI (approximation for history if we don't have secondary storage)
-        # For now we'll set to 0 to keep schema valid, real trades will use LIVE mode anyway
-        df_feats['funding_rate'] = 0.0
-        df_feats['funding_rate_zscore'] = 0.0
-        df_feats['open_interest'] = 0.0
-        df_feats['oi_change'] = 0.0
-        df_feats['oi_rsi'] = 50.0
+        # Funding & OI with REAL DATA
+        try:
+            # 1. Real Funding Rate History
+            fr_data = client._request("GET", "/api/v5/public/funding-rate-history", {"instId": inst_id, "limit": "100"})
+            if fr_data:
+                df_fr = pd.DataFrame(fr_data)[['fundingTime', 'fundingRate']]
+                df_fr['datetime'] = pd.to_datetime(df_fr['fundingTime'].astype(int), unit='ms')
+                df_fr['fundingRate'] = df_fr['fundingRate'].astype(float)
+                df_fr = df_fr.sort_values('datetime')
+                
+                df_feats = df_feats.sort_values('datetime')
+                df_feats = pd.merge_asof(df_feats, df_fr[['datetime', 'fundingRate']], on='datetime', direction='backward')
+                df_feats['funding_rate'] = df_feats['fundingRate'].fillna(0.0)
+                
+                mean_fr = df_feats['funding_rate'].rolling(30, min_periods=1).mean()
+                std_fr = df_feats['funding_rate'].rolling(30, min_periods=1).std() + 1e-9
+                df_feats['funding_rate_zscore'] = (df_feats['funding_rate'] - mean_fr) / std_fr
+            else:
+                df_feats['funding_rate'] = 0.0
+                df_feats['funding_rate_zscore'] = 0.0
+                
+            # 2. Real Open Interest History
+            try:
+                oi_data = client._request("GET", "/api/v5/rubik/stat/contracts/open-interest-history", {"instId": inst_id, "period": "4H", "limit": "100"})
+                if oi_data and isinstance(oi_data, list):
+                    df_oi = pd.DataFrame(oi_data, columns=['ts', 'oi', 'oiCcy'])
+                    df_oi['datetime'] = pd.to_datetime(df_oi['ts'].astype(int), unit='ms')
+                    df_oi['oi'] = df_oi['oi'].astype(float)
+                    df_oi = df_oi.sort_values('datetime')
+                    
+                    df_feats = pd.merge_asof(df_feats, df_oi[['datetime', 'oi']], on='datetime', direction='backward')
+                    df_feats['open_interest'] = df_feats['oi'].fillna(0.0)
+                    df_feats['oi_change'] = df_feats['open_interest'].pct_change().fillna(0.0)
+                    
+                    delta = df_feats['open_interest'].diff()
+                    up = delta.clip(lower=0).ewm(alpha=1/14, adjust=False).mean()
+                    down = -1 * delta.clip(upper=0).ewm(alpha=1/14, adjust=False).mean()
+                    rs = up / down
+                    df_feats['oi_rsi'] = 100 - (100 / (1 + rs))
+                    df_feats['oi_rsi'] = df_feats['oi_rsi'].fillna(50.0)
+                else:
+                    df_feats['open_interest'] = 0.0
+                    df_feats['oi_change'] = 0.0
+                    df_feats['oi_rsi'] = 50.0
+            except Exception:
+                df_feats['open_interest'] = 0.0
+                df_feats['oi_change'] = 0.0
+                df_feats['oi_rsi'] = 50.0
+                
+        except Exception as e:
+            print(f"⚠️ Error fetching sentiment history for {symbol}: {e}")
+            df_feats['funding_rate'] = 0.0
+            df_feats['funding_rate_zscore'] = 0.0
+            df_feats['open_interest'] = 0.0
+            df_feats['oi_change'] = 0.0
+            df_feats['oi_rsi'] = 50.0
+
         df_feats['btc_corr_24h'] = 1.0 # default
         
         # Targets (set to 0 for inference)
