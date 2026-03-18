@@ -347,8 +347,8 @@ Structure:
       "side": "long | short",
       "action": "hold | adjust_sl_tp | reduce_25 | reduce_50 | reduce_75 | close_position",
       "action_logic": {
-        "zh": "针对该具体持仓的独立维护理由（必须基于该特定仓位的盈亏、当前鲸鱼动向与风险对冲需求）。",
-        "en": "Asset-specific maintenance logic (must reference this specific position's PnL, current whale flow, and hedging needs)."
+        "zh": "【强制】必须首先宣读该仓位的 original_invalidation_rule（如果存在），判断当前最新数据是否已触发该离场红线。如果触发，必须全仓平仓。然后再补充其他技术面/盈亏理由。",
+        "en": "【MANDATORY】First, read the 'original_invalidation_rule' from the portfolio state. Check if current data triggers this red line. If YES, you MUST close_position. Then add other technical/PnL reasoning."
       },
       "exit_plan": { "take_profit": 123.45, "stop_loss": 100.00 } /* Mandatory for adjust_sl_tp */
     }
@@ -403,10 +403,34 @@ def get_portfolio_state(executor=None):
                 "positions": []
             }
             
+            # Fetch historical DB to map original invalidation rules
+            try:
+                from db_client import db
+                history_db = db.get_data("agent_decisions", [])
+            except Exception:
+                history_db = []
+                
             for p in positions:
-                # amount from OKX is contracts usually, calculate value roughly
-                # amount * ctVal * price? 
-                # OKXExecutor returns 'amount' as pos size.
+                sym = p["symbol"]
+                
+                # Search backwards for the most recent open rule for this symbol
+                invalidation_txt = "Not explicitly recorded"
+                if isinstance(history_db, list):
+                    for dec in history_db:
+                        found = False
+                        actions = dec.get("new_opportunities", []) + dec.get("actions", [])
+                        for act in actions:
+                            if act.get("symbol") == sym and "open_" in act.get("action", ""):
+                                inv = act.get("exit_plan", {}).get("invalidation", {})
+                                if isinstance(inv, dict):
+                                    invalidation_txt = inv.get("en", str(inv))
+                                else:
+                                    invalidation_txt = str(inv)
+                                found = True
+                                break
+                        if found:
+                            break
+                            
                 try:
                     size = float(p.get("amount", 0))
                     val = size * p.get("currentPrice", 0) # Approx value
@@ -415,14 +439,15 @@ def get_portfolio_state(executor=None):
                     val = 0
                     
                 state["positions"].append({
-                    "symbol": p["symbol"],
+                    "symbol": sym,
                     "side": p["type"],
                     "entry_price": p.get("entryPrice", 0),
                     "size": size,
                     "value_usd": val,
                     "pnl": p.get("pnl", 0),
                     "leverage": p.get("leverage", 1),
-                    "pnlPercent": p.get("pnlPercent", 0) # Use value from executor
+                    "pnlPercent": p.get("pnlPercent", 0),
+                    "original_invalidation_rule": invalidation_txt
                 })
             
             # Save this real-time state to file so daily_report.py and frontend can see it
@@ -1228,7 +1253,7 @@ def run_agent():
                     # Add reason string for text logs
                     reason_txt = entry_reason.get('en', 'Driven by whale accumulation.')
                     
-                    # memory.log_trade(symbol, action_type, amount, entry_reason, market_snapshot)
+                    memory.log_trade(symbol, action_type, amount, entry_reason, market_snapshot)
                     
                     # 🔔 SEND NOTIFICATION (Telegram/Discord)
                     # For reduce actions, position_size_usd is 0 (executor fetches real size dynamically)
