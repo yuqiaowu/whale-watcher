@@ -409,41 +409,81 @@ def fetch_live_context_and_predict():
 
     live_df = pd.DataFrame(live_data)
     
-    # 2. Mock or Run Model (If model is available, we try to use it)
-    model = load_model()
-    
+    # 2. Advanced Composite Scoring (Scientific Fallback)
+    # Weights: Trend(40%), Explosion(30%), Contra-Sentiment(30%)
     payload = {
         "as_of": current_time,
-        "strategy": "Live Proxy Ranking (Formula-Based)",
+        "strategy": "Live Proxy Ranking (Compound Formula)",
         "model_meta": {
-            "type": "Heuristic Proxy (Hardcoded Formula)",
-            "source": "Live Market Data Snapshot"
+            "type": "Heuristic Composite (Trend+Explosion+Sentiment)",
+            "source": f"Live Market Data Snapshot @ {current_time}"
         },
         "market_summary": {
-           "trend": "mixed",
+           "trend": "evaluating",
            "volatility": "evaluating"
         },
         "coins": []
     }
     
-    # For now, we use a scoring proxy based on the live metrics if model fails or for speed
-    # But let's try to get a rough rank
-    live_df['score'] = live_df['ret'] * 0.5 + (live_df['rsi_14'] - 50) * 0.01 + live_df['rel_volume_20'] * 0.1
-    live_df = live_df.sort_values("score", ascending=False)
-    
-    for idx, row in live_df.iterrows():\
-        payload["coins"].append({
-            "symbol": row['instrument'],
-            "qlib_score": round(row['score'], 4),
-            "rank": len(payload["coins"]) + 1,
+    scored_coins = []
+    for idx, row in live_df.iterrows():
+        symbol = row['instrument']
+        
+        # --- A. Trend Component (40%) ---
+        # Normalize: ret (usually -0.05 to 0.05) and RSI (30-70)
+        ret_score = np.clip(row['ret'] * 10, -1, 1) # 10% move = 1.0
+        rsi_normalized = (row['rsi_14'] - 50) / 20.0 # 70 RSI = 1.0, 30 RSI = -1.0
+        trend_score = (ret_score * 0.7 + rsi_normalized * 0.3)
+        
+        # --- B. Explosion Component (30%) ---
+        # Volume Ratio (rel_volume_20): 1.0 is normal, 2.0+ is explosion
+        vol_score = np.clip((row['rel_volume_20'] - 1.0) / 2.0, -1, 1)
+        # OI Change (oi_change): Usually -0.02 to 0.02
+        oi_score = np.clip(row['oi_change'] * 20, -1, 1) # 5% OI increase = 1.0
+        explosion_score = (vol_score * 0.6 + oi_score * 0.4)
+        
+        # --- C. Contra-Sentiment / Squeeze Component (30%) ---
+        # Funding Z-Score: > 2.0 is overbought crowd, < -2.0 is oversold crowd
+        fz = row.get('funding_rate_zscore', 0)
+        # Squeeze Logic: 
+        # If price is down and funding is extremely negative -> Short Squeeze Potential (Bullish)
+        # If price is up and funding is extremely positive -> Long liquidation risk (Bearish)
+        sentiment_score = 0
+        if row['ret'] < -0.01 and fz < -1.5:
+            # Panic selling + short crowd = High score (reversal)
+            sentiment_score = abs(fz) / 3.0 
+        elif row['ret'] > 0.01 and fz > 1.5:
+            # Over-leveraged longs + price peak = Penalty (safety)
+            sentiment_score = -abs(fz) / 3.0
+            
+        # Composite Final Score
+        final_score = (trend_score * 0.4) + (explosion_score * 0.3) + (sentiment_score * 0.3)
+        
+        # Append meta info for transparency
+        scored_coins.append({
+            "symbol": symbol,
+            "qlib_score": round(final_score, 4),
+            "trend_s": round(trend_score, 2),
+            "explosion_s": round(explosion_score, 2),
+            "sentiment_s": round(sentiment_score, 2),
             "market_data": {
                 "price": row['close'],
                 "rsi": round(row['rsi_14'], 2),
-                "vol_z": round(row.get('vol_zscore_20', 0), 2),
-                "funding_z": round(row.get('funding_rate_zscore', 0), 2),
+                "vol_ratio": round(row['rel_volume_20'], 2),
+                "oi_change": f"{row['oi_change']:.2%}",
+                "funding_z": round(fz, 2),
                 "funding": f"{row['funding_rate']:.4%}"
             }
         })
+
+    # Sort
+    scored_coins = sorted(scored_coins, key=lambda x: x["qlib_score"], reverse=True)
+    
+    # Update Payload
+    payload["coins"] = []
+    for i, coin in enumerate(scored_coins):
+        coin["rank"] = i + 1
+        payload["coins"].append(coin)
     
     # Save
     with open(PAYLOAD_PATH, "w") as f:

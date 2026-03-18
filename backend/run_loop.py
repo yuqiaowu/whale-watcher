@@ -435,6 +435,12 @@ def main():
         print(">> Step 1: Updating Market Reality (crypto_brain)...")
         success_data = run_script("crypto_brain.py")
         
+        # 1.25 Run Qlib Database Update (Automated 4H Data Ingestion)
+        if success_data:
+            print(">> Step 1.25: Updating Qlib Database...")
+            # We don't fail the loop if this fails, we just try our best to keep data fresh
+            run_script("update_qlib_data.py")
+        
         # 1.5 Run Qlib Strategy Ranking
         if success_data:
             print(">> Step 1.5: Running Qlib Strategy Ranking...")
