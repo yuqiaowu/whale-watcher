@@ -361,13 +361,25 @@ export function AICopyTrading() {
                                   {decision.context_analysis.portfolio_status?.[language as 'zh' | 'en'] || decision.context_analysis.portfolio_status?.['en'] || "N/A"}
                                 </div>
                               </div>
-                              <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
+                              <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-2">
                                 <div className="text-[10px] text-[#FCD34D] font-bold uppercase tracking-wider flex items-center gap-1">
                                   <div className="w-1 h-3 bg-[#FCD34D] rounded-full"></div>
-                                  Reflection
+                                  Invalidation Conditions (认错退场机制)
                                 </div>
-                                <div className="text-xs text-[#d1d5db] leading-relaxed italic">
-                                  "{decision.context_analysis.reflection?.[language as 'zh' | 'en'] || decision.context_analysis.reflection?.['en'] || "No reflection"}"
+                                <div className="text-xs text-[#d1d5db] leading-relaxed">
+                                  {(() => {
+                                    const invalCards = decision.actions?.filter((a: any) =>
+                                      (a.exit_plan?.invalidation && a.exit_plan.invalidation.zh !== "N/A") ||
+                                      (a.original_invalidation_rule && a.original_invalidation_rule !== "Not explicitly recorded")
+                                    );
+                                    if (!invalCards || invalCards.length === 0) return <span className="italic">"No invalidation recorded"</span>;
+                                    return invalCards.map((a: any, i: number) => (
+                                      <div key={i} className="mb-2 last:mb-0">
+                                        <span className="font-bold text-[#E9B124]">{a.symbol}: </span>
+                                        {a.exit_plan?.invalidation?.[language as 'zh' | 'en'] || a.exit_plan?.invalidation?.['en'] || a.original_invalidation_rule || "N/A"}
+                                      </div>
+                                    ));
+                                  })()}
                                 </div>
                               </div>
                             </div>
