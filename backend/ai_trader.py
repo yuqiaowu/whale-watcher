@@ -1211,6 +1211,19 @@ def run_agent():
         
         # Validate & Enforce
         decision = validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_index, executor)
+        
+        # --- UI ENRICHMENT: Ensure original rules are attached to actions for UI display ---
+        if decision and "actions" in decision:
+            for act in decision["actions"]:
+                sym = act.get("symbol", "").upper()
+                side = act.get("side", "").lower()
+                # Check current portfolio to see if we have a rule for this
+                for pos in p_state_obj.get("positions", []):
+                    pos_sym = pos.get("symbol", "").upper()
+                    pos_side = pos.get("side", "").lower()
+                    if pos_sym == sym and (pos_side == side or side == ""):
+                        if pos.get("original_invalidation_rule"):
+                            act["original_invalidation_rule"] = pos["original_invalidation_rule"]
             
         print("\n💡 Dolores' Decision:")
         print(json.dumps(decision, indent=2, ensure_ascii=False))
