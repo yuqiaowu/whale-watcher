@@ -305,10 +305,11 @@ def predict_and_export():
         
         # --- Suggestion A: Model Meta ---
         "model_meta": {
-            "trained_until": "2025-11-21", # Approximate based on split
+            "last_trained": datetime.fromtimestamp(MODEL_PATH.stat().st_mtime).strftime('%Y-%m-%d %H:%M'),
             "target": "next_24h_relative_return",
             "feature_count": len(feature_cols),
-            "model_type": "LightGBM Ranker"
+            "model_type": "LightGBM Ranker",
+            "status": "up-to-date"
         },
         
         "market_summary": market_summary,
