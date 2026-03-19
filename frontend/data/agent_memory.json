@@ -324,5 +324,26 @@
       "bb_trend": "UP"
     },
     "outcome": null
+  },
+  {
+    "id": "SOL_1773879094",
+    "timestamp": "2026-03-19T08:11:34.244912",
+    "symbol": "SOL",
+    "action": "adjust_sl_tp",
+    "entry_price": 89.97,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$90.02 > 85.0\uff0c\u8d44\u91d1\u8d39\u7387-0.0117%\u672a\u8f6c\u6b63\uff0cRSI 43.82 > 30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aSOL\u76c8\u52294.39%\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51653.1M SOL\u770b\u8dcc\u3001\u7206\u4ed3\u591a\u7a7a\u6bd433.88\u6781\u9ad8\uff0c\u8c03\u6574\u6b62\u635f\u6b62\u76c8\u4ee5\u9501\u5b9a\u5229\u6da6\u3002",
+      "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current data: price $90.02 > 85.0, funding rate -0.0117% not positive, RSI 43.82 > 30, red line not triggered. Additional: SOL profit 4.39%, but whale token inflow 3.1M SOL bearish, liquidation ratio 33.88 very high, adjust SL/TP to lock profits."
+    },
+    "context": {
+      "rsi": 43.63922535791528,
+      "adx": 32.93193306849544,
+      "whale_flow": "?",
+      "funding_rate": -0.0001173967839917,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
   }
 ]
