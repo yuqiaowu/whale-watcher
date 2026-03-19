@@ -1,6 +1,228 @@
 [
   {
     "analysis_summary": {
+      "zh": "1. [\u53d9\u4e8b\u6821\u9a8c]\uff1a\u5f53\u524d\u5e02\u573a\u9a71\u52a8\u529b\u4e3a\u5df2\u5b9a\u4ef7\u7684\u718a\u5e02\u8c03\u6574\uff0c\u65e0\u660e\u663e\u65b0\u53d9\u4e8b\u51b2\u51fb\u3002QLib\u9884\u6d4b\u7684ETH/DOGE/SOL\u76f8\u5bf9\u5f3a\u52bf\u4e0e\u6574\u4f53\u5e02\u573aBEAR REGIME\u5f62\u6210\u77db\u76fe\uff0c\u8868\u660e\u8fd9\u662f\u7ed3\u6784\u6027\u5206\u5316\u800c\u975e\u8d8b\u52bf\u53cd\u8f6c\u3002\n2. [\u51b3\u7b56\u4f9d\u636e\u8be6\u60c5]\uff1aTechnical Signal\u663e\u793a\u591a\u6570\u8d44\u4ea7RSI<45\u3001MACD\u8d1f\u503c\uff0c\u5904\u4e8e\u5f31\u52bf\uff1bMacro & On-Chain\u663e\u793aETH/SOL\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u5206\u5316\uff08ETH\u6d41\u51fa\u770b\u6da8\u3001SOL\u6d41\u5165\u770b\u8dcc\uff09\uff0c\u4f46\u7a33\u5b9a\u5e01\u5747\u6d41\u51fa\u6697\u793a\u8d44\u91d1\u64a4\u79bb\uff1bQuantitative (Qlib)\u786e\u8ba4ETH/DOGE/SOL\u4e3a\u524d\u4e09\u5f3a\uff0c\u4f46\u5f97\u5206\u7edd\u5bf9\u503c\u4f4e\uff080.38\u4ee5\u4e0b\uff09\uff0c\u4fe1\u53f7\u5f3a\u5ea6\u6709\u9650\u3002\n3. [\u75db\u82e6\u4ea4\u6613]\uff1a\u7206\u4ed3\u71c3\u6599\u6781\u9ad8\uff0c\u591a\u7a7a\u7206\u4ed3\u6bd4\u666e\u904d>2\uff08ETH=2.40, SOL=33.88, BTC=4.77, BNB=60.03, DOGE=20.03\uff09\uff0c\u663e\u793a\u591a\u5934\u6b63\u906d\u53d7\u5f3a\u5e73\u75db\u82e6\uff0c\u7a7a\u5934\u6324\u538b\u98ce\u9669\u4f4e\uff1b\u6301\u4ed3L/S\u6bd4\u4e2dETH/BTC/BNB\u5927\u6237\u504f\u7a7a\uff08\u6301\u4ed3\u91cf\u6bd4<1\uff09\uff0cDOGE\u5927\u6237\u504f\u591a\uff081.45\uff09\uff0c\u4f46\u6574\u4f53\u62e5\u6324\u5ea6\u4e0d\u9ad8\u3002\n4. [\u5267\u672c\u9009\u62e9]\uff1a\u9009\u62e9NARRATIVE_DIVERGENCE\uff0c\u56e0\u5e02\u573a\u5448\u73b0\u7ed3\u6784\u6027\u77db\u76fe\uff1aQLib\u76f8\u5bf9\u5f3a\u52bf\u5e01\uff08ETH/DOGE/SOL\uff09\u4e0e\u9cb8\u9c7c\u6d41\u5411\uff08ETH\u770b\u6da8\u3001SOL\u770b\u8dcc\uff09\u53ca\u7206\u4ed3\u75db\u82e6\uff08\u591a\u5934\u53d7\u538b\uff09\u4e0d\u4e00\u81f4\uff0c\u6697\u793a\u6f5c\u5728\u9690\u85cf\u79ef\u7d2f\u6216\u5206\u5316\u673a\u4f1a\uff0c\u800c\u975e\u8d8b\u52bf\u8ddf\u968f\u6216\u5747\u503c\u56de\u5f52\u3002",
+      "en": "1. [Narrative Validation]: The current market driver is a priced-in bearish adjustment with no new narrative shocks. The QLib-predicted relative strength of ETH/DOGE/SOL contradicts the overall BEAR REGIME, indicating structural divergence rather than trend reversal.\n2. [Decision Details]: Technical signals show most assets with RSI<45 and negative MACD, indicating weakness. Macro & On-Chain reveal divergent whale token flows (ETH outflow bullish, SOL inflow bearish), but stablecoin outflows suggest capital withdrawal. Quantitative (Qlib) confirms ETH/DOGE/SOL as top three, but low absolute scores (<0.38) limit signal strength.\n3. [Pain Trade]: Liquidation fuel is extremely high, with long/short liquidation ratios >2 across assets (ETH=2.40, SOL=33.88, BTC=4.77, BNB=60.03, DOGE=20.03), showing longs are under liquidation pain and short squeeze risk is low. L/S ratios show ETH/BTC/BNB whales leaning short (volume ratio<1) and DOGE whales leaning long (1.45), but overall crowding is moderate.\n4. [Scenario Selection]: Chose NARRATIVE_DIVERGENCE due to structural contradictions: QLib strong coins (ETH/DOGE/SOL) vs. whale flows (ETH bullish, SOL bearish) and liquidation pain (longs pressured) suggest hidden accumulation or divergence opportunities, not trend-following or mean reversion."
+    },
+    "hypothesis_scenario": "NARRATIVE_DIVERGENCE",
+    "contrary_signal_check": {
+      "zh": "\u6700\u4e25\u91cd\u7684\u51b2\u7a81\u6570\u636e\u662f\uff1a\u6574\u4f53\u5e02\u573a\u5904\u4e8eBEAR REGIME\uff08\u65e5\u7ebfRSI<55\u4e14\u8d8b\u52bf\u504f\u718a\uff09\uff0c\u4f46QLib\u63a8\u8350\u505a\u591aETH/DOGE/SOL\u3002\u5ffd\u7565\u6b64\u51b2\u7a81\u7684\u7406\u7531\u662f\uff1aQLib\u57fa\u4e8e\u76f8\u5bf9\u5f3a\u5ea6\u6392\u540d\uff0c\u5728\u718a\u5e02\u4e2d\u4ecd\u53ef\u8bc6\u522b\u6297\u8dcc\u5e01\u79cd\uff1b\u4e14\u9cb8\u9c7c\u6570\u636e\uff08\u5982ETH\u4ee3\u5e01\u6d41\u51fa\uff09\u652f\u6301\u7ed3\u6784\u6027\u5206\u5316\uff0c\u800c\u975e\u5168\u9762\u770b\u8dcc\u3002",
+      "en": "The most significant contrary signal is: overall market in BEAR REGIME (daily RSI<55 and bearish trend), but QLib recommends longs on ETH/DOGE/SOL. This is ignored because QLib ranks relative strength, which can identify resilient coins even in bear markets, and whale data (e.g., ETH token outflow) supports structural divergence over broad bearishness."
+    },
+    "context_analysis": {
+      "technical_signal": {
+        "zh": "\u3010\u91cd\u8981\u3011\u4e0a\u5f71\u7ebf/\u4e0b\u5f71\u7ebf\u6bd4\u7387\uff1aETH\u4e0a\u5f71\u7ebf74%\u9ad8\u629b\u538b\u3001\u4e0b\u5f71\u7ebf13%\u5f31\u652f\u6491\uff1bSOL\u4e0a\u5f71\u7ebf41%\u3001\u4e0b\u5f71\u7ebf32%\u76f8\u5bf9\u5747\u8861\uff1bBTC\u4e0a\u5f71\u7ebf45%\u3001\u4e0b\u5f71\u7ebf39%\u5747\u8861\uff1bBNB\u4e0a\u5f71\u7ebf31%\u3001\u4e0b\u5f71\u7ebf54%\u652f\u6491\u5f3a\uff1bDOGE\u4e0a\u5f71\u7ebf33%\u3001\u4e0b\u5f71\u7ebf63%\u652f\u6491\u5f3a\u3002RSI\u4e0eADX\u72b6\u6001\uff1a\u591a\u6570RSI<45\uff08\u5f31\u52bf\uff09\uff0cADX 30-40\uff08\u8d8b\u52bf\u4e2d\u7b49\uff09\u3002\u5747\u7ebf\u4e56\u79bb\u7387\uff1aETH\u504f\u79bb+2.15%\uff08\u8d85\u4e70\u98ce\u9669\uff09\uff0cBTC\u504f\u79bb-0.74%\u3001BNB\u504f\u79bb-1.12%\u3001DOGE\u504f\u79bb-1.41%\uff08\u8d85\u5356\u673a\u4f1a\uff09\u3002",
+        "en": "\u3010IMPORTANT\u3011Upper/Lower Wick Ratio: ETH has 74% upper wick (high selling pressure) and 13% lower wick (weak support); SOL 41%/32% balanced; BTC 45%/39% balanced; BNB 31%/54% strong support; DOGE 33%/63% strong support. RSI & ADX status: Most RSI<45 (weak), ADX 30-40 (moderate trend). SMA deviation: ETH +2.15% (overbought risk), BTC -0.74%, BNB -1.12%, DOGE -1.41% (oversold opportunities)."
+      },
+      "macro_onchain": {
+        "zh": "\u3010\u91cd\u8981\u301124h\u7206\u4ed3\u6570\u636e\uff1a\u591a\u5355\u7206\u4ed3\u8fdc\u9ad8\u4e8e\u7a7a\u5355\uff08ETH\u591a\u7a7a\u6bd42.40, SOL 33.88, BTC 4.77, BNB 60.03, DOGE 20.03\uff09\uff0c\u663e\u793a\u591a\u5934\u75db\u82e6\u3002\u9cb8\u9c7c\u51c0\u6d41\u5165/\u6d41\u51fa\uff1aETH\u4ee3\u5e01\u6d41\u51fa-4.3M ETH\uff08\u770b\u6da8\uff09\u3001\u7a33\u5b9a\u5e01\u6d41\u51fa-$74M\uff08\u770b\u8dcc\uff09\uff1bSOL\u4ee3\u5e01\u6d41\u51653.1M SOL\uff08\u770b\u8dcc\uff09\u3001\u7a33\u5b9a\u5e01\u6d41\u51fa-$111K\uff08\u8f7b\u5fae\u770b\u8dcc\uff09\u3002\u8d44\u91d1\u8d39\u7387\uff1a\u5168\u4e3a\u8d1f\u503c\uff08ETH -0.0003%, SOL -0.0117%, BTC -0.0027%, BNB -0.0107%, DOGE -0.0099%\uff09\uff0c\u5229\u4e8e\u591a\u5934\u3002",
+        "en": "\u3010IMPORTANT\u301124h Liquidation Data: Long liquidations far exceed short (ETH ratio 2.40, SOL 33.88, BTC 4.77, BNB 60.03, DOGE 20.03), indicating long pain. Whale Net Inflow/Outflow: ETH token outflow -4.3M ETH (bullish), stablecoin outflow -$74M (bearish); SOL token inflow 3.1M SOL (bearish), stablecoin outflow -$111K (slightly bearish). Funding Rate: All negative (ETH -0.0003%, SOL -0.0117%, BTC -0.0027%, BNB -0.0107%, DOGE -0.0099%), favorable for longs."
+      },
+      "quantitative_analysis": {
+        "zh": "QLib\u6392\u540d\u9760\u524d\u5e01\u79cd\uff1aETH\uff08\u5f97\u52060.38, \u6392\u540d1\uff09\u3001DOGE\uff080.30, \u6392\u540d2\uff09\u3001SOL\uff080.28, \u6392\u540d3\uff09\uff0c\u663e\u793a\u76f8\u5bf9\u5f3a\u52bf\u3002Z-Score\u5f02\u5e38\uff1a\u8d44\u91d1\u8d39\u7387Z-Score\u5168\u4e3a\u8d1f\uff08ETH -75.7%, SOL -152.2%, BTC -87.5%, BNB -111.1%, DOGE -226.7%\uff09\uff0c\u7edf\u8ba1\u4e0a\u6781\u5ea6\u8d1f\u503c\uff0c\u6697\u793a\u60c5\u7eea\u8d85\u5356\u3002",
+        "en": "Qlib top-ranked coins: ETH (score 0.38, rank 1), DOGE (0.30, rank 2), SOL (0.28, rank 3), indicating relative strength. Z-Score significance: Funding rate Z-Scores all negative (ETH -75.7%, SOL -152.2%, BTC -87.5%, BNB -111.1%, DOGE -226.7%), statistically extreme negatives, suggesting oversold sentiment."
+      },
+      "regime_safety": {
+        "zh": "\u3010\u5fc5\u586b\u3011\u57fa\u4e8e\u75db\u82e6\u4ea4\u6613\u8bc4\u4f30\uff1a1) RSI<45\u3001ADX 30-40\u3001NATR 1.4-2.4%\u663e\u793a\u5f31\u52bf\u9707\u8361\uff1b2) \u4e0a\u5f71\u7ebf\u6bd4\u7387ETH\u9ad8\u629b\u538b\uff0c\u5176\u4ed6\u5747\u8861\u6216\u652f\u6491\u5f3a\uff1b3) \u591a\u7a7a\u7206\u4ed3\u6bd4\u6781\u9ad8\uff08>2\uff09\uff0c\u591a\u5934\u6b63\u88ab\u5f3a\u5e73\uff1b4) \u9cb8\u9c7c\u51c0\u6d41\u5411ETH\u770b\u6da8\u3001SOL\u770b\u8dcc\u3002\u6700\u7ec8\u5224\u65ad\uff1aWHALE_ACCUMULATION\uff08\u9cb8\u9c7c\u6258\u5e95\uff09\uff0c\u56e0ETH\u4ee3\u5e01\u6d41\u51fa+\u8d1f\u8d44\u91d1\u8d39\u7387+\u9ad8\u7206\u4ed3\u6bd4\u6697\u793a\u9cb8\u9c7c\u53ef\u80fd\u5728\u79ef\u7d2f\uff0c\u4f46\u9700\u8b66\u60d5\u7a33\u5b9a\u5e01\u6d41\u51fa\u98ce\u9669\u3002",
+        "en": "\u3010Required\u3011Based on Pain Trade: 1) RSI<45, ADX 30-40, NATR 1.4-2.4% indicate weak consolidation; 2) Wick ratios show ETH high selling pressure, others balanced or strong support; 3) Liquidation long/short ratios very high (>2), longs being liquidated; 4) Whale net flow: ETH bullish, SOL bearish. Verdict: WHALE_ACCUMULATION, as ETH token outflow + negative funding + high liquidation ratio suggest whale accumulation, but stablecoin outflow risk warrants caution."
+      },
+      "portfolio_status": {
+        "zh": "\u5f53\u524d\u6301\u4ed3\u98ce\u9669\u8bc4\u4f30\uff1a\u6301\u6709BTC\u3001SOL\u3001ETH\u591a\u5934\uff0c\u603b\u98ce\u9669$1310\uff0834%\u6743\u76ca\uff09\uff0c\u5728\u52a8\u6001\u9650\u989d\u5185\uff08\u53ef\u7528\u591a\u5934\u7a7a\u95f4$538\uff09\u3002BTC\u4e8f\u635f-1.16%\u3001SOL\u76c8\u52294.39%\u3001ETH\u76c8\u52294.01%\uff0c\u6574\u4f53\u5fae\u76c8\u3002\u9700\u76d1\u63a7BTC\u8d85\u5356\u548cSOL\u9cb8\u9c7c\u6d41\u5165\u98ce\u9669\u3002",
+        "en": "Portfolio risk check: Holding BTC, SOL, ETH longs, total risk $1310 (34% equity), within dynamic limits (available long room $538). BTC loss -1.16%, SOL profit 4.39%, ETH profit 4.01%, overall slightly profitable. Monitor BTC oversold and SOL whale inflow risks."
+      }
+    },
+    "portfolio_management": [
+      {
+        "symbol": "BTC",
+        "side": "long",
+        "action": "hold",
+        "action_logic": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$71212 > 70000\uff0c\u8d44\u91d1\u8d39\u7387-0.0027%\u672a\u8f6c\u6b63\uff0cRSI 39.59 > 30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aBTC\u8d85\u5356\uff08RSI<40\u3001\u4e56\u79bb\u7387-0.74%\uff09\u3001\u7206\u4ed3\u591a\u7a7a\u6bd44.77\u9ad8\uff0c\u4f46QLib\u6392\u540d\u4f4e\uff084\uff09\uff0c\u6301\u4ed3\u5fae\u4e8f\uff0c\u6682\u6301\u6709\u7b49\u5f85\u53cd\u5f39\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current data: price $71212 > 70000, funding rate -0.0027% not positive, RSI 39.59 > 30, red line not triggered. Additional: BTC oversold (RSI<40, deviation -0.74%), liquidation ratio 4.77 high, but QLib rank low (4), position slightly loss, hold for rebound."
+        },
+        "exit_plan": {
+          "take_profit": 73000,
+          "stop_loss": 70000
+        },
+        "entry_reason": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$71212 > 70000\uff0c\u8d44\u91d1\u8d39\u7387-0.0027%\u672a\u8f6c\u6b63\uff0cRSI 39.59 > 30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aBTC\u8d85\u5356\uff08RSI<40\u3001\u4e56\u79bb\u7387-0.74%\uff09\u3001\u7206\u4ed3\u591a\u7a7a\u6bd44.77\u9ad8\uff0c\u4f46QLib\u6392\u540d\u4f4e\uff084\uff09\uff0c\u6301\u4ed3\u5fae\u4e8f\uff0c\u6682\u6301\u6709\u7b49\u5f85\u53cd\u5f39\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current data: price $71212 > 70000, funding rate -0.0027% not positive, RSI 39.59 > 30, red line not triggered. Additional: BTC oversold (RSI<40, deviation -0.74%), liquidation ratio 4.77 high, but QLib rank low (4), position slightly loss, hold for rebound."
+        },
+        "original_invalidation_rule": "If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately."
+      },
+      {
+        "symbol": "SOL",
+        "side": "long",
+        "action": "adjust_sl_tp",
+        "action_logic": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$90.02 > 85.0\uff0c\u8d44\u91d1\u8d39\u7387-0.0117%\u672a\u8f6c\u6b63\uff0cRSI 43.82 > 30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aSOL\u76c8\u52294.39%\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51653.1M SOL\u770b\u8dcc\u3001\u7206\u4ed3\u591a\u7a7a\u6bd433.88\u6781\u9ad8\uff0c\u8c03\u6574\u6b62\u635f\u6b62\u76c8\u4ee5\u9501\u5b9a\u5229\u6da6\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current data: price $90.02 > 85.0, funding rate -0.0117% not positive, RSI 43.82 > 30, red line not triggered. Additional: SOL profit 4.39%, but whale token inflow 3.1M SOL bearish, liquidation ratio 33.88 very high, adjust SL/TP to lock profits."
+        },
+        "exit_plan": {
+          "take_profit": 92.0,
+          "stop_loss": 88.0
+        },
+        "entry_reason": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$90.02 > 85.0\uff0c\u8d44\u91d1\u8d39\u7387-0.0117%\u672a\u8f6c\u6b63\uff0cRSI 43.82 > 30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aSOL\u76c8\u52294.39%\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51653.1M SOL\u770b\u8dcc\u3001\u7206\u4ed3\u591a\u7a7a\u6bd433.88\u6781\u9ad8\uff0c\u8c03\u6574\u6b62\u635f\u6b62\u76c8\u4ee5\u9501\u5b9a\u5229\u6da6\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current data: price $90.02 > 85.0, funding rate -0.0117% not positive, RSI 43.82 > 30, red line not triggered. Additional: SOL profit 4.39%, but whale token inflow 3.1M SOL bearish, liquidation ratio 33.88 very high, adjust SL/TP to lock profits."
+        },
+        "original_invalidation_rule": "If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately."
+      },
+      {
+        "symbol": "ETH",
+        "side": "long",
+        "action": "hold",
+        "action_logic": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$2201.93 > 2100\uff0c\u8d44\u91d1\u8d39\u7387-0.0003%\u672a\u6781\u8d1f\uff0cRSI 45.85 > 30\u4e14\u53cd\u5f39\u4e2d\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aETH\u76c8\u52294.01%\uff0cQLib\u6392\u540d1\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51fa\u770b\u6da8\uff0c\u4f46\u4e0a\u5f71\u7ebf74%\u9ad8\u629b\u538b\uff0c\u6301\u6709\u4f46\u8c28\u614e\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' Current data: price $2201.93 > 2100, funding rate -0.0003% not extremely negative, RSI 45.85 > 30 and rebounding, red line not triggered. Additional: ETH profit 4.01%, QLib rank 1, whale token outflow bullish, but 74% upper wick high selling pressure, hold with caution."
+        },
+        "exit_plan": {
+          "take_profit": 2250,
+          "stop_loss": 2150
+        },
+        "entry_reason": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$2201.93 > 2100\uff0c\u8d44\u91d1\u8d39\u7387-0.0003%\u672a\u6781\u8d1f\uff0cRSI 45.85 > 30\u4e14\u53cd\u5f39\u4e2d\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aETH\u76c8\u52294.01%\uff0cQLib\u6392\u540d1\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51fa\u770b\u6da8\uff0c\u4f46\u4e0a\u5f71\u7ebf74%\u9ad8\u629b\u538b\uff0c\u6301\u6709\u4f46\u8c28\u614e\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' Current data: price $2201.93 > 2100, funding rate -0.0003% not extremely negative, RSI 45.85 > 30 and rebounding, red line not triggered. Additional: ETH profit 4.01%, QLib rank 1, whale token outflow bullish, but 74% upper wick high selling pressure, hold with caution."
+        },
+        "original_invalidation_rule": "If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately."
+      }
+    ],
+    "new_opportunities": [
+      {
+        "symbol": "DOGE",
+        "action": "REJECTED",
+        "leverage": 3,
+        "position_size_usd": 300,
+        "entry_reason": {
+          "zh": "DOGE QLib\u6392\u540d2\uff08\u5f97\u52060.30\uff09\uff0c\u76f8\u5bf9\u5f3a\u52bf\uff1b\u6280\u672f\u9762\u8d85\u5356\uff08\u4e56\u79bb\u7387-1.41%\u3001RSI 41.39\uff09\u3001\u4e0b\u5f71\u7ebf63%\u652f\u6491\u5f3a\uff1b\u8d44\u91d1\u8d39\u7387\u8d1f\uff08-0.0099%\uff09\u5229\u4e8e\u591a\u5934\uff1b\u7206\u4ed3\u591a\u7a7a\u6bd420.03\u9ad8\uff0c\u4f46\u5927\u6237\u504f\u591a\uff08\u8d26\u6237\u6570\u6bd41.45\uff09\uff0c\u7b26\u5408NARRATIVE_DIVERGENCE\u5267\u672c\u3002",
+          "en": "DOGE QLib rank 2 (score 0.30), relatively strong; technically oversold (deviation -1.41%, RSI 41.39), 63% lower wick strong support; funding rate negative (-0.0099%) favorable for longs; liquidation ratio 20.03 high, but whales lean long (account ratio 1.45), aligns with NARRATIVE_DIVERGENCE scenario."
+        },
+        "exit_plan": {
+          "take_profit": 0.098,
+          "stop_loss": 0.0918,
+          "invalidation": {
+            "zh": "\u82e5\u4ef7\u683c\u8dcc\u78340.092\u4e14\u8d44\u91d1\u8d39\u7387\u8f6c\u6b63\uff08>0.005%\uff09\uff0c\u6216RSI\u8dcc\u783435\u672a\u80fd\u53cd\u5f39\uff0c\u5219\u591a\u5934\u8bba\u70b9\u5931\u6548\uff0c\u7acb\u5373\u79bb\u573a\u3002",
+            "en": "If price breaks below 0.092 with funding rate turning positive (>0.005%), or RSI falls below 35 and fails to rebound, the long thesis is invalidated, exit immediately."
+          }
+        },
+        "reason": "\ud83d\udee1\ufe0f Max positions (3) reached."
+      },
+      {
+        "symbol": "BNB",
+        "action": "monitor",
+        "leverage": 0,
+        "position_size_usd": 0,
+        "entry_reason": {
+          "zh": "BNB QLib\u6392\u540d5\uff08\u5f97\u5206-0.11\uff09\u6700\u5f31\uff0c\u6280\u672f\u9762\u8d85\u5356\uff08\u4e56\u79bb\u7387-1.12%\u3001RSI 40.03\uff09\u3001\u4e0b\u5f71\u7ebf54%\u652f\u6491\u5f3a\uff0c\u4f46\u7206\u4ed3\u591a\u7a7a\u6bd460.03\u6781\u9ad8\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u4e14\u65e0\u9cb8\u9c7c\u6570\u636e\uff0c\u6682\u89c2\u671b\u3002",
+          "en": "BNB QLib rank 5 (score -0.11) weakest, technically oversold (deviation -1.12%, RSI 40.03), 54% lower wick strong support, but liquidation ratio 60.03 extremely high indicating long pain, and no whale data, monitor for now."
+        },
+        "exit_plan": {
+          "take_profit": null,
+          "stop_loss": null,
+          "invalidation": {
+            "zh": "\u4e0d\u9002\u7528",
+            "en": "N/A"
+          }
+        }
+      }
+    ],
+    "actions": [
+      {
+        "symbol": "BTC",
+        "side": "long",
+        "action": "hold",
+        "action_logic": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$71212 > 70000\uff0c\u8d44\u91d1\u8d39\u7387-0.0027%\u672a\u8f6c\u6b63\uff0cRSI 39.59 > 30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aBTC\u8d85\u5356\uff08RSI<40\u3001\u4e56\u79bb\u7387-0.74%\uff09\u3001\u7206\u4ed3\u591a\u7a7a\u6bd44.77\u9ad8\uff0c\u4f46QLib\u6392\u540d\u4f4e\uff084\uff09\uff0c\u6301\u4ed3\u5fae\u4e8f\uff0c\u6682\u6301\u6709\u7b49\u5f85\u53cd\u5f39\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current data: price $71212 > 70000, funding rate -0.0027% not positive, RSI 39.59 > 30, red line not triggered. Additional: BTC oversold (RSI<40, deviation -0.74%), liquidation ratio 4.77 high, but QLib rank low (4), position slightly loss, hold for rebound."
+        },
+        "exit_plan": {
+          "take_profit": 73000,
+          "stop_loss": 70000
+        },
+        "entry_reason": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$71212 > 70000\uff0c\u8d44\u91d1\u8d39\u7387-0.0027%\u672a\u8f6c\u6b63\uff0cRSI 39.59 > 30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aBTC\u8d85\u5356\uff08RSI<40\u3001\u4e56\u79bb\u7387-0.74%\uff09\u3001\u7206\u4ed3\u591a\u7a7a\u6bd44.77\u9ad8\uff0c\u4f46QLib\u6392\u540d\u4f4e\uff084\uff09\uff0c\u6301\u4ed3\u5fae\u4e8f\uff0c\u6682\u6301\u6709\u7b49\u5f85\u53cd\u5f39\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current data: price $71212 > 70000, funding rate -0.0027% not positive, RSI 39.59 > 30, red line not triggered. Additional: BTC oversold (RSI<40, deviation -0.74%), liquidation ratio 4.77 high, but QLib rank low (4), position slightly loss, hold for rebound."
+        },
+        "original_invalidation_rule": "If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately."
+      },
+      {
+        "symbol": "SOL",
+        "side": "long",
+        "action": "adjust_sl_tp",
+        "action_logic": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$90.02 > 85.0\uff0c\u8d44\u91d1\u8d39\u7387-0.0117%\u672a\u8f6c\u6b63\uff0cRSI 43.82 > 30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aSOL\u76c8\u52294.39%\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51653.1M SOL\u770b\u8dcc\u3001\u7206\u4ed3\u591a\u7a7a\u6bd433.88\u6781\u9ad8\uff0c\u8c03\u6574\u6b62\u635f\u6b62\u76c8\u4ee5\u9501\u5b9a\u5229\u6da6\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current data: price $90.02 > 85.0, funding rate -0.0117% not positive, RSI 43.82 > 30, red line not triggered. Additional: SOL profit 4.39%, but whale token inflow 3.1M SOL bearish, liquidation ratio 33.88 very high, adjust SL/TP to lock profits."
+        },
+        "exit_plan": {
+          "take_profit": 92.0,
+          "stop_loss": 88.0
+        },
+        "entry_reason": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$90.02 > 85.0\uff0c\u8d44\u91d1\u8d39\u7387-0.0117%\u672a\u8f6c\u6b63\uff0cRSI 43.82 > 30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aSOL\u76c8\u52294.39%\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51653.1M SOL\u770b\u8dcc\u3001\u7206\u4ed3\u591a\u7a7a\u6bd433.88\u6781\u9ad8\uff0c\u8c03\u6574\u6b62\u635f\u6b62\u76c8\u4ee5\u9501\u5b9a\u5229\u6da6\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current data: price $90.02 > 85.0, funding rate -0.0117% not positive, RSI 43.82 > 30, red line not triggered. Additional: SOL profit 4.39%, but whale token inflow 3.1M SOL bearish, liquidation ratio 33.88 very high, adjust SL/TP to lock profits."
+        },
+        "original_invalidation_rule": "If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately."
+      },
+      {
+        "symbol": "ETH",
+        "side": "long",
+        "action": "hold",
+        "action_logic": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$2201.93 > 2100\uff0c\u8d44\u91d1\u8d39\u7387-0.0003%\u672a\u6781\u8d1f\uff0cRSI 45.85 > 30\u4e14\u53cd\u5f39\u4e2d\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aETH\u76c8\u52294.01%\uff0cQLib\u6392\u540d1\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51fa\u770b\u6da8\uff0c\u4f46\u4e0a\u5f71\u7ebf74%\u9ad8\u629b\u538b\uff0c\u6301\u6709\u4f46\u8c28\u614e\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' Current data: price $2201.93 > 2100, funding rate -0.0003% not extremely negative, RSI 45.85 > 30 and rebounding, red line not triggered. Additional: ETH profit 4.01%, QLib rank 1, whale token outflow bullish, but 74% upper wick high selling pressure, hold with caution."
+        },
+        "exit_plan": {
+          "take_profit": 2250,
+          "stop_loss": 2150
+        },
+        "entry_reason": {
+          "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$2201.93 > 2100\uff0c\u8d44\u91d1\u8d39\u7387-0.0003%\u672a\u6781\u8d1f\uff0cRSI 45.85 > 30\u4e14\u53cd\u5f39\u4e2d\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aETH\u76c8\u52294.01%\uff0cQLib\u6392\u540d1\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51fa\u770b\u6da8\uff0c\u4f46\u4e0a\u5f71\u7ebf74%\u9ad8\u629b\u538b\uff0c\u6301\u6709\u4f46\u8c28\u614e\u3002",
+          "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' Current data: price $2201.93 > 2100, funding rate -0.0003% not extremely negative, RSI 45.85 > 30 and rebounding, red line not triggered. Additional: ETH profit 4.01%, QLib rank 1, whale token outflow bullish, but 74% upper wick high selling pressure, hold with caution."
+        },
+        "original_invalidation_rule": "If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately."
+      },
+      {
+        "symbol": "DOGE",
+        "action": "REJECTED",
+        "leverage": 3,
+        "position_size_usd": 300,
+        "entry_reason": {
+          "zh": "DOGE QLib\u6392\u540d2\uff08\u5f97\u52060.30\uff09\uff0c\u76f8\u5bf9\u5f3a\u52bf\uff1b\u6280\u672f\u9762\u8d85\u5356\uff08\u4e56\u79bb\u7387-1.41%\u3001RSI 41.39\uff09\u3001\u4e0b\u5f71\u7ebf63%\u652f\u6491\u5f3a\uff1b\u8d44\u91d1\u8d39\u7387\u8d1f\uff08-0.0099%\uff09\u5229\u4e8e\u591a\u5934\uff1b\u7206\u4ed3\u591a\u7a7a\u6bd420.03\u9ad8\uff0c\u4f46\u5927\u6237\u504f\u591a\uff08\u8d26\u6237\u6570\u6bd41.45\uff09\uff0c\u7b26\u5408NARRATIVE_DIVERGENCE\u5267\u672c\u3002",
+          "en": "DOGE QLib rank 2 (score 0.30), relatively strong; technically oversold (deviation -1.41%, RSI 41.39), 63% lower wick strong support; funding rate negative (-0.0099%) favorable for longs; liquidation ratio 20.03 high, but whales lean long (account ratio 1.45), aligns with NARRATIVE_DIVERGENCE scenario."
+        },
+        "exit_plan": {
+          "take_profit": 0.098,
+          "stop_loss": 0.0918,
+          "invalidation": {
+            "zh": "\u82e5\u4ef7\u683c\u8dcc\u78340.092\u4e14\u8d44\u91d1\u8d39\u7387\u8f6c\u6b63\uff08>0.005%\uff09\uff0c\u6216RSI\u8dcc\u783435\u672a\u80fd\u53cd\u5f39\uff0c\u5219\u591a\u5934\u8bba\u70b9\u5931\u6548\uff0c\u7acb\u5373\u79bb\u573a\u3002",
+            "en": "If price breaks below 0.092 with funding rate turning positive (>0.005%), or RSI falls below 35 and fails to rebound, the long thesis is invalidated, exit immediately."
+          }
+        },
+        "reason": "\ud83d\udee1\ufe0f Max positions (3) reached."
+      },
+      {
+        "symbol": "BNB",
+        "action": "monitor",
+        "leverage": 0,
+        "position_size_usd": 0,
+        "entry_reason": {
+          "zh": "BNB QLib\u6392\u540d5\uff08\u5f97\u5206-0.11\uff09\u6700\u5f31\uff0c\u6280\u672f\u9762\u8d85\u5356\uff08\u4e56\u79bb\u7387-1.12%\u3001RSI 40.03\uff09\u3001\u4e0b\u5f71\u7ebf54%\u652f\u6491\u5f3a\uff0c\u4f46\u7206\u4ed3\u591a\u7a7a\u6bd460.03\u6781\u9ad8\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u4e14\u65e0\u9cb8\u9c7c\u6570\u636e\uff0c\u6682\u89c2\u671b\u3002",
+          "en": "BNB QLib rank 5 (score -0.11) weakest, technically oversold (deviation -1.12%, RSI 40.03), 54% lower wick strong support, but liquidation ratio 60.03 extremely high indicating long pain, and no whale data, monitor for now."
+        },
+        "exit_plan": {
+          "take_profit": null,
+          "stop_loss": null,
+          "invalidation": {
+            "zh": "\u4e0d\u9002\u7528",
+            "en": "N/A"
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-03-19 08:11:36"
+  },
+  {
+    "analysis_summary": {
       "zh": "1. [\u53d9\u4e8b\u6821\u9a8c]\uff1a\u5f53\u524d\u5e02\u573a\u5904\u4e8e\u718a\u5e02\u9707\u8361\u671f\uff0c\u6ca1\u6709\u65b0\u7684\u5b8f\u89c2\u6216\u57fa\u672c\u9762\u9a71\u52a8\u529b\uff08Impulse\uff09\uff0c\u4ef7\u683c\u4e0b\u8dcc\u66f4\u591a\u662f\u524d\u671f\u6da8\u5e45\u540e\u7684\u6280\u672f\u6027\u56de\u8c03\uff0c\u5df2\u57fa\u672c\u5b9a\u4ef7\u3002\u5e02\u573a\u4e3b\u65cb\u5f8b\u662f\u9707\u8361\u5bfb\u5e95\uff0c\u7b49\u5f85\u65b9\u5411\u9009\u62e9\u3002\n2. [\u51b3\u7b56\u4f9d\u636e\u8be6\u60c5]\uff1a\u6280\u672f\u9762\u663e\u793a\u591a\u6570\u8d44\u4ea7RSI\u5904\u4e8e30-45\u8d85\u5356\u533a\u57df\uff0cADX\u4e2d\u7b49\u8868\u660e\u8d8b\u52bf\u5f3a\u5ea6\u4e00\u822c\uff1b\u94fe\u4e0a\u6570\u636e\u663e\u793aETH\u548cSOL\u6709\u663e\u8457\u7684\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51fa\uff08\u770b\u6da8\u4fe1\u53f7\uff09\uff0c\u4f46\u7a33\u5b9a\u5e01\u6d41\u51fa\uff08\u770b\u8dcc\u4fe1\u53f7\uff09\u5f62\u6210\u77db\u76fe\uff1b\u91cf\u5316\u6a21\u578b\uff08Qlib\uff09\u6392\u540d\u524d\u4e09\u4e3aSOL\u3001BNB\u3001ETH\uff0c\u4f46\u5f97\u5206\u4e0d\u9ad8\uff0c\u8868\u660e\u6574\u4f53\u5f3a\u5ea6\u504f\u5f31\u3002\n3. [\u75db\u82e6\u4ea4\u6613]\uff1a\u7206\u4ed3\u6570\u636e\u663e\u793a\u591a\u5355\u7206\u4ed3\u8fdc\u9ad8\u4e8e\u7a7a\u5355\uff08\u7206\u4ed3\u591a\u7a7a\u6bd4\u666e\u904d>1.8\uff09\uff0c\u8868\u660e\u591a\u5934\u6b63\u5728\u627f\u53d7\u75db\u82e6\uff0c\u7a7a\u5934\u76f8\u5bf9\u5b89\u5168\uff1b\u6301\u4ed3L/S\u6bd4\u663e\u793a\u6563\u6237\u591a\u7a7a\u6bd4\u504f\u9ad8\uff08\u5982DOGE\u8d26\u6237\u6570\u6bd41.51\uff09\uff0c\u4f46\u5927\u6237\u6301\u4ed3\u91cf\u6bd4\u504f\u4f4e\uff0c\u6697\u793a\u6563\u6237\u53ef\u80fd\u88ab\u5957\u3002\u5f53\u524d\u5904\u4e8e\u591a\u5934\u8e29\u8e0f\u9636\u6bb5\uff0c\u4f46\u7a7a\u5934\u6324\u538b\u98ce\u9669\u4f4e\u3002\n4. [\u5267\u672c\u9009\u62e9]\uff1a\u9009\u62e9WHALE_FRONT_RUN\u5267\u672c\uff0c\u56e0\u4e3aETH\u548cSOL\u7684\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51fa\uff08FROM_EXCHANGE\uff09\u8868\u660e\u673a\u6784\u5728\u4ef7\u683c\u4e0b\u8dcc\u65f6\u79ef\u7d2f\uff0c\u8fd9\u4e0e\u4ef7\u683c\u75b2\u8f6f\u5f62\u6210\u80cc\u79bb\uff0c\u5c5e\u4e8e\u9690\u85cf\u79ef\u7d2f\u4fe1\u53f7\uff0c\u9002\u5408\u8ddf\u968f\u9cb8\u9c7c\u6d41\u5411\u505a\u591a\u3002",
       "en": "1. [Narrative Validation]: The market is in a bearish consolidation phase with no new macro or fundamental drivers (Impulse). The price decline is largely a technical correction after previous gains, mostly priced in. The main theme is range-bound bottoming, awaiting directional breakout.\n2. [Decision Details]: Technicals show most assets have RSI in oversold 30-45 range, ADX moderate indicating weak trend strength; on-chain data shows significant whale token outflow for ETH and SOL (bullish), but stablecoin outflow (bearish) creates contradiction; quantitative model (Qlib) ranks SOL, BNB, ETH top but with low scores, indicating overall weakness.\n3. [Pain Trade]: Liquidation data shows long liquidations far exceed shorts (liquidation ratios mostly >1.8), indicating long pain and short safety; L/S ratios show retail long bias (e.g., DOGE account ratio 1.51) but low whale volume ratios, suggesting retail may be trapped. Currently in a long flush phase, but short squeeze risk is low.\n4. [Scenario Selection]: Choose WHALE_FRONT_RUN scenario because ETH and SOL whale token outflow (FROM_EXCHANGE) indicates institutional accumulation during price weakness, diverging from price action as hidden accumulation, suitable for following whale flow long."
     },
@@ -10766,219 +10988,5 @@
       }
     ],
     "timestamp": "2026-03-12 00:09:31"
-  },
-  {
-    "analysis_summary": {
-      "zh": "1. [\u53d9\u4e8b\u6821\u9a8c]\uff1a\u5f53\u524d\u5e02\u573a\u9a71\u52a8\u529b\u4e3a\u5b8f\u89c2\u718a\u5e02\u80cc\u666f\u4e0b\u7684\u591a\u7a7a\u535a\u5f08\uff0c\u65e0\u660e\u663e\u65b0\u53d9\u4e8b\u51b2\u51fb\u3002\u4ef7\u683c\u4e0e\u6570\u636e\u5448\u73b0\u5206\u5316\uff1aBNB Qlib\u6392\u540d\u7b2c\u4e00\u4f46\u8d44\u91d1\u8d39\u7387\u8d1f\u503c\uff0cETH/SOL\u9cb8\u9c7c\u6d41\u5411\u4ea4\u6613\u6240\u4f46\u4ef7\u683c\u672a\u5927\u5e45\u4e0b\u8dcc\uff0c\u663e\u793a\u5e02\u573a\u5904\u4e8e\u5b9a\u4ef7\u5206\u6b67\u9636\u6bb5\u3002\n2. [\u51b3\u7b56\u4f9d\u636e\u8be6\u60c5]\uff1a\u6280\u672f\u9762\uff1aBNB RSI 56.5 \u7565\u504f\u5f3a\uff0cETH/SOL RSI \u4e2d\u6027\uff1b\u9cb8\u9c7c\u9762\uff1aETH/SOL 24h\u4ee3\u5e01\u51c0\u6d41\u5411\u4ea4\u6613\u6240\uff08\u770b\u8dcc\u4fe1\u53f7\uff09\uff0c\u4f46\u7a33\u5b9a\u5e01\u6d41\u51fa\uff08SOL\uff09\u6216\u6301\u5e73\uff08ETH\uff09\uff1b\u91cf\u5316\u9762\uff1aBNB Qlib\u5f97\u5206\u6700\u9ad8\uff0c\u4f46\u8d44\u91d1\u8d39\u7387Z-Score -2.16 \u663e\u8457\u8d1f\u503c\u3002\n3. [\u75db\u82e6\u4ea4\u6613]\uff1aETH\u7206\u4ed3\u591a\u7a7a\u6bd45.94\uff08\u591a\u5934\u75db\u82e6\u6781\u9ad8\uff09\uff0cSOL 3.36\uff0cBTC 2.22\uff0c\u663e\u793a\u591a\u5934\u4ed3\u4f4d\u666e\u904d\u53d7\u538b\uff1bBNB\u7206\u4ed3\u591a\u7a7a\u6bd40.25\uff08\u7a7a\u5934\u75db\u82e6\u9ad8\uff09\u3002\u6301\u4ed3L/S\u6bd4\u663e\u793aETH/SOL\u5927\u6237\u8d26\u6237\u6570\u504f\u591a\u4f46\u6301\u4ed3\u91cf\u504f\u7a7a\uff0c\u7ed3\u6784\u77db\u76fe\u3002\n4. [\u5267\u672c\u9009\u62e9]\uff1a\u9009\u62e9 MICROSTRUCTURE_SQUEEZE\uff0c\u56e0BNB\u7a7a\u5934\u75db\u82e6\u9ad8+\u8d44\u91d1\u8d39\u7387\u8d1f\u503c+\u4ef7\u683c\u7565\u5f3a\uff0c\u5b58\u5728\u7a7a\u5934\u6324\u538b\u673a\u4f1a\uff1b\u540c\u65f6ETH\u591a\u5934\u75db\u82e6\u6781\u9ad8\u4f46\u9cb8\u9c7c\u6d41\u5411\u770b\u8dcc\uff0c\u9700\u8c28\u614e\u5bf9\u51b2\u3002",
-      "en": "1. [Narrative Validation]: Current market driver is long-short\u535a\u5f08 under macro bearish backdrop, no clear new narrative impulse. Price-data divergence: BNB ranks #1 in Qlib but has negative funding, ETH/SOL whale flow to exchange but price not collapsing, indicating priced-in disagreement.\n2. [Decision Details]: Technical: BNB RSI 56.5 slightly bullish, ETH/SOL RSI neutral; Whale: ETH/SOL 24h token net flow to exchange (bearish), but stablecoin outflow (SOL) or flat (ETH); Quantitative: BNB highest Qlib score but funding Z-Score -2.16 significantly negative.\n3. [Pain Trade]: ETH liquidation long/short ratio 5.94 (extreme long pain), SOL 3.36, BTC 2.22, showing long positions under pressure; BNB ratio 0.25 (high short pain). L/S ratio shows ETH/SOL large account count\u504f\u591a but position size\u504f\u7a7a, structural\u77db\u76fe.\n4. [Scenario Selection]: Choose MICROSTRUCTURE_SQUEEZE, as BNB has high short pain + negative funding + price strength, suggesting short squeeze potential; while ETH has extreme long pain but bearish whale flow, requiring cautious hedging."
-    },
-    "hypothesis_scenario": "MICROSTRUCTURE_SQUEEZE",
-    "contrary_signal_check": {
-      "zh": "\u6700\u4e25\u91cd\u51b2\u7a81\uff1aETH\u591a\u5934\u75db\u82e6\u6781\u9ad8\uff08\u7206\u4ed3\u6bd45.94\uff09\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u4ea4\u6613\u6240\uff08\u770b\u8dcc\uff09\u4e14\u7a33\u5b9a\u5e01\u65e0\u6d41\u5165\u3002\u5ffd\u7565\u539f\u56e0\uff1a\u9cb8\u9c7c\u6d41\u5411\u53ef\u80fd\u6ede\u540e\u6216\u53cd\u6620\u77ed\u671f\u5957\u73b0\uff0c\u800c\u6781\u9ad8\u591a\u5934\u75db\u82e6\u8868\u660e\u629b\u538b\u5df2\u90e8\u5206\u91ca\u653e\uff0c\u4ef7\u683c\u5728$2020\u9644\u8fd1\u6301\u7a33\uff0c\u7ed3\u5408\u6301\u4ed3L/S\u6bd4\u77db\u76fe\uff08\u8d26\u6237\u6570\u591a\u4f46\u6301\u4ed3\u91cf\u7a7a\uff09\uff0c\u53ef\u80fd\u5f62\u6210\u5c40\u90e8\u5e95\u90e8\uff0c\u5f53\u524d\u7a7a\u5934\u4ed3\u4f4d\u53ef\u7ee7\u7eed\u6301\u6709\u4f46\u9700\u7d27\u5bc6\u76d1\u63a7\u3002",
-      "en": "Most significant conflict: ETH has extreme long pain (liquidation ratio 5.94), but whale token flow to exchange (bearish) and no stablecoin inflow. Reason to ignore: Whale flow may lag or reflect short-term profit-taking, while extreme long pain suggests selling pressure partially exhausted, price holding near $2020, combined with contradictory L/S ratio (more accounts long but position size short), may form local bottom. Current short position can be held but closely monitored."
-    },
-    "context_analysis": {
-      "technical_signal": {
-        "zh": "BNB\uff1a\u4e0a\u5f71\u7ebf/\u4e0b\u5f71\u7ebf\u6bd4\u738721%/21%\u5e73\u8861\uff0cRSI 56.5\u504f\u5f3a\uff0cADX 17.1\u8d8b\u52bf\u5f31\uff0c\u5747\u7ebf\u4e56\u79bb\u7387+0.64%\u7565\u504f\u591a\u3002ETH\uff1a\u4e0a\u5f71\u7ebf12%/\u4e0b\u5f71\u7ebf16%\u4e0b\u5f71\u7ebf\u7565\u957f\uff0cRSI 52.2\u4e2d\u6027\uff0cADX 11.4\u65e0\u8d8b\u52bf\uff0c\u5747\u7ebf\u4e56\u79bb\u7387-0.41%\u7565\u504f\u7a7a\u3002SOL\uff1a\u4e0a\u5f71\u7ebf15%/\u4e0b\u5f71\u7ebf74%\u4e0b\u5f71\u7ebf\u6781\u957f\uff08\u652f\u6491\u5f3a\uff09\uff0cRSI 50.8\u4e2d\u6027\uff0cADX 12.8\u65e0\u8d8b\u52bf\uff0c\u5747\u7ebf\u4e56\u79bb\u7387-0.73%\u504f\u7a7a\u3002",
-        "en": "BNB: Upper/Lower Wick Ratio 21%/21% balanced, RSI 56.5 slightly bullish, ADX 17.1 weak trend, SMA deviation +0.64% slightly bullish. ETH: Upper/Lower Wick Ratio 12%/16% lower wick longer, RSI 52.2 neutral, ADX 11.4 no trend, SMA deviation -0.41% slightly bearish. SOL: Upper/Lower Wick Ratio 15%/74% lower wick very long (strong support), RSI 50.8 neutral, ADX 12.8 no trend, SMA deviation -0.73% bearish."
-      },
-      "macro_onchain": {
-        "zh": "ETH\uff1a24h\u7206\u4ed3\u591a\u5355$9560\u4e07/\u7a7a\u5355$1610\u4e07\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd45.94\uff08\u591a\u5934\u75db\u82e6\u6781\u9ad8\uff09\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u51c0\u6d41\u5411\u4ea4\u6613\u624021.7\u4e07ETH\uff08\u770b\u8dcc\uff09\uff0c\u8d44\u91d1\u8d39\u73870.0100%\u7565\u6b63\u3002SOL\uff1a24h\u7206\u4ed3\u591a\u5355$114\u4e07/\u7a7a\u5355$34\u4e07\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd43.36\uff08\u591a\u5934\u75db\u82e6\u9ad8\uff09\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u51c0\u6d41\u5411\u4ea4\u6613\u624014.7\u4e07SOL\uff08\u770b\u8dcc\uff09\uff0c\u7a33\u5b9a\u5e01\u51c0\u6d41\u51fa$43\u4e07\uff08\u770b\u6da8\uff09\uff0c\u8d44\u91d1\u8d39\u7387-0.0049%\u7565\u8d1f\u3002BNB\uff1a24h\u7206\u4ed3\u591a\u5355$72\u4e07/\u7a7a\u5355$290\u4e07\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd40.25\uff08\u7a7a\u5934\u75db\u82e6\u9ad8\uff09\uff0c\u8d44\u91d1\u8d39\u7387-0.0141%\u8d1f\u503c\u663e\u8457\u3002",
-        "en": "ETH: 24h liquidation long $95.6M/short $16.1M, long/short ratio 5.94 (extreme long pain), whale token net flow to exchange 217k ETH (bearish), funding rate 0.0100% slightly positive. SOL: 24h liquidation long $1.15M/short $0.34M, long/short ratio 3.36 (high long pain), whale token net flow to exchange 147k SOL (bearish), stablecoin net outflow $434k (bullish), funding rate -0.0049% slightly negative. BNB: 24h liquidation long $0.72M/short $2.91M, long/short ratio 0.25 (high short pain), funding rate -0.0141% significantly negative."
-      },
-      "quantitative_analysis": {
-        "zh": "Qlib\u6392\u540d\uff1aBNB\u7b2c\u4e00\uff08\u5f97\u52060.0837\uff09\uff0cBTC\u7b2c\u4e8c\uff080.0768\uff09\uff0cETH\u7b2c\u4e09\uff080.0508\uff09\uff0cSOL\u7b2c\u56db\uff080.0298\uff09\uff0cDOGE\u7b2c\u4e94\uff08-0.0004\uff09\u3002Z-Score\u5f02\u5e38\uff1aBNB\u8d44\u91d1\u8d39\u7387Z-Score -2.16\u663e\u8457\u8d1f\u503c\uff08\u7a7a\u5934\u62e5\u6324\uff09\uff0cETH\u6210\u4ea4\u91cfZ-Score -1.24\u504f\u4f4e\uff08\u6d3b\u8dc3\u5ea6\u4e0d\u8db3\uff09\u3002",
-        "en": "Qlib ranking: BNB #1 (score 0.0837), BTC #2 (0.0768), ETH #3 (0.0508), SOL #4 (0.0298), DOGE #5 (-0.0004). Z-Score anomalies: BNB funding Z-Score -2.16 significantly negative (short crowding), ETH volume Z-Score -1.24 low (low activity)."
-      },
-      "regime_safety": {
-        "zh": "\u57fa\u4e8e\u75db\u82e6\u4ea4\u6613\u5206\u6790\uff1aBNB RSI 56.5\u504f\u5f3a\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd40.25\uff08\u7a7a\u5934\u75db\u82e6\u9ad8\uff09\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\u503c\uff0c\u9cb8\u9c7c\u6570\u636e\u7f3a\u5931\u4f46\u4ea4\u6613\u6240\u60c5\u7eea\u4e2d\u6027\uff0c\u5224\u65ad\u4e3a WHALE_SQUEEZE\uff08\u7a7a\u5934\u8f67\u7a7a\u673a\u4f1a\uff09\u3002ETH RSI 52.2\u4e2d\u6027\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd45.94\uff08\u591a\u5934\u75db\u82e6\u6781\u9ad8\uff09\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u770b\u8dcc\uff0c\u4f46\u4ef7\u683c\u6301\u7a33\uff0c\u5224\u65ad\u4e3a KNIFE\uff08\u63a5\u98de\u5200\u98ce\u9669\u9ad8\uff0c\u5f53\u524d\u7a7a\u5934\u9700\u8c28\u614e\uff09\u3002SOL RSI 50.8\u4e2d\u6027\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd43.36\uff08\u591a\u5934\u75db\u82e6\u9ad8\uff09\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u770b\u8dcc\u4f46\u7a33\u5b9a\u5e01\u6d41\u51fa\u770b\u6da8\uff0c\u4e0b\u5f71\u7ebf\u6781\u957f\u652f\u6491\u5f3a\uff0c\u5224\u65ad\u4e3a SAFE_MR\uff08\u5b89\u5168\u5747\u503c\u56de\u5f52\u673a\u4f1a\uff09\u3002",
-        "en": "Based on pain trade analysis: BNB RSI 56.5 bullish, liquidation long/short ratio 0.25 (high short pain), negative funding, whale data missing but exchange sentiment neutral, verdict WHALE_SQUEEZE (short squeeze opportunity). ETH RSI 52.2 neutral, liquidation long/short ratio 5.94 (extreme long pain), whale token flow bearish but price holding, verdict KNIFE (high risk of catching a falling knife, current short\u9700\u8c28\u614e). SOL RSI 50.8 neutral, liquidation long/short ratio 3.36 (high long pain), whale token flow bearish but stablecoin outflow bullish, very long lower wick strong support, verdict SAFE_MR (safe mean reversion opportunity)."
-      },
-      "portfolio_status": {
-        "zh": "\u5f53\u524d\u6301\u4ed3\uff1aBNB\u591a\u5934\uff08\u76c8\u52290.7%\uff09\uff0cDOGE\u7a7a\u5934\uff08\u76c8\u52291.72%\uff09\uff0cETH\u7a7a\u5934\uff08\u4e8f\u635f0.26%\uff09\u3002\u603b\u98ce\u9669\u53ef\u63a7\uff0c\u4f46ETH\u7a7a\u5934\u9762\u4e34\u9cb8\u9c7c\u6d41\u5411\u770b\u8dcc\u4e0e\u6781\u9ad8\u591a\u5934\u75db\u82e6\u7684\u77db\u76fe\uff0c\u9700\u8c03\u6574\u6b62\u635f\u3002\u53ef\u7528\u8d44\u91d1\u5145\u8db3\uff1a\u591a\u5934\u989d\u5ea6$1345\uff0c\u7a7a\u5934\u989d\u5ea6$1047\u3002",
-        "en": "Current positions: BNB long (PnL 0.7%), DOGE short (PnL 1.72%), ETH short (PnL -0.26%). Total risk manageable, but ETH short faces contradiction between bearish whale flow and extreme long pain, requiring stop-loss adjustment. Sufficient available funds: long room $1345, short room $1047."
-      }
-    },
-    "portfolio_management": [
-      {
-        "symbol": "BNB",
-        "side": "long",
-        "action": "adjust_sl_tp",
-        "action_logic": {
-          "zh": "BNB Qlib\u6392\u540d\u7b2c\u4e00\uff0c\u6280\u672f\u9762\u504f\u5f3a\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\u503c\u4e14\u7a7a\u5934\u75db\u82e6\u9ad8\uff0c\u5b58\u5728\u7a7a\u5934\u6324\u538b\u6f5c\u529b\u3002\u6301\u4ed3\u76c8\u52290.7%\uff0c\u8c03\u6574\u6b62\u635f\u4ee5\u9501\u5b9a\u5229\u6da6\u5e76\u6355\u6349\u4e0a\u884c\u7a7a\u95f4\u3002\u57fa\u4e8e\u5f53\u524d\u4ef7\u683c$640.9\uff0c\u8bbe\u7f6e\u6b62\u76c8\u4e8e\u963b\u529b\u4f4d$660\uff0c\u6b62\u635f\u4e8e\u652f\u6491\u4f4d$625\u3002",
-          "en": "BNB ranks #1 in Qlib, technicals bullish, negative funding with high short pain, potential short squeeze. Position profitable at 0.7%, adjust stop-loss to lock in gains and capture upside. Based on current price $640.9, set take-profit at resistance $660, stop-loss at support $625."
-        },
-        "exit_plan": {
-          "take_profit": 660.0,
-          "stop_loss": 625.0
-        },
-        "entry_reason": {
-          "zh": "BNB Qlib\u6392\u540d\u7b2c\u4e00\uff0c\u6280\u672f\u9762\u504f\u5f3a\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\u503c\u4e14\u7a7a\u5934\u75db\u82e6\u9ad8\uff0c\u5b58\u5728\u7a7a\u5934\u6324\u538b\u6f5c\u529b\u3002\u6301\u4ed3\u76c8\u52290.7%\uff0c\u8c03\u6574\u6b62\u635f\u4ee5\u9501\u5b9a\u5229\u6da6\u5e76\u6355\u6349\u4e0a\u884c\u7a7a\u95f4\u3002\u57fa\u4e8e\u5f53\u524d\u4ef7\u683c$640.9\uff0c\u8bbe\u7f6e\u6b62\u76c8\u4e8e\u963b\u529b\u4f4d$660\uff0c\u6b62\u635f\u4e8e\u652f\u6491\u4f4d$625\u3002",
-          "en": "BNB ranks #1 in Qlib, technicals bullish, negative funding with high short pain, potential short squeeze. Position profitable at 0.7%, adjust stop-loss to lock in gains and capture upside. Based on current price $640.9, set take-profit at resistance $660, stop-loss at support $625."
-        }
-      },
-      {
-        "symbol": "DOGE",
-        "side": "short",
-        "action": "hold",
-        "action_logic": {
-          "zh": "DOGE Qlib\u6392\u540d\u6700\u540e\uff0c\u6280\u672f\u9762\u504f\u5f31\uff08RSI 49.1\uff09\uff0c\u6301\u4ed3\u76c8\u52291.72%\u3002\u5c3d\u7ba1\u7206\u4ed3\u591a\u7a7a\u6bd41.50\u663e\u793a\u591a\u5934\u7565\u75db\u82e6\uff0c\u4f46\u4ea4\u6613\u6240\u60c5\u7eea\u4e2d\u6027\u4e14\u65e0\u9cb8\u9c7c\u6570\u636e\uff0c\u5b8f\u89c2\u718a\u5e02\u4e0b\u7ee7\u7eed\u6301\u6709\u7a7a\u5934\uff0c\u7b49\u5f85\u8fdb\u4e00\u6b65\u4e0b\u8dcc\u3002",
-          "en": "DOGE ranks last in Qlib, technicals weak (RSI 49.1), position profitable at 1.72%. Although liquidation long/short ratio 1.50 shows slight long pain, exchange sentiment neutral and no whale data, hold short under macro bearish regime for further downside."
-        },
-        "exit_plan": {
-          "take_profit": 0.085,
-          "stop_loss": 0.095
-        },
-        "entry_reason": {
-          "zh": "DOGE Qlib\u6392\u540d\u6700\u540e\uff0c\u6280\u672f\u9762\u504f\u5f31\uff08RSI 49.1\uff09\uff0c\u6301\u4ed3\u76c8\u52291.72%\u3002\u5c3d\u7ba1\u7206\u4ed3\u591a\u7a7a\u6bd41.50\u663e\u793a\u591a\u5934\u7565\u75db\u82e6\uff0c\u4f46\u4ea4\u6613\u6240\u60c5\u7eea\u4e2d\u6027\u4e14\u65e0\u9cb8\u9c7c\u6570\u636e\uff0c\u5b8f\u89c2\u718a\u5e02\u4e0b\u7ee7\u7eed\u6301\u6709\u7a7a\u5934\uff0c\u7b49\u5f85\u8fdb\u4e00\u6b65\u4e0b\u8dcc\u3002",
-          "en": "DOGE ranks last in Qlib, technicals weak (RSI 49.1), position profitable at 1.72%. Although liquidation long/short ratio 1.50 shows slight long pain, exchange sentiment neutral and no whale data, hold short under macro bearish regime for further downside."
-        }
-      },
-      {
-        "symbol": "ETH",
-        "side": "short",
-        "action": "adjust_sl_tp",
-        "action_logic": {
-          "zh": "ETH\u7a7a\u5934\u6301\u4ed3\u4e8f\u635f0.26%\uff0c\u9762\u4e34\u77db\u76fe\uff1a\u7206\u4ed3\u591a\u7a7a\u6bd45.94\u663e\u793a\u591a\u5934\u75db\u82e6\u6781\u9ad8\uff08\u5229\u597d\u7a7a\u5934\uff09\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u4ea4\u6613\u6240\u770b\u8dcc\uff08\u5229\u7a7a\u7a7a\u5934\uff09\u3002\u4ef7\u683c\u5728$2020\u9644\u8fd1\u6301\u7a33\uff0c\u8c03\u6574\u6b62\u635f\u4ee5\u63a7\u5236\u98ce\u9669\uff0c\u8bbe\u7f6e\u6b62\u76c8\u4e8e$1980\uff08\u652f\u6491\u4f4d\uff09\uff0c\u6b62\u635f\u4e8e$2050\uff08\u963b\u529b\u4f4d\uff09\u3002",
-          "en": "ETH short position at -0.26% PnL, facing contradiction: liquidation long/short ratio 5.94 shows extreme long pain (bullish for short), but whale token flow to exchange bearish (bearish for short). Price holding near $2020, adjust stop-loss to manage risk, set take-profit at $1980 (support), stop-loss at $2050 (resistance)."
-        },
-        "exit_plan": {
-          "take_profit": 1980.0,
-          "stop_loss": 2050.0
-        },
-        "entry_reason": {
-          "zh": "ETH\u7a7a\u5934\u6301\u4ed3\u4e8f\u635f0.26%\uff0c\u9762\u4e34\u77db\u76fe\uff1a\u7206\u4ed3\u591a\u7a7a\u6bd45.94\u663e\u793a\u591a\u5934\u75db\u82e6\u6781\u9ad8\uff08\u5229\u597d\u7a7a\u5934\uff09\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u4ea4\u6613\u6240\u770b\u8dcc\uff08\u5229\u7a7a\u7a7a\u5934\uff09\u3002\u4ef7\u683c\u5728$2020\u9644\u8fd1\u6301\u7a33\uff0c\u8c03\u6574\u6b62\u635f\u4ee5\u63a7\u5236\u98ce\u9669\uff0c\u8bbe\u7f6e\u6b62\u76c8\u4e8e$1980\uff08\u652f\u6491\u4f4d\uff09\uff0c\u6b62\u635f\u4e8e$2050\uff08\u963b\u529b\u4f4d\uff09\u3002",
-          "en": "ETH short position at -0.26% PnL, facing contradiction: liquidation long/short ratio 5.94 shows extreme long pain (bullish for short), but whale token flow to exchange bearish (bearish for short). Price holding near $2020, adjust stop-loss to manage risk, set take-profit at $1980 (support), stop-loss at $2050 (resistance)."
-        }
-      }
-    ],
-    "new_opportunities": [
-      {
-        "symbol": "BTC",
-        "action": "monitor",
-        "leverage": 0,
-        "position_size_usd": 0,
-        "entry_reason": {
-          "zh": "BTC Qlib\u6392\u540d\u7b2c\u4e8c\uff0c\u6280\u672f\u9762\u4e2d\u6027\uff08RSI 54.7\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd42.22\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u4f46\u4ea4\u6613\u6240\u60c5\u7eea\u7565\u504f\u591a\u4e14\u65e0\u9cb8\u9c7c\u6570\u636e\u3002\u5b8f\u89c2\u718a\u5e02\u4e0b\uff0c\u7b49\u5f85\u66f4\u6e05\u6670\u4fe1\u53f7\uff0c\u5982\u4ef7\u683c\u7a81\u7834$70000\u6216\u8dcc\u7834$69000\u3002",
-          "en": "BTC ranks #2 in Qlib, technicals neutral (RSI 54.7), liquidation long/short ratio 2.22 shows long pain, but exchange sentiment slightly bullish and no whale data. Under macro bearish regime, wait for clearer signals, e.g., price breaking $70000 or falling below $69000."
-        },
-        "exit_plan": {
-          "take_profit": 0,
-          "stop_loss": 0,
-          "invalidation": {
-            "zh": "\u4e0d\u9002\u7528\uff0c\u56e0\u4ec5\u76d1\u63a7\u3002",
-            "en": "Not applicable, as only monitoring."
-          }
-        }
-      },
-      {
-        "symbol": "SOL",
-        "action": "monitor",
-        "leverage": 0,
-        "position_size_usd": 0,
-        "entry_reason": {
-          "zh": "SOL Qlib\u6392\u540d\u7b2c\u56db\uff0c\u6280\u672f\u9762\u4e2d\u6027\uff08RSI 50.8\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd43.36\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u770b\u8dcc\u4f46\u7a33\u5b9a\u5e01\u6d41\u51fa\u770b\u6da8\uff0c\u4e0b\u5f71\u7ebf\u6781\u957f\u652f\u6491\u5f3a\u3002\u7b49\u5f85\u4ef7\u683c\u786e\u8ba4\u65b9\u5411\uff0c\u5982\u7a81\u7834$87\u6216\u8dcc\u7834$84\u3002",
-          "en": "SOL ranks #4 in Qlib, technicals neutral (RSI 50.8), liquidation long/short ratio 3.36 shows long pain, whale token flow bearish but stablecoin outflow bullish, very long lower wick strong support. Wait for price confirmation, e.g., breaking $87 or falling below $84."
-        },
-        "exit_plan": {
-          "take_profit": 0,
-          "stop_loss": 0,
-          "invalidation": {
-            "zh": "\u4e0d\u9002\u7528\uff0c\u56e0\u4ec5\u76d1\u63a7\u3002",
-            "en": "Not applicable, as only monitoring."
-          }
-        }
-      }
-    ],
-    "actions": [
-      {
-        "symbol": "BNB",
-        "side": "long",
-        "action": "adjust_sl_tp",
-        "action_logic": {
-          "zh": "BNB Qlib\u6392\u540d\u7b2c\u4e00\uff0c\u6280\u672f\u9762\u504f\u5f3a\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\u503c\u4e14\u7a7a\u5934\u75db\u82e6\u9ad8\uff0c\u5b58\u5728\u7a7a\u5934\u6324\u538b\u6f5c\u529b\u3002\u6301\u4ed3\u76c8\u52290.7%\uff0c\u8c03\u6574\u6b62\u635f\u4ee5\u9501\u5b9a\u5229\u6da6\u5e76\u6355\u6349\u4e0a\u884c\u7a7a\u95f4\u3002\u57fa\u4e8e\u5f53\u524d\u4ef7\u683c$640.9\uff0c\u8bbe\u7f6e\u6b62\u76c8\u4e8e\u963b\u529b\u4f4d$660\uff0c\u6b62\u635f\u4e8e\u652f\u6491\u4f4d$625\u3002",
-          "en": "BNB ranks #1 in Qlib, technicals bullish, negative funding with high short pain, potential short squeeze. Position profitable at 0.7%, adjust stop-loss to lock in gains and capture upside. Based on current price $640.9, set take-profit at resistance $660, stop-loss at support $625."
-        },
-        "exit_plan": {
-          "take_profit": 660.0,
-          "stop_loss": 625.0
-        },
-        "entry_reason": {
-          "zh": "BNB Qlib\u6392\u540d\u7b2c\u4e00\uff0c\u6280\u672f\u9762\u504f\u5f3a\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\u503c\u4e14\u7a7a\u5934\u75db\u82e6\u9ad8\uff0c\u5b58\u5728\u7a7a\u5934\u6324\u538b\u6f5c\u529b\u3002\u6301\u4ed3\u76c8\u52290.7%\uff0c\u8c03\u6574\u6b62\u635f\u4ee5\u9501\u5b9a\u5229\u6da6\u5e76\u6355\u6349\u4e0a\u884c\u7a7a\u95f4\u3002\u57fa\u4e8e\u5f53\u524d\u4ef7\u683c$640.9\uff0c\u8bbe\u7f6e\u6b62\u76c8\u4e8e\u963b\u529b\u4f4d$660\uff0c\u6b62\u635f\u4e8e\u652f\u6491\u4f4d$625\u3002",
-          "en": "BNB ranks #1 in Qlib, technicals bullish, negative funding with high short pain, potential short squeeze. Position profitable at 0.7%, adjust stop-loss to lock in gains and capture upside. Based on current price $640.9, set take-profit at resistance $660, stop-loss at support $625."
-        }
-      },
-      {
-        "symbol": "DOGE",
-        "side": "short",
-        "action": "hold",
-        "action_logic": {
-          "zh": "DOGE Qlib\u6392\u540d\u6700\u540e\uff0c\u6280\u672f\u9762\u504f\u5f31\uff08RSI 49.1\uff09\uff0c\u6301\u4ed3\u76c8\u52291.72%\u3002\u5c3d\u7ba1\u7206\u4ed3\u591a\u7a7a\u6bd41.50\u663e\u793a\u591a\u5934\u7565\u75db\u82e6\uff0c\u4f46\u4ea4\u6613\u6240\u60c5\u7eea\u4e2d\u6027\u4e14\u65e0\u9cb8\u9c7c\u6570\u636e\uff0c\u5b8f\u89c2\u718a\u5e02\u4e0b\u7ee7\u7eed\u6301\u6709\u7a7a\u5934\uff0c\u7b49\u5f85\u8fdb\u4e00\u6b65\u4e0b\u8dcc\u3002",
-          "en": "DOGE ranks last in Qlib, technicals weak (RSI 49.1), position profitable at 1.72%. Although liquidation long/short ratio 1.50 shows slight long pain, exchange sentiment neutral and no whale data, hold short under macro bearish regime for further downside."
-        },
-        "exit_plan": {
-          "take_profit": 0.085,
-          "stop_loss": 0.095
-        },
-        "entry_reason": {
-          "zh": "DOGE Qlib\u6392\u540d\u6700\u540e\uff0c\u6280\u672f\u9762\u504f\u5f31\uff08RSI 49.1\uff09\uff0c\u6301\u4ed3\u76c8\u52291.72%\u3002\u5c3d\u7ba1\u7206\u4ed3\u591a\u7a7a\u6bd41.50\u663e\u793a\u591a\u5934\u7565\u75db\u82e6\uff0c\u4f46\u4ea4\u6613\u6240\u60c5\u7eea\u4e2d\u6027\u4e14\u65e0\u9cb8\u9c7c\u6570\u636e\uff0c\u5b8f\u89c2\u718a\u5e02\u4e0b\u7ee7\u7eed\u6301\u6709\u7a7a\u5934\uff0c\u7b49\u5f85\u8fdb\u4e00\u6b65\u4e0b\u8dcc\u3002",
-          "en": "DOGE ranks last in Qlib, technicals weak (RSI 49.1), position profitable at 1.72%. Although liquidation long/short ratio 1.50 shows slight long pain, exchange sentiment neutral and no whale data, hold short under macro bearish regime for further downside."
-        }
-      },
-      {
-        "symbol": "ETH",
-        "side": "short",
-        "action": "adjust_sl_tp",
-        "action_logic": {
-          "zh": "ETH\u7a7a\u5934\u6301\u4ed3\u4e8f\u635f0.26%\uff0c\u9762\u4e34\u77db\u76fe\uff1a\u7206\u4ed3\u591a\u7a7a\u6bd45.94\u663e\u793a\u591a\u5934\u75db\u82e6\u6781\u9ad8\uff08\u5229\u597d\u7a7a\u5934\uff09\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u4ea4\u6613\u6240\u770b\u8dcc\uff08\u5229\u7a7a\u7a7a\u5934\uff09\u3002\u4ef7\u683c\u5728$2020\u9644\u8fd1\u6301\u7a33\uff0c\u8c03\u6574\u6b62\u635f\u4ee5\u63a7\u5236\u98ce\u9669\uff0c\u8bbe\u7f6e\u6b62\u76c8\u4e8e$1980\uff08\u652f\u6491\u4f4d\uff09\uff0c\u6b62\u635f\u4e8e$2050\uff08\u963b\u529b\u4f4d\uff09\u3002",
-          "en": "ETH short position at -0.26% PnL, facing contradiction: liquidation long/short ratio 5.94 shows extreme long pain (bullish for short), but whale token flow to exchange bearish (bearish for short). Price holding near $2020, adjust stop-loss to manage risk, set take-profit at $1980 (support), stop-loss at $2050 (resistance)."
-        },
-        "exit_plan": {
-          "take_profit": 1980.0,
-          "stop_loss": 2050.0
-        },
-        "entry_reason": {
-          "zh": "ETH\u7a7a\u5934\u6301\u4ed3\u4e8f\u635f0.26%\uff0c\u9762\u4e34\u77db\u76fe\uff1a\u7206\u4ed3\u591a\u7a7a\u6bd45.94\u663e\u793a\u591a\u5934\u75db\u82e6\u6781\u9ad8\uff08\u5229\u597d\u7a7a\u5934\uff09\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u4ea4\u6613\u6240\u770b\u8dcc\uff08\u5229\u7a7a\u7a7a\u5934\uff09\u3002\u4ef7\u683c\u5728$2020\u9644\u8fd1\u6301\u7a33\uff0c\u8c03\u6574\u6b62\u635f\u4ee5\u63a7\u5236\u98ce\u9669\uff0c\u8bbe\u7f6e\u6b62\u76c8\u4e8e$1980\uff08\u652f\u6491\u4f4d\uff09\uff0c\u6b62\u635f\u4e8e$2050\uff08\u963b\u529b\u4f4d\uff09\u3002",
-          "en": "ETH short position at -0.26% PnL, facing contradiction: liquidation long/short ratio 5.94 shows extreme long pain (bullish for short), but whale token flow to exchange bearish (bearish for short). Price holding near $2020, adjust stop-loss to manage risk, set take-profit at $1980 (support), stop-loss at $2050 (resistance)."
-        }
-      },
-      {
-        "symbol": "BTC",
-        "action": "monitor",
-        "leverage": 0,
-        "position_size_usd": 0,
-        "entry_reason": {
-          "zh": "BTC Qlib\u6392\u540d\u7b2c\u4e8c\uff0c\u6280\u672f\u9762\u4e2d\u6027\uff08RSI 54.7\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd42.22\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u4f46\u4ea4\u6613\u6240\u60c5\u7eea\u7565\u504f\u591a\u4e14\u65e0\u9cb8\u9c7c\u6570\u636e\u3002\u5b8f\u89c2\u718a\u5e02\u4e0b\uff0c\u7b49\u5f85\u66f4\u6e05\u6670\u4fe1\u53f7\uff0c\u5982\u4ef7\u683c\u7a81\u7834$70000\u6216\u8dcc\u7834$69000\u3002",
-          "en": "BTC ranks #2 in Qlib, technicals neutral (RSI 54.7), liquidation long/short ratio 2.22 shows long pain, but exchange sentiment slightly bullish and no whale data. Under macro bearish regime, wait for clearer signals, e.g., price breaking $70000 or falling below $69000."
-        },
-        "exit_plan": {
-          "take_profit": 0,
-          "stop_loss": 0,
-          "invalidation": {
-            "zh": "\u4e0d\u9002\u7528\uff0c\u56e0\u4ec5\u76d1\u63a7\u3002",
-            "en": "Not applicable, as only monitoring."
-          }
-        }
-      },
-      {
-        "symbol": "SOL",
-        "action": "monitor",
-        "leverage": 0,
-        "position_size_usd": 0,
-        "entry_reason": {
-          "zh": "SOL Qlib\u6392\u540d\u7b2c\u56db\uff0c\u6280\u672f\u9762\u4e2d\u6027\uff08RSI 50.8\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd43.36\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u770b\u8dcc\u4f46\u7a33\u5b9a\u5e01\u6d41\u51fa\u770b\u6da8\uff0c\u4e0b\u5f71\u7ebf\u6781\u957f\u652f\u6491\u5f3a\u3002\u7b49\u5f85\u4ef7\u683c\u786e\u8ba4\u65b9\u5411\uff0c\u5982\u7a81\u7834$87\u6216\u8dcc\u7834$84\u3002",
-          "en": "SOL ranks #4 in Qlib, technicals neutral (RSI 50.8), liquidation long/short ratio 3.36 shows long pain, whale token flow bearish but stablecoin outflow bullish, very long lower wick strong support. Wait for price confirmation, e.g., breaking $87 or falling below $84."
-        },
-        "exit_plan": {
-          "take_profit": 0,
-          "stop_loss": 0,
-          "invalidation": {
-            "zh": "\u4e0d\u9002\u7528\uff0c\u56e0\u4ec5\u76d1\u63a7\u3002",
-            "en": "Not applicable, as only monitoring."
-          }
-        }
-      }
-    ],
-    "timestamp": "2026-03-11 17:53:30"
   }
 ]
