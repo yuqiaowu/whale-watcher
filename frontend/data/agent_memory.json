@@ -345,5 +345,68 @@
       "bb_trend": "UP"
     },
     "outcome": null
+  },
+  {
+    "id": "BTC_1773893393",
+    "timestamp": "2026-03-19T12:09:53.618298",
+    "symbol": "BTC",
+    "action": "adjust_sl_tp",
+    "entry_price": 71027.2,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u4ef7\u683c70908.5\u9ad8\u4e8e70000\uff0c\u8d44\u91d1\u8d39\u73870.0015%\u672a\u8d85\u8fc70.01%\uff0cRSI 37.73\u9ad8\u4e8e30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1a\u6280\u672f\u9762RSI\u504f\u4f4e\uff0837.73\uff09\u548c\u7206\u4ed3\u591a\u7a7a\u6bd4\u9ad8\uff083.02\uff09\u652f\u6301\u53cd\u5f39\uff0c\u4f46\u9700\u6536\u7d27\u6b62\u635f\u4ee5\u63a7\u5236\u98ce\u9669\u3002",
+      "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 70000 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current price 70908.5 > 70000, funding rate 0.0015% < 0.01%, RSI 37.73 > 30, no trigger. Additional: Technicals with low RSI (37.73) and high liquidation ratio (3.02) support bounce, but stop-loss should be tightened for risk control."
+    },
+    "context": {
+      "rsi": 38.44319334103083,
+      "adx": 33.99097730320031,
+      "whale_flow": "?",
+      "funding_rate": 1.53786987813e-05,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
+  },
+  {
+    "id": "SOL_1773893395",
+    "timestamp": "2026-03-19T12:09:55.294706",
+    "symbol": "SOL",
+    "action": "adjust_sl_tp",
+    "entry_price": 90.38,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u4ef7\u683c90.3\u9ad8\u4e8e85.0\uff0c\u8d44\u91d1\u8d39\u7387-0.0116%\u672a\u8f6c\u6b63\uff0cRSI 45.31\u9ad8\u4e8e30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1a\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5165\u770b\u8dcc\uff0c\u4f46\u8d44\u91d1\u8d39\u7387\u6781\u8d1f\u548c\u7206\u4ed3\u591a\u7a7a\u6bd4\u9ad8\uff083.87\uff09\u53ef\u80fd\u5f15\u53d1\u8f67\u7a7a\uff0c\u6301\u6709\u4f46\u8c03\u6574\u6b62\u635f\u3002",
+      "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current price 90.3 > 85.0, funding rate -0.0116% not positive, RSI 45.31 > 30, no trigger. Additional: Whale token inflow bearish, but extremely negative funding and high liquidation ratio (3.87) may trigger squeeze, hold but adjust stop-loss."
+    },
+    "context": {
+      "rsi": 45.61021357712299,
+      "adx": 30.673980502953572,
+      "whale_flow": "?",
+      "funding_rate": -0.000105000284561,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
+  },
+  {
+    "id": "ETH_1773893397",
+    "timestamp": "2026-03-19T12:09:57.129336",
+    "symbol": "ETH",
+    "action": "adjust_sl_tp",
+    "entry_price": 2205.26,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' \u5f53\u524d\u4ef7\u683c2201.91\u9ad8\u4e8e2100\uff0c\u8d44\u91d1\u8d39\u7387-0.0044%\u672a\u4f4e\u4e8e-0.02%\uff0cRSI 45.99\u9ad8\u4e8e30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1a\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51fa\u770b\u6da8\uff0c\u4f46\u7a33\u5b9a\u5e01\u6d41\u51fa\u770b\u8dcc\uff0c\u6280\u672f\u9762\u652f\u6301\u6301\u6709\uff0c\u8c03\u6574\u6b62\u635f\u3002",
+      "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' Current price 2201.91 > 2100, funding rate -0.0044% > -0.02%, RSI 45.99 > 30, no trigger. Additional: Whale token outflow bullish, but stablecoin outflow bearish, technicals support holding, adjust stop-loss."
+    },
+    "context": {
+      "rsi": 46.61214311984753,
+      "adx": 36.652879899668285,
+      "whale_flow": "?",
+      "funding_rate": -4.42941896809e-05,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
   }
 ]
