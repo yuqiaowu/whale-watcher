@@ -4,6 +4,8 @@ import { useState } from "react";
 import {
   TrendingUp,
   Activity,
+  ShieldAlert,
+  Target,
 } from "lucide-react";
 import { ProfitCurve } from "./profit-curve";
 
@@ -291,10 +293,26 @@ export function AICopyTrading() {
                     decisions.map((decision, idx) => (
                       <div key={idx} className="border-b border-[#2D3139]/50 pb-8 last:border-0 last:pb-0">
                         {/* Decision Header with Timestamp */}
-                        <div className="flex items-center gap-2 mb-4">
+                        <div className="flex items-center justify-between mb-4">
                           <div className="text-xs font-mono text-[#8E9297] bg-[#1A1D24] px-2 py-1 rounded border border-[#2D3139]">
                             Timestamp: {decision.timestamp || 'Unknown'}
                           </div>
+                          {decision.confidence_probability !== undefined && (
+                            <div className="flex items-center gap-3">
+                              <div className="text-[10px] text-[#8E9297] font-bold uppercase tracking-wider flex items-center gap-1">
+                                <Target className="w-3 h-3" />
+                                Confidence
+                              </div>
+                              <div className="w-24 h-1.5 bg-[#0A0C0E] rounded-full overflow-hidden border border-[#2D3139]">
+                                <motion.div 
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${decision.confidence_probability}%` }}
+                                  className={`h-full ${decision.confidence_probability > 70 ? 'bg-[#39FF14]' : decision.confidence_probability > 50 ? 'bg-[#FCD34D]' : 'bg-[#FF3131]'}`}
+                                />
+                              </div>
+                              <span className="text-xs font-mono font-bold text-white">{decision.confidence_probability}%</span>
+                            </div>
+                          )}
                         </div>
 
                         {/* Market Analysis */}
@@ -382,6 +400,19 @@ export function AICopyTrading() {
                                   })()}
                                 </div>
                               </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Red Team Audit (Anti-Bias) */}
+                        {decision.red_team_audit && (
+                          <div className="mb-8 p-4 bg-[#FF3131]/5 border border-[#FF3131]/20 rounded-sm">
+                            <div className="flex items-center gap-2 mb-3">
+                              <ShieldAlert className="w-4 h-4 text-[#FF3131]" />
+                              <h3 className="text-sm font-bold text-[#FF3131]">Red Team Audit (红色突击队/自我批判)</h3>
+                            </div>
+                            <div className="text-xs italic leading-relaxed text-[#FF3131]/80 font-sans">
+                              "{decision.red_team_audit?.[language as 'zh' | 'en'] || decision.red_team_audit?.['en']}"
                             </div>
                           </div>
                         )}

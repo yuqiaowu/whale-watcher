@@ -55,6 +55,8 @@ export interface TradeHistory {
 
 export interface AgentDecision {
     analysis_summary: { zh: string; en: string };
+    confidence_probability?: number;
+    red_team_audit?: { zh: string; en: string };
     context_analysis?: {
         technical_signal: { zh: string; en: string };
         macro_onchain: { zh: string; en: string };
@@ -70,7 +72,9 @@ export interface AgentDecision {
         exit_plan?: {
             take_profit?: number;
             stop_loss?: number;
+            invalidation?: { zh: string; en: string };
         };
+        original_invalidation_rule?: string;
         price?: number;
         amount?: number;
     }>;

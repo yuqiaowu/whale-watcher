@@ -105,9 +105,16 @@ class TradeMemory:
                 latest_decision = history_db[0]
                 latest_time = latest_decision.get("timestamp", "Unknown Time")
                 reflection = latest_decision.get("context_analysis", {}).get("reflection", {}).get("en", "")
-                if reflection:
+                
+                # New: Include Red Team Audit and Confidence
+                red_team = latest_decision.get("red_team_audit", {}).get("en", "N/A")
+                confidence = latest_decision.get("confidence_probability", "N/A")
+                
+                if reflection or red_team != "N/A":
                     summary += f"[LATEST AI CYCLE: {latest_time}]\n"
-                    summary += f"Your Previous Reflection: {reflection}\n\n"
+                    summary += f"Previous Confidence: {confidence}%\n"
+                    summary += f"Previous Reflection: {reflection}\n"
+                    summary += f"Previous Red Team Audit (Self-Criticism): {red_team}\n\n"
         except Exception as e:
             pass  # Silently skip if DB fails to load
             
@@ -259,6 +266,13 @@ Before committing, explicitly consider all three:
 Score each scenario by: (Signal Strength) × (Data Confluence) × (Risk/Reward).
 Choose the highest-scoring one. **Explicitly state why you rejected the other two.**
 
+**4D. ANTI-MOTIVATED REASONING AUDIT (CRITICAL)**
+Before finalizing, perform a **Red Team Audit** on your own conclusion:
+1. **The "Bet" Test**: If you had to bet 50% of your own wealth on this trade, what information would make you hesitate? (Identify "Unknown Unknowns").
+2. **Red Team Mode**: If you were forced to argue the EXACT OPPOSITE position (e.g., if you are long, build the strongest Bear case), what evidence would you use? 
+3. **Source De-coupling**: Evaluate the data points (Whale Flow, Funding, News) purely as numbers. Do not let a "famous" narrative or a large news headline bias you if the on-chain reality is neutral.
+4. **Decision Swear Jar**: DO NOT use words like "Certain", "100%", "Definitely", "Impossible", "Everyone knows". Any use of these triggers a logic penalty.
+
 HYPOTHESIS OPTIONS:
 1. **TREND_FOLLOWING**: Ride the momentum based on flow and technicals.
 2. **MEAN_REVERSION**: Trade reversals when price and data reach extremes.
@@ -313,8 +327,13 @@ Constraints:
 Structure:
 {
   "analysis_summary": {
-    "zh": "必须是中文，按以下结构分段阐述：\n1. [叙事校验]：判断当前驱动力是Impulse还是已定价，识别市场主旋律。\n2. [决策依据详情]：综合 Technical Signal, Macro & On-Chain, Quantitative (Qlib/Z-Vol) 的交叉验证。\n3. [痛苦交易]：分析爆仓燃料与 L/S Ratio，识别是否处于‘踩踏’或‘衰竭’阶段。\n4. [剧本选择]：明确 4C 中的剧本（WHALE_FRONT_RUN 等）及选择理由。",
+    "zh": "必须是中文，按以下结构分段阐述：\n1. [叙事校验]：判断当前驱动力是Impulse还是已定价，识别市场主旋律。\n2. [决策依据详情]：综合 Technical Signal, Macro & On-Chain, Quantitative (Qlib/Z-Vol) 的交叉验证。\n3. [痛苦交易]：分析爆仓燃料与 L/S Ratio，识别是否处于‘踩踏’或‘衰竭’阶段。\n4. [剧本选择]：明确 4C 中的剧本及选择理由。",
     "en": "Must be in English, structured as follows:\n1. [Narrative Validation]: Impulse vs Priced-in.\n2. [Decision Details]: Cross-verification of Tech, Whale, and Quant signals.\n3. [Pain Trade]: Liquidation fuel and L/S Ratio analysis.\n4. [Scenario Selection]: Chosen Scenario (4C) and justification."
+  },
+  "confidence_probability": 75, /* Use a percentage 0-100% instead of absolute certainty. Admit your 25% uncertainty. */
+  "red_team_audit": {
+    "zh": "强行站在对立面（红色突击队），列出如果你的判断是错的，最可能的反向理由是什么？哪些数据支撑反面结论？",
+    "en": "Forced Contra-Argument: If your thesis is WRONG, what is the most likely reason? What data points support the opposite view?"
   },
   "hypothesis_scenario": "TREND_FOLLOWING | MEAN_REVERSION | MICROSTRUCTURE_SQUEEZE | NARRATIVE_DIVERGENCE | WHALE_FRONT_RUN",
   "contrary_signal_check": {
@@ -382,6 +401,7 @@ Structure:
 - **CLEAN TEXT**: Avoid redundant nested bolding like `** 【Header】 **`. Use simple brackets `[Header]` for section titles.
 - **READABILITY**: Use clear spacing and avoid excessive Markdown symbols.
 - **DIVERSIFIED FOCUS**: Do not focus only on ETH. Scan BTC, SOL, BNB, and DOGE data provided. If a non-ETH asset has a clearer setup, take it.
+- **SWEAR JAR RULE (CRITICAL)**: Avoid absolute words like "Certain", "100%", "Definitely", "Impossible". Use probabilistic language (e.g., "Highly likely", "Potential risk", "70% probability").
 - **NO CHATTER**: Do not include any text outside the JSON structure.
 """
 
