@@ -21,7 +21,8 @@ FILES_TO_SYNC = [
     "frontend/data/portfolio_state.json",
     "frontend/data/nav_history.json",
     "frontend/data/agent_decision_log.json",
-    "frontend/data/agent_memory.json"
+    "frontend/data/agent_memory.json",
+    "backend/qlib_data/model_latest.pkl"
 ]
 
 def get_file_sha(path, branch):
@@ -68,9 +69,12 @@ def create_branch_if_missing(branch, source_branch="main"):
 
 def sync_file(file_path):
     """Sync a single file to GitHub."""
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Resolve project root relative to this script (backend/data_sync.py)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)
+    
     # Handle paths relative to project root
-    abs_path = os.path.join(base_dir, file_path)
+    abs_path = os.path.join(project_root, file_path)
     
     if not os.path.exists(abs_path):
         print(f"⚠️ File not found (skipping): {abs_path}")
@@ -87,7 +91,7 @@ def sync_file(file_path):
     # Push
     url = f"{API_BASE}/contents/{file_path}"
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-    message = f"Data Update: {file_path} @ {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}"
+    message = f"Data & Brain Update: {file_path} @ {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}"
     
     payload = {
         "message": message,
@@ -98,7 +102,7 @@ def sync_file(file_path):
         payload["sha"] = sha
         print(f"📝 Updating {file_path}...")
     else:
-        print(f"Mw Creating {file_path}...")
+        print(f"🆕 Creating {file_path}...")
         
     resp = requests.put(url, headers=headers, json=payload)
     
@@ -113,9 +117,8 @@ def pull_data_from_github():
         print("⚠️ GITHUB_TOKEN not found. Skipping pull.")
         return
 
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    data_dir = os.path.join(base_dir, "frontend", "data")
-    os.makedirs(data_dir, exist_ok=True)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)
 
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
     for file_path in FILES_TO_SYNC:
@@ -125,7 +128,9 @@ def pull_data_from_github():
             content_b64 = resp.json().get("content", "")
             if content_b64:
                 content = base64.b64decode(content_b64)
-                abs_path = os.path.join(base_dir, file_path)
+                abs_path = os.path.join(project_root, file_path)
+                # Ensure directory exists
+                os.makedirs(os.path.dirname(abs_path), exist_ok=True)
                 with open(abs_path, "wb") as f:
                     f.write(content)
                 print(f"✅ Downloaded: {file_path}")
