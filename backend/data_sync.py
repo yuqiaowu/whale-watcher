@@ -125,17 +125,35 @@ def pull_data_from_github():
         url = f"{API_BASE}/contents/{file_path}?ref={BRANCH_NAME}"
         resp = requests.get(url, headers=headers)
         if resp.status_code == 200:
-            content_b64 = resp.json().get("content", "")
-            if content_b64:
-                content = base64.b64decode(content_b64)
+            data = resp.json()
+            # GitHub /contents/ API returns empty 'content' for files > 1MB
+            # Use 'download_url' instead for larger files
+            download_url = data.get("download_url")
+            
+            content = None
+            if data.get("content") and data.get("size", 0) <= 1000000:
+                try:
+                    content = base64.b64decode(data["content"])
+                    print(f"📦 Downloaded (In-API): {file_path}")
+                except:
+                    pass
+            
+            if not content and download_url:
+                print(f"🌐 File large or content missing, using download_url for {file_path}...")
+                d_resp = requests.get(download_url)
+                if d_resp.status_code == 200:
+                    content = d_resp.content
+                    print(f"✅ Downloaded (Direct URL): {file_path}")
+            
+            if content:
                 abs_path = os.path.join(project_root, file_path)
-                # Ensure directory exists
                 os.makedirs(os.path.dirname(abs_path), exist_ok=True)
                 with open(abs_path, "wb") as f:
                     f.write(content)
-                print(f"✅ Downloaded: {file_path}")
+            else:
+                print(f"❌ Failed to get content for {file_path}")
         else:
-            print(f"⚠️ Could not download {file_path} (might not exist yet).")
+            print(f"⚠️ Could not download {file_path}: {resp.status_code}")
 
 def sync_data_to_github():
     print(f"🔄 Starting Multi-File Sync to '{BRANCH_NAME}'...")

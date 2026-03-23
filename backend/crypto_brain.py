@@ -611,8 +611,8 @@ def analyze_transfers_v1(transfers, market_metrics, target_symbol="UNKNOWN"):
                 if signal == "BULLISH_INFLOW": acc["stable"] += amount_usd
                 elif signal == "BEARISH_OUTFLOW": acc["stable"] -= amount_usd
             else:
-                if signal == "BEARISH_INFLOW": acc["token"] += amount_usd
-                elif signal == "BULLISH_OUTFLOW": acc["token"] -= amount_usd
+                if signal == "BEARISH_INFLOW": acc["token"] -= amount_usd
+                elif signal == "BULLISH_OUTFLOW": acc["token"] += amount_usd
 
         # 7d Update
         update(acc_7d)
