@@ -475,6 +475,26 @@ def main():
         print(f"\n🔄 --- Starting Cycle: {cycle_start.strftime('%Y-%m-%d %H:%M:%S')} ---")
         write_status("RUNNING", "Fetching new data and analyzing...")
         
+        # 0. Monday Auto-Retrain Logic (Weekly Evolution)
+        if cycle_start.weekday() == 0: # 0 = Monday
+            print("📅 [MONDAY] Qlib Evolution Check...")
+            model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "qlib_data", "model_latest.pkl")
+            needs_train = False
+            
+            if not os.path.exists(model_path):
+                print("⚠️  Qlib Brain missing! Starting initial training...")
+                needs_train = True
+            else:
+                last_mod = datetime.fromtimestamp(os.path.getmtime(model_path))
+                if last_mod.date() < cycle_start.date():
+                    print(f"🧠 Current brain is from {last_mod.date()}. Needs Monday refresh!")
+                    needs_train = True
+            
+            if needs_train:
+                write_status("TRAINING", "Weekly Qlib model retraining in progress...")
+                run_script("train_local_brain.py")
+                print("✅ [MONDAY] Qlib Evolution Complete!")
+
         # 1. Update Market Reality (crypto_brain)
         print(">> Step 1: Updating Market Reality (crypto_brain)...")
         success_data = run_script("crypto_brain.py")
