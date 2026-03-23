@@ -389,8 +389,8 @@ Constraints:
     {
       "symbol": "BTC",
       "action": "open_long | open_short | monitor",
-      "leverage": 3,
-      "position_size_usd": 500,
+      "leverage": 1, /* Dynamic leverage based on your risk tolerance */
+      "position_size_usd": 0.0, /* Calculated based on your confidence and total_equity */
       "entry_reason": { 
         "zh": "【强制包含：1)为何是此币 2)为何是现在 3)你的手动盈亏比计算 (必须 > 1.5)】", 
         "en": "【MUST INCLUDE: 1)Catalysts 2)Timing 3)Calculated RRR (Must be > 1.5)】" 
@@ -411,8 +411,9 @@ Constraints:
 1. **MAPPING FORCE**: Your `portfolio_management` list MUST contain exactly one entry for EVERY position listed in: {{MANDATORY_SYMBOLS_LIST}}. Every entry MUST have a non-generic reason.
 2. **HEDGE AWARENESS**: If you hold both LONG and SHORT for the same coin, you MUST provide TWO entries in `portfolio_management`, specifying the correct `side` for each.
 3. **NO GROUPING**: Provide an independent `action_logic` for EACH entry in `portfolio_management`.
-4. **SCENARIO DISCIPLINE**: The `hypothesis_scenario` you select MUST be consistent with the direction of actions in `new_opportunities`. If you choose MICROSTRUCTURE_SQUEEZE but open no longs, explain the contradiction explicitly.
-5. **INVALIDATION REQUIRED**: Every `open_long` or `open_short` action MUST include a non-empty `invalidation` in its `exit_plan`. Vague answers like 'if market changes' are NOT acceptable.
+4. **SCENARIO DISCIPLINE**: Your `hypothesis_scenario` must match your actions.
+5. **DYNAMIC CAPITAL ALLOCATION**: You have FULL AUTONOMY to decide `position_size_usd` and `leverage` based on your confidence level against the provided `total_equity`. If you have high conviction, you may size up; if you are uncertain, size down or `monitor`.
+6. **INVALIDATION REQUIRED**: Every `open_long` or `open_short` action MUST include a non-empty `invalidation`.
 
 *** STYLE GUIDELINES ***
 - **CLEAN TEXT**: Avoid redundant nested bolding like `** 【Header】 **`. Use simple brackets `[Header]` for section titles.
