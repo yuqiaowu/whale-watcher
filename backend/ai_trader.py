@@ -268,27 +268,12 @@ Before committing, explicitly consider all three:
 Score each scenario by: (Signal Strength) × (Data Confluence) × (Risk/Reward).
 Choose the highest-scoring one. **Explicitly state why you rejected the other two.**
 
-**4D. THE ALPHA RRR RULE (盈亏比金律 - MANDATORY)**
-Your primary job is to find high-asymmetry opportunities.
-1. **Minimum RRR = 1.5**: Every `open_long` or `open_short` MUST have a projected Profit (TP distance) that is at least 1.5x the projected Risk (SL distance).
-2. **The "Math Check" Step**: 
-   Before outputting JSON, you MUST perform this internal calculation:
-   *   Entry Price = $E
-   *   Stop Loss = $SL (Distance to entry = |E - SL| = D_risk)
-   *   Take Profit = $TP (Distance to entry = |E - TP| = D_reward)
-   *   **RRR = D_reward / D_risk**
-3. **SELF-CENSORSHIP**: If the technical setup requires a wide stop (e.g. 1.5x NATR) but the resistance levels (TP) only yield a 1.2x RRR, you MUST choose `monitor` or `hold`. **Suggesting a trade with RRR < 1.5 is a failure of your logic.**
-4. **TIMID TP PENALTY**: Do not set 'micro-TPs' (e.g., 0.5% gain) while having a 'macro-SL' (e.g., 5% loss).
+4. **ALPHA RRR RULE (RRR > 1.5)**: Every `open` action MUST have a projected Profit targets at least 1.5x larger than the Stop Loss distance.
+5. **2% NAV RISK CAP**: Size trades so `(Size * SL%) <= (Total Equity * 0.02)`. 
+6. **NO NESTED QUOTES**: Use ONLY single quotes or brackets `()` inside JSON string fields. **NEVER use double quotes "" inside a string.** 
+7. **JSON ONLY**: Output ONLY the raw JSON. No markdown backticks, no introductions.
 
-**4F. THE 2% NAV RISK CAP (2% 资产红线 - MANDATORY)**
-Your risk tolerance is STRICT. You MUST size every trade so that a single stop-loss event does not lose more than 2% of your `total_equity`.
-- **The Formula**: `(Position Size USD * Stop Loss distance %) <= (Total Equity * 0.02)`.
-- **Example**: If `total_equity` = $3,800, your max risk per trade is $76.
-- If your technical Stop Loss is 10% away, your `position_size_usd` (nominal, not margin) MUST NOT exceed $760.
-- If your technical Stop Loss is 2% away, your `position_size_usd` could go up to $3,800 (100% NAV).
-- Suggesting a trade that risks > 2% NAV is a CRITICAL FAILURE.
-
-**4G. ANTI-MOTIVATED REASONING AUDIT (MANDATORY)**
+**4E. RED TEAM AUDIT**
 Before finalizing, perform a **Red Team Audit** on your own conclusion:
 1. **The "Bet" Test**: If you had to bet 50% of your own wealth on this trade, what information would make you hesitate? (Identify "Unknown Unknowns").
 2. **Red Team Mode**: If you were forced to argue the EXACT OPPOSITE position (e.g., if you are long, build the strongest Bear case), what evidence would you use? 
@@ -400,8 +385,8 @@ Constraints:
       "leverage": 1, /* Dynamic leverage based on your risk tolerance */
       "position_size_usd": 0.0, /* Calculated based on your confidence and total_equity */
       "entry_reason": { 
-        "zh": "【强制包含：1)为何是此币 2)为何是现在 3)你的手动盈亏比计算 (必须 > 1.5) 4)单笔风险占 NAV 比例 (必须 <= 2%)】", 
-        "en": "【MUST INCLUDE: 1)Catalysts 2)Timing 3)Calculated RRR (> 1.5) 4)Risk % of NAV (<= 2%)】" 
+        "zh": "(为何是此币?为何是现在? RRR > 1.5 计算结果? 2% NAV 风险校验?)", 
+        "en": "(Why? Catalysts? Timing? RRR > 1.5 check? 2% NAV risk check? No double quotes inside!)" 
       },
       "exit_plan": {
         "take_profit": 120000,
