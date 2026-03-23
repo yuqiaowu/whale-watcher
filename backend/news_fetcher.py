@@ -383,18 +383,24 @@ def fetch_fed_futures() -> Dict[str, Any]:
             # Determine trend
             if change_bps < -5:
                 result["trend"] = "Dovish (Rate expectations dropping)"
+                result["trend_zh"] = "鸽派 (利率预期下降)"
             elif change_bps > 5:
                 result["trend"] = "Hawkish (Rate expectations rising)"
+                result["trend_zh"] = "鹰派 (利率预期上升)"
             else:
                 result["trend"] = "Neutral (Stable expectations)"
+                result["trend_zh"] = "中性 (预期稳定)"
         
         # Determine Zone (Heuristic)
         if implied_rate > 3.0:
             result["zone"] = "Restrictive (High)"
+            result["zone_zh"] = "限制性高位"
         elif implied_rate < 2.0:
             result["zone"] = "Accommodative (Low)"
+            result["zone_zh"] = "调节性低位"
         else:
             result["zone"] = "Neutral"
+            result["zone_zh"] = "中性"
             
         return result
         
@@ -432,18 +438,24 @@ def fetch_japan_context() -> Dict[str, Any]:
             # Price RISE = Yen WEAKNESS = Dovish/Risk On
             if change_pct < -0.5:
                 result["trend"] = "Yen Strength (Risk Off)"
+                result["trend_zh"] = "日元走强 (避险情绪)"
             elif change_pct > 0.5:
                 result["trend"] = "Yen Weakness (Risk On)"
+                result["trend_zh"] = "日元走弱 (风险偏好)"
             else:
                 result["trend"] = "Neutral"
+                result["trend_zh"] = "中性"
                 
         # Zone Logic
         if latest_price > 150:
             result["zone"] = "Weak Yen (Intervention Risk)"
+            result["zone_zh"] = "日元极弱 (干预风险)"
         elif latest_price < 130:
             result["zone"] = "Strong Yen"
+            result["zone_zh"] = "日元强势"
         else:
             result["zone"] = "Neutral"
+            result["zone_zh"] = "中性"
             
         return result
 
@@ -487,9 +499,15 @@ def fetch_liquidity_monitor() -> Dict[str, Any]:
                 
                 # Risk Logic
                 if key == "dxy":
-                    if change_pct > 0.1: item["trend"] = "Stronger (Risk Off)"
-                    elif change_pct < -0.1: item["trend"] = "Weaker (Risk On)"
-                    else: item["trend"] = "Neutral"
+                    if change_pct > 0.1: 
+                        item["trend"] = "Stronger (Risk Off)"
+                        item["trend_zh"] = "美元走强 (避险)"
+                    elif change_pct < -0.1: 
+                        item["trend"] = "Weaker (Risk On)"
+                        item["trend_zh"] = "美元走弱 (利好)"
+                    else: 
+                        item["trend"] = "Neutral"
+                        item["trend_zh"] = "中性"
                 elif key == "us10y":
                     # Zone Logic
                     zone = "Neutral"
@@ -499,11 +517,24 @@ def fetch_liquidity_monitor() -> Dict[str, Any]:
                     
                     # Movement Logic
                     move = ""
-                    if change_pct > 0.5: move = "Rising"
-                    elif change_pct < -0.5: move = "Falling"
+                    move_zh = ""
+                    if change_pct > 0.5: 
+                        move = "Rising"
+                        move_zh = "上升"
+                    elif change_pct < -0.5: 
+                        move = "Falling"
+                        move_zh = "下降"
                     
                     # Combine
                     item["trend"] = f"{zone} {move}".strip()
+                    item["trend_zh"] = f"{zone} {move_zh}".strip() if move_zh else zone # Using English zone mapping below is simpler or I can translate here
+                    
+                    # Manually translate common zone combinations
+                    if zone == "Critical High": item["trend_zh"] = f"极高位 {move_zh}".strip()
+                    elif zone == "High": item["trend_zh"] = f"高位 {move_zh}".strip()
+                    elif zone == "Low": item["trend_zh"] = f"低位 {move_zh}".strip()
+                    else: item["trend_zh"] = f"中性 {move_zh}".strip()
+
                 elif key == "vix":
                     # Zone Logic
                     zone = "Normal" # Renamed from Neutral for clarity
@@ -513,11 +544,21 @@ def fetch_liquidity_monitor() -> Dict[str, Any]:
                     
                     # Movement Logic
                     move = ""
-                    if change_pct > 2.0: move = "Rising"
-                    elif change_pct < -2.0: move = "Subsiding"
+                    move_zh = ""
+                    if change_pct > 2.0: 
+                        move = "Rising"
+                        move_zh = "上升"
+                    elif change_pct < -2.0: 
+                        move = "Subsiding"
+                        move_zh = "回落"
                     
                     # Combine
                     item["trend"] = f"{zone} {move}".strip()
+                    if zone == "Extreme Panic": item["trend_zh"] = f"极为恐慌 {move_zh}".strip()
+                    elif zone == "High Fear": item["trend_zh"] = f"高度恐惧 {move_zh}".strip()
+                    elif zone == "Greed": item["trend_zh"] = f"贪婪情绪 {move_zh}".strip()
+                    else: item["trend_zh"] = f"情绪平稳 {move_zh}".strip()
+
                 
                 result[key] = item
                 

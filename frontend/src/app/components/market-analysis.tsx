@@ -30,7 +30,8 @@ export function MarketAnalysis() {
         // Fallback: Construct summary from available raw paragraphs
         let parts = [];
         if (stats.macro?.fed_futures?.trend) {
-          const fedText = language === 'zh' ? `美联储趋势: ${stats.macro.fed_futures.trend}` : `Fed Trend: ${stats.macro.fed_futures.trend}`;
+          const trend = language === 'zh' ? (stats.macro.fed_futures.trend_zh || stats.macro.fed_futures.trend) : stats.macro.fed_futures.trend;
+          const fedText = language === 'zh' ? `美联储趋势: ${trend}` : `Fed Trend: ${trend}`;
           parts.push(fedText);
         }
         if (stats.daily_report?.stablecoins?.paragraph) {

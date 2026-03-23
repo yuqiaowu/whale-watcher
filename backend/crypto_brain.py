@@ -960,7 +960,7 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
     - **Synthesize** the layers. Don't just list data.
     - **Verdict**: For EACH asset (ETH, SOL, BTC, BNB, DOGE), give a final signal (EXECUTE / PROBE / OBSERVE / WAIT) based on the *confluence* of layers.
     
-    Structure:
+    Structure for 'en':
     **🌍 Global Macro & Liquidity**: [Summary of Layer 1 & 2 combined]
     
     **🟠 BTC Strategy (Contract Only)**:
@@ -969,17 +969,35 @@ def generate_comparative_summary(eth_data, sol_data, eth_market, sol_market, fea
     
     **🔷 ETH Strategy**:
     * **Signal**: [Action Signal]
-    * **Reality Check**: [Compare News Sentiment vs Whale Flow. **CRITICAL: Compare 7-Day Trend (Structural) vs 24H (Immediate). Are they aligning or diverging? Check Liquidation Pain**: Are retail traders bleeding? If Long Liqs are high, is the bottom near?]
-    * **Key Metric**: [Mention the most critical metric]
+    * **Reality Check**: [Compare News Sentiment vs Whale Flow. CRITICAL: Compare 7-Day Trend vs 24H. Check Liquidation Pain.]
+    * **Key Metric**: [Most critical metric]
     
     **🟣 SOL Strategy**:
     * **Signal**: [Action Signal]
-    * **Reality Check**: [Compare News Sentiment vs Whale Flow. **CRITICAL: Compare 7-Day Trend (Structural) vs 24H (Immediate). Check Liquidation Pain**: Are retail traders bleeding? If Long Liqs are high, is the bottom near?]
-    * **Key Metric**: [Mention crucial metric]
+    * **Reality Check**: [Compare News Sentiment vs Whale Flow. CRITICAL: Compare 7-Day Trend vs 24H. Check Liquidation Pain.]
+    * **Key Metric**: [Crucial metric]
+
+    Structure for 'zh':
+    **🌍 全球宏观与流动性**: [层级 1 和层级 2 的内容综合总结]
+    
+    **🟠 BTC 策略（仅限合约）**:
+    * **信号**: [基于市场情绪/指标的行动信号]
+    * **现实核查**: [分析资金费率和清算压力。空头是否被套？市场是否超卖？]
+    
+    **🔷 ETH 策略**:
+    * **信号**: [行动信号]
+    * **现实核查**: [对比新闻情绪与鲸鱼资金流。关键：对比 7 日趋势与 24 小时即时流向。检查清算痛点。]
+    * **关键指标**: [提到的最关键指标]
+    
+    **🟣 SOL 策略**:
+    * **信号**: [行动信号]
+    * **现实核查**: [对比新闻情绪与鲸鱼资金流。关键：对比 7 日趋势与 24 小时即时流向。检查清算痛点。]
+    * **关键指标**: [提到的最关键指标]
     """
     
     # Add prompt reinforcement
     prompt += "\n\nCRITICAL: You MUST include BOTH 'en' (English) and 'zh' (Chinese) analysis in the JSON."
+    prompt += "\nIn the 'zh' version, you MUST translate ALL terms into Chinese, including signals (e.g., Use '立即执行' for EXECUTE, '试探性建仓' for PROBE, '持续观察' for OBSERVE, '暂无交易' for WAIT/NO_TRADE)."
     
     res = _call_ai_with_fallback(prompt)
     

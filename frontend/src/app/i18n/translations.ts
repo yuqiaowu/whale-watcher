@@ -87,7 +87,14 @@ export const translations = {
       logicLabel: '逻辑',
       entryLabel: '开仓',
       exitLabel: '平仓',
-      btcBenchmark: 'BTC 基准'
+      btcBenchmark: 'BTC 基准',
+      confidence: '模型置信度',
+      technicalSignal: '技术信号 (Technical)',
+      macroOnChain: '宏观与链上 (Macro/On-Chain)',
+      quantitative: '量化指标 (Quantitative)',
+      regimeSafety: '环境安全性 (Regime Safety)',
+      portfolioStatus: '个人账户状态 (Portfolio Status)',
+      redTeamAudit: '红色突击队审计 (Red Team Audit)'
     },
 
     // Liquidity Market
@@ -457,7 +464,14 @@ export const translations = {
       logicLabel: 'Logic',
       entryLabel: 'Entry',
       exitLabel: 'Exit',
-      btcBenchmark: 'BTC Benchmark'
+      btcBenchmark: 'BTC Benchmark',
+      confidence: 'Confidence',
+      technicalSignal: 'Technical Signal',
+      macroOnChain: 'Macro & On-Chain',
+      quantitative: 'Quantitative (Qlib/Z-Vol)',
+      regimeSafety: 'Regime Safety (Knife/Rocket)',
+      portfolioStatus: 'Portfolio Status',
+      redTeamAudit: 'Red Team Audit'
     },
 
     // Liquidity Market

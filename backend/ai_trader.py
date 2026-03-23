@@ -326,40 +326,40 @@ Constraints:
 - If available room is low, consider closing existing positions first.
 
 🟫 6. OUTPUT FORMAT (JSON ONLY)
-Structure:
+    Structure:
 {
   "analysis_summary": {
-    "zh": "必须是中文，按以下结构分段阐述：\n1. [叙事校验]：判断当前驱动力是Impulse还是已定价，识别市场主旋律。\n2. [决策依据详情]：综合 Technical Signal, Macro & On-Chain, Quantitative (Qlib/Z-Vol) 的交叉验证。\n3. [痛苦交易]：分析爆仓燃料与 L/S Ratio，识别是否处于‘踩踏’或‘衰竭’阶段。\n4. [剧本选择]：明确 4C 中的剧本及选择理由。",
+    "zh": "必须是全中文，按以下结构分段阐述：\n1. [叙事校验]：判断当前驱动力是‘冲动驱动’还是‘已定价’，识别市场主旋律。\n2. [决策依据详情]：综合技术信号、宏观与链上数据、量化指标（Qlib/Z-Vol）的交叉验证。\n3. [痛苦交易]：分析强平头寸分布与多空比（L/S Ratio），识别市场是否处于‘盲目踩踏’或‘动能衰竭’阶段。\n4. [剧本选择]：明确 Section 4C 中的剧本及选择理由。",
     "en": "Must be in English, structured as follows:\n1. [Narrative Validation]: Impulse vs Priced-in.\n2. [Decision Details]: Cross-verification of Tech, Whale, and Quant signals.\n3. [Pain Trade]: Liquidation fuel and L/S Ratio analysis.\n4. [Scenario Selection]: Chosen Scenario (4C) and justification."
   },
   "confidence_probability": 75, /* Use a percentage 0-100% instead of absolute certainty. Admit your 25% uncertainty. */
   "red_team_audit": {
-    "zh": "强行站在对立面（红色突击队），列出如果你的判断是错的，最可能的反向理由是什么？哪些数据支撑反面结论？",
+    "zh": "【强制要求全中文】强行站在对立面（红色突击队/红军审计），列出如果你的判断是错误的，最可能的反向理由是什么？哪些数据支撑反面结论？",
     "en": "Forced Contra-Argument: If your thesis is WRONG, what is the most likely reason? What data points support the opposite view?"
   },
   "hypothesis_scenario": "TREND_FOLLOWING | MEAN_REVERSION | MICROSTRUCTURE_SQUEEZE | NARRATIVE_DIVERGENCE | WHALE_FRONT_RUN",
   "contrary_signal_check": {
-    "zh": "列出当前最严重的冲突数据或风险点，并解释为什么忽略/对冲它。",
+    "zh": "【要求全中文】列出目前最明显的冲突信号或潜在风险点，并合理解释为什么它们不会推翻你的交易结论。",
     "en": "List the most significant contrary signal or risk point and justify why it doesn't invalidate the trade."
   },
   "context_analysis": {
     "technical_signal": { 
-        "zh": "【重要】必须明确提及：1) 上影线/下影线比率 (Wick Ratio) 以判断抛压/托底; 2) RSI 与 ADX 状态; 3) 均线乖离率。", 
+        "zh": "【全中文】必须明确提及：1) 上/下影线比率 (Wick Ratio) 以判断抛压或托底力度; 2) RSI 与 ADX 的具体趋势状态; 3) 价格与均线的偏离度 (SMA Deviation)。", 
         "en": "【IMPORTANT】Must explicitly mention: 1) Upper/Lower Wick Ratio to judge selling pressure/support; 2) RSI & ADX status; 3) SMA deviation." 
     },
     "macro_onchain": { 
-        "zh": "【重要】必须明确提及：1) 24h爆仓数据 (Liquidation Data) 及多空爆仓比; 2) 鲸鱼净流入/流出; 3) 资金费率。", 
+        "zh": "【全中文】必须明确提及：1) 过去 24 小时强平数据及多空强平比; 2) 巨鲸资金的净流入/流出情况; 3) 当前的资金费率状态。", 
         "en": "【IMPORTANT】Must explicitly mention: 1) 24h Liquidation Data & Long/Short Liquidation Ratio; 2) Whale Net Inflow/Outflow; 3) Funding Rate." 
     },
     "quantitative_analysis": { 
-        "zh": "分析 Qlib 排名靠前的币种及 Z-Score 的异常显著性（如成交量或资金费率的统计偏差）。", 
+        "zh": "【全中文】分析 Qlib 排名靠前的币种及其 Qlib 分数的显著性，以及量价偏差（如成交量或费率的 Z-Score 异常）。", 
         "en": "Analyze Qlib top-ranked coins and Z-Score significance (statistical deviations in vol/funding)." 
     },
     "regime_safety": { 
-        "zh": "【必填】基于Section 4B（痛苦交易）评估: 1)当前RSI/ADX/NATR状态; 2)上下影线比率; 3)多空爆仓比; 4)鲸鱼净流向。最终给出明确判断: KNIFE(接飞刀)/ROCKET(挡火箭)/SAFE_MR(安全均值回归)/WHALE_SQUEEZE(鲸鱼轧空)/WHALE_ACCUMULATION(鲸鱼托底)", 
+        "zh": "【全中文必填】基于 Section 4B（痛苦交易）进行评估。最终给出明确的中文判断：‘接飞刀’ (KNIFE) / ‘挡火箭’ (ROCKET) / ‘安全均值回归’ (SAFE_MR) / ‘鲸鱼轧空’ (WHALE_SQUEEZE) / ‘鲸鱼托底’ (WHALE_ACCUMULATION)，并详细说明依据。", 
         "en": "【Required】Based on Section 4B (Pain Trade): 1) RSI/ADX/NATR current state; 2) Upper/Lower Wick Ratio; 3) Liquidation long/short ratio; 4) Whale net flow direction. Conclude with explicit verdict: KNIFE / ROCKET / SAFE_MR / WHALE_SQUEEZE / WHALE_ACCUMULATION and explain why." 
     },
-    "portfolio_status": { "zh": "当前持仓风险评估", "en": "Portfolio risk check." }
+    "portfolio_status": { "zh": "当前投资组合的风险评估（全中文）", "en": "Portfolio risk check." }
   },
   "portfolio_management": [
     { 
@@ -704,28 +704,28 @@ def get_whale_data():
         japan = macro.get("japan_macro", {})
         liq = macro.get("liquidity_monitor", {})
         
-        ctx += "\n=== GLOBAL MACRO CONTEXT (CRITICAL) ===\n"
+        ctx += "\n=== 🌍 全球宏观背景 (GLOBAL MACRO CONTEXT) ===\n"
         fed_rate = (fed or {}).get('implied_rate')
-        ctx += f"- Fed Futures Rate: {f'{fed_rate}%' if fed_rate is not None else 'N/A'} (Trend: {(fed or {}).get('trend', 'N/A')})\n"
+        ctx += f"- 美联储基金利率 (Fed Rate): {f'{fed_rate}%' if fed_rate is not None else 'N/A'} (趋势: {(fed or {}).get('trend', 'N/A')})\n"
         if fed and 'change_5d_bps' in fed:
-             ctx += f"  * 5d Change: {fed['change_5d_bps']} bps\n"
+             ctx += f"  * 5日变动: {fed['change_5d_bps']} bps\n"
         
         jpy_price = (japan or {}).get('price')
-        ctx += f"- USD/JPY: {jpy_price if jpy_price is not None else 'N/A'} (Trend: {(japan or {}).get('trend', 'N/A')})\n"
+        ctx += f"- 美元/日元 (USD/JPY): {jpy_price if jpy_price is not None else 'N/A'} (趋势: {(japan or {}).get('trend', 'N/A')})\n"
         if japan and 'change_5d_pct' in japan:
-             ctx += f"  * 5d Change: {japan['change_5d_pct']}%\n"
+             ctx += f"  * 5日变动: {japan['change_5d_pct']}%\n"
              
         vix_price = (liq.get('vix') or {}).get('price')
         vix_trend = (liq.get('vix') or {}).get('trend', 'N/A')
-        ctx += f"- VIX: {vix_price if vix_price is not None else 'N/A'} (Trend: {vix_trend})\n"
+        ctx += f"- VIX 恐慌指数: {vix_price if vix_price is not None else 'N/A'} (趋势: {vix_trend})\n"
         
         dxy_price = (liq.get('dxy') or {}).get('price')
         dxy_trend = (liq.get('dxy') or {}).get('trend', 'N/A')
-        ctx += f"- DXY: {dxy_price if dxy_price is not None else 'N/A'} (Trend: {dxy_trend})\n"
+        ctx += f"- 美元指数 (DXY): {dxy_price if dxy_price is not None else 'N/A'} (趋势: {dxy_trend})\n"
         
         # Add Daily Macro Trend (Derived from Brain's market data)
         # Brain's market_data.py now provides regime_1d, sma50_1d, sma200_1d
-        daily_ctx = "=== 1D MACRO TREND & REGIME (Aggregated) ===\n"
+        daily_ctx = "=== 📈 1D 级别市场宏观趋势与环境 (1D MACRO) ===\n"
         for sym in ["BTC", "ETH", "SOL", "BNB", "DOGE"]:
             s_obj = data.get(sym.lower(), {})
             m_data = s_obj.get("market", {}) if "market" in s_obj else s_obj
@@ -736,21 +736,22 @@ def get_whale_data():
             sma50 = m_data.get("sma50_1d", 0)
             sma200 = m_data.get("sma200_1d", 0)
             
-            daily_ctx += f"- {sym}: Price ${p:,.2f} | REGIME={regime} (RSI_1D={rsi_1d:.1f})\n"
-            daily_ctx += f"  - Trend: {'BULLISH' if p > sma50 else 'BEARISH'} (vs SMA50 ${sma50:.2f} / SMA200 ${sma200:.2f})\n"
+            daily_ctx += f"- {sym}: 价格 ${p:,.2f} | 市场环境={regime} (RSI_1D={rsi_1d:.1f})\n"
+            daily_ctx += f"  - 长期趋势: {'看涨 (BULLISH)' if p > sma50 else '看跌 (BEARISH)'} (对比 SMA50 ${sma50:.2f} / SMA200 ${sma200:.2f})\n"
             
             if sym == "BTC":
                 # Inject Global Regime Marker for Risk Shield Logic
-                daily_ctx += f"  - **GLOBAL MARKET STATE**: {regime} MARKET\n"
+                daily_ctx += f"  - **全市场状态总结**: {regime} 市场\n"
             
         # Add News context from the same data obj
         news_root = data.get("news", {})
         news_items = news_root.get("items", {})
-        news_str = "\n=== NEWS & SENTIMENT ===\n"
+        news_str = "\n=== 📰 新闻焦点与市场情绪 (NEWS & SENTIMENT) ===\n"
         for source in ["macro", "bitcoin", "ethereum", "general"]:
             items = news_items.get(source, {}).get("items", [])
             for item in items[:2]:
-                news_str += f"- [{source.upper()}] {item.get('title')} ({item.get('published','N/A')})\n"
+                title = item.get('title_cn') or item.get('title')
+                news_str += f"- [{source.upper()}] {title} ({item.get('published','N/A')})\n"
 
         # Final Combined String
         full_ctx = ctx + "\n" + daily_ctx + "\n" + news_str

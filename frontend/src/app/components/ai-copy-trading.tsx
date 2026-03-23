@@ -301,7 +301,7 @@ export function AICopyTrading() {
                             <div className="flex items-center gap-3">
                               <div className="text-[10px] text-[#8E9297] font-bold uppercase tracking-wider flex items-center gap-1">
                                 <Target className="w-3 h-3" />
-                                Confidence
+                                {t.aiTrading.confidence}
                               </div>
                               <div className="w-24 h-1.5 bg-[#0A0C0E] rounded-full overflow-hidden border border-[#2D3139]">
                                 <motion.div 
@@ -337,7 +337,7 @@ export function AICopyTrading() {
                               <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
                                 <div className="text-[10px] text-[#3B82F6] font-bold uppercase tracking-wider flex items-center gap-1">
                                   <div className="w-1 h-3 bg-[#3B82F6] rounded-full"></div>
-                                  Technical Signal
+                                  {t.aiTrading.technicalSignal}
                                 </div>
                                 <div className="text-xs text-[#d1d5db] leading-relaxed">
                                   {decision.context_analysis.technical_signal?.[language as 'zh' | 'en'] || decision.context_analysis.technical_signal?.['en'] || "N/A"}
@@ -346,7 +346,7 @@ export function AICopyTrading() {
                               <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
                                 <div className="text-[10px] text-[#8B5CF6] font-bold uppercase tracking-wider flex items-center gap-1">
                                   <div className="w-1 h-3 bg-[#8B5CF6] rounded-full"></div>
-                                  Macro & On-Chain
+                                  {t.aiTrading.macroOnChain}
                                 </div>
                                 <div className="text-xs text-[#d1d5db] leading-relaxed">
                                   {decision.context_analysis.macro_onchain?.[language as 'zh' | 'en'] || decision.context_analysis.macro_onchain?.['en'] || "N/A"}
@@ -355,7 +355,7 @@ export function AICopyTrading() {
                               <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
                                 <div className="text-[10px] text-[#06B6D4] font-bold uppercase tracking-wider flex items-center gap-1">
                                   <div className="w-1 h-3 bg-[#06B6D4] rounded-full"></div>
-                                  Quantitative (Qlib/Z-Vol)
+                                  {t.aiTrading.quantitative}
                                 </div>
                                 <div className="text-xs text-[#d1d5db] leading-relaxed">
                                   {decision.context_analysis.quantitative_analysis?.[language as 'zh' | 'en'] || decision.context_analysis.quantitative_analysis?.['en'] || "Evaluating quant markers..."}
@@ -364,7 +364,7 @@ export function AICopyTrading() {
                               <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
                                 <div className="text-[10px] text-[#F97316] font-bold uppercase tracking-wider flex items-center gap-1">
                                   <div className="w-1 h-3 bg-[#F97316] rounded-full"></div>
-                                  Regime Safety (Knife/Rocket)
+                                  {t.aiTrading.regimeSafety}
                                 </div>
                                 <div className="text-xs text-[#d1d5db] leading-relaxed">
                                   {decision.context_analysis.regime_safety?.[language as 'zh' | 'en'] || decision.context_analysis.regime_safety?.['en'] || "Analyzing trend exhaustion..."}
@@ -373,7 +373,7 @@ export function AICopyTrading() {
                               <div className="bg-[#1A1D24] border border-[#2D3139]/50 p-3 rounded-sm space-y-1">
                                 <div className="text-[10px] text-[#39FF14] font-bold uppercase tracking-wider flex items-center gap-1">
                                   <div className="w-1 h-3 bg-[#39FF14] rounded-full"></div>
-                                  Portfolio Status
+                                  {t.aiTrading.portfolioStatus}
                                 </div>
                                 <div className="text-xs text-[#d1d5db] leading-relaxed">
                                   {decision.context_analysis.portfolio_status?.[language as 'zh' | 'en'] || decision.context_analysis.portfolio_status?.['en'] || "N/A"}
@@ -428,7 +428,7 @@ export function AICopyTrading() {
                           <div className="mb-8 p-4 bg-[#FF3131]/5 border border-[#FF3131]/20 rounded-sm">
                             <div className="flex items-center gap-2 mb-3">
                               <ShieldAlert className="w-4 h-4 text-[#FF3131]" />
-                              <h3 className="text-sm font-bold text-[#FF3131]">Red Team Audit (红色突击队/自我批判)</h3>
+                              <h3 className="text-sm font-bold text-[#FF3131]">{t.aiTrading.redTeamAudit}</h3>
                             </div>
                             <div className="text-xs italic leading-relaxed text-[#FF3131]/80 font-sans">
                               "{decision.red_team_audit?.[language as 'zh' | 'en'] || decision.red_team_audit?.['en']}"
