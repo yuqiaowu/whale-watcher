@@ -407,6 +407,47 @@ def run_script(script_name):
         write_status("CRASHED", str(e))
         return False
 
+def background_sync_loop():
+    """
+    Independent background thread to sync trade history and positions every 10 minutes.
+    This ensures the dashboard is always 'fresh' even between 4H AI cycles.
+    """
+    print("⏳ Background Sync Thread Started (Interval: 10m)")
+    sync_executor = OKXExecutor() # Dedicated executor for this thread
+    
+    while True:
+        try:
+            # 1. Sync Trade History (Closed orders)
+            sync_executor.sync_trade_history()
+            
+            # 2. Sync Active Positions & Equity
+            current_eq = sync_executor.get_account_equity()
+            active_positions = sync_executor.get_all_positions()
+            
+            state = db.get_data("portfolio_state", {})
+            state["total_equity"] = round(current_eq, 2)
+            state["positions"] = active_positions
+            
+            # Sync cash if possible
+            try:
+                balances = sync_executor._request("GET", "/api/v5/account/balance")
+                if balances.get("code") == "0" and balances.get("data"):
+                     avail = float(balances["data"][0].get("totalEq", current_eq))
+                     for d in balances["data"][0].get("details", []):
+                         if d.get("ccy") == "USDT":
+                             avail = float(d.get("availBal", avail))
+                     state["cash"] = round(avail, 2)
+            except: pass
+            
+            db.save_data("portfolio_state", state)
+            print(f"🔄 [Background Sync] Stats updated at {datetime.now().strftime('%H:%M:%S')}")
+            
+        except Exception as e:
+            print(f"⚠️ Background Sync Error: {e}")
+            
+        # Wait 10 minutes
+        time.sleep(600)
+
 def main():
     print(f"🤖 Unified Whale Monitor & AI Trader Started.")
     print(f"⏱️  Interval: Every {INTERVAL_HOURS} hours.")
@@ -423,6 +464,9 @@ def main():
     
     # 1. Start Web Server
     threading.Thread(target=start_web_server, daemon=True).start()
+    
+    # 1.5 Start Background Sync Thread (10m interval)
+    threading.Thread(target=background_sync_loop, daemon=True).start()
     
     print("==================================================")
     
@@ -494,6 +538,15 @@ def main():
                     # --- NEW: Keep current_state in sync with Real OKX ---
                     state = db.get_data("portfolio_state", {})
                     state["total_equity"] = round(current_eq, 2)
+                    
+                    # Sync active positions list
+                    try:
+                        active_positions = executor.get_all_positions()
+                        state["positions"] = active_positions
+                        print(f"✅ Synced {len(active_positions)} active positions from OKX.")
+                    except Exception as e:
+                        print(f"⚠️ Failed to sync active positions: {e}")
+
                     # Sync cash (available balance) as well
                     try:
                         balances = executor._request("GET", "/api/v5/account/balance")

@@ -268,7 +268,15 @@ Before committing, explicitly consider all three:
 Score each scenario by: (Signal Strength) × (Data Confluence) × (Risk/Reward).
 Choose the highest-scoring one. **Explicitly state why you rejected the other two.**
 
-**4D. ANTI-MOTIVATED REASONING AUDIT (CRITICAL)**
+**4D. THE ALPHA RRR RULE (盈亏比金律 - MANDATORY)**
+Your primary job is to find high-asymmetry opportunities.
+1. **Minimum RRR = 1.5**: Every `open_long` or `open_short` MUST have a projected Profit (TP distance) that is at least 1.5x the projected Risk (SL distance).
+2. **Stop Placement**: Place stops below technical support/above resistance, ideally at least 1.2x - 1.5x the current 4H NATR (Normalized ATR) to avoid noise.
+3. **The Math**: If your technical stop requires a 4% room, you MUST identify a realistic profit target at least 6% away. 
+4. **NO SQUEEZE, NO TRADE**: If the technical range is too tight to allow for a 1.5x RRR, you MUST choose `monitor` and wait for a better entry. 
+5. **TIMID TP PENALTY**: Do not set 'micro-TPs' (e.g., 0.5% gain) while having a 'macro-SL' (e.g., 5% loss). This will lead to immediate rejection by the Risk Supervisor.
+
+**4E. ANTI-MOTIVATED REASONING AUDIT (CRITICAL)**
 Before finalizing, perform a **Red Team Audit** on your own conclusion:
 1. **The "Bet" Test**: If you had to bet 50% of your own wealth on this trade, what information would make you hesitate? (Identify "Unknown Unknowns").
 2. **Red Team Mode**: If you were forced to argue the EXACT OPPOSITE position (e.g., if you are long, build the strongest Bear case), what evidence would you use? 
@@ -950,59 +958,49 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
              validated_actions.append(action)
              continue
 
-        # --- NEW Layer: Volatility & Risk Refinement (NATR & 2% NAV) ---
-
-
-        # Refines size and stop_loss BEFORE exposure checks
+        # --- NEW Layer: Volatility & RRR Validation ---
         sym_key = symbol.lower()
         m_data = whale_data_obj.get(sym_key, {}).get('market', {})
-        natr = m_data.get('natr_percent', 3.0) # Default to 3% if data missing
         entry_price = m_data.get('price', 0)
         
         if entry_price > 0 and act_type.startswith("open_"):
-            min_stop_dist_pct = 1.5 * natr
             exit_plan = action.get("exit_plan", {})
+            tp_input = exit_plan.get("take_profit")
             sl_input = exit_plan.get("stop_loss")
             
-            # 1. Price Parsing
+            # Parse Prices
             try:
-                sl_price = float(str(sl_input).replace('$', '').replace(',', '')) if sl_input and str(sl_input) != "None" and not isinstance(sl_input, str) else 0
-                if isinstance(sl_input, str) and not sl_input.replace('.', '', 1).isdigit():
-                    sl_price = 0 # Handle "Dynamic..." strings
-            except ValueError:
-                sl_price = 0
-            
-            if sl_price > 0:
-                current_sl_dist_pct = abs(entry_price - sl_price) / entry_price * 100
-            else:
-                current_sl_dist_pct = 0
+                tp_px = float(str(tp_input).replace('$', '').replace(',', '')) if tp_input else 0
+                sl_px = float(str(sl_input).replace('$', '').replace(',', '')) if sl_input else 0
+            except:
+                tp_px, sl_px = 0, 0
                 
-            # 2. Enforce Minimum Stop Distance (1.5x NATR)
-            enforced_sl_pct = max(current_sl_dist_pct, min_stop_dist_pct)
-            
-            if enforced_sl_pct > current_sl_dist_pct:
-                # Recalculate price
-                if "long" in act_type:
-                    new_sl_price = entry_price * (1 - enforced_sl_pct / 100)
-                else:
-                    new_sl_price = entry_price * (1 + enforced_sl_pct / 100)
+            if tp_px > 0 and sl_px > 0:
+                dist_tp = abs(tp_px - entry_price)
+                dist_sl = abs(entry_price - sl_px)
+                rrr = dist_tp / dist_sl if dist_sl > 0 else 0
                 
-                action["exit_plan"]["stop_loss"] = round(new_sl_price, 4)
-                if current_sl_dist_pct > 0:
-                    print(f"🛡️ RISK: Widening Stop to 1.5x NATR ({enforced_sl_pct:.2f}%) for {symbol}")
-                else:
-                    print(f"🛡️ RISK: Enforcing NATR Stop ({enforced_sl_pct:.2f}%) for {symbol}")
-            
-            # 3. NAV Risk Cap (2% Max Risk)
-            # If (Size * StopDist%) > (Equity * 2%), we MUST reduce Size.
-            max_risk_usd = equity * 0.02
-            current_risk_usd = (enforced_sl_pct / 100) * size_usd
-            
-            if current_risk_usd > max_risk_usd:
-                refined_size_usd = max_risk_usd / (enforced_sl_pct / 100)
-                print(f"🛡️ RISK: Downsizing {symbol} from ${size_usd:.0f} to ${refined_size_usd:.0f} to meet 2% NAV loss limit")
-                action["position_size_usd"] = round(refined_size_usd, 2)
-                size_usd = refined_size_usd # Update for subsequent checks
+                # REJECTION RULE: RRR must be >= 1.5
+                MIN_RRR = 1.45 # Giving a tiny buffer for rounding
+                if rrr < MIN_RRR:
+                    reason = f"🛡️ LOW RRR: {symbol} Risk/Reward Ratio is {rrr:.2f} (< {MIN_RRR}). Setup is biased towards 'Small Win / Big Loss'. REJECTED."
+                    print(f"{reason}")
+                    action["action"] = "REJECTED"
+                    action["reason"] = reason
+                    validated_actions.append(action)
+                    continue
+
+            # NAV Risk Cap (2% Max Risk) remains as a sizing rule
+            if sl_px > 0:
+                sl_dist_pct = abs(entry_price - sl_px) / entry_price * 100
+                max_risk_usd = equity * 0.02
+                current_risk_usd = (sl_dist_pct / 100) * size_usd
+                
+                if current_risk_usd > max_risk_usd and equity > 0:
+                    refined_size_usd = max_risk_usd / (sl_dist_pct / 100)
+                    print(f"🛡️ RISK: Downsizing {symbol} from ${size_usd:.0f} to ${refined_size_usd:.0f} (2% NAV Limit)")
+                    action["position_size_usd"] = round(refined_size_usd, 2)
+                    size_usd = refined_size_usd
 
         # CHECK: Open Actions
         if act_type.startswith("open_"):
