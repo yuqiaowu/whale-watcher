@@ -5,7 +5,7 @@ from qlib.data import D
 from qlib.utils import init_instance_by_config
 from pathlib import Path
 import pickle
-import os
+from datetime import datetime, timedelta
 from qlib_config import QLIB_FEATURES, FEATURE_EXPRESSIONS, FIT_START_TIME
 
 # 1. Init Qlib
@@ -20,21 +20,22 @@ def train():
 
     qlib.init(provider_uri=str(BIN_DIR), region="cn")
 
-    # 2. Config
+    # 2. Config (Dynamic Rolling Window for 2026)
     market = "all"
     feature_cols = QLIB_FEATURES
-    feature_exprs = FEATURE_EXPRESSIONS
+    feature_expr_list = FEATURE_EXPRESSIONS
     label_expr = ["Ref($close, -6) / $close - 1"] # 24h return (6 * 4h)
 
-    # Dates
+    # Calculate rolling dates based on current time
+    now_dt = datetime.now()
     train_start = FIT_START_TIME 
-    train_end = "2026-02-15"
-    valid_start = "2026-02-16"
-    valid_end = "2026-03-05"
-    test_start = "2026-03-06"
-    test_end = "2026-03-19"
+    train_end = (now_dt - timedelta(days=20)).strftime("%Y-%m-%d")
+    valid_start = (now_dt - timedelta(days=19)).strftime("%Y-%m-%d")
+    valid_end = (now_dt - timedelta(days=5)).strftime("%Y-%m-%d")
+    test_start = (now_dt - timedelta(days=4)).strftime("%Y-%m-%d")
+    test_end = now_dt.strftime("%Y-%m-%d")
 
-    print(f"🚀 Training Model: {train_start} -> {train_end}...")
+    print(f"🚀 Training: {train_start} -> {train_end}. Valid: {valid_start} -> {valid_end}. Test: {test_start} -> {test_end}")
 
     # 3. Data Handler
     handler_config = {
@@ -61,7 +62,7 @@ def train():
                 "class": "QlibDataLoader",
                 "kwargs": {
                     "config": {
-                        "feature": feature_exprs,
+                        "feature": feature_expr_list,
                         "label": label_expr,
                     },
                 },
@@ -69,7 +70,7 @@ def train():
         },
     }
 
-    # 4. Dataset
+    # segments remain consistent with calculations above
     dataset_config = {
         "class": "DatasetH",
         "module_path": "qlib.data.dataset",
@@ -83,19 +84,19 @@ def train():
         },
     }
 
-    # 5. Model (LightGBM)
+    # 5. Model (Relaxed Regularization to fix constant score bug)
     model_config = {
         "class": "LGBModel",
         "module_path": "qlib.contrib.model.gbdt",
         "kwargs": {
             "loss": "mse",
-            "colsample_bytree": 0.8879,
-            "learning_rate": 0.0421,
-            "subsample": 0.8789,
-            "lambda_l1": 205.6999,
-            "lambda_l2": 580.9768,
-            "max_depth": 8,
-            "num_leaves": 210,
+            "colsample_bytree": 0.85,
+            "learning_rate": 0.05,
+            "subsample": 0.85,
+            "lambda_l1": 0.05, # Reduced from 205 to fix dead-score bug
+            "lambda_l2": 0.05, # Reduced from 580 to fix dead-score bug
+            "max_depth": 6,
+            "num_leaves": 31,
             "num_threads": 2,
         },
     }

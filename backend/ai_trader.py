@@ -12,7 +12,7 @@ import google.generativeai as genai
 from openai import OpenAI
 import time
 from okx_executor import OKXExecutor
-from notifier import notify_trade_execution # Restored Notification System
+from notifier import notify_trade_execution, notify_rejection_alert, notify_cycle_summary # Notification System
 
 # Load environment variables
 load_dotenv()
@@ -444,7 +444,7 @@ def get_portfolio_state(executor=None):
                 sym = p["symbol"]
                 
                 # Search backwards for the most recent open rule for this symbol
-                invalidation_obj = {"zh": "未记录", "en": "Not explicitly recorded"}
+                invalidation_obj = {"zh": "离场红线未记录。请基于目前的 [技术指标详情] 和 [鲸鱼实况] 为资产重新定义离场信号。", "en": "No invalidation recorded. AS THE AI MANAGER, YOU MUST DEFINE NEW EXIT CONDITIONS based on current technicals/whale flow."}
                 if isinstance(history_db, list):
                     for dec in history_db:
                         found = False
@@ -1346,6 +1346,24 @@ def run_agent():
             # Backup to local log just in case
             db.save_data("agent_decision_log", history)
             print("✅ Decision Log Saved Successfully!")
+            
+            # 🔔 SEND CYCLE SUMMARY & REJECTIONS
+            try:
+                # Rejection Alerts
+                rej_list = decision.get("rejection_report", [])
+                for rej in rej_list:
+                    notify_rejection_alert(rej["symbol"], rej["reason"], rej["detail"])
+                
+                # Heartbeat Summary
+                sentiment = decision.get("market_bias", {}).get("zh", "中立")
+                conf = decision.get("confidence_probability", 70)
+                
+                # Calculate Heat
+                heat_pct = (curr_long + curr_short) / equity * 100 if equity > 0 else 0
+                notify_cycle_summary(sentiment, conf, round(heat_pct, 1))
+            except Exception as notify_err:
+                print(f"⚠️ Notification Layer Error: {notify_err}")
+
         except Exception as e:
             print(f"❌ FAILED to save log to DB: {e}")
                 
