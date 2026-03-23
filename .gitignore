@@ -45,4 +45,11 @@ backend/qlib_data/bin_multi_coin/
 backend/qlib_data/*.json
 error_log.txt
 frontend/whale_watcher/
-*.txt
+# MLFlow and Model Training Artifacts
+mlruns/
+mlflow/
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+dist/
+build/

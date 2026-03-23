@@ -870,6 +870,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
     # B. New Opportunities
     raw_actions.extend(decision.get("new_opportunities", []))
 
+    rejection_report = []
     for action in raw_actions:
         symbol = action.get("symbol")
         act_type = action.get("action")
@@ -1062,6 +1063,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
 
     
     decision["actions"] = validated_actions
+    decision["rejection_report"] = rejection_report
     return decision
 
 def run_agent():

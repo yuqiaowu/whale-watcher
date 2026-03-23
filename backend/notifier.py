@@ -110,6 +110,24 @@ _{reason}_
     }
     send_discord_message("", embed=discord_embed)
     
+def notify_rejection_alert(symbol, reason, detail=""):
+    """
+    Warns the user when the Risk Shield blocks an AI suggested trade.
+    """
+    title = f"🛡️ RISK SHIELD: BLOCKED {symbol}"
+    msg = f"<b>{title}</b>\n\n<b>Reason:</b> <code>{reason}</code>\n<b>Detail:</b> <i>{detail}</i>\n\n<i>Dolores was prevented from entering this trade to preserve NAV safety.</i>"
+    send_telegram_message(msg)
+    send_discord_message(f"🛡️ **RISK SHIELD:** Blocked `{symbol}`. Reason: `{reason}`. {detail}")
+
+def notify_cycle_summary(sentiment, confidence, portfolio_heat):
+    """
+    Sends a periodic heartbeat status summary.
+    """
+    title = "💓 CYCLE SUMMARY: Dolores is Alive"
+    msg = f"<b>{title}</b>\n\n<b>Market Sentiment:</b> <code>{sentiment}</code>\n<b>AI Confidence:</b> <code>{confidence}%</code>\n<b>Portfolio Heat:</b> <code>{portfolio_heat}% NAV</code>\n\n<i>Analysis cycle complete. No immediate critical actions required.</i>"
+    send_telegram_message(msg)
+    send_discord_message(f"💓 **CYCLE SUMMARY:** {sentiment} | Conf: {confidence}% | Heat: {portfolio_heat}% NAV")
+    
 if __name__ == "__main__":
     # Test
     notify_trade_execution("BTC", "OPEN_LONG", 0.5, 65000, 64000, 68000, "Test notification system.")
