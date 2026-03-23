@@ -6,6 +6,7 @@ from qlib.utils import init_instance_by_config
 from pathlib import Path
 import pickle
 import os
+from qlib_config import QLIB_FEATURES, FEATURE_EXPRESSIONS, FIT_START_TIME
 
 # 1. Init Qlib
 BASE_DIR = Path(__file__).resolve().parent
@@ -21,17 +22,12 @@ def train():
 
     # 2. Config
     market = "all"
-    feature_cols = [
-        "ret", "momentum_12", "macd_hist", "atr_14", "bb_width_20", 
-        "rsi_14", "rel_volume_20", "price_position_20", 
-        "funding_rate", "funding_rate_zscore", "open_interest", 
-        "oi_change", "oi_rsi", "btc_corr_24h", "natr_14"
-    ]
-    feature_exprs = [f"${col}" for col in feature_cols]
+    feature_cols = QLIB_FEATURES
+    feature_exprs = FEATURE_EXPRESSIONS
     label_expr = ["Ref($close, -6) / $close - 1"] # 24h return (6 * 4h)
 
     # Dates
-    train_start = "2025-04-01" 
+    train_start = FIT_START_TIME 
     train_end = "2026-02-15"
     valid_start = "2026-02-16"
     valid_end = "2026-03-05"

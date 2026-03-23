@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import List
 import sys
 from datetime import datetime
+from qlib_config import QLIB_FEATURES, FEATURE_EXPRESSIONS, FIT_START_TIME
 try:
     import qlib
     from qlib.data import D
@@ -130,20 +131,11 @@ def build_inference_dataset(latest_date: str):
     Construct dataset with normalization for model inference.
     Must match training configuration exactly.
     """
-    feature_cols = [
-        "ret", "momentum_12",
-        "macd_hist",
-        "atr_14", "bb_width_20",
-        "rsi_14",
-        "rel_volume_20",
-        "price_position_20",
-        "funding_rate", "funding_rate_zscore",
-        "oi_change", "oi_rsi",
-    ]
-    feature_exprs = [f"${col}" for col in feature_cols]
+    feature_cols = QLIB_FEATURES
+    feature_exprs = FEATURE_EXPRESSIONS
 
-    # Fit range for RobustZScoreNorm (should match training or be a long recent window)
-    fit_start = "2025-04-01"
+    # Fit range for RobustZScoreNorm (should match training)
+    fit_start = FIT_START_TIME
 
     handler_config = {
         "class": "DataHandlerLP",
