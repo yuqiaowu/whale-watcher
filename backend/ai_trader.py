@@ -113,8 +113,10 @@ class TradeMemory:
                 if reflection or red_team != "N/A":
                     summary += f"[LATEST AI CYCLE: {latest_time}]\n"
                     summary += f"Previous Confidence: {confidence}%\n"
-                    summary += f"Previous Reflection: {reflection}\n"
-                    summary += f"Previous Red Team Audit (Self-Criticism): {red_team}\n\n"
+                    summary += f"Previous Reflection (ZH): {latest_decision.get('context_analysis', {}).get('reflection', {}).get('zh', 'N/A')}\n"
+                    summary += f"Previous Reflection (EN): {reflection}\n"
+                    summary += f"Previous Red Team Audit (ZH): {latest_decision.get('red_team_audit', {}).get('zh', 'N/A')}\n"
+                    summary += f"Previous Red Team Audit (EN): {red_team}\n\n"
         except Exception as e:
             pass  # Silently skip if DB fails to load
             
@@ -150,6 +152,7 @@ class TradeMemory:
                         act = t['action']
                         price = t.get('entry_price', '?')
                         
+                        rationale_zh = t['reason'].get('zh', '') if isinstance(t.get('reason'), dict) else ""
                         rationale_en = t['reason'].get('en', '') if isinstance(t.get('reason'), dict) else str(t.get('reason', ''))
                         ctx = t.get('context', {})
                         rsi = ctx.get('rsi', '?')
@@ -167,7 +170,8 @@ class TradeMemory:
                             pnl_outcome = recent_pnls[sym].pop(0)
                             summary += f"    Result Context: {pnl_outcome} shortly after this.\n"
                             
-                        summary += f"    Rationale: {rationale_en[:400]}\n\n"
+                        summary += f"    Rationale (ZH): {rationale_zh[:200]}\n"
+                        summary += f"    Rationale (EN): {rationale_en[:200]}\n\n"
             except Exception as e:
                 pass
                 
@@ -216,11 +220,9 @@ DATA GLOSSARY (指标释义):
 - [爆仓多空比]: 多单爆仓金额 / 空单爆仓金额。高于1表示多头受压显著。
 - [技术指标详情]: 包含 [均线乖离率]、[RSI/ADX 状态]、[上影线/下影线比率]、[波动率 NATR] 等。
 - [鲸鱼代币流向]: 巨鲸往交易所充提**加密资产(如ETH/SOL)**的净值。(仅限ETH/SOL)
-  ⚠️基本逻辑⚠️：代币流入(正数/TO_EXCHANGE) = 准备抛售，**看跌**。流出(负数) = 提币囤积，**看涨**。
-  🤫高阶特例🤫：如果在**底部震荡期**伴随巨额代币流入，且资金费率极负，可能是巨鲸**存入现货作为保证金，准备开高倍做多**（看涨）。
+  ⚠️核心逻辑（标准化）⚠️：现在的数值已标准化。**Token Flow 为正(+) = 提币囤货/流出（看涨）**，数值为负(-) = 充币抛售/流入（看跌）。
 - [鲸鱼资金流向]: 巨鲸往交易所充提**稳定币(USDT/USDC)**的净值。(仅限ETH/SOL)
-  ⚠️基本逻辑⚠️：稳定币流入(正数/IN) = 准备抄底买入，**看涨**。流出(负数) = 资金撤离，**看跌**。
-  🤫高阶特例🤫：如果市场在狂暴大牛市，稳定币小幅流出未必是看跌，可能是巨鲸把 USDT 提走去链上赚取 DeFi 极高无风险收益率（挖矿/质押）。
+  ⚠️核心逻辑（标准化）⚠️：现在的数值已标准化。**Stablecoin Flow 为正(+) = 流入交易所准备抄底（看涨）**，数值为负(-) = 资金离场（看跌）。
 - 对于 BTC/BNB/DOGE，由于尚未接入链上监控，流向均显示 N/A，请忽略流向，重点分析其 [交易所情绪] (OKX Top Trader Sentiment) 和 [24h爆仓量分布]。
 
 {{WHALE_CONTEXT}}
@@ -365,8 +367,8 @@ Structure:
       "side": "long | short",
       "action": "hold | adjust_sl_tp | reduce_25 | reduce_50 | reduce_75 | close_position",
       "action_logic": {
-        "zh": "【强制】必须首先宣读该仓位的 original_invalidation_rule（如果存在），判断当前最新数据是否已触发该离场红线。如果触发，必须全仓平仓。然后再补充其他技术面/盈亏理由。",
-        "en": "【MANDATORY】First, read the 'original_invalidation_rule' from the portfolio state. Check if current data triggers this red line. If YES, you MUST close_position. Then add other technical/PnL reasoning."
+        "zh": "【强制】必须首先结合 original_invalidation_rule 中的离场红线（包含中英文版本），判断当前最新数据是否已触发。如果触发，必须全仓平仓。然后再补充其他技术面/盈亏理由。",
+        "en": "【MANDATORY】First, check the original_invalidation_rule (both ZH and EN) against current data. If triggered, you MUST close_position. Then add other technical/PnL reasoning."
       },
       "exit_plan": { "take_profit": 123.45, "stop_loss": 100.00 } /* Mandatory for adjust_sl_tp */
     }
@@ -433,7 +435,7 @@ def get_portfolio_state(executor=None):
                 sym = p["symbol"]
                 
                 # Search backwards for the most recent open rule for this symbol
-                invalidation_txt = "Not explicitly recorded"
+                invalidation_obj = {"zh": "未记录", "en": "Not explicitly recorded"}
                 if isinstance(history_db, list):
                     for dec in history_db:
                         found = False
@@ -442,9 +444,9 @@ def get_portfolio_state(executor=None):
                             if act.get("symbol") == sym and "open_" in act.get("action", ""):
                                 inv = act.get("exit_plan", {}).get("invalidation", {})
                                 if isinstance(inv, dict):
-                                    invalidation_txt = inv.get("en", str(inv))
+                                    invalidation_obj = inv
                                 else:
-                                    invalidation_txt = str(inv)
+                                    invalidation_obj = {"zh": str(inv), "en": str(inv)}
                                 found = True
                                 break
                         if found:
@@ -466,7 +468,7 @@ def get_portfolio_state(executor=None):
                     "pnl": p.get("pnl", 0),
                     "leverage": p.get("leverage", 1),
                     "pnlPercent": p.get("pnlPercent", 0),
-                    "original_invalidation_rule": invalidation_txt
+                    "original_invalidation_rule": invalidation_obj
                 })
             
             # Save this real-time state to file so daily_report.py and frontend can see it
@@ -586,9 +588,9 @@ def get_whale_data():
             try:
                 flow_val = float(flow)
                 if flow_val > 0:
-                    return f"{flow_val:,.1f} {symbol_name} [TO_EXCHANGE]"
+                    return f"{flow_val:,.1f} {symbol_name} [提币囤货/FROM_EXCHANGE]"
                 elif flow_val < 0:
-                    return f"{flow_val:,.1f} {symbol_name} [FROM_EXCHANGE]"
+                    return f"{flow_val:,.1f} {symbol_name} [充币抛售/TO_EXCHANGE]"
                 else:
                     return f"0 {symbol_name}"
             except:

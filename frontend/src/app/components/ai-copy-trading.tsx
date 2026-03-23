@@ -391,12 +391,31 @@ export function AICopyTrading() {
                                       (a.original_invalidation_rule && a.original_invalidation_rule !== "Not explicitly recorded")
                                     );
                                     if (!invalCards || invalCards.length === 0) return <span className="italic">"No invalidation recorded"</span>;
-                                    return invalCards.map((a: any, i: number) => (
-                                      <div key={i} className="mb-2 last:mb-0">
-                                        <span className="font-bold text-[#E9B124]">{a.symbol}: </span>
-                                        {a.exit_plan?.invalidation?.[language as 'zh' | 'en'] || a.exit_plan?.invalidation?.['en'] || a.original_invalidation_rule || "N/A"}
-                                      </div>
-                                    ));
+                                    return invalCards.map((a: any, i: number) => {
+                                      const getInvalText = (item: any) => {
+                                        // 1. Try new object format from exit_plan
+                                        if (item.exit_plan?.invalidation) {
+                                          const inv = item.exit_plan.invalidation;
+                                          return inv[language as 'zh' | 'en'] || inv['en'] || (typeof inv === 'string' ? inv : null);
+                                        }
+                                        // 2. Try original_invalidation_rule (may be object or string)
+                                        if (item.original_invalidation_rule) {
+                                          const inv = item.original_invalidation_rule;
+                                          if (typeof inv === 'object') {
+                                            return inv[language as 'zh' | 'en'] || inv['en'] || null;
+                                          }
+                                          return inv;
+                                        }
+                                        return null;
+                                      };
+
+                                      return (
+                                        <div key={i} className="mb-2 last:mb-0">
+                                          <span className="font-bold text-[#E9B124]">{a.symbol}: </span>
+                                          {getInvalText(a) || "N/A"}
+                                        </div>
+                                      );
+                                    });
                                   })()}
                                 </div>
                               </div>
