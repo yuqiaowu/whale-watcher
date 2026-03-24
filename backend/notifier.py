@@ -119,12 +119,26 @@ def notify_rejection_alert(symbol, reason, detail=""):
     send_telegram_message(msg)
     send_discord_message(f"🛡️ **RISK SHIELD:** Blocked `{symbol}`. Reason: `{reason}`. {detail}")
 
-def notify_cycle_summary(sentiment, confidence, portfolio_heat):
+def notify_cycle_summary(sentiment, confidence, portfolio_heat, regime="", monitor_msgs=None):
     """
-    Sends a periodic heartbeat status summary.
+    Sends a periodic heartbeat status summary, including analysis and monitor logics.
     """
+    if monitor_msgs is None:
+        monitor_msgs = []
+        
     title = "💓 CYCLE SUMMARY: Dolores is Alive"
-    msg = f"<b>{title}</b>\n\n<b>Market Sentiment:</b> <code>{sentiment}</code>\n<b>AI Confidence:</b> <code>{confidence}%</code>\n<b>Portfolio Heat:</b> <code>{portfolio_heat}% NAV</code>\n\n<i>Analysis cycle complete. No immediate critical actions required.</i>"
+    msg = f"<b>{title}</b>\n\n<b>Market Sentiment:</b> <code>{sentiment}</code>\n<b>AI Confidence:</b> <code>{confidence}%</code>\n<b>Portfolio Heat:</b> <code>{portfolio_heat}% NAV</code>\n"
+    
+    if regime:
+        msg += f"\n<b>大盘安全判定 (Regime):</b>\n<i>{regime}</i>\n"
+        
+    if monitor_msgs:
+        msg += f"\n<b>最新标的观望分析 (Monitor Logics):</b>\n"
+        for m in monitor_msgs:
+            msg += f"{m}\n\n"
+            
+    msg += f"\n<i>Analysis cycle complete. No immediate critical executions triggered.</i>"
+    
     send_telegram_message(msg)
     send_discord_message(f"💓 **CYCLE SUMMARY:** {sentiment} | Conf: {confidence}% | Heat: {portfolio_heat}% NAV")
     

@@ -1363,7 +1363,22 @@ def run_agent():
                 
                 # Calculate Heat
                 heat_pct = (curr_long + curr_short) / equity * 100 if equity > 0 else 0
-                notify_cycle_summary(sentiment, conf, round(heat_pct, 1))
+                
+                # Append analysis summary
+                regime = decision.get("context_analysis", {}).get("regime_safety", {}).get("zh", "")
+                
+                # Format monitor reasons
+                monitor_msgs = []
+                for act in actions:
+                    sym = act.get("symbol", "")
+                    action_type = act.get("action", "")
+                    if action_type in ["monitor", "hold"]:
+                        reason_obj = act.get("action_logic") or act.get("entry_reason") or {}
+                        reason_txt_zh = reason_obj.get("zh", "")
+                        if reason_txt_zh:
+                             monitor_msgs.append(f"🔍 <b>{sym} ({action_type.upper()}):</b>\n{reason_txt_zh}")
+                             
+                notify_cycle_summary(sentiment, conf, round(heat_pct, 1), regime, monitor_msgs)
             except Exception as notify_err:
                 print(f"⚠️ Notification Layer Error: {notify_err}")
 
