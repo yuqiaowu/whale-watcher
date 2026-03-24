@@ -1199,6 +1199,7 @@ def run_agent():
                         {"role": "user", "content": "Analyze the market reality (Whales vs Retail). Detect traps. Generate trading actions."}
                     ],
                     response_format={"type": "json_object"},
+                    max_tokens=8192,
                     timeout=120
                 )
                 
