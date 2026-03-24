@@ -142,7 +142,7 @@ def get_stateful_normalized_features(latest_date: str):
 
     # Allow fallback if exact calendar day mismatches
     from datetime import datetime, timedelta
-    latest_dt = datetime.strptime(latest_date, "%Y-%m-%d")
+    latest_dt = datetime.strptime(latest_date[:10], "%Y-%m-%d")
     latest_str_minus_1 = (latest_dt - timedelta(days=1)).strftime("%Y-%m-%d")
 
     try:
@@ -160,8 +160,11 @@ def get_stateful_normalized_features(latest_date: str):
         print(f"❌ Could not load raw feature dataframe for {latest_date} via Qlib DataLoader.")
         return None
 
-    for proc in handler.infer_processors:
-        df = proc(df)
+    # Iterate over the natively fitted processors from training (skip DropnaLabel which is only for training)
+    # This applies the exact frozen Z-Score parameters!
+    for proc in handler.learn_processors:
+        if "DropnaLabel" not in proc.__class__.__name__:
+            df = proc(df)
         
     return df
 
@@ -291,7 +294,7 @@ def predict_and_export():
         "model_meta": {
             "last_trained": datetime.fromtimestamp(MODEL_PATH.stat().st_mtime).strftime('%Y-%m-%d %H:%M'),
             "target": "next_24h_relative_return",
-            "feature_count": len(feature_cols),
+            "feature_count": len(QLIB_FEATURES),
             "model_type": "LightGBM Ranker",
             "status": "up-to-date"
         },
