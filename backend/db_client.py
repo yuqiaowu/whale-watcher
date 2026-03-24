@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from datetime import datetime
 from dotenv import load_dotenv
+import certifi
 
 load_dotenv()
 
@@ -17,7 +18,7 @@ class DBClient:
         if self.uri and "mongodb+srv://<" not in self.uri and "<password>" not in self.uri:
             try:
                 # Disable SSL warnings for local dev sometimes, but SRV needs it
-                self.client = MongoClient(self.uri, serverSelectionTimeoutMS=5000)
+                self.client = MongoClient(self.uri, serverSelectionTimeoutMS=5000, tlsCAFile=certifi.where())
                 # Verify connection
                 self.client.admin.command('ping')
                 self.db = self.client.whale_watcher # Database name
