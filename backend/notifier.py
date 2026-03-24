@@ -1,12 +1,18 @@
 import os
 import requests
 import json
+import html
 from datetime import datetime
 
 # --- CONFIGURATION ---
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
+
+def escape_html(text):
+    """Simple helper to escape HTML for Telegram."""
+    if not text: return ""
+    return html.escape(str(text))
 
 def send_telegram_message(message):
     """
@@ -97,7 +103,7 @@ _{reason}_
 • <b>Take Profit:</b> <code>{tp if tp else '---'}</code>
 
 🧠 <b>Rationale:</b>
-<i>{reason}</i>
+<i>{escape_html(reason)}</i>
 """
     send_telegram_message(tg_msg)
     
@@ -115,7 +121,7 @@ def notify_rejection_alert(symbol, reason, detail=""):
     Warns the user when the Risk Shield blocks an AI suggested trade.
     """
     title = f"🛡️ RISK SHIELD: BLOCKED {symbol}"
-    msg = f"<b>{title}</b>\n\n<b>Reason:</b> <code>{reason}</code>\n<b>Detail:</b> <i>{detail}</i>\n\n<i>Dolores was prevented from entering this trade to preserve NAV safety.</i>"
+    msg = f"<b>{title}</b>\n\n<b>Reason:</b> <code>{escape_html(reason)}</code>\n<b>Detail:</b> <i>{escape_html(detail)}</i>\n\n<i>Dolores was prevented from entering this trade to preserve NAV safety.</i>"
     send_telegram_message(msg)
     send_discord_message(f"🛡️ **RISK SHIELD:** Blocked `{symbol}`. Reason: `{reason}`. {detail}")
 
@@ -135,9 +141,12 @@ def notify_cycle_summary(sentiment, confidence, portfolio_heat, regime="", monit
     if monitor_msgs:
         msg += f"\n<b>最新标的观望分析 (Monitor Logics):</b>\n"
         for m in monitor_msgs:
+            # Note: m already contains <b> tags from elsewhere, but the actual logic body should be escaped.
+            # However, looking at the call site, m is built with <b>tags</b> already.
+            # I will modify the call site in ai_trader.py to be safer.
             msg += f"{m}\n\n"
             
-    msg += f"\n<i>Analysis cycle complete. No immediate critical executions triggered.</i>"
+    msg += f"\n<i>Analysis cycle complete. Check dashboard for details.</i>"
     
     send_telegram_message(msg)
     send_discord_message(f"💓 **CYCLE SUMMARY:** {sentiment} | Conf: {confidence}% | Heat: {portfolio_heat}% NAV")

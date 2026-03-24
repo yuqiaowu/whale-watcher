@@ -12,7 +12,7 @@ import google.generativeai as genai
 from openai import OpenAI
 import time
 from okx_executor import OKXExecutor
-from notifier import notify_trade_execution, notify_rejection_alert, notify_cycle_summary # Notification System
+from notifier import notify_trade_execution, notify_rejection_alert, notify_cycle_summary, escape_html # Notification System
 
 # Load environment variables
 load_dotenv()
@@ -1300,7 +1300,6 @@ def run_agent():
                     
                     # 🔔 SEND NOTIFICATION (Telegram/Discord)
                     # For reduce actions, position_size_usd is 0 (executor fetches real size dynamically)
-                    # So we display the percentage instead
                     if action_type.startswith("reduce_"):
                         pct = action_type.split("_")[-1]  # e.g. "25" from "reduce_25"
                         size_display = f"{pct}% of position"
@@ -1308,15 +1307,18 @@ def run_agent():
                         size_display = "ALL"
                     else:
                         size_display = f"${amount} ({leverage}x)"
+                        
+                    # Prioritize ZH reason for the user
+                    reason_zh = entry_reason.get('zh', reason_txt)
 
                     notify_trade_execution(
                         symbol=symbol,
                         action=action_type,
                         size=size_display,
-                        entry_price="MARKET", # Execution is market/limit based on executor
+                        entry_price="MARKET",
                         sl=sl,
                         tp=tp,
-                        reason=reason_txt
+                        reason=reason_zh
                     )
                     
                 except Exception as log_err:
@@ -1374,9 +1376,11 @@ def run_agent():
                     action_type = act.get("action", "")
                     if action_type in ["monitor", "hold"]:
                         reason_obj = act.get("action_logic") or act.get("entry_reason") or {}
-                        reason_txt_zh = reason_obj.get("zh", "")
+                        reason_txt_zh = reason_obj.get("zh", "Maintaining monitoring state.")
                         if reason_txt_zh:
-                             monitor_msgs.append(f"🔍 <b>{sym} ({action_type.upper()}):</b>\n{reason_txt_zh}")
+                             # We escape just the text part, keep the <b> tags
+                             safe_reason = escape_html(reason_txt_zh)
+                             monitor_msgs.append(f"🔍 <b>{symbol} ({action_type.upper()}):</b>\n{safe_reason}")
                              
                 notify_cycle_summary(sentiment, conf, round(heat_pct, 1), regime, monitor_msgs)
             except Exception as notify_err:
