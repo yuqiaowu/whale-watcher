@@ -744,5 +744,26 @@
       "bb_trend": "DOWN"
     },
     "outcome": null
+  },
+  {
+    "id": "BNB_1774330180",
+    "timestamp": "2026-03-24T13:29:40.017149",
+    "symbol": "BNB",
+    "action": "adjust_sl_tp",
+    "entry_price": 627.8,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u4ef7\u683c\u672a\u8dcc\u7834$615\uff08\u5f53\u524d$627.8\uff09\uff0cRSI=39.33\u672a\u8dcc\u783435\uff0cOKX\u5927\u6237\u60c5\u7eea\u6307\u6570=0.50\u9ad8\u4e8e0.40\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\u7406\u7531\uff1aBNB\u7684RSI\u8d85\u5356\u3001\u7206\u4ed3\u591a\u7a7a\u6bd4\u663e\u793a\u7a7a\u5934\u75db\u82e6\uff0c\u6280\u672f\u9762\u652f\u6301\u53cd\u5f39\uff0c\u4f46QLib\u5206\u6570\u8d1f\u9700\u8c28\u614e\uff0c\u56e0\u6b64\u8c03\u6574\u6b62\u635f\u6b62\u76c8\u4ee5\u7ba1\u7406\u98ce\u9669\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: price not below $615 (current $627.8), RSI=39.33 not below 35, OKX whale sentiment index=0.50 above 0.40, not triggered. Additional reasoning: BNB's RSI oversold, liquidation ratio shows short pain, technicals support bounce, but negative QLib score requires caution, so adjust SL/TP to manage risk."
+    },
+    "context": {
+      "rsi": 39.409767490832465,
+      "adx": 33.418301847212014,
+      "whale_flow": "?",
+      "funding_rate": 0.0001,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
   }
 ]
