@@ -472,6 +472,21 @@ def main():
     
     while True:
         cycle_start = datetime.now()
+        
+        # --- Linux / Apple Silicon Pickle Architecture Healing ---
+        import os
+        from pathlib import Path
+        import subprocess
+        import sys
+
+        BASE_DIR = Path(__file__).resolve().parent
+        linux_flag = BASE_DIR / "qlib_data" / "trained_on_linux_v2.txt"
+        if not linux_flag.exists():
+            print("🔧 Cross-Architecture detected (Mac -> Linux/Railway). Natively retraining model for OS compatibility...")
+            subprocess.run([sys.executable, "train_local_brain.py"], cwd=BASE_DIR)
+            with open(linux_flag, "w") as f:
+                f.write(f"Trained natively on container at {now}")
+            print("✅ Native retrain complete! Pickle structures are now aligned.")
         print(f"\n🔄 --- Starting Cycle: {cycle_start.strftime('%Y-%m-%d %H:%M:%S')} ---")
         write_status("RUNNING", "Fetching new data and analyzing...")
         
