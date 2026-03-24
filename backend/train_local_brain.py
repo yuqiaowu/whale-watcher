@@ -12,6 +12,7 @@ from qlib_config import QLIB_FEATURES, FEATURE_EXPRESSIONS, FIT_START_TIME
 BASE_DIR = Path(__file__).resolve().parent
 BIN_DIR = BASE_DIR / "qlib_data" / "bin_multi_coin"
 MODEL_OUT_PATH = BASE_DIR / "qlib_data" / "model_latest.pkl"
+HANDLER_OUT_PATH = BASE_DIR / "qlib_data" / "handler_latest.pkl"
 
 def train():
     if not BIN_DIR.exists():
@@ -29,10 +30,10 @@ def train():
     # Calculate rolling dates based on current time
     now_dt = datetime.now()
     train_start = FIT_START_TIME 
-    train_end = (now_dt - timedelta(days=20)).strftime("%Y-%m-%d")
-    valid_start = (now_dt - timedelta(days=19)).strftime("%Y-%m-%d")
-    valid_end = (now_dt - timedelta(days=5)).strftime("%Y-%m-%d")
-    test_start = (now_dt - timedelta(days=4)).strftime("%Y-%m-%d")
+    train_end = (now_dt - timedelta(days=5)).strftime("%Y-%m-%d")
+    valid_start = (now_dt - timedelta(days=4)).strftime("%Y-%m-%d")
+    valid_end = (now_dt - timedelta(days=2)).strftime("%Y-%m-%d")
+    test_start = (now_dt - timedelta(days=1)).strftime("%Y-%m-%d")
     test_end = now_dt.strftime("%Y-%m-%d")
 
     print(f"🚀 Training: {train_start} -> {train_end}. Valid: {valid_start} -> {valid_end}. Test: {test_start} -> {test_end}")
@@ -114,6 +115,10 @@ def train():
     print(f"💾 Saving model to {MODEL_OUT_PATH}")
     with open(MODEL_OUT_PATH, "wb") as f:
         pickle.dump(model, f)
+
+    print(f"💾 Saving handler to {HANDLER_OUT_PATH}")
+    with open(HANDLER_OUT_PATH, "wb") as f:
+        pickle.dump(dataset.handler, f)
 
     print("✅ Retrain Complete!")
 

@@ -87,6 +87,7 @@ QLIB_DATA_DIR = BASE_DIR / "qlib_data"
 BIN_DIR = QLIB_DATA_DIR / "bin_multi_coin"
 CSV_PATH = QLIB_DATA_DIR / "multi_coin_features.csv"
 MODEL_PATH = QLIB_DATA_DIR / "model_latest.pkl"
+HANDLER_PATH = QLIB_DATA_DIR / "handler_latest.pkl"
 PAYLOAD_PATH = QLIB_DATA_DIR / "deepseek_payload.json"
 
 # Initialize Qlib (only if available)
@@ -134,6 +135,11 @@ def build_inference_dataset(latest_date: str):
     feature_cols = QLIB_FEATURES
     feature_exprs = FEATURE_EXPRESSIONS
 
+    from datetime import datetime, timedelta
+    now_dt = datetime.now()
+    # Ensure this matches train_local_brain.py logic:
+    fit_end = (now_dt - timedelta(days=5)).strftime("%Y-%m-%d")
+
     # Fit range for RobustZScoreNorm (should match training)
     fit_start = FIT_START_TIME
 
@@ -151,7 +157,7 @@ def build_inference_dataset(latest_date: str):
                         "fields_group": "feature",
                         "clip_outlier": True,
                         "fit_start_time": fit_start,
-                        "fit_end_time": latest_date,
+                        "fit_end_time": fit_end,  # Crucial: uses training's end date, not latest_date!
                     },
                 },
                 {"class": "Fillna", "kwargs": {"fields_group": "feature"}},
