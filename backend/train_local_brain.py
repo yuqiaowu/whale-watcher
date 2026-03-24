@@ -117,6 +117,10 @@ def train():
     print(f"💾 Saving model to {MODEL_OUT_PATH}")
     with open(MODEL_OUT_PATH, "wb") as f:
         pickle.dump(model, f)
+        
+    print(f"📄 Saving universal text booster cross-platform...")
+    booster = model.model
+    booster.save_model(str(BASE_DIR / "qlib_data" / "model_latest.txt"))
 
     print(f"💾 Saving handler to {HANDLER_OUT_PATH}")
     with open(HANDLER_OUT_PATH, "wb") as f:

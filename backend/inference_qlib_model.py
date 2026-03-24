@@ -106,22 +106,32 @@ if HAS_QLIB:
 # 2. Model Loading
 # -----------------------
 
-def load_model():
-    if not MODEL_PATH.exists():
-        print(f"❌ Model not found: {MODEL_PATH}")
-        return None
+def load_booster():
+    model_txt = BASE_DIR / "qlib_data" / "model_latest.txt"
+    model_pkl = BASE_DIR / "qlib_data" / "model_latest.pkl"
     
-    print(f"✅ Loading model: {MODEL_PATH}")
-    try:
-        with open(MODEL_PATH, "rb") as f:
-            model = pickle.load(f)
-        return model
-    except ModuleNotFoundError as e:
-        print(f"⚠️ Model uses qlib classes not available here ({e}). Skipping model — Live Bridge will use simple scoring.")
-        return None
-    except Exception as e:
-        print(f"⚠️ Model load failed ({e}). Proceeding without model.")
-        return None
+    import lightgbm as lgb
+    
+    # 1. Try Universal Text Model (Cross-Platform Safe)
+    if model_txt.exists():
+        print(f"✅ Loading Universal Text Model: {model_txt}")
+        try:
+            return lgb.Booster(model_file=str(model_txt))
+        except Exception as e:
+            print(f"⚠️ Failed to load .txt model: {e}")
+
+    # 2. Fallback to Pickle (Mac-Only Safe usually)
+    if model_pkl.exists():
+        print(f"✅ Loading Pickle Model: {model_pkl}")
+        try:
+            with open(model_pkl, "rb") as f:
+                qlib_model = pickle.load(f)
+            return qlib_model.model
+        except Exception as e:
+            print(f"⚠️ Failed to load .pkl model: {e}")
+            
+    print("❌ No valid model found.")
+    return None
 
 # -----------------------
 # 3. Inference Dataset
@@ -190,8 +200,8 @@ def predict_and_export():
         print(f"   CSV Tail:\n{df_debug[['datetime', 'instrument', 'close']].tail(5)}")
 
     # 2. Load Model & Predict
-    model = load_model()
-    if model is None:
+    booster = load_booster()
+    if booster is None:
         return
 
     print("🔮 Predicting scores using Stateful Handler...")
@@ -202,7 +212,6 @@ def predict_and_export():
 
     # Extract features matching QLib structure and predict natively with LightGBM Booster
     features = processed_df["feature"].values
-    booster = model.model
     preds = booster.predict(features)
     
     pred = pd.Series(preds, index=processed_df.index, name="score")
