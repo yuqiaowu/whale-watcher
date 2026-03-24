@@ -127,72 +127,43 @@ def load_model():
 # 3. Inference Dataset
 # -----------------------
 
-def build_inference_dataset(latest_date: str):
+def get_stateful_normalized_features(latest_date: str):
     """
-    Construct dataset with normalization for model inference using pure Qlib DatasetH.
-    Now that Railway has the full 1.4MB history, QLib can natively fetch from
-    2025-01-01 to compute identical robust Z-Scores dynamically!
+    Manually loads raw data and sequences it through the pre-fitted (pickled) QLib processors.
+    This GUARANTEES we use the exact mean/std learned on the developer's local machine!
+    DatasetH recalculates them which causes drift due to UTC timezone offsets on Railway.
     """
-    feature_cols = QLIB_FEATURES
-    feature_exprs = FEATURE_EXPRESSIONS
+    if not HANDLER_PATH.exists():
+        print(f"❌ Handler not found: {HANDLER_PATH}")
+        return None
 
+    with open(HANDLER_PATH, "rb") as f:
+        handler = pickle.load(f)
+
+    # Allow fallback if exact calendar day mismatches
     from datetime import datetime, timedelta
-    now_dt = datetime.now()
-    
-    # Check the model file's modification time to align the fit_end_time 
-    # to exactly when the model was trained.
-    import os
-    if MODEL_PATH.exists():
-        last_mod = datetime.fromtimestamp(os.path.getmtime(MODEL_PATH))
-    else:
-        last_mod = now_dt
+    latest_dt = datetime.strptime(latest_date, "%Y-%m-%d")
+    latest_str_minus_1 = (latest_dt - timedelta(days=1)).strftime("%Y-%m-%d")
+
+    try:
+        df = handler.data_loader.load(instruments="all", start_time=latest_date, end_time=latest_date)
+    except Exception as e:
+        df = pd.DataFrame()
         
-    fit_end = (last_mod - timedelta(days=5)).strftime("%Y-%m-%d")
-    fit_start = FIT_START_TIME
+    if df is None or df.empty:
+        try:
+            df = handler.data_loader.load(instruments="all", start_time=latest_str_minus_1, end_time=latest_date)
+        except Exception:
+            pass
 
-    handler_config = {
-        "class": "DataHandlerLP",
-        "module_path": "qlib.data.dataset.handler",
-        "kwargs": {
-            "start_time": fit_start,
-            "end_time": latest_date,
-            "instruments": "all",
-            "infer_processors": [
-                {
-                    "class": "RobustZScoreNorm",
-                    "kwargs": {
-                        "fields_group": "feature",
-                        "clip_outlier": True,
-                        "fit_start_time": fit_start,
-                        "fit_end_time": fit_end,
-                    },
-                },
-                {"class": "Fillna", "kwargs": {"fields_group": "feature"}},
-            ],
-            "data_loader": {
-                "class": "QlibDataLoader",
-                "kwargs": {
-                    "config": {
-                        "feature": feature_exprs,
-                    },
-                },
-            },
-        },
-    }
+    if df is None or df.empty:
+        print(f"❌ Could not load raw feature dataframe for {latest_date} via Qlib DataLoader.")
+        return None
 
-    dataset_config = {
-        "class": "DatasetH",
-        "module_path": "qlib.data.dataset",
-        "kwargs": {
-            "handler": handler_config,
-            "segments": {
-                "test": (latest_date, latest_date),
-            },
-        },
-    }
-
-    dataset = init_instance_by_config(dataset_config)
-    return dataset, feature_cols
+    for proc in handler.infer_processors:
+        df = proc(df)
+        
+    return df
 
 # -----------------------
 # 4. Main Logic
@@ -220,11 +191,19 @@ def predict_and_export():
     if model is None:
         return
 
-    dataset, feature_cols = build_inference_dataset(latest_str)
-    print("🔮 Predicting scores using pure QLib DatasetH...")
-    pred = model.predict(dataset)
-    if isinstance(pred, pd.Series):
-        pred = pred.to_frame("score")
+    print("🔮 Predicting scores using Stateful Handler...")
+    processed_df = get_stateful_normalized_features(latest_str)
+    if processed_df is None or processed_df.empty:
+        print("⚠️ Processed inference dataframe is empty. Cannot predict.")
+        return
+
+    # Extract features matching QLib structure and predict natively with LightGBM Booster
+    features = processed_df["feature"].values
+    booster = model.model
+    preds = booster.predict(features)
+    
+    pred = pd.Series(preds, index=processed_df.index, name="score")
+    pred = pred.to_frame("score")
     
     # 3. Get RAW Features (for LLM context)
     # We read from the CSV directly to get un-normalized values
