@@ -385,8 +385,8 @@ Constraints:
       "leverage": 1, /* Dynamic leverage based on your risk tolerance */
       "position_size_usd": 0.0, /* Calculated based on your confidence and total_equity */
       "entry_reason": { 
-        "zh": "(为何是此币?为何是现在? RRR > 1.5 计算结果? 2% NAV 风险校验?)", 
-        "en": "(Why? Catalysts? Timing? RRR > 1.5 check? 2% NAV risk check? No double quotes inside!)" 
+        "zh": "【强制严格按此4点模板输出，无论是开仓还是monitor】：\n1) 为何是此币：[说明技术面支撑/阻力、RSI、均线偏离度及爆仓多空比等]\n2) 为何是现在：[说明当前价格动作与市场状态]\n3) 手动盈亏比(RRR)计算：[列出入场价、止损价风险%、止盈价盈利%，盈亏比=盈利%/风险%]\n4) 单笔风险占NAV比例：[列出计算过程，如风险$xx占NAV的0.xx% <= 2%]。如果是monitor，在此说明是因为盈亏比不足或其他原因。", 
+        "en": "MUST STRICTLY FOLLOW THIS 4-POINT TEMPLATE (Even for monitor):\n1) Why this coin: [Technical/Sentiment summary]\n2) Why now: [Price action state]\n3) RRR Math: [Entry, SL risk%, TP profit%, RRR=X]\n4) NAV Risk: [Risk USD vs NAV%]. If monitor, explain math failure here." 
       },
       "exit_plan": {
         "take_profit": 120000,
