@@ -29,7 +29,9 @@ def train():
 
     # Calculate rolling dates based on current time
     now_dt = datetime.now()
-    train_start = FIT_START_TIME 
+    # Expand training back to 2025-01-01 so LightGBM has 10,000+ rows to build actual splits
+    # instead of a zero-split constant output.
+    train_start = "2025-01-01"
     train_end = (now_dt - timedelta(days=5)).strftime("%Y-%m-%d")
     valid_start = (now_dt - timedelta(days=4)).strftime("%Y-%m-%d")
     valid_end = (now_dt - timedelta(days=2)).strftime("%Y-%m-%d")
