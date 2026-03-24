@@ -1380,7 +1380,7 @@ def run_agent():
                         if reason_txt_zh:
                              # We escape just the text part, keep the <b> tags
                              safe_reason = escape_html(reason_txt_zh)
-                             monitor_msgs.append(f"🔍 <b>{symbol} ({action_type.upper()}):</b>\n{safe_reason}")
+                             monitor_msgs.append(f"🔍 <b>{sym} ({action_type.upper()}):</b>\n{safe_reason}")
                              
                 notify_cycle_summary(sentiment, conf, round(heat_pct, 1), regime, monitor_msgs)
             except Exception as notify_err:
