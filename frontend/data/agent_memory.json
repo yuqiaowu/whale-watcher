@@ -786,5 +786,26 @@
       "bb_trend": "UP"
     },
     "outcome": null
+  },
+  {
+    "id": "SOL_1774339894",
+    "timestamp": "2026-03-24T16:11:34.926222",
+    "symbol": "SOL",
+    "action": "adjust_sl_tp",
+    "entry_price": 91.7,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u4ef7\u683c\u672a\u8dcc\u7834$87.0\uff08\u5f53\u524d$91.74\uff09\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u629b\u552e\u672a\u52a0\u5267\uff0824h\u6d41\u51fa-735.7K SOL\uff0c\u672a\u8d85\u8fc7-1M SOL\u7ea2\u7ebf\uff09\uff0c\u56e0\u6b64\u672a\u89e6\u53d1\u79bb\u573a\u3002\u8865\u5145\u7406\u7531\uff1a\u6280\u672f\u9762RSI 60.5\u63a5\u8fd1\u8d85\u4e70\uff0cADX 21.4\u8d8b\u52bf\u5f31\uff0c\u4e0a\u5f71\u7ebf\u6bd4\u7387\u4f4e\uff0818%\uff09\u663e\u793a\u629b\u538b\u5c0f\uff0c\u4f46\u9cb8\u9c7c\u629b\u552e\uff08-735.7K SOL\uff09\u548c\u7a33\u5b9a\u5e01\u6d41\u51fa\uff08-$4.4K\uff09\u5e26\u6765\u98ce\u9669\uff0c\u8c03\u6574\u6b62\u635f\u4ee5\u9501\u5b9a\u5229\u6da6\u5e76\u9632\u8303\u56de\u8c03\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: price not below $87.0 (current $91.74), whale token selling not intensified (24h outflow -735.7K SOL, not beyond -1M SOL threshold), so not triggered. Additional reasoning: technicals show RSI 60.5 near overbought, ADX 21.4 weak trend, low upper wick ratio (18%) indicates low selling pressure, but whale selling (-735.7K SOL) and stablecoin outflow (-$4.4K) pose risks, adjust SL to lock profits and guard against pullback."
+    },
+    "context": {
+      "rsi": 60.52636066335974,
+      "adx": 21.371046244786292,
+      "whale_flow": "?",
+      "funding_rate": 2.57300630385e-05,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
   }
 ]
