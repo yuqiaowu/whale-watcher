@@ -183,6 +183,147 @@ memory = TradeMemory()
 WHALE_DATA_PATH = BASE_DIR.parent / "frontend/data/whale_analysis.json" # [NEW]
 
 # ------------------------------------------------------------------------
+# INVALIDATION ENGINE — 指标字典 & 认错条件执行器
+# ------------------------------------------------------------------------
+# 所有 AI 可使用的量化指标名称（必须与此字典保持一致）
+# metric 名称是 AI 在 invalidation.conditions 里引用的 key
+SUPPORTED_METRICS = [
+    # 价格
+    "price",
+    # 技术指标
+    "rsi", "adx", "macd", "bb_width", "natr", "vol_ratio", "oi_change_pct",
+    # 资金费率
+    "funding_rate", "funding_zscore",
+    # 爆仓数据
+    "liq_long_short_ratio",
+    # 鲸鱼流向（仅 ETH/SOL 有效）
+    "token_net_flow", "stablecoin_net_flow", "sentiment_score",
+    # 大户持仓比
+    "whale_ls_ratio", "whale_pos_ratio",
+    # 持仓盈亏
+    "pnl_percent", "pnl_usd",
+]
+
+def build_metric_registry(whale_data_obj, executor):
+    """
+    从实时 whale_data_obj 和 OKX 持仓数据构建指标注册表。
+    返回 { 'BNB': {'price': 650.0, 'rsi': 57.8, 'liq_long_short_ratio': 0.57, ...}, ... }
+    """
+    registry = {}
+    for sym in ["btc", "eth", "sol", "bnb", "doge"]:
+        sym_upper = sym.upper()
+        s_obj     = whale_data_obj.get(sym, {})
+        market    = s_obj.get("market", {})
+        stats_24h = s_obj.get("stats_24h", {})
+
+        # 计算爆仓多空比
+        liq_long  = stats_24h.get("liquidation_long_usd")
+        liq_short = stats_24h.get("liquidation_short_usd")
+        try:
+            liq_long_val  = float(liq_long)  if liq_long  else 0.0
+            liq_short_val = float(liq_short) if liq_short else 0.0
+            liq_ratio = liq_long_val / liq_short_val if liq_short_val > 0 else 0.0
+        except Exception:
+            liq_ratio = 0.0
+
+        registry[sym_upper] = {
+            "price":               market.get("last_closed_close") or market.get("price"),
+            "rsi":                 market.get("rsi_14"),
+            "adx":                 market.get("adx_14"),
+            "macd":                market.get("macd_hist"),
+            "bb_width":            market.get("bb_width"),
+            "natr":                market.get("natr_percent"),
+            "vol_ratio":           market.get("vol_ratio_20"),
+            "oi_change_pct":       market.get("delta_oi_24h_percent"),
+            "funding_rate":        market.get("funding_rate"),
+            "funding_zscore":      market.get("funding_zscore"),
+            "liq_long_short_ratio": liq_ratio,
+            "token_net_flow":      stats_24h.get("token_net_flow"),
+            "stablecoin_net_flow": stats_24h.get("stablecoin_net_flow"),
+            "sentiment_score":     stats_24h.get("sentiment_score"),
+            "whale_ls_ratio":      market.get("whale_ls_ratio"),
+            "whale_pos_ratio":     market.get("whale_pos_ratio"),
+            "pnl_percent":         0.0,  # 由持仓数据覆盖
+            "pnl_usd":             0.0,
+        }
+
+    # 用实盘持仓覆盖 pnl_percent / pnl_usd
+    try:
+        positions = executor.get_all_positions()
+        for pos in positions:
+            sym = pos.get("symbol", "").upper()
+            if sym in registry:
+                registry[sym]["pnl_percent"] = float(pos.get("pnlPercent", 0))
+                registry[sym]["pnl_usd"]     = float(pos.get("pnl", 0))
+    except Exception:
+        pass
+
+    return registry
+
+
+def check_invalidation_conditions(symbol, conditions, registry):
+    """
+    对一个持仓的结构化认错条件列表进行逐条校验。
+    返回 (triggered: bool, reason_zh: str)
+
+    conditions 格式（由 AI 在 exit_plan.invalidation.conditions 里输出）：
+    [
+      {"metric": "liq_long_short_ratio", "operator": "<", "value": 10.0},
+      {"metric": "price",               "operator": "<", "value": 630.0},
+      {"metric": "rsi",                 "operator": ">", "value": 70.0}
+    ]
+    """
+    if not conditions or not isinstance(conditions, list):
+        return False, ""
+
+    sym_upper = symbol.upper()
+    sym_data  = registry.get(sym_upper, {})
+
+    OPERATORS = {
+        "<":  lambda a, b: a < b,
+        ">":  lambda a, b: a > b,
+        "<=": lambda a, b: a <= b,
+        ">=": lambda a, b: a >= b,
+        "==": lambda a, b: a == b,
+    }
+
+    for cond in conditions:
+        metric   = cond.get("metric", "")
+        operator = cond.get("operator", "")
+        value    = cond.get("value")
+
+        if not metric or not operator or value is None:
+            continue
+
+        current = sym_data.get(metric)
+        if current is None:
+            print(f"⚠️ [Invalidation] 指标 '{metric}' 在 {sym_upper} 数据中不存在，跳过此条件。")
+            continue
+
+        try:
+            current_val   = float(current)
+            threshold_val = float(value)
+        except Exception:
+            continue
+
+        op_fn = OPERATORS.get(operator)
+        if not op_fn:
+            print(f"⚠️ [Invalidation] 未知运算符 '{operator}'，跳过。")
+            continue
+
+        if op_fn(current_val, threshold_val):
+            reason = (
+                f"🔴 认错条件触发 [{sym_upper}]: "
+                f"{metric} 当前值={current_val:.4f} {operator} 阈值={threshold_val} "
+                f"→ AI 设定红线已突破，系统强制平仓"
+            )
+            print(reason)
+            return True, reason
+
+    return False, ""
+
+
+# ------------------------------------------------------------------------
 # 1. System Prompt (Optimized for Whale Integration)
 # ------------------------------------------------------------------------
 SYSTEM_PROMPT = """
@@ -304,6 +445,7 @@ Before even thinking about new trades, you MUST address your current exposure.
    - **ASSET-SPECIFIC DEFENSE**: 
      - For coins WITH whale data (ETH, SOL): Defend based on Flow + Technicals.
      - For coins WITHOUT whale data (BTC, DOGE, BNB): You **MUST** defend the position based on Technicals (RSI/ADX) + Liquidation Pain + Qlib Ranking. 
+     - **CRITICAL**: Use the `current_sl` (Current Stop Loss) and `current_tp` (Current Take Profit) fields to assess safety. These are the LIVE orders currently active on the exchange.
      - "Missing data" is NOT a reason to skip an action.
    - **ZERO TOLERANCE**: Failing to provide a matching action entry for ANY symbol in portfolio is a **LOGICAL INTEGRITY BREACH**.
 
@@ -404,9 +546,26 @@ Constraints:
         "stop_loss": 95000,
         "invalidation": {
           "zh": "明确描述：什么情况发生时，说明你的判断是错的，应该立即离场（例如：若价格收回X以上/以下，或鲸鱼流向反转，则多/空论点失效）",
-          "en": "Clearly state: under what condition your thesis is WRONG and you must exit immediately (e.g., if price reclaims X, or whale flow reverses, the long/short thesis is invalidated)"
+          "en": "Clearly state: under what condition your thesis is WRONG and you must exit immediately (e.g., if price reclaims X, or whale flow reverses, the long/short thesis is invalidated)",
+          "conditions": [
+            {
+              "metric": "<METRIC_NAME_FROM_SUPPORTED_LIST>",
+              "operator": "< | > | <= | >= | ==",
+              "value": 0.0
+            }
+          ]
         }
       }
+      /* CRITICAL RULE FOR conditions:
+         - metric MUST be one of the SUPPORTED_METRICS list provided in the system.
+         - Supported values: price | rsi | adx | macd | bb_width | natr | vol_ratio |
+           oi_change_pct | funding_rate | funding_zscore | liq_long_short_ratio |
+           token_net_flow | stablecoin_net_flow | sentiment_score |
+           whale_ls_ratio | whale_pos_ratio | pnl_percent | pnl_usd
+         - You may include multiple conditions (any one triggering = exit).
+         - The Python enforcement engine will automatically check these every 2 hours.
+         - Do NOT use metric names outside the supported list above — they will be ignored.
+      */
     }
   ]
 }
@@ -478,7 +637,11 @@ def get_portfolio_state(executor=None):
                 except:
                     size = 0
                     val = 0
-                    
+                
+                # 获取实盘止损位（如手动调整过的 $640）
+                live_sl = p.get("stopLoss")
+                live_tp = p.get("takeProfit")
+
                 state["positions"].append({
                     "symbol": sym,
                     "side": p["type"],
@@ -488,6 +651,8 @@ def get_portfolio_state(executor=None):
                     "pnl": p.get("pnl", 0),
                     "leverage": p.get("leverage", 1),
                     "pnlPercent": p.get("pnlPercent", 0),
+                    "current_sl": live_sl if live_sl else "None",
+                    "current_tp": live_tp if live_tp else "None",
                     "original_invalidation_rule": invalidation_obj
                 })
             
@@ -873,6 +1038,37 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
     except Exception as e:
         print(f"⚠️ Portfolio Integrity Check Failed: {e}")
 
+    # --- INVALIDATION ENGINE: 强制检查每个持仓的认错条件 ---
+    # 在 AI 思考结果之前，程序先用硬逻辑核查所有红线，确保 AI 无法自我辩解
+    try:
+        live_registry = build_metric_registry(whale_data_obj, executor)
+        pm_list_for_check = decision.get("portfolio_management", [])
+
+        for entry in pm_list_for_check:
+            # 只检查 AI 说 hold 的仓位（close/reduce 已经对了，不需要覆盖）
+            if entry.get("action") not in ("hold", "adjust_sl_tp", "monitor"):
+                continue
+
+            sym = entry.get("symbol", "").upper()
+            inv_rule = entry.get("original_invalidation_rule", {})
+            if not isinstance(inv_rule, dict):
+                continue
+
+            conditions = inv_rule.get("conditions", [])
+            if not conditions:
+                continue
+
+            triggered, reason = check_invalidation_conditions(sym, conditions, live_registry)
+            if triggered:
+                print(f"🔴 [Invalidation Engine] {sym} 认错条件触发，覆盖 AI 决策为 close_position")
+                entry["action"] = "close_position"
+                entry["action_logic"] = {
+                    "zh": f"【系统强制平仓】AI 设定的认错红线已触发，Python 执行器自动覆盖决策。触发原因：{reason}",
+                    "en": f"[System Force-Close] Invalidation condition triggered by enforcement engine. Reason: {reason}"
+                }
+    except Exception as e:
+        print(f"⚠️ Invalidation Engine Error: {e}")
+
     # A. Existing Portfolio
     pm_list = decision.get("portfolio_management", [])
     for entry in pm_list:
@@ -906,6 +1102,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
              print(f"{reason} Skipping {symbol}.")
              action["action"] = "REJECTED"
              action["reason"] = reason
+             rejection_report.append({"symbol": symbol, "reason": "Trade Size Too Small", "detail": reason})
              validated_actions.append(action)
              continue
             
@@ -940,6 +1137,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
              print(f"{reason}")
              action["action"] = "REJECTED"
              action["reason"] = reason
+             rejection_report.append({"symbol": symbol, "reason": "WHALE TRAP DETECTED", "detail": reason})
              validated_actions.append(action)
              continue
 
@@ -960,6 +1158,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
              print(f"{reason}")
              action["action"] = "REJECTED"
              action["reason"] = reason
+             rejection_report.append({"symbol": symbol, "reason": "LIQUIDITY TRAP (EXHAUSTED)", "detail": reason})
              validated_actions.append(action)
              continue
              
@@ -968,6 +1167,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
              print(f"{reason}")
              action["action"] = "REJECTED"
              action["reason"] = reason
+             rejection_report.append({"symbol": symbol, "reason": "REVERSAL TRAP (FLUSHED)", "detail": reason})
              validated_actions.append(action)
              continue
 
@@ -1000,6 +1200,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
                     print(f"{reason}")
                     action["action"] = "REJECTED"
                     action["reason"] = reason
+                    rejection_report.append({"symbol": symbol, "reason": "RRR GATE FAILED", "detail": reason})
                     validated_actions.append(action)
                     continue
             else:
@@ -1009,6 +1210,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
                 print(f"{reason}")
                 action["action"] = "REJECTED"
                 action["reason"] = reason
+                rejection_report.append({"symbol": symbol, "reason": "MISSING EXIT PLAN (RRR)", "detail": reason})
                 validated_actions.append(action)
                 continue
 
@@ -1032,6 +1234,7 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
                 print(f"{reason} Skipping {symbol}.")
                 action["action"] = "REJECTED"
                 action["reason"] = reason
+                rejection_report.append({"symbol": symbol, "reason": "MAX POSITIONS EXCEEDED", "detail": reason})
                 validated_actions.append(action)
                 continue
             
