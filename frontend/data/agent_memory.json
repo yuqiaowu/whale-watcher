@@ -912,5 +912,47 @@
       "bb_trend": "UP"
     },
     "outcome": null
+  },
+  {
+    "id": "DOGE_1774419095",
+    "timestamp": "2026-03-25T14:11:35.330793",
+    "symbol": "DOGE",
+    "action": "close_position",
+    "entry_price": 0.09626,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u5f53\u524dDOGE\u4ef7\u683c0.0952\uff0c\u672a\u7a81\u78340.0970\uff1b\u8d44\u91d1\u8d39\u7387Z-Score 98.97%\uff0c\u9ad8\u4e8e50%\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u4f46\u5176\u4ed6\u7406\u7531\uff1a1) \u6301\u4ed3L/S\u6bd4\u663e\u793a\u591a\u5934\u62e5\u6324\uff08\u8d26\u6237\u6570\u6bd41.39\uff09\uff0c\u4f46\u7206\u4ed3\u591a\u7a7a\u6bd40.37\u663e\u793a\u7a7a\u5934\u75db\u82e6\uff0c\u53ef\u80fd\u8f67\u7a7a\uff1b2) \u6280\u672f\u9762RSI 60.7\u504f\u9ad8\uff0c\u4e0a\u5f71\u7ebf\u6bd4\u738731%\u663e\u793a\u629b\u538b\uff0c\u4f46\u4ef7\u683c\u63a5\u8fd1SMA50\u652f\u6491\uff1b3) \u603b\u7a7a\u5934\u66b4\u9732\u8d85\u9650\uff0c\u9700\u51cf\u4ed3\u3002\u7efc\u5408\u98ce\u9669\uff0c\u9009\u62e9\u5e73\u4ed3\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: Current DOGE price 0.0952, not above 0.0970; funding Z-Score 98.97%, above 50%, not triggered. But other reasons: 1) L/S ratios show crowded longs (accounts 1.39), but liquidation ratio 0.37 indicates short pain, potential squeeze; 2) Technicals: RSI 60.7 high, upper wick 31% selling pressure, but price near SMA50 support; 3) Total short exposure exceeds limit, need reduction. Overall risk, choose to close."
+    },
+    "context": {
+      "rsi": 60.665912566182165,
+      "adx": 20.814828094001186,
+      "whale_flow": "?",
+      "funding_rate": 1.6767453564e-06,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": "Closed"
+  },
+  {
+    "id": "SOL_1774419096",
+    "timestamp": "2026-03-25T14:11:36.879554",
+    "symbol": "SOL",
+    "action": "close_position",
+    "entry_price": 92.23,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u5f53\u524dSOL\u4ef7\u683c91.77\uff0c\u672a\u7a81\u783492.5\uff1b\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u4e3a\u51c0\u6d41\u51fa\uff08\u770b\u8dcc\uff09\uff0c\u672a\u53cd\u8f6c\u81f3\u51c0\u6d41\u5165\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u4f46\u5176\u4ed6\u7406\u7531\uff1a1) \u6301\u4ed3L/S\u6bd4\u663e\u793a\u6563\u6237\u591a\u5934\u62e5\u6324\uff08\u8d26\u6237\u6570\u6bd41.15\uff09\uff0c\u4f46\u7206\u4ed3\u591a\u7a7a\u6bd41.49\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u53ef\u80fd\u56de\u8c03\uff1b2) \u6280\u672f\u9762RSI 57.84\u4e2d\u6027\uff0c\u4e0a\u5f71\u7ebf\u6bd4\u738749%\u629b\u538b\uff0c\u4ef7\u683c\u9ad8\u4e8eSMA50\u504f\u79bb+1.70%\uff1b3) \u603b\u7a7a\u5934\u66b4\u9732\u8d85\u9650\uff0c\u9700\u51cf\u4ed3\u3002\u7efc\u5408\u98ce\u9669\uff0c\u9009\u62e9\u5e73\u4ed3\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: Current SOL price 91.77, not above 92.5; whale token flow net outflow (bearish), not reversed to inflow, not triggered. But other reasons: 1) L/S ratios show crowded retail longs (accounts 1.15), but liquidation ratio 1.49 indicates long pain, potential pullback; 2) Technicals: RSI 57.84 neutral, upper wick 49% selling pressure, price above SMA50 deviation +1.70%; 3) Total short exposure exceeds limit, need reduction. Overall risk, choose to close."
+    },
+    "context": {
+      "rsi": 59.28932301252965,
+      "adx": 18.285529842826467,
+      "whale_flow": "?",
+      "funding_rate": 8.32966298448e-05,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": "Closed"
   }
 ]
