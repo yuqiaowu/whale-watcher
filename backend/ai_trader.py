@@ -487,8 +487,8 @@ Constraints:
     Structure:
 {
   "analysis_summary": {
-    "zh": "必须是全中文，按以下结构分段阐述：\n1. [叙事校验]：判断当前驱动力是‘冲动驱动’还是‘已定价’，识别市场主旋律。\n2. [决策依据详情]：综合技术信号、宏观与链上数据、量化指标（Qlib/Z-Vol）的交叉验证。\n3. [痛苦交易]：分析强平头寸分布与多空比（L/S Ratio），识别市场是否处于‘盲目踩踏’或‘动能衰竭’阶段。\n4. [剧本选择]：明确 Section 4C 中的剧本及选择理由。",
-    "en": "Must be in English, structured as follows:\n1. [Narrative Validation]: Impulse vs Priced-in.\n2. [Decision Details]: Cross-verification of Tech, Whale, and Quant signals.\n3. [Pain Trade]: Liquidation fuel and L/S Ratio analysis.\n4. [Scenario Selection]: Chosen Scenario (4C) and justification."
+    "zh": "【禁止复读模版】全中文，深度的叙事合成逻辑：\n1. [叙事校验]：对比当前新闻、宏观背景与价格走势，判断当前是“新信号触发”、“情绪分歧”还是“动能衰竭”。严禁使用固定的、通用的结论词汇。\n2. [决策依据详情]：必须引用具体的数值（如RSI、ADX、Qlib分数）来交叉验证你的逻辑，说明数据的显著性。\n3. [痛苦交易]：基于当前的爆仓多空比和L/S比，精准定位哪一方正处于强制平仓的边缘。\n4. [剧本选择]：结合Section 4C中的剧本，阐述为何当前的微观结构（如轧空或均值回归）是目前最高胜算的路径。",
+    "en": "Narrative Synthesis (MANDATORY UNIQUE CONTENT):\n1. [Narrative Validation]: Dynamic analysis of current drivers vs price action. Do not use boilerplate text.\n2. [Decision Details]: Quantify your logic using real-time tech/whale metrics.\n3. [Pain Trade]: Identify specific trapped liquidity based on current liquidation data.\n4. [Scenario Selection]: Justify the chosen playbook using current microstructure."
   },
   "confidence_probability": 75, /* Use a percentage 0-100% instead of absolute certainty. Admit your 25% uncertainty. */
   "red_team_audit": {
