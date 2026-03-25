@@ -1301,45 +1301,49 @@ def run_agent():
                 # Fetch NATR for the Risk Shield in Executor
                 coin_natr = whale_data_obj.get(symbol.lower(), {}).get('market', {}).get('natr_percent')
                 
-                executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp, natr_percent=coin_natr, pos_side=act.get("side"))
+                order_id = executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp, natr_percent=coin_natr, pos_side=act.get("side"))
 
-                
-                # LOG TO MEMORY
-                try:
-                    sym_lower = symbol.lower()
-                    market_snapshot = whale_data_obj.get(sym_lower, {}).get('market', {})
-                    entry_reason = act.get('entry_reason', {})
-                    # Add reason string for text logs
-                    reason_txt = entry_reason.get('en', reason_txt_en)
-                    
-                    memory.log_trade(symbol, action_type, amount, entry_reason, market_snapshot)
-                    
-                    # 🔔 SEND NOTIFICATION (Telegram/Discord)
-                    # For reduce actions, position_size_usd is 0 (executor fetches real size dynamically)
-                    if action_type.startswith("reduce_"):
-                        pct = action_type.split("_")[-1]  # e.g. "25" from "reduce_25"
-                        size_display = f"{pct}% of position"
-                    elif "close" in action_type and amount == 0:
-                        size_display = "ALL"
-                    else:
-                        size_display = f"${amount} ({leverage}x)"
+                # Only proceed to log memory and notify if an actual order was placed (or adjusted)
+                # Note: okx_executor returns order_id string if successful, None if it skipped/failed
+                if order_id:
+                    # LOG TO MEMORY
+                    try:
+                        sym_lower = symbol.lower()
+                        market_snapshot = whale_data_obj.get(sym_lower, {}).get('market', {})
+                        entry_reason = act.get('entry_reason', {})
+                        # Add reason string for text logs
+                        reason_txt = entry_reason.get('en', reason_txt_en)
                         
-                    # Prioritize ZH reason for the user
-                    # If we have a specific entry_reason from this loop iteration, use it
-                    loop_reason_zh = entry_reason.get('zh', reason_txt_zh)
-                    
-                    notify_trade_execution(
-                        symbol=symbol,
-                        action=action_type,
-                        size=size_display,
-                        entry_price="MARKET",
-                        sl=sl,
-                        tp=tp,
-                        reason=loop_reason_zh
-                    )
-                    
-                except Exception as log_err:
-                    print(f"⚠️ Memory/Notify Log Error: {log_err}")
+                        memory.log_trade(symbol, action_type, amount, entry_reason, market_snapshot)
+                        
+                        # 🔔 SEND NOTIFICATION (Telegram/Discord)
+                        # For reduce actions, position_size_usd is 0 (executor fetches real size dynamically)
+                        if action_type.startswith("reduce_"):
+                            pct = action_type.split("_")[-1]  # e.g. "25" from "reduce_25"
+                            size_display = f"{pct}% of position"
+                        elif "close" in action_type and amount == 0:
+                            size_display = "ALL"
+                        else:
+                            size_display = f"${amount} ({leverage}x)"
+                            
+                        # Prioritize ZH reason for the user
+                        # If we have a specific entry_reason from this loop iteration, use it
+                        loop_reason_zh = entry_reason.get('zh', reason_txt_zh)
+                        
+                        notify_trade_execution(
+                            symbol=symbol,
+                            action=action_type,
+                            size=size_display,
+                            entry_price="MARKET",
+                            sl=sl,
+                            tp=tp,
+                            reason=loop_reason_zh
+                        )
+                        
+                    except Exception as log_err:
+                        print(f"⚠️ Memory/Notify Log Error: {log_err}")
+                else:
+                    print(f"⚠️ Executor returned no order_id for {symbol} ({action_type}). Skipping notification.")
         
         # Save decision log
         try:
