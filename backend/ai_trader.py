@@ -1261,9 +1261,24 @@ def run_agent():
             symbol = act.get("symbol")
             action_type = act.get("action")
             
-            # Logic Mapping for reason (English)
+            # Logic Mapping for reason
             reason_obj = act.get("action_logic") or act.get("entry_reason") or {}
-            reason_txt = reason_obj.get("en", "Maintaining position based on trend.")
+            
+            # Initial reason extraction (will be prioritized later)
+            reason_txt_en = reason_obj.get("en", "Maintaining position based on trend.")
+            reason_txt_zh = reason_obj.get("zh", "根据当前趋势维持仓位。")
+            
+            # Fallback handling for close/reduce actions
+            if "close" in action_type or "reduce" in action_type:
+                # Check if we have an original invalidation rule to reference
+                inv_rule = act.get("original_invalidation_rule", {})
+                inv_zh = inv_rule.get("zh", "未定义") if isinstance(inv_rule, dict) else str(inv_rule)
+                inv_en = inv_rule.get("en", "Not defined") if isinstance(inv_rule, dict) else str(inv_rule)
+
+                if not reason_obj.get("en"):
+                    reason_txt_en = f"Closing/Reducing position based on AI portfolio management rules (Ref Rule: {inv_en})."
+                if not reason_obj.get("zh"):
+                    reason_txt_zh = f"由于触发离场红线或AI风控逻辑（参考红线：{inv_zh}），对仓位进行平仓/减仓。"
 
             try:
                 amount = float(str(act.get("position_size_usd", 0)).replace('$', '').replace(',', ''))
@@ -1294,7 +1309,7 @@ def run_agent():
                     market_snapshot = whale_data_obj.get(sym_lower, {}).get('market', {})
                     entry_reason = act.get('entry_reason', {})
                     # Add reason string for text logs
-                    reason_txt = entry_reason.get('en', 'Driven by whale accumulation.')
+                    reason_txt = entry_reason.get('en', reason_txt_en)
                     
                     memory.log_trade(symbol, action_type, amount, entry_reason, market_snapshot)
                     
@@ -1309,8 +1324,9 @@ def run_agent():
                         size_display = f"${amount} ({leverage}x)"
                         
                     # Prioritize ZH reason for the user
-                    reason_zh = entry_reason.get('zh', reason_txt)
-
+                    # If we have a specific entry_reason from this loop iteration, use it
+                    loop_reason_zh = entry_reason.get('zh', reason_txt_zh)
+                    
                     notify_trade_execution(
                         symbol=symbol,
                         action=action_type,
@@ -1318,7 +1334,7 @@ def run_agent():
                         entry_price="MARKET",
                         sl=sl,
                         tp=tp,
-                        reason=reason_zh
+                        reason=loop_reason_zh
                     )
                     
                 except Exception as log_err:
