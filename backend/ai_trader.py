@@ -1069,13 +1069,28 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
     except Exception as e:
         print(f"⚠️ Invalidation Engine Error: {e}")
 
+    # Merge actions into a flat list without duplicates
+    raw_actions = []
+    
     # A. Existing Portfolio
     pm_list = decision.get("portfolio_management", [])
+    seen_symbols = set()
     for entry in pm_list:
         raw_actions.append(entry)
+        sym = entry.get("symbol", "").split('(')[0].strip().upper()
+        if sym:
+             seen_symbols.add(sym)
         
-    # B. New Opportunities
-    raw_actions.extend(decision.get("new_opportunities", []))
+    # B. New Opportunities - Filters out coins already in portfolio to avoid redundant monitor actions in UI
+    new_opps = decision.get("new_opportunities", [])
+    for entry in new_opps:
+        sym = entry.get("symbol", "").split('(')[0].strip().upper()
+        if sym not in seen_symbols:
+            raw_actions.append(entry)
+            seen_symbols.add(sym)
+        else:
+            print(f"🧹 DEDUPLICATION: Skipping {sym} in new_opportunities as it is already in portfolio management.")
+
 
     rejection_report = []
     for action in raw_actions:
