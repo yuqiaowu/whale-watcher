@@ -975,5 +975,26 @@
       "bb_trend": "UP"
     },
     "outcome": null
+  },
+  {
+    "id": "BNB_1774433498",
+    "timestamp": "2026-03-25T18:11:38.955925",
+    "symbol": "BNB",
+    "action": "adjust_sl_tp",
+    "entry_price": 648.8,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u4ef7\u683c\u672a\u8dcc\u7834$630.0\uff08\u5f53\u524d$643.5\uff09\uff0c\u4e14\u7206\u4ed3\u591a\u7a7a\u6bd420.38\u672a\u8fc5\u901f\u4e0b\u964d\uff08\u4ecd\u9ad8\uff09\uff0c\u56e0\u6b64\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\u7406\u7531\uff1a\u6280\u672f\u9762RSI 60.9\u504f\u9ad8\u3001\u4e0a\u5f71\u7ebf18%\u663e\u793a\u629b\u538b\uff0c\u4f46Qlib\u6392\u540d\u7b2c\u4e00\u548c\u7206\u4ed3\u7a7a\u5934\u75db\u82e6\u9ad8\u53ef\u80fd\u652f\u6491\u4ef7\u683c\uff1b\u4e3a\u63a7\u5236\u98ce\u9669\uff0c\u8c03\u6574\u6b62\u635f\u6b62\u76c8\uff0c\u9501\u5b9a\u90e8\u5206\u5229\u6da6\u5e76\u9632\u8303\u53cd\u8f6c\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: price not below $630.0 (current $643.5), and liquidation ratio 20.38 not dropped rapidly (still high), so not triggered. Additional reasoning: Technicals show RSI 60.9 high, upper wick 18% selling pressure, but Qlib rank 1 and high short pain may support price; to manage risk, adjust SL/TP to lock some profit and guard against reversal."
+    },
+    "context": {
+      "rsi": 60.85803455279131,
+      "adx": 26.270405729134225,
+      "whale_flow": "?",
+      "funding_rate": 0.0001,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
   }
 ]
