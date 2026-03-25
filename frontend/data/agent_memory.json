@@ -1,22 +1,5 @@
 [
   {
-    "id": "SOL_2026-02-26 12:07:36",
-    "timestamp": "2026-02-26 12:07:36",
-    "symbol": "SOL",
-    "action": "open_long",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u5f00\u7acbSOL\u591a\u5934\uff1a\u9cb8\u9c7c\u5438\u7b79\u4fe1\u53f7\u5f3a\uff0824h\u6d41\u5165180,077 SOL\uff09\uff0c\u4ef7\u683c$88.03\uff08RSI 67.7\u4e2d\u6027\uff09\uff0c\u718a\u5e02\u4e2d\u9075\u5faa\u9cb8\u9c7c\u79ef\u7d2f\u89c4\u5219\u3002\u7206\u4ed3\u6570\u636e\u663e\u793a\u7a7a\u5934\u7206\u4ed3$10.9M\uff08\u9ad8\u4e8e\u591a\u5934\uff09\uff0c\u5b58\u5728\u8f67\u7a7a\u6f5c\u529b\u3002",
-      "en": "Open SOL long: Strong whale accumulation signal (24h inflow 180,077 SOL), price $88.03 (RSI 67.7 neutral), follow whale accumulation rule in bear market. Liquidation data shows short liquidations $10.9M (higher than longs), squeeze potential."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
     "id": "ETH_2026-02-26 14:33:17",
     "timestamp": "2026-02-26 14:33:17",
     "symbol": "ETH",
@@ -994,6 +977,27 @@
     "context": {
       "rsi": 61.217646956262236,
       "adx": 25.184055534194215,
+      "whale_flow": "?",
+      "funding_rate": 0.0001,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
+  },
+  {
+    "id": "BNB_1774447827",
+    "timestamp": "2026-03-25T22:10:27.597490",
+    "symbol": "BNB",
+    "action": "adjust_sl_tp",
+    "entry_price": 649.3,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u4ef7\u683c\u8dcc\u7834$630.0\u6216\u7206\u4ed3\u591a\u7a7a\u6bd4\u5feb\u901f\u4e0b\u964d\uff08\u5982\u4f4e\u4e8e10\uff09\u5e94\u79bb\u573a\u3002\u5f53\u524d\u4ef7\u683c$649.3\u9ad8\u4e8e$630.0\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd410.96\u9ad8\u4e8e10\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\u7406\u7531\uff1a\u6280\u672f\u9762RSI 61.3\u3001ADX 25.4\u663e\u793a\u8d8b\u52bf\u504f\u5f3a\uff0c\u4f46\u7206\u4ed3\u591a\u7a7a\u6bd4\u9ad8\u6697\u793a\u7a7a\u5934\u6324\u538b\u98ce\u9669\uff0c\u8c03\u6574\u6b62\u635f\u4ee5\u9501\u5b9a\u5229\u6da6\u5e76\u9632\u8303\u53cd\u8f6c\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: price below $630.0 or liquidation ratio drops rapidly (e.g., below 10) should exit. Current price $649.3 above $630.0, liquidation ratio 10.96 above 10, not triggered. Additional reasoning: Technicals RSI 61.3, ADX 25.4 show strong trend, but high liquidation ratio indicates short squeeze risk, adjust stop-loss to lock profits and guard against reversal."
+    },
+    "context": {
+      "rsi": 61.217646956262236,
+      "adx": 25.432801896176148,
       "whale_flow": "?",
       "funding_rate": 0.0001,
       "bb_width": "?",
