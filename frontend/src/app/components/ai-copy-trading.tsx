@@ -393,15 +393,24 @@ export function AICopyTrading() {
                                     if (!invalCards || invalCards.length === 0) return <span className="italic">"No invalidation recorded"</span>;
                                     return invalCards.map((a: any, i: number) => {
                                       const getInvalText = (item: any) => {
-                                        // 1. Try new object format from exit_plan
+                                        // 0. If this is a force-close or existing decision with custom logic
+                                        const reason = item.action_logic || item.entry_reason;
+                                        if (reason && (reason.zh || reason.en)) {
+                                          return reason[language as 'zh' | 'en'] || reason['en'];
+                                        }
+
+                                        // 1. Try new object format from exit_plan (AI raw output)
                                         if (item.exit_plan?.invalidation) {
                                           const inv = item.exit_plan.invalidation;
-                                          return inv[language as 'zh' | 'en'] || inv['en'] || (typeof inv === 'string' ? inv : null);
+                                          if (typeof inv === 'object' && inv !== null) {
+                                            return inv[language as 'zh' | 'en'] || inv['en'] || null;
+                                          }
+                                          return typeof inv === 'string' ? inv : null;
                                         }
-                                        // 2. Try original_invalidation_rule (may be object or string)
+                                        // 2. Try original_invalidation_rule (persistent state)
                                         if (item.original_invalidation_rule) {
                                           const inv = item.original_invalidation_rule;
-                                          if (typeof inv === 'object') {
+                                          if (typeof inv === 'object' && inv !== null) {
                                             return inv[language as 'zh' | 'en'] || inv['en'] || null;
                                           }
                                           return inv;
