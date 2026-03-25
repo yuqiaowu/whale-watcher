@@ -387,10 +387,12 @@ export function AICopyTrading() {
                                 <div className="text-xs text-[#d1d5db] leading-relaxed">
                                   {(() => {
                                     const invalCards = decision.actions?.filter((a: any) =>
-                                      (a.exit_plan?.invalidation && a.exit_plan.invalidation.zh !== "N/A") ||
-                                      (a.original_invalidation_rule && a.original_invalidation_rule !== "Not explicitly recorded")
+                                      a.action !== 'monitor' && (
+                                        (a.exit_plan?.invalidation && a.exit_plan.invalidation.zh !== "N/A") ||
+                                        (a.original_invalidation_rule && a.original_invalidation_rule !== "Not explicitly recorded")
+                                      )
                                     );
-                                    if (!invalCards || invalCards.length === 0) return <span className="italic">"No invalidation recorded"</span>;
+                                    if (!invalCards || invalCards.length === 0) return <span className="italic">"Not Applicable (No active positions with set thresholds)"</span>;
                                     return invalCards.map((a: any, i: number) => {
                                       const getInvalText = (item: any) => {
                                         // 1. Try new object format from exit_plan (AI raw output)
@@ -415,12 +417,6 @@ export function AICopyTrading() {
                                           }
                                         }
 
-                                        // 3. Last resort fallback to action_logic (for existing positions management)
-                                        // Avoid using entry_reason as it's the 4-point rationale template
-                                        const fallbackReason = item.action_logic;
-                                        if (fallbackReason && (fallbackReason.zh || fallbackReason.en)) {
-                                          return fallbackReason[language as 'zh' | 'en'] || fallbackReason['en'];
-                                        }
                                         return null;
                                       };
 
