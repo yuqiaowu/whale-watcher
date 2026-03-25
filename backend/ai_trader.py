@@ -316,20 +316,26 @@ Before even thinking about new trades, you MUST address your current exposure.
 
 Market Regime: {{MARKET_REGIME}}
 Dynamic Exposure Limits (STRICT):
-- Max Total LONG Exposure: ${{MAX_LONG_LIMIT_USD}} ({{MAX_LONG_PCT}}% of Equity)
-- Max Total SHORT Exposure: ${{MAX_SHORT_LIMIT_USD}} ({{MAX_SHORT_PCT}}% of Equity)
-- Current LONG Exposure: ${{CURR_LONG_EXP_USD}}
-- Current SHORT Exposure: ${{CURR_SHORT_EXP_USD}}
-- Available LONG Room: ${{AVAILABLE_LONG_USD}}
-- Available SHORT Room: ${{AVAILABLE_SHORT_USD}}
+- [GLOBAL CEILING] Max Total LONG Exposure: ${{MAX_LONG_LIMIT_USD}} ({{MAX_LONG_PCT}}% of Equity)
+- [GLOBAL CEILING] Max Total SHORT Exposure: ${{MAX_SHORT_LIMIT_USD}} ({{MAX_SHORT_PCT}}% of Equity)
+- [CURRENT USAGE]  Current LONG Exposure: ${{CURR_LONG_EXP_USD}}
+- [CURRENT USAGE]  Current SHORT Exposure: ${{CURR_SHORT_EXP_USD}}
+- [REMAINING BUDGET - NOT THE CEILING] Unspent LONG Quota: ${{AVAILABLE_LONG_USD}}
+- [REMAINING BUDGET - NOT THE CEILING] Unspent SHORT Quota: ${{AVAILABLE_SHORT_USD}}
+
+⚠️ MANDATORY MATH RULE (DO NOT VIOLATE):
+- Utilization Rate MUST be calculated as: [CURRENT USAGE] / [GLOBAL CEILING]
+- NEVER divide [CURRENT USAGE] by [REMAINING BUDGET]. That produces a meaningless number.
+- Example: If CEILING=$1836, USAGE=$1009, REMAINING=$827 → Utilization = 1009/1836 = 55%. NOT 1009/827.
+- If [CURRENT USAGE] > [GLOBAL CEILING], THEN you are over-limit. Otherwise you are within limits.
 
 Constraints:
 - Max Open Positions: 3.
 - Max Risk Per Trade: 2% of NAV.
 - Max Leverage: 5x (Normal), 10x (High Conviction Whale Signal).
-- **DO NOT exceed the Available Room.** 
-- **SAFETY RULE**: Always keep your total exposure at least $10 BELOW the limit to account for market volatility and fees.
-- If available room is low, consider closing existing positions first.
+- **DO NOT exceed the GLOBAL CEILING.**
+- **SAFETY RULE**: Always keep your total exposure at least $10 BELOW the GLOBAL CEILING.
+- If Unspent Quota is low (< $100), consider closing existing positions first.
 
 🟫 6. OUTPUT FORMAT (JSON ONLY)
     Structure:
@@ -1200,6 +1206,7 @@ def run_agent():
                         {"role": "user", "content": "Analyze the market reality (Whales vs Retail). Detect traps. Generate trading actions."}
                     ],
                     response_format={"type": "json_object"},
+                    temperature=0.5,
                     max_tokens=8192,
                     timeout=120
                 )
