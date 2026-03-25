@@ -125,7 +125,7 @@ def notify_rejection_alert(symbol, reason, detail=""):
     send_telegram_message(msg)
     send_discord_message(f"🛡️ **RISK SHIELD:** Blocked `{symbol}`. Reason: `{reason}`. {detail}")
 
-def notify_cycle_summary(sentiment, confidence, portfolio_heat, regime="", monitor_msgs=None):
+def notify_cycle_summary(sentiment, confidence, portfolio_heat, regime="", monitor_msgs=None, version="---"):
     """
     Sends a periodic heartbeat status summary, including analysis and monitor logics.
     """
@@ -146,7 +146,7 @@ def notify_cycle_summary(sentiment, confidence, portfolio_heat, regime="", monit
             # I will modify the call site in ai_trader.py to be safer.
             msg += f"{m}\n\n"
             
-    msg += f"\n<i>Analysis cycle complete. Check dashboard for details.</i>"
+    msg += f"\n<i>Analysis cycle complete. Check dashboard for details.</i>\n<code>v{version}</code>"
     
     send_telegram_message(msg)
     send_discord_message(f"💓 **CYCLE SUMMARY:** {sentiment} | Conf: {confidence}% | Heat: {portfolio_heat}% NAV")

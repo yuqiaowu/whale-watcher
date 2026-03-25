@@ -15,6 +15,7 @@ from db_client import db
 INTERVAL_HOURS = 4
 INTERVAL_SECONDS = INTERVAL_HOURS * 3600
 PORT = int(os.getenv("PORT", 5001))
+VERSION = "2026.03.25.1220" # Version for tracking deployments
 
 # --- DATA INITIALIZATION ---
 def init_data_files():
@@ -470,6 +471,20 @@ def main():
     
     print("==================================================")
     
+    # --- NEW: Alignment Check on Startup ---
+    # To prevent 'surprise' runs like 7:16 AM when user expects 8:00 AM.
+    # If we are more than 15 mins away from a 4H mark, ask if we should wait.
+    now = datetime.now()
+    minutes_from_align = (now.minute + (now.hour % 4) * 60)
+    # Marks are 0, 4, 8... so we check deviation from start of 4H blocks.
+    # Actually simpler: sleep until next (now // 4 + 1) * 4 window if desired.
+    
+    # We'll stick to a 'Smart Alignment' approach: 
+    # If the process just started and it's 'late' into a cycle (e.g. 1 hour past the mark),
+    # we might still want to run once to get fresh data, OR wait.
+    # Decision: We will run ONCE on startup (to verify everything works), 
+    # but we'll print a very clear warning that this is a STARTUP execution.
+    
     while True:
         cycle_start = datetime.now()
         
@@ -487,8 +502,8 @@ def main():
             with open(linux_flag, "w") as f:
                 f.write(f"Trained natively on container at {now}")
             print("✅ Native retrain complete! Pickle structures are now aligned.")
-        print(f"\n🔄 --- Starting Cycle: {cycle_start.strftime('%Y-%m-%d %H:%M:%S')} ---")
-        write_status("RUNNING", "Fetching new data and analyzing...")
+        print(f"\n🔄 --- Starting Cycle: {cycle_start.strftime('%Y-%m-%d %H:%M:%S')} (v{VERSION}) ---")
+        write_status("RUNNING", f"Analyzing market (v{VERSION})...")
         
         # 0. Monday Auto-Retrain Logic (Weekly Evolution)
         if cycle_start.weekday() == 0: # 0 = Monday

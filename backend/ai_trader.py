@@ -25,6 +25,7 @@ if GEMINI_API_KEY:
 
 # Initialize Client
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url=BASE_URL)
+VERSION = "2026.03.25.1225" # Code version for tracking deployment status
 
 # Paths
 # Paths
@@ -1398,7 +1399,7 @@ def run_agent():
                              safe_reason = escape_html(reason_txt_zh)
                              monitor_msgs.append(f"🔍 <b>{sym} ({action_type.upper()}):</b>\n{safe_reason}")
                              
-                notify_cycle_summary(sentiment, conf, round(heat_pct, 1), regime, monitor_msgs)
+                notify_cycle_summary(sentiment, conf, round(heat_pct, 1), regime, monitor_msgs, version=VERSION)
             except Exception as notify_err:
                 print(f"⚠️ Notification Layer Error: {notify_err}")
 
