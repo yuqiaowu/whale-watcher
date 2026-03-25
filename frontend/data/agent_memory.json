@@ -3,23 +3,6 @@
     "id": "SOL_2026-02-26 12:07:36",
     "timestamp": "2026-02-26 12:07:36",
     "symbol": "SOL",
-    "action": "close_short",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u5173\u95edSOL\u7a7a\u5934\uff1a\u9cb8\u9c7c\u6570\u636e\u663e\u793a24h\u51c0\u6d41\u5165180,077 SOL\uff087d\u6d41\u5165538,433 SOL\uff09\uff0c\u4ef7\u683c\u4e0b\u8dcc\u4f46\u9cb8\u9c7c\u5438\u7b79\uff0c\u5f62\u6210\u770b\u6da8\u80cc\u79bb\u3002\u6301\u4ed3\u76c8\u52294.89%\uff0c\u4f46\u4fe1\u53f7\u51b2\u7a81\uff0c\u4f18\u5148\u9075\u5faa\u9cb8\u9c7c\u73b0\u5b9e\u3002",
-      "en": "Close SOL short: Whale data shows 24h net inflow 180,077 SOL (7d inflow 538,433 SOL), price down but whales accumulating, creating bullish divergence. Position up 4.89%, but signal conflict, prioritize whale reality."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
-    "id": "SOL_2026-02-26 12:07:36",
-    "timestamp": "2026-02-26 12:07:36",
-    "symbol": "SOL",
     "action": "open_long",
     "entry_price": "MARKET",
     "reason": {
@@ -990,6 +973,27 @@
     "context": {
       "rsi": 60.85803455279131,
       "adx": 26.270405729134225,
+      "whale_flow": "?",
+      "funding_rate": 0.0001,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
+  },
+  {
+    "id": "BNB_1774440652",
+    "timestamp": "2026-03-25T20:10:52.559531",
+    "symbol": "BNB",
+    "action": "adjust_sl_tp",
+    "entry_price": 649.2,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u4ef7\u683c\u672a\u8dcc\u7834$630.0\uff08\u5f53\u524d$649.3\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd423.29\u672a\u8fc5\u901f\u4e0b\u964d\uff08\u4ecd\u9ad8\uff09\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u5176\u4ed6\u7406\u7531\uff1a\u6280\u672f\u9762RSI 61.3\u4e2d\u6027\uff0cADX 25.2\u8d8b\u52bf\u4e2d\u7b49\uff0c\u5747\u7ebf\u504f\u79bb+0.82%\u5c0f\uff0c\u4f46\u7206\u4ed3\u591a\u7a7a\u6bd4\u9ad8\u663e\u793a\u591a\u5934\u98ce\u9669\uff0c\u8c03\u6574\u6b62\u635f\u6b62\u76c8\u4ee5\u9501\u5b9a\u5229\u6da6\u5e76\u964d\u4f4e\u98ce\u9669\u3002",
+      "en": "First, check original_invalidation_rule: price not below $630.0 (current $649.3), liquidation ratio 23.29 not dropped rapidly (still high), not triggered. Other reasons: technicals RSI 61.3 neutral, ADX 25.2 moderate trend, SMA deviation +0.82% small, but high liquidation ratio shows long risk, adjust SL/TP to lock profit and reduce risk."
+    },
+    "context": {
+      "rsi": 61.217646956262236,
+      "adx": 25.184055534194215,
       "whale_flow": "?",
       "funding_rate": 0.0001,
       "bb_width": "?",
