@@ -1,22 +1,5 @@
 [
   {
-    "id": "ETH_2026-02-26 14:33:17",
-    "timestamp": "2026-02-26 14:33:17",
-    "symbol": "ETH",
-    "action": "open_short",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u53d1\u73b0\u9cb8\u9c7c\u9677\u9631\uff1a\u4ef7\u683c\u4e0a\u6da8\u4f46\u9cb8\u9c7c\u5927\u91cf\u51fa\u8d27\uff0824h\u51c0\u6d41\u51fa90.8\u4e07ETH\uff09\uff0c\u6563\u6237\u7a7a\u5934\u7206\u4ed36.3\u4ebf\u7f8e\u5143\u663e\u793a\u8fc7\u5ea6\u60b2\u89c2\uff0c\u5f62\u6210\u770b\u8dcc\u80cc\u79bb\u3002\u6280\u672f\u9762RSI 69.4\u8d85\u4e70\uff0c\u7b26\u5408\u718a\u5e02\u505a\u7a7a\u7b56\u7565\u3002",
-      "en": "Whale trap detected: Price rising but whales distributing heavily (24h net outflow 908k ETH), retail short liquidations $630M show excessive pessimism, creating bearish divergence. Technicals show RSI 69.4 overbought, aligning with bear market short strategy."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
     "id": "BTC_2026-02-26 16:08:37",
     "timestamp": "2026-02-26 16:08:37",
     "symbol": "BTC",
@@ -1000,6 +983,27 @@
       "adx": 25.432801896176148,
       "whale_flow": "?",
       "funding_rate": 0.0001,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
+  },
+  {
+    "id": "DOGE_1774455024",
+    "timestamp": "2026-03-26T00:10:24.564953",
+    "symbol": "DOGE",
+    "action": "open_long",
+    "entry_price": 0.09599,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u4e25\u683c\u6309\u6b644\u70b9\u6a21\u677f\u8f93\u51fa\u3011\uff1a\n1) \u4e3a\u4f55\u662f\u6b64\u5e01\uff1aQlib\u6392\u540d\u7b2c\u4e00\u5206\u65700.0166\uff0c\u6280\u672f\u9762RSI 58.16\u4e2d\u6027\u504f\u5f3a\uff0c\u4e0a\u5f71\u7ebf\u6bd4\u738725%\u4f4e\u629b\u538b\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd40.30\u7a7a\u5934\u75db\u82e6\u3002\n2) \u4e3a\u4f55\u662f\u73b0\u5728\uff1a\u4ef7\u683c$0.0961\uff0c\u9ad8\u4e8eSMA50\u504f\u79bb+1.63%\uff0c\u52a8\u91cf0.013\u6b63\uff0c\u5e02\u573a\u4e2d\u6027\u4e2d\u8ddf\u968f\u5f3a\u52bf\u3002\n3) \u624b\u52a8\u76c8\u4e8f\u6bd4(RRR)\u8ba1\u7b97\uff1a\u5165\u573a\u4ef7$0.0961\uff0c\u6b62\u635f\u4ef7$0.0940\uff08\u98ce\u9669-2.19%\uff09\uff0c\u6b62\u76c8\u4ef7$0.1000\uff08\u76c8\u5229+4.06%\uff09\uff0c\u76c8\u4e8f\u6bd4=4.06%/2.19%=1.85 >=1.5\u3002\n4) \u5355\u7b14\u98ce\u9669\u5360NAV\u6bd4\u4f8b\uff1a\u98ce\u9669$10.93\uff08500 * 2.19%\uff09\uff0c\u5360NAV $3826\u76840.29% <= 2%\u3002",
+      "en": "MUST STRICTLY FOLLOW THIS 4-POINT TEMPLATE:\n1) Why this coin: Qlib rank 1 score 0.0166, technicals RSI 58.16 neutral-strong, upper wick ratio 25% low pressure, liquidation ratio 0.30 short pain.\n2) Why now: Price $0.0961, above SMA50 deviation +1.63%, momentum 0.013 positive, following strength in neutral market.\n3) RRR Math: Entry $0.0961, SL $0.0940 (risk -2.19%), TP $0.1000 (profit +4.06%), RRR=4.06%/2.19%=1.85 >=1.5.\n4) NAV Risk: Risk $10.93 (500 * 2.19%), 0.29% of NAV $3826 <=2%."
+    },
+    "context": {
+      "rsi": 57.783818601428834,
+      "adx": 21.474674536210884,
+      "whale_flow": "?",
+      "funding_rate": 5.96310324954e-05,
       "bb_width": "?",
       "bb_trend": "UP"
     },
