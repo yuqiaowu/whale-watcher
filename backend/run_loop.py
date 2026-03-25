@@ -12,7 +12,7 @@ from stats_calculator import calculate_stats
 from db_client import db
 
 # Configuration
-INTERVAL_HOURS = 4
+INTERVAL_HOURS = 2
 INTERVAL_SECONDS = INTERVAL_HOURS * 3600
 PORT = int(os.getenv("PORT", 5001))
 VERSION = "2026.03.25.1220" # Version for tracking deployments
@@ -632,10 +632,9 @@ def main():
         now = datetime.now()
         current_hour = now.hour
         
-        # Find next 4-hour block
-        # e.g. if hour is 18, next is 20. If 21, next is 0 (tomorrow).
-        # We use (h // 4 + 1) * 4 to find next slot
-        next_slot_hour = ((current_hour // 4) + 1) * 4
+        # Find next 2-hour block
+        # e.g. if hour is 13, next is 14. If 14, next is 16.
+        next_slot_hour = ((current_hour // 2) + 1) * 2
         
         # Calculate target time
         # If next_slot_hour is 24, it means 00:00 tomorrow
