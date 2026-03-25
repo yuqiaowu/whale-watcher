@@ -269,7 +269,11 @@ Before committing, explicitly consider all three:
 Score each scenario by: (Signal Strength) × (Data Confluence) × (Risk/Reward).
 Choose the highest-scoring one. **Explicitly state why you rejected the other two.**
 
-4. **ALPHA RRR RULE (RRR > 1.5)**: Every `open` action MUST have a projected Profit targets at least 1.5x larger than the Stop Loss distance.
+4. **ALPHA RRR RULE (HARD GATE — SELF-ENFORCE BEFORE OUTPUT)**:
+   - You MUST calculate RRR = (TP distance from entry) / (SL distance from entry) BEFORE deciding the action type.
+   - If RRR < 1.5: you MUST output `action: "monitor"` — **not** `open_long` or `open_short`. Explain the failed RRR in the `action_logic` field.
+   - If RRR >= 1.5: you may proceed with `open_long` or `open_short`.
+   - **Outputting an `open_` action with RRR < 1.5 is a LOGICAL INTEGRITY BREACH**. You already know the math — enforce it yourself before writing the JSON output.
 5. **2% NAV RISK CAP**: Size trades so `(Size * SL%) <= (Total Equity * 0.02)`. 
 6. **NO NESTED QUOTES**: Use ONLY single quotes or brackets `()` inside JSON string fields. **NEVER use double quotes "" inside a string.** 
 7. **JSON ONLY**: Output ONLY the raw JSON. No markdown backticks, no introductions.
@@ -998,6 +1002,15 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
                     action["reason"] = reason
                     validated_actions.append(action)
                     continue
+            else:
+                # HARD REJECT: open action with no valid TP or SL has undefined risk.
+                # Cannot calculate RRR => cannot allow execution.
+                reason = f"🛡️ MISSING EXIT PLAN: {symbol} open action has no valid TP ({tp_px}) or SL ({sl_px}). RRR cannot be calculated. REJECTED."
+                print(f"{reason}")
+                action["action"] = "REJECTED"
+                action["reason"] = reason
+                validated_actions.append(action)
+                continue
 
             # NAV Risk Cap (2% Max Risk) remains as a sizing rule
             if sl_px > 0:
