@@ -1,22 +1,5 @@
 [
   {
-    "id": "BTC_2026-02-26 16:08:37",
-    "timestamp": "2026-02-26 16:08:37",
-    "symbol": "BTC",
-    "action": "close_long",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u5e73\u4ed3BTC\u591a\u5934\uff1a\u8d44\u91d1\u8d39\u7387\u4e2d\u6027\uff080.0100%\uff09\uff0c\u4f4624\u5c0f\u65f6\u591a\u5934\u7206\u4ed3$6.88\u4ebf\u663e\u793a\u6563\u6237\u8ffd\u6da8\u8106\u5f31\uff0c\u718a\u5e02\u80cc\u666f\u4e0b\u53cd\u5f39\u4e4f\u529b\uff1b\u9cb8\u9c7c\u6570\u636e\u672a\u63d0\u4f9b\u660e\u786e\u5438\u7b79\u4fe1\u53f7\uff0c\u98ce\u9669\u56de\u62a5\u6bd4\u4e0d\u4f73\u3002",
-      "en": "Close BTC long: Funding neutral (0.0100%) but high long liquidations $688M reveal retail overextension, weak bounce in bear market; whale data lacks clear accumulation, poor risk-reward."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
     "id": "SOL_2026-02-26 19:33:10",
     "timestamp": "2026-02-26 19:33:10",
     "symbol": "SOL",
@@ -1004,6 +987,27 @@
       "adx": 21.474674536210884,
       "whale_flow": "?",
       "funding_rate": 5.96310324954e-05,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
+  },
+  {
+    "id": "DOGE_1774458253",
+    "timestamp": "2026-03-26T01:04:13.515434",
+    "symbol": "DOGE",
+    "action": "adjust_sl_tp",
+    "entry_price": 0.09657,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u4ef7\u683c\u672a\u8dcc\u78340.0940\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd40.27\uff08\u4f4e\u4e8e1.0\uff09\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\u7406\u7531\uff1a\u6280\u672f\u9762RSI 59.9\u63a5\u8fd1\u8d85\u4e70\uff0c\u4e0a\u5f71\u7ebf\u6bd4\u738739%\u663e\u793a\u629b\u538b\uff0c\u4e14\u6301\u4ed3L/S\u6bd4\u663e\u793a\u591a\u5934\u62e5\u6324\uff08\u8d26\u6237\u6570\u6bd41.32\uff09\uff0c\u5efa\u8bae\u6536\u7d27\u6b62\u635f\u4ee5\u9501\u5b9a\u5229\u6da6\u5e76\u9632\u8303\u56de\u8c03\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: price not below 0.0940, liquidation long/short ratio 0.27 (<1.0), not triggered. Additional reasoning: technical RSI 59.9 near overbought, upper wick ratio 39% shows selling pressure, and L/S ratio indicates crowded long (account ratio 1.32), suggesting tighten stop-loss to lock profits and guard against pullback."
+    },
+    "context": {
+      "rsi": 59.8617034970822,
+      "adx": 21.474674536210884,
+      "whale_flow": "?",
+      "funding_rate": 0.0001,
       "bb_width": "?",
       "bb_trend": "UP"
     },
