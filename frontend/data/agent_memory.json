@@ -870,5 +870,26 @@
       "bb_trend": "UP"
     },
     "outcome": null
+  },
+  {
+    "id": "BNB_1774412602",
+    "timestamp": "2026-03-25T12:23:22.903488",
+    "symbol": "BNB",
+    "action": "close_position",
+    "entry_price": 642.1,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u4ef7\u683c\u672a\u8dcc\u7834$615\uff08\u5f53\u524d$642\uff09\uff0cRSI 54.98\u672a\u4f4e\u4e8e35\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u4f46\u8865\u5145\uff1a\u5f3a\u5e73\u591a\u7a7a\u6bd430.52\u6781\u7aef\u9ad8\uff08\u591a\u5934\u6781\u5ea6\u53d7\u538b\uff09\uff0c\u6697\u793a\u5f3a\u70c8\u53cd\u8f6c\u98ce\u9669\uff1b\u6280\u672f\u9762\u4e0a\u5f71\u7ebf\u6bd4\u738762%\u963b\u529b\u5f3a\uff0cADX 28.0\u8d8b\u52bf\u8f83\u5f3a\u4f46\u53ef\u80fd\u8f6c\u5411\uff1bQlib\u6392\u540d\u7b2c\u4e8c\u4f46\u5206\u6570\u6781\u4f4e\uff080.0022\uff09\uff0c\u4fe1\u53f7\u5f31\u3002\u4e3a\u7ba1\u7406\u98ce\u9669\uff0c\u9009\u62e9\u5e73\u4ed3\u9501\u5b9a\u76c8\u5229\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: price not below $615 (current $642), RSI 54.98 not below 35, not triggered. But additional: liquidation ratio 30.52 extremely high (extreme long pressure), hints strong reversal risk; technical upper wick ratio 62% strong resistance, ADX 28.0 trend strong but may turn; Qlib rank 2 but score very low (0.0022), signal weak. To manage risk, close to lock profit."
+    },
+    "context": {
+      "rsi": 55.074447218559,
+      "adx": 28.013307491704712,
+      "whale_flow": "?",
+      "funding_rate": 0.0001,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": "Closed"
   }
 ]
