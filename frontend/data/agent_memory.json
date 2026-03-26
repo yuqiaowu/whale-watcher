@@ -1,22 +1,5 @@
 [
   {
-    "id": "ETH_2026-02-27 12:08:28",
-    "timestamp": "2026-02-27 12:08:28",
-    "symbol": "ETH",
-    "action": "open_long",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u5f00\u7acbETH\u591a\u5934\uff1a\u57fa\u4e8e\u8f67\u7a7a\u673a\u4f1a\uff08\u7a7a\u5934\u7206\u4ed3\u6781\u7aef\uff09\uff0c\u9cb8\u9c7c\u7a33\u5b9a\u5e01\u6d41\u5165\uff0c\u8d44\u91d1\u8d39\u7387\u4e2d\u6027\u65e0\u62e5\u6324\uff0cADX 31.8>20\u6ee1\u8db3\u8d8b\u52bf\u6761\u4ef6\uff0c\u53f3\u4fa7\u786e\u8ba4\u4ef7\u683c\u7a81\u7834$2050\u3002",
-      "en": "Open ETH long: Based on squeeze opportunity (extreme short liquidations), whale stablecoin inflow, neutral funding no crowding, ADX 31.8>20 meets trend condition, right-side confirmation on break above $2050."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
     "id": "BNB_2026-02-27 12:08:28",
     "timestamp": "2026-02-27 12:08:28",
     "symbol": "BNB",
@@ -1032,5 +1015,26 @@
       "bb_trend": "UP"
     },
     "outcome": null
+  },
+  {
+    "id": "DOGE_1774534253",
+    "timestamp": "2026-03-26T22:10:53.403935",
+    "symbol": "DOGE",
+    "action": "close_position",
+    "entry_price": 0.09171,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u6761\u4ef61\u4ef7\u683c\u8dcc\u7834$0.0910\u672a\u89e6\u53d1\uff08\u5f53\u524d$0.0912\uff09\uff0c\u6761\u4ef62 RSI<40\u4e14ADX<15\uff1a\u5f53\u524dRSI 38.21<40\uff0cADX 20.3>15\uff0c\u672a\u5b8c\u5168\u89e6\u53d1\u3002\u4f46\u5176\u4ed6\u7406\u7531\uff1a1) \u6280\u672f\u9762\u5f31\uff1aRSI 38.21\u8d85\u5356\u8fb9\u7f18\uff0c\u4e0a\u5f71\u7ebf\u6bd4\u738742%\u6781\u9ad8\u663e\u793a\u629b\u538b\u91cd\uff0c\u52a8\u91cf-0.0223\u8d1f\uff1b2) \u7206\u4ed3\u591a\u7a7a\u6bd421.79\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u53ef\u80fd\u7ee7\u7eed\u4e0b\u8dcc\uff1b3) Qlib\u6392\u540d\u6700\u5dee\uff08\u7b2c\u4e94\uff0c\u5206\u6570-0.0017\uff09\uff1b4) \u5f53\u524d\u4ef7\u63a5\u8fd1\u6b62\u635f$0.09\uff0c\u98ce\u9669\u9ad8\u3002\u56e0\u6b64\u5e73\u4ed3\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: Condition 1 price break $0.0910 not triggered (current $0.0912), condition 2 RSI<40 and ADX<15: current RSI 38.21<40, ADX 20.3>15, not fully triggered. But other reasons: 1) Technically weak: RSI 38.21 nearing oversold, upper wick 42% very high selling pressure, momentum -0.0223 negative; 2) Liquidation ratio 21.79 shows long pain, may fall further; 3) Qlib worst rank (5th, score -0.0017); 4) Current price near SL $0.09, high risk. Thus close."
+    },
+    "context": {
+      "rsi": 40.37114746126899,
+      "adx": 20.26244646861678,
+      "whale_flow": "?",
+      "funding_rate": -1.88603538587e-05,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": "Closed"
   }
 ]
