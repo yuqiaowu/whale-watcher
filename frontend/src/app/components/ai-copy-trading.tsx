@@ -387,12 +387,12 @@ export function AICopyTrading() {
                                 <div className="text-xs text-[#d1d5db] leading-relaxed">
                                   {(() => {
                                     const invalCards = decision.actions?.filter((a: any) =>
-                                      a.action !== 'monitor' && (
-                                        (a.exit_plan?.invalidation && a.exit_plan.invalidation.zh !== "N/A") ||
-                                        (a.original_invalidation_rule && a.original_invalidation_rule !== "Not explicitly recorded")
+                                      !['monitor', 'REJECTED', 'monitor_only'].includes(a.action) && (
+                                        (a.exit_plan?.invalidation && a.exit_plan.invalidation.zh !== "N/A" && a.exit_plan.invalidation.zh !== "None") ||
+                                        (a.original_invalidation_rule && a.original_invalidation_rule.zh !== "Not explicitly recorded" && a.original_invalidation_rule.zh !== "None")
                                       )
                                     );
-                                    if (!invalCards || invalCards.length === 0) return <span className="italic">"Not Applicable (No active positions with set thresholds)"</span>;
+                                    if (!invalCards || invalCards.length === 0) return <span className="italic text-[#8E9297]">"Not Applicable (No active positions with set thresholds)"</span>;
                                     return invalCards.map((a: any, i: number) => {
                                       const getInvalText = (item: any) => {
                                         // 1. Try new object format from exit_plan (AI raw output)

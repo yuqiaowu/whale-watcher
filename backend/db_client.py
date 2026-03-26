@@ -51,7 +51,7 @@ class DBClient:
                 else:
                     # Logs, nav history, trade history are arrays of documents
                     cursor = collection.find({}, {"_id": 0})
-                    if collection_name == "agent_decision_log":
+                    if collection_name in ["agent_decision_log", "agent_decisions"]:
                         cursor = cursor.sort("timestamp", -1) # newest first
                     
                     data = list(cursor)
