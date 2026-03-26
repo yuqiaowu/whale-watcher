@@ -589,11 +589,23 @@ def main():
                     state = db.get_data("portfolio_state", {})
                     state["total_equity"] = round(current_eq, 2)
                     
-                    # Sync active positions list
+                    # Sync active positions list with Invalidation Rule persistence
                     try:
+                        old_positions = state.get("positions", [])
+                        # Map symbol -> rule for lookup
+                        rule_map = { p["symbol"]: p.get("invalidation_rule") for p in old_positions if p.get("invalidation_rule") }
+                        
                         active_positions = executor.get_all_positions()
+                        
+                        # Enrichment: Merge old AI rules into the new real-time position list
+                        for p in active_positions:
+                             sym = p.get("symbol")
+                             if sym in rule_map:
+                                  p["invalidation_rule"] = rule_map[sym]
+                                  print(f"🔗 Re-attached AI Invalidation Rule to active {sym} position.")
+                        
                         state["positions"] = active_positions
-                        print(f"✅ Synced {len(active_positions)} active positions from OKX.")
+                        print(f"✅ Synced {len(active_positions)} active positions from OKX (with rule persistence).")
                     except Exception as e:
                         print(f"⚠️ Failed to sync active positions: {e}")
 

@@ -1539,7 +1539,7 @@ def run_agent():
                 # Fetch NATR for the Risk Shield in Executor
                 coin_natr = whale_data_obj.get(symbol.lower(), {}).get('market', {}).get('natr_percent')
                 
-                order_id = executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp, natr_percent=coin_natr, pos_side=act.get("side"))
+                order_id = executor.execute_trade(symbol, action_type, amount, leverage, stop_loss=sl, take_profit=tp, natr_percent=coin_natr, pos_side=act.get("side"), invalidation_rule=exit_plan.get("invalidation"))
 
                 # Only proceed to log memory and notify if an actual order was placed (or adjusted)
                 # Note: okx_executor returns order_id string if successful, None if it skipped/failed

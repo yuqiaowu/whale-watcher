@@ -387,7 +387,7 @@ export function AICopyTrading() {
                                 <div className="text-xs text-[#d1d5db] leading-relaxed">
                                   {(() => {
                                     const invalCards = decision.actions?.filter((a: any) =>
-                                      !['monitor', 'REJECTED', 'monitor_only'].includes(a.action) && (
+                                      ['hold', 'open_long', 'open_short', 'adjust_sl_tp', 'reduce_25', 'reduce_50', 'reduce_75'].includes(a.action) && (
                                         (a.exit_plan?.invalidation && a.exit_plan.invalidation.zh !== "N/A" && a.exit_plan.invalidation.zh !== "None") ||
                                         (a.original_invalidation_rule && a.original_invalidation_rule.zh !== "Not explicitly recorded" && a.original_invalidation_rule.zh !== "None")
                                       )

@@ -235,7 +235,7 @@ class OKXExecutor:
         except Exception as e:
             print(f"⚠️ Failed to save shadow state: {e}")
 
-    def execute_trade(self, symbol, action, amount_usd, leverage, stop_loss=None, take_profit=None, natr_percent=None, pos_side=None):
+    def execute_trade(self, symbol, action, amount_usd, leverage, stop_loss=None, take_profit=None, natr_percent=None, pos_side=None, invalidation_rule=None):
         """
         Main entry point for AI Trader.
         Includes a 'Risk Shield' Layer to enforce NATR and NAV Risk rules.
@@ -473,6 +473,7 @@ class OKXExecutor:
                     "size_usd": amount_usd,
                     "stop_loss": stop_loss,
                     "take_profit": take_profit,
+                    "invalidation_rule": invalidation_rule, # Persistent AI Redline
                     "timestamp": datetime.datetime.now().isoformat()
                 }
                 state["positions"].append(new_pos)
