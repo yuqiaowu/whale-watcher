@@ -3,23 +3,6 @@
     "id": "ETH_2026-02-27 12:08:28",
     "timestamp": "2026-02-27 12:08:28",
     "symbol": "ETH",
-    "action": "close_short",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u5173\u95edETH\u7a7a\u5934\uff1a\u8f67\u7a7a\u4fe1\u53f7\u5f3a\u70c8\uff08\u591a\u7a7a\u7206\u4ed3\u6bd40.20\uff0c\u7a7a\u5934\u7206\u4ed3$1.09\u4ebf\uff09\uff0c\u9cb8\u9c7c\u7a33\u5b9a\u5e01\u6d41\u5165$4450\u4e07\u63d0\u4f9b\u652f\u6491\uff0cQlib\u6392\u540d\u7b2c1\u4f46\u6210\u4ea4\u91cfZ-Score\u5f31\uff0c\u53f3\u4fa7\u786e\u8ba4\u4ef7\u683c\u7a81\u7834\u524d\u9ad8$2050\u3002",
-      "en": "Close ETH short: Strong squeeze signal (L/S ratio 0.20, short liquidations $109M), whale stablecoin inflow $44.5M provides support, Qlib rank #1 but weak volume Z-Score, right-side confirmation on break above prior high $2050."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
-    "id": "ETH_2026-02-27 12:08:28",
-    "timestamp": "2026-02-27 12:08:28",
-    "symbol": "ETH",
     "action": "open_long",
     "entry_price": "MARKET",
     "reason": {
@@ -1024,6 +1007,27 @@
       "adx": 21.730117759875608,
       "whale_flow": "?",
       "funding_rate": -5.01822402766e-05,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
+  },
+  {
+    "id": "BNB_1774527043",
+    "timestamp": "2026-03-26T20:10:43.701696",
+    "symbol": "BNB",
+    "action": "adjust_sl_tp",
+    "entry_price": 628.0,
+    "leverage": 1,
+    "reason": {
+      "zh": "[\u5f3a\u5236\u68c0\u67e5]\uff1a\u5bf9\u7167original_invalidation_rule\uff0c\u5f53\u524d\u4ef7\u683c$628.4\u9ad8\u4e8e\u6b62\u635f\u4ef7$640.0\uff08\u672a\u89e6\u53d1\uff09\uff0cRSI 39.43\u4f4e\u4e8e50\u4f46ADX 21.7\u9ad8\u4e8e15\uff0c\u4ea4\u6613\u6240\u60c5\u7eea\u6307\u65700.50\u9ad8\u4e8e0.40\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u3002\u6280\u672f\u9762\uff1a\u4ef7\u683c\u4f4e\u4e8eSMA50\uff0c\u504f\u79bb\u5ea6-1.61%\uff0c\u8d85\u5356\u4f46\u8d8b\u52bf\u5f31\u3002\u8c03\u6574\u6b62\u635f\u81f3$620\uff08\u57fa\u4e8eATR 7.41\uff09\uff0c\u6b62\u76c8\u81f3$635\uff0c\u4ee5\u7ba1\u7406\u98ce\u9669\u3002",
+      "en": "[MANDATORY]: Check against original_invalidation_rule: current price $628.4 above SL $640.0 (not triggered), RSI 39.43 below 50 but ADX 21.7 above 15, exchange sentiment 0.50 above 0.40, not triggered. Technicals: price below SMA50, deviation -1.61%, oversold but weak trend. Adjust SL to $620 (based on ATR 7.41), TP to $635 to manage risk."
+    },
+    "context": {
+      "rsi": 39.0401749521277,
+      "adx": 21.741805651934936,
+      "whale_flow": "?",
+      "funding_rate": -4.81639734601e-05,
       "bb_width": "?",
       "bb_trend": "UP"
     },
