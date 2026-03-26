@@ -1481,13 +1481,17 @@ def run_agent():
             for act in decision["actions"]:
                 sym = act.get("symbol", "").upper()
                 side = act.get("side", "").lower()
-                # Check current portfolio to see if we have a rule for this
-                for pos in p_state_obj.get("positions", []):
-                    pos_sym = pos.get("symbol", "").upper()
-                    pos_side = pos.get("side", "").lower()
-                    if pos_sym == sym and (pos_side == side or side == ""):
-                        if pos.get("original_invalidation_rule"):
-                            act["original_invalidation_rule"] = pos["original_invalidation_rule"]
+                # Check current portfolio to see if we have a rule for this (using rule_map for efficiency)
+                pos_match = next((p for p in p_state_obj.get("positions", []) if p.get("symbol", "").upper() == sym), None)
+                if pos_match:
+                    rule_raw = pos_match.get("invalidation_rule") or pos_match.get("original_invalidation_rule")
+                    if rule_raw:
+                        # Normalize to object for UI & Future Runs
+                        if isinstance(rule_raw, str):
+                             rule_obj = {"zh": rule_raw, "en": rule_raw}
+                        else:
+                             rule_obj = rule_raw
+                        act["original_invalidation_rule"] = rule_obj
             
         print("\n💡 Dolores' Decision:")
         print(json.dumps(decision, indent=2, ensure_ascii=False))

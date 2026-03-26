@@ -388,8 +388,11 @@ export function AICopyTrading() {
                                   {(() => {
                                     const invalCards = decision.actions?.filter((a: any) =>
                                       ['hold', 'open_long', 'open_short', 'adjust_sl_tp', 'reduce_25', 'reduce_50', 'reduce_75'].includes(a.action) && (
-                                        (a.exit_plan?.invalidation && a.exit_plan.invalidation.zh !== "N/A" && a.exit_plan.invalidation.zh !== "None") ||
-                                        (a.original_invalidation_rule && a.original_invalidation_rule.zh !== "Not explicitly recorded" && a.original_invalidation_rule.zh !== "None")
+                                        (a.exit_plan?.invalidation && typeof a.exit_plan.invalidation === 'object' && a.exit_plan.invalidation.zh && a.exit_plan.invalidation.zh !== "N/A") ||
+                                        (a.original_invalidation_rule && (
+                                          (typeof a.original_invalidation_rule === 'object' && a.original_invalidation_rule.zh && a.original_invalidation_rule.zh !== "None") ||
+                                          (typeof a.original_invalidation_rule === 'string' && a.original_invalidation_rule !== "Not explicitly recorded" && a.original_invalidation_rule !== "None")
+                                        ))
                                       )
                                     );
                                     if (!invalCards || invalCards.length === 0) return <span className="italic text-[#8E9297]">"Not Applicable (No active positions with set thresholds)"</span>;
