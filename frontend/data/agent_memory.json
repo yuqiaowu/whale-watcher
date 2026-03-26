@@ -1,22 +1,5 @@
 [
   {
-    "id": "DOGE_2026-02-28 04:08:35",
-    "timestamp": "2026-02-28 04:08:35",
-    "symbol": "DOGE",
-    "action": "open_long",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u57fa\u4e8eSAFE_MR\u5747\u503c\u56de\u5f52\u673a\u4f1a\uff1a1) RSI 40.05\u63a5\u8fd1\u8d85\u5356\uff1b2) \u8d44\u91d1\u8d39\u7387\u8d1f(-0.0086%)\uff0c\u96f6\u552e\u505a\u7a7a\u62e5\u6324\uff0c\u5b58\u5728\u8f67\u7a7a\u71c3\u6599\uff1b3) \u7206\u4ed3\u6bd4\u5e73\u8861\uff08\u65e0\u6781\u7aef\u591a\u5934\u8e29\u8e0f\uff09\uff1b4) Qlib\u6392\u540d\u7b2c\u4e94\u4f46Z-Score\u5f02\u5e38\uff08funding_z -1.56\uff09\u7edf\u8ba1\u663e\u8457\u3002\u7b49\u5f85\u53f3\u4fa7\u786e\u8ba4\uff1a\u4ef7\u683c\u7a81\u78344H\u524d\u9ad8$0.0935\u3002",
-      "en": "Based on SAFE_MR mean reversion: 1) RSI 40.05 near oversold; 2) Funding negative (-0.0086%), retail shorts crowded, squeeze fuel present; 3) Balanced liquidation ratio (no extreme long flush); 4) Qlib rank #5 but Z-Score anomaly (funding_z -1.56) statistically significant. Await right-side confirmation: price break above 4H prior high $0.0935."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
     "id": "SOL_2026-02-28 20:09:23",
     "timestamp": "2026-02-28 20:09:23",
     "symbol": "SOL",
@@ -1036,6 +1019,27 @@
       "adx": 16.967512221546194,
       "whale_flow": "?",
       "funding_rate": -0.0001198098451178,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
+  },
+  {
+    "id": "BNB_1774540429",
+    "timestamp": "2026-03-26T23:53:49.676656",
+    "symbol": "BNB",
+    "action": "adjust_sl_tp",
+    "entry_price": 627.3,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a1) \u4ef7\u683c$627.4 > $640.0\uff0c\u672a\u89e6\u53d1\uff1b2) RSI 38.66 < 50\uff0c\u4f46ADX 22.1 > 15\uff0c\u672a\u540c\u65f6\u6ee1\u8db3RSI<50\u4e14ADX<15\uff1b3) \u4ea4\u6613\u6240\u60c5\u7eea\u6307\u65700.50 > 0.40\uff0c\u672a\u89e6\u53d1\u3002\u56e0\u6b64\u672a\u8fbe\u5230\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\u7406\u7531\uff1aBNB\u6d6e\u4e8f-8.41%\uff0c\u6280\u672f\u9762RSI 38.66\u8d85\u5356\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd4250.02\u6781\u9ad8\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u4f46\u4ef7\u683c\u63a5\u8fd1\u652f\u6491\u3002\u8c03\u6574\u6b62\u635f\u81f3$625\uff08\u57fa\u4e8eATR 7.91\uff09\uff0c\u6b62\u76c8\u81f3$635\uff0c\u4ee5\u63a7\u5236\u98ce\u9669\u5e76\u6355\u6349\u53cd\u5f39\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: 1) Price $627.4 > $640.0, not triggered; 2) RSI 38.66 < 50, but ADX 22.1 > 15, not both RSI<50 and ADX<15; 3) Exchange sentiment 0.50 > 0.40, not triggered. Thus, exit conditions not met. Additional reasoning: BNB PnL -8.41%, technicals RSI 38.66 oversold, liquidation ratio 250.02 shows long pain, but price near support. Adjust stop-loss to $625 (based on ATR 7.91), take-profit to $635, to manage risk and capture rebound."
+    },
+    "context": {
+      "rsi": 38.5823702248849,
+      "adx": 22.095626319444506,
+      "whale_flow": "?",
+      "funding_rate": -3.85307113036e-05,
       "bb_width": "?",
       "bb_trend": "UP"
     },
