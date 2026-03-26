@@ -1,22 +1,5 @@
 [
   {
-    "id": "SOL_2026-02-28 20:09:23",
-    "timestamp": "2026-02-28 20:09:23",
-    "symbol": "SOL",
-    "action": "open_long",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u53d1\u73b0\u9cb8\u9c7c\u5728\u4ef7\u683c\u4e0b\u8dcc\u4e2d\u52a0\u901f\u5438\u7b79\uff0824h\u60c5\u7eea\u52060.88 vs 7d 0.07\uff0c\u4ee3\u5e01\u51c0\u6d41\u51652569.9 SOL\uff09\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\u503c\uff08-0.0165%\uff09\u663e\u793a\u6563\u6237\u505a\u7a7a\u62e5\u6324\uff0cL/S\u7206\u4ed3\u6bd45.27\u8868\u660e\u591a\u5934\u88ab\u5f3a\u5e73\uff0c\u5f62\u6210\u8f67\u7a7a\u71c3\u6599\u3002\u6280\u672f\u9762RSI 34.8\u8d85\u5356\uff0c\u4e0b\u5f71\u7ebf40%\u663e\u793a\u652f\u6491\u3002\u7b49\u5f85\u53f3\u4fa7\u786e\u8ba4\uff1a\u4ef7\u683c\u7a81\u78344H\u524d\u9ad8$79.5\u540e\u5165\u573a\u3002",
-      "en": "Whale accumulation accelerating during price drop (24h sentiment 0.88 vs 7d 0.07, token net inflow 2569.9 SOL), negative funding (-0.0165%) shows crowded retail shorts, L/S ratio 5.27 indicates long flush, creating squeeze fuel. Technicals: RSI 34.8 oversold, lower wick 40% shows support. Await right-side confirmation: enter after price breaks above 4H prior high $79.5."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
     "id": "ETH_1772910461",
     "timestamp": "2026-03-08T03:07:41.534891",
     "symbol": "ETH",
@@ -1040,6 +1023,27 @@
       "adx": 22.095626319444506,
       "whale_flow": "?",
       "funding_rate": -3.85307113036e-05,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
+  },
+  {
+    "id": "SOL_1774540833",
+    "timestamp": "2026-03-27T00:00:33.211960",
+    "symbol": "SOL",
+    "action": "adjust_sl_tp",
+    "entry_price": 87.55,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u4ef7\u683c\u672a\u8dcc\u7834$86.0\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411-1,683,942.5 SOL\u672a\u4f4e\u4e8e-2,000,000 SOL\uff0c\u8d44\u91d1\u8d39\u7387-0.0131%\u672a\u8f6c\u6b63\u8d850.01%\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u3002\u8865\u5145\uff1a\u6280\u672f\u9762\u8d85\u5356\uff08RSI 39.9\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd4150.61\u652f\u6301\u7a7a\u5934\u8f67\u7a7a\uff0c\u8c03\u6574\u6b62\u635f\u4ee5\u9501\u5b9a\u5229\u6da6\u5e76\u964d\u4f4e\u98ce\u9669\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: price not below $86.0, whale token flow -1,683,942.5 SOL not below -2,000,000 SOL, funding rate -0.0131% not positive above 0.01%, not triggered. Additional: Technical oversold (RSI 39.9), liquidation ratio 150.61 supports short squeeze, adjust stop loss to lock profit and reduce risk."
+    },
+    "context": {
+      "rsi": 39.90294557636297,
+      "adx": 16.967512221546194,
+      "whale_flow": "?",
+      "funding_rate": -0.0001093161303147,
       "bb_width": "?",
       "bb_trend": "UP"
     },
