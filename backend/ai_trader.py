@@ -514,8 +514,8 @@ Constraints:
         "en": "Analyze Qlib top-ranked coins and Z-Score significance (statistical deviations in vol/funding)." 
     },
     "regime_safety": { 
-        "zh": "【全中文必填】基于 Section 4B（痛苦交易）进行评估。最终给出明确的中文判断：‘接飞刀’ (KNIFE) / ‘挡火箭’ (ROCKET) / ‘安全均值回归’ (SAFE_MR) / ‘鲸鱼轧空’ (WHALE_SQUEEZE) / ‘鲸鱼托底’ (WHALE_ACCUMULATION)，并详细说明依据。", 
-        "en": "【Required】Based on Section 4B (Pain Trade): 1) RSI/ADX/NATR current state; 2) Upper/Lower Wick Ratio; 3) Liquidation long/short ratio; 4) Whale net flow direction. Conclude with explicit verdict: KNIFE / ROCKET / SAFE_MR / WHALE_SQUEEZE / WHALE_ACCUMULATION and explain why." 
+        "zh": "【全中文必填】最终给出明确判读并详细说明依据：‘均值回归’ (SAFE_MR) / ‘鲸鱼轧空’ (WHALE_SQUEEZE) / ‘鲸鱼吸筹’ (WHALE_ACCUMULATION) / ‘缩量蓄势’ (CHOP_ACCUMULATION) / ‘大盘联动’ (BTC_BETA_SYNC)。", 
+        "en": "Select and justify ONE: SAFE_MR / WHALE_SQUEEZE / WHALE_ACCUMULATION / CHOP_ACCUMULATION / BTC_BETA_SYNC." 
     },
     "portfolio_status": { "zh": "当前投资组合的风险评估（全中文）", "en": "Portfolio risk check." }
   },
@@ -582,6 +582,9 @@ Constraints:
 - **CLEAN TEXT**: Avoid redundant nested bolding like `** 【Header】 **`. Use simple brackets `[Header]` for section titles.
 - **READABILITY**: Use clear spacing and avoid excessive Markdown symbols.
 - **DIVERSIFIED FOCUS**: Do not focus only on ETH. Scan BTC, SOL, BNB, and DOGE data provided. If a non-ETH asset has a clearer setup, take it.
+- **REGIME DISCIPLINE (CRITICAL)**: 
+  1) If ATR is decreasing and price is range-bound, you MUST consider `CHOP_ACCUMULATION` and avoid heavy trading.
+  2) If BTC 24h change is > 5% down, you MUST consider `BTC_BETA_SYNC` and prioritize closing/reducing small-cap long positions.
 - **SWEAR JAR RULE (CRITICAL)**: Avoid absolute words like "Certain", "100%", "Definitely", "Impossible". Use probabilistic language (e.g., "Highly likely", "Potential risk", "70% probability").
 - **NO CHATTER**: Do not include any text outside the JSON structure.
 """
