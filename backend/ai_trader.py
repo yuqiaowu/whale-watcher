@@ -558,9 +558,9 @@ Constraints:
       }
       /* CRITICAL RULE FOR conditions:
          - metric MUST be one of the SUPPORTED_METRICS list provided in the system.
-         - Supported values: price | rsi | adx | macd | bb_width | natr | vol_ratio |
-           oi_change_pct | funding_rate | funding_zscore | liq_long_short_ratio |
-           token_net_flow | stablecoin_net_flow | sentiment_score |
+         - Supported values: price | rsi | adx | macd | bb_width | natr | vol_ratio | 
+           oi_change_pct | funding_rate | funding_zscore | liq_long_short_ratio | 
+           token_net_flow | stablecoin_net_flow | sentiment_score | 
            whale_ls_ratio | whale_pos_ratio | pnl_percent | pnl_usd
          - You may include multiple conditions (any one triggering = exit).
          - The Python enforcement engine will automatically check these every 2 hours.
