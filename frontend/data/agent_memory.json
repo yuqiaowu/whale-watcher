@@ -1,26 +1,5 @@
 [
   {
-    "id": "ETH_1773853343",
-    "timestamp": "2026-03-19T01:02:23.699825",
-    "symbol": "ETH",
-    "action": "adjust_sl_tp",
-    "entry_price": 0,
-    "leverage": 1,
-    "reason": {
-      "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c2173 > 2100\uff0c\u8d44\u91d1\u8d39\u73870.0089%\uff08\u6b63\uff0c\u975e\u8d1f\uff09\uff0cRSI 41.29\uff08>30\u4e14\u4ece\u4f4e\u70b9\u53cd\u5f39\uff1f\u6570\u636e\u672a\u663e\u793a\u5386\u53f2\uff0c\u4f46\u5f53\u524d>30\uff09\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\u7406\u7531\uff1aETH Qlib\u6392\u540d\u7b2c\u4e00\uff080.3485\uff09\uff0c\u76f8\u5bf9\u5f3a\u5ea6\u652f\u6491\uff1b\u4f46\u8d44\u91d1\u8d39\u7387Z-Score 155.2%\u663e\u793a\u591a\u5934\u62e5\u6324\uff0c\u9700\u6536\u7d27\u6b62\u635f\u4ee5\u7ba1\u7406\u98ce\u9669\u3002",
-      "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' Current data: price 2173 > 2100, funding rate 0.0089% (positive, not negative), RSI 41.29 (>30 and rebounding? history not shown, but current >30), red line not triggered. Additional reasoning: ETH Qlib rank 1 (0.3485) supports relative strength; but funding Z-score 155.2% indicates crowded longs, requiring tighter stop-loss to manage risk."
-    },
-    "context": {
-      "rsi": "?",
-      "adx": "?",
-      "whale_flow": "?",
-      "funding_rate": "?",
-      "bb_width": "?",
-      "bb_trend": "?"
-    },
-    "outcome": null
-  },
-  {
     "id": "SOL_1773853345",
     "timestamp": "2026-03-19T01:02:25.217768",
     "symbol": "SOL",
@@ -1046,6 +1025,27 @@
       "funding_rate": -0.0001013219371268,
       "bb_width": "?",
       "bb_trend": "UP"
+    },
+    "outcome": null
+  },
+  {
+    "id": "BNB_1774548631",
+    "timestamp": "2026-03-27T02:10:31.326045",
+    "symbol": "BNB",
+    "action": "open_long",
+    "entry_price": 625.0,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u4e25\u683c\u6309\u6b644\u70b9\u6a21\u677f\u8f93\u51fa\u3011\uff1a\n1) \u4e3a\u4f55\u662f\u6b64\u5e01\uff1a\u6280\u672f\u9762\u8d85\u5356\uff08RSI_14 38.73\uff0c\u4ef7\u683c\u8d1f\u504f\u79bbSMA50 -1.86%\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd4278.00\u663e\u793a\u591a\u5934\u75db\u82e6\u91cd\uff0c\u8d44\u91d1\u8d39\u7387-0.0042%\u652f\u6301\u7a7a\u5934\u56de\u8865\uff0cQLib\u5206\u65700.0058\u6392\u540d\u7b2c\u4e00\u3002\n2) \u4e3a\u4f55\u662f\u73b0\u5728\uff1a\u4ef7\u683c\u5728$625-$627\u533a\u95f4\u76d8\u6574\uff0c\u4e0a\u5f71\u7ebf49%\u663e\u793a\u629b\u538b\u4f46\u4e0b\u5f71\u7ebf22%\u6709\u652f\u6491\uff0cADX 22.5\u8d8b\u52bf\u5f31\u5316\uff0c\u53ef\u80fd\u53cd\u8f6c\u3002\n3) \u624b\u52a8\u76c8\u4e8f\u6bd4(RRR)\u8ba1\u7b97\uff1a\u5165\u573a\u4ef7$627.0\uff0c\u6b62\u635f\u4ef7$620.0\uff08\u98ce\u96691.12%\uff09\uff0c\u6b62\u76c8\u4ef7$640.0\uff08\u76c8\u52292.07%\uff09\uff0c\u76c8\u4e8f\u6bd4=2.07%/1.12%=1.85\u22651.5\u3002\n4) \u5355\u7b14\u98ce\u9669\u5360NAV\u6bd4\u4f8b\uff1a\u98ce\u9669$7.0\uff081.12% of $627\uff09\uff0c\u5360NAV\u76840.18% \u2264 2%\u3002",
+      "en": "MUST STRICTLY FOLLOW THIS 4-POINT TEMPLATE:\n1) Why this coin: Oversold technicals (RSI_14 38.73, price below SMA50 -1.86%), liquidation ratio 278.00 shows heavy long pain, funding -0.0042% supports short covering, QLib score 0.0058 rank 1.\n2) Why now: Price consolidating $625-$627, upper wick 49% selling pressure but lower wick 22% support, ADX 22.5 trend weak, potential reversal.\n3) RRR Math: Entry $627.0, SL $620.0 (risk 1.12%), TP $640.0 (profit 2.07%), RRR=2.07%/1.12%=1.85.\n4) NAV Risk: Risk $7.0 (1.12% of $627), 0.18% of NAV \u22642%."
+    },
+    "context": {
+      "rsi": 36.85370968179585,
+      "adx": 22.49196000513116,
+      "whale_flow": "?",
+      "funding_rate": -7.13519035534e-05,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
     },
     "outcome": null
   }
