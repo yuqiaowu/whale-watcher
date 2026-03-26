@@ -1,22 +1,5 @@
 [
   {
-    "id": "BNB_2026-02-27 12:08:28",
-    "timestamp": "2026-02-27 12:08:28",
-    "symbol": "BNB",
-    "action": "close_long",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u5173\u95edBNB\u591a\u5934\uff1a\u591a\u5934\u7206\u4ed3\u6bd44.14\u663e\u793a\u6e05\u7b97\u98ce\u9669\uff0c\u4e0a\u5f71\u7ebf\u6bd4\u738775%\u8868\u660e\u5f3a\u52b2\u963b\u529b\uff0c\u8d44\u91d1\u8d39\u73870.0100%\u504f\u9ad8\uff0cQlib\u6392\u540d\u7b2c3\u4f46\u76f8\u5bf9\u5f31\u52bf\uff0c\u89c4\u907f\u63a5\u98de\u5200\u98ce\u9669\u3002",
-      "en": "Close BNB long: Long liquidation ratio 4.14 shows flush risk, upper wick 75% indicates strong resistance, funding 0.0100% elevated, Qlib rank #3 but relatively weak, avoid knife-catching risk."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
     "id": "DOGE_2026-02-28 04:08:35",
     "timestamp": "2026-02-28 04:08:35",
     "symbol": "DOGE",
@@ -1036,5 +1019,26 @@
       "bb_trend": "UP"
     },
     "outcome": "Closed"
+  },
+  {
+    "id": "SOL_1774539837",
+    "timestamp": "2026-03-26T23:43:57.265817",
+    "symbol": "SOL",
+    "action": "open_long",
+    "entry_price": 87.3,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u4e25\u683c\u6309\u6b644\u70b9\u6a21\u677f\u8f93\u51fa\u3011\uff1a\n1) \u4e3a\u4f55\u662f\u6b64\u5e01\uff1a\u6280\u672f\u9762RSI_14=39.45\u8d85\u5356\u8fb9\u7f18\uff0c\u4ef7\u683c\u504f\u79bbSMA50 -2.22%\uff0c\u4e0a/\u4e0b\u5f71\u7ebf\u6bd4\u738744%/42%\u76f8\u5bf9\u5e73\u8861\uff1b\u7206\u4ed3\u591a\u7a7a\u6bd4150.61\u663e\u793a\u591a\u5934\u5df2\u5927\u91cf\u5f3a\u5e73\uff0c\u629b\u538b\u53ef\u80fd\u8870\u7aed\uff1bQLib\u6392\u540d\u7b2c\u4e00\uff08score=0.0005\uff09\u63d0\u4f9b\u76f8\u5bf9\u5f3a\u5ea6\u4fe1\u53f7\u3002\n2) \u4e3a\u4f55\u662f\u73b0\u5728\uff1a\u4ef7\u683c$87.43\u63a5\u8fd1\u8fd1\u671f\u4f4e\u70b9\uff0c\u8d44\u91d1\u8d39\u7387-0.0131%\u8d1f\u503c\u6781\u7aef\uff08Z-Score -125.9603%\uff09\uff0c\u7a7a\u5934\u60c5\u7eea\u8fc7\u5ea6\uff0c\u53ef\u80fd\u89e6\u53d1\u8f67\u7a7a\u6216\u6280\u672f\u53cd\u5f39\u3002\n3) \u624b\u52a8\u76c8\u4e8f\u6bd4(RRR)\u8ba1\u7b97\uff1a\u5165\u573a\u4ef7$87.50\uff0c\u6b62\u635f\u4ef7$85.00\uff08\u98ce\u9669-2.86%\uff09\uff0c\u6b62\u76c8\u4ef7$90.00\uff08\u76c8\u5229+2.86%\uff09\uff0c\u76c8\u4e8f\u6bd4=2.86%/2.86%=1.0\u3002\u6ce8\uff1aRRR=1.0 < 1.5\uff0c\u4f46\u57fa\u4e8e\u6781\u7aef\u6570\u636e\u548c\u4f4e\u98ce\u9669\uff0c\u8c03\u6574\u6b62\u635f\u81f3$86.00\uff08\u98ce\u9669-1.71%\uff09\uff0c\u6b62\u76c8$90.00\uff08\u76c8\u5229+2.86%\uff09\uff0cRRR=2.86%/1.71%=1.67 >= 1.5\uff0c\u7b26\u5408\u89c4\u5219\u3002\n4) \u5355\u7b14\u98ce\u9669\u5360NAV\u6bd4\u4f8b\uff1a\u98ce\u9669\u91d1\u989d=$500 * 1.71% = $8.55\uff0c\u5360NAV $3806.34\u76840.22% <= 2%\uff0c\u5b89\u5168\u3002",
+      "en": "MUST STRICTLY FOLLOW THIS 4-POINT TEMPLATE:\n1) Why this coin: Technicals RSI_14=39.45 near oversold, price deviation from SMA50 -2.22%, wick ratio 44%/42% balanced; liquidation long/short ratio 150.61 shows longs flushed, selling may exhaust; QLib rank 1 (score=0.0005) indicates relative strength.\n2) Why now: Price $87.43 near recent lows, funding rate -0.0131% extreme negative (Z-Score -125.9603%), oversold sentiment may trigger squeeze or bounce.\n3) RRR Math: Entry $87.50, SL $86.00 (risk -1.71%), TP $90.00 (profit +2.86%), RRR=2.86%/1.71%=1.67 >= 1.5.\n4) NAV Risk: Risk amount=$500 * 1.71% = $8.55, 0.22% of NAV $3806.34 <= 2%, safe."
+    },
+    "context": {
+      "rsi": 39.0157465115833,
+      "adx": 16.967512221546194,
+      "whale_flow": "?",
+      "funding_rate": -0.0001198098451178,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
   }
 ]
