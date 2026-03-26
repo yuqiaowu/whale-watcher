@@ -1,22 +1,5 @@
 [
   {
-    "id": "SOL_2026-02-26 19:33:10",
-    "timestamp": "2026-02-26 19:33:10",
-    "symbol": "SOL",
-    "action": "close_long",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u5e73\u4ed3SOL\u591a\u5934\uff1a\u9cb8\u9c7c\u6d41\u5165\u653e\u7f13\uff0824h 97.5\u4e07SOL vs 7d 133\u4e07SOL\uff09\uff0c24h\u60c5\u7eea\u5f97\u5206\uff08-0.12\uff09\u4f4e\u4e8e7d\uff08-0.31\uff09\uff0c\u6697\u793a\u77ed\u671f\u629b\u538b\uff1bQlib\u6392\u540d\u7b2c\u4e8c\u4f46Z-Score\u504f\u4f4e\uff0c\u91cf\u5316\u652f\u6301\u51cf\u5f31\uff1b\u6301\u4ed3\u6d6e\u4e8f-3.95%\uff0c\u98ce\u9669\u4e0a\u5347\u3002",
-      "en": "Close SOL long: Whale inflow slowing (24h 975k SOL vs 7d 1.33M SOL), 24h sentiment score (-0.12) lower than 7d (-0.31), indicating short-term selling pressure; Qlib rank second but low Z-Scores weaken quantitative support; position at -3.95% loss, risk increasing."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
     "id": "SOL_2026-02-26 19:51:18",
     "timestamp": "2026-02-26 19:51:18",
     "symbol": "SOL",
@@ -1006,6 +989,27 @@
     "context": {
       "rsi": 59.8617034970822,
       "adx": 21.474674536210884,
+      "whale_flow": "?",
+      "funding_rate": 0.0001,
+      "bb_width": "?",
+      "bb_trend": "UP"
+    },
+    "outcome": null
+  },
+  {
+    "id": "BNB_1774491050",
+    "timestamp": "2026-03-26T10:10:50.810307",
+    "symbol": "BNB",
+    "action": "open_long",
+    "entry_price": 645.8,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u4e25\u683c\u6309\u6b644\u70b9\u6a21\u677f\u8f93\u51fa\u3011\uff1a\n1) \u4e3a\u4f55\u662f\u6b64\u5e01\uff1aBNB QLib\u6392\u540d\u7b2c1\uff08\u5f97\u52060.0007\uff09\uff0c\u6280\u672f\u9762RSI 59.28\u4e2d\u6027\u504f\u5f3a\uff0cMACD\u6b63\u67f11.9208\uff0c\u52a8\u91cf12\u4e3a0.0242\uff08\u4e94\u5e01\u6700\u9ad8\uff09\uff0c\u4ea4\u6613\u6240\u60c5\u7eea\u6307\u65700.50\uff08\u6700\u9ad8\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd42.97\u663e\u793a\u591a\u5934\u75db\u82e6\u4f46\u91cf\u5c0f\uff0c\u6ce2\u52a8\u7387NATR 1.25%\u6700\u4f4e\u98ce\u9669\u3002\n2) \u4e3a\u4f55\u662f\u73b0\u5728\uff1a\u4ef7\u683c$647.8\u63a5\u8fd1\u65e5\u5185\u9ad8\u70b9\uff0c\u4f46\u504f\u79bbSMA50\u4ec5+0.92%\uff0c4H\u8d8b\u52bf\u5411\u4e0a\uff08\u5e03\u6797\u5e26\u8d8b\u52bfUP\uff09\uff0c\u5e02\u573a\u65e0\u6781\u7aef\u60c5\u7eea\uff0c\u9002\u5408\u8d8b\u52bf\u8ddf\u968f\u3002\n3) \u624b\u52a8\u76c8\u4e8f\u6bd4(RRR)\u8ba1\u7b97\uff1a\u5165\u573a\u4ef7$647.8\uff0c\u6b62\u635f\u4ef7$640.0\uff08\u98ce\u9669-1.20%\uff09\uff0c\u6b62\u76c8\u4ef7$660.0\uff08\u76c8\u5229+1.88%\uff09\uff0c\u76c8\u4e8f\u6bd4=1.88%/1.20%=1.57\u22651.5\u3002\n4) \u5355\u7b14\u98ce\u9669\u5360NAV\u6bd4\u4f8b\uff1a\u4ed3\u4f4d$500\uff0c\u6760\u67463\u500d\uff0c\u540d\u4e49\u98ce\u9669$1500\uff0c\u6b62\u635f\u98ce\u96691.20%\u5bf9\u5e94$18\uff0c\u5360NAV $3826.84\u76840.47% \u2264 2%\uff0c\u5b89\u5168\u3002",
+      "en": "MUST STRICTLY FOLLOW THIS 4-POINT TEMPLATE:\n1) Why this coin: BNB QLib rank 1 (score 0.0007), technicals RSI 59.28 neutral-strong, MACD hist positive 1.9208, momentum_12 0.0242 (highest), exchange sentiment index 0.50 (highest), liquidation long/short ratio 2.97 shows long pain but small volume, NATR 1.25% lowest risk.\n2) Why now: Price $647.8 near intraday high, but deviation from SMA50 only +0.92%, 4H trend up (BB trend UP), no extreme sentiment, suitable for trend following.\n3) RRR Math: Entry $647.8, SL $640.0 (risk -1.20%), TP $660.0 (profit +1.88%), RRR=1.88%/1.20%=1.57\u22651.5.\n4) NAV Risk: Position $500, leverage 3x, notional risk $1500, SL risk 1.20% equals $18, which is 0.47% of NAV $3826.84 \u2264 2%, safe."
+    },
+    "context": {
+      "rsi": 56.725724668506615,
+      "adx": 22.961997473418446,
       "whale_flow": "?",
       "funding_rate": 0.0001,
       "bb_width": "?",
