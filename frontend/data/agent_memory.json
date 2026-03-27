@@ -1,26 +1,5 @@
 [
   {
-    "id": "SOL_1773879094",
-    "timestamp": "2026-03-19T08:11:34.244912",
-    "symbol": "SOL",
-    "action": "adjust_sl_tp",
-    "entry_price": 89.97,
-    "leverage": 1,
-    "reason": {
-      "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' \u5f53\u524d\u6570\u636e\uff1a\u4ef7\u683c$90.02 > 85.0\uff0c\u8d44\u91d1\u8d39\u7387-0.0117%\u672a\u8f6c\u6b63\uff0cRSI 43.82 > 30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1aSOL\u76c8\u52294.39%\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51653.1M SOL\u770b\u8dcc\u3001\u7206\u4ed3\u591a\u7a7a\u6bd433.88\u6781\u9ad8\uff0c\u8c03\u6574\u6b62\u635f\u6b62\u76c8\u4ee5\u9501\u5b9a\u5229\u6da6\u3002",
-      "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 85.0 and funding rate turns positive (>0.01%), or RSI falls below 30 and fails to rebound, the short squeeze thesis is invalidated, exit immediately.' Current data: price $90.02 > 85.0, funding rate -0.0117% not positive, RSI 43.82 > 30, red line not triggered. Additional: SOL profit 4.39%, but whale token inflow 3.1M SOL bearish, liquidation ratio 33.88 very high, adjust SL/TP to lock profits."
-    },
-    "context": {
-      "rsi": 43.63922535791528,
-      "adx": 32.93193306849544,
-      "whale_flow": "?",
-      "funding_rate": -0.0001173967839917,
-      "bb_width": "?",
-      "bb_trend": "UP"
-    },
-    "outcome": null
-  },
-  {
     "id": "BTC_1773893393",
     "timestamp": "2026-03-19T12:09:53.618298",
     "symbol": "BTC",
@@ -1044,6 +1023,27 @@
       "adx": 28.249304161437898,
       "whale_flow": "?",
       "funding_rate": -0.000279501866809,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
+  },
+  {
+    "id": "SOL_1774620632",
+    "timestamp": "2026-03-27T22:10:32.404428",
+    "symbol": "SOL",
+    "action": "adjust_sl_tp",
+    "entry_price": 83.12,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u5f53\u524d\u4ef7\u683c$83.2\u672a\u8dcc\u7834$80.0\uff08SL\uff09\uff0cFunding Z-Score -105.0395%\u672a\u8f6c\u6b63\u4e14Z-Score >50%\u4e0d\u89e6\u53d1\uff0cRSI 30.01\u672a\u5347\u81f350\u4ee5\u4e0a\uff0c\u56e0\u6b64\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\u7406\u7531\uff1a\u6280\u672f\u9762\u8d85\u5356\uff08RSI 30.01\uff0c\u4e0b\u5f71\u7ebf69%\u9ad8\uff09\uff0c\u4f46\u9cb8\u9c7c\u6d41\u5411\u663e\u793a\u629b\u552e\u548c\u7a33\u5b9a\u5e01\u6d41\u51fa\uff0c\u98ce\u9669\u589e\u52a0\uff0c\u5efa\u8bae\u6536\u7d27\u6b62\u635f\u4ee5\u4fdd\u62a4\u8d44\u672c\uff0c\u540c\u65f6\u4fdd\u6301\u4ed3\u4f4d\u6355\u6349\u6f5c\u5728\u53cd\u5f39\u3002",
+      "en": "First, check original_invalidation_rule: current price $83.2 not below $80.0 (SL), Funding Z-Score -105.0395% not positive and Z-Score >50% not triggered, RSI 30.01 not above 50, so no exit triggers. Additional reasoning: technicals oversold (RSI 30.01, lower wick 69% high), but whale flow shows selling and stablecoin outflow, increasing risk, suggest tightening stop-loss to protect capital while maintaining position for potential bounce."
+    },
+    "context": {
+      "rsi": 29.83468896262133,
+      "adx": 28.29550257166955,
+      "whale_flow": "?",
+      "funding_rate": -0.0003002521565513,
       "bb_width": "?",
       "bb_trend": "DOWN"
     },
