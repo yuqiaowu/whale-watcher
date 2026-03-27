@@ -1,26 +1,5 @@
 [
   {
-    "id": "ETH_1773907821",
-    "timestamp": "2026-03-19T16:10:21.424155",
-    "symbol": "ETH",
-    "action": "open_long",
-    "entry_price": 2162.34,
-    "leverage": 1,
-    "reason": {
-      "zh": "Qlib\u6392\u540d\u7b2c\u4e00\uff08\u5f97\u52060.4889\uff09\uff0c\u6280\u672f\u8d85\u5356\uff08RSI 40.6\uff09\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51fa-4.3M ETH\u770b\u6da8\uff0c\u591a\u7a7a\u7206\u4ed3\u6bd44.10\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u5b58\u5728\u8f67\u7a7a\u673a\u4f1a\u3002",
-      "en": "Qlib rank 1 (score 0.4889), technical oversold (RSI 40.6), whale token outflow -4.3M ETH bullish, long/short liquidation ratio 4.10 shows long pain, presenting squeeze opportunity."
-    },
-    "context": {
-      "rsi": 40.46128796740942,
-      "adx": 36.04638476968695,
-      "whale_flow": "?",
-      "funding_rate": 2.0750561757e-06,
-      "bb_width": "?",
-      "bb_trend": "UP"
-    },
-    "outcome": null
-  },
-  {
     "id": "SOL_1773920571",
     "timestamp": "2026-03-19T19:42:51.177426",
     "symbol": "SOL",
@@ -1044,6 +1023,27 @@
       "adx": 30.57998205281865,
       "whale_flow": "?",
       "funding_rate": -0.0003789747937228,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
+  },
+  {
+    "id": "SOL_1774642230",
+    "timestamp": "2026-03-28T04:10:30.437650",
+    "symbol": "SOL",
+    "action": "adjust_sl_tp",
+    "entry_price": 82.89,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u5f53\u524d\u4ef7\u683c$82.69\u9ad8\u4e8e\u6b62\u635f$80.0\uff0c\u672a\u89e6\u53d1\uff1b\u8d44\u91d1\u8d39\u7387Z-Score -253.2531%\u5c0f\u4e8e50%\uff0c\u672a\u89e6\u53d1\uff1bRSI 28.81\u5c0f\u4e8e50\uff0c\u672a\u89e6\u53d1\u3002\u56e0\u6b64\u672a\u8fbe\u5230\u79bb\u573a\u7ea2\u7ebf\u3002\u8c03\u6574\u7406\u7531\uff1a\u6280\u672f\u9762\u8d85\u5356\uff08RSI 28.81\uff09\u548c\u8d1f\u8d44\u91d1\u8d39\u7387\uff08-0.0321%\uff09\u53ef\u80fd\u652f\u6301\u53cd\u5f39\uff0c\u4f46Qlib\u5206\u6570\u8d1f\uff08-0.0098\uff09\u548c\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51fa\u663e\u793a\u98ce\u9669\u3002\u8c03\u6574\u6b62\u635f\u81f3$80.5\uff08\u66f4\u7d27\uff09\u4ee5\u7ba1\u7406\u4e0b\u884c\u98ce\u9669\uff0c\u6b62\u76c8\u81f3$84.0\u4ee5\u6355\u6349\u6f5c\u5728\u53cd\u5f39\u3002",
+      "en": "First, check original_invalidation_rule: current price $82.69 above SL $80.0, not triggered; funding Z-Score -253.2531% < 50%, not triggered; RSI 28.81 < 50, not triggered. Thus, exit conditions not met. Adjustment reason: oversold technicals (RSI 28.81) and negative funding (-0.0321%) may support bounce, but negative Qlib score (-0.0098) and whale token outflow indicate risk. Adjust SL to $80.5 (tighter) to manage downside, TP to $84.0 to capture potential rebound."
+    },
+    "context": {
+      "rsi": 29.732024124898246,
+      "adx": 32.83082290954635,
+      "whale_flow": "?",
+      "funding_rate": -0.0003797393653627,
       "bb_width": "?",
       "bb_trend": "DOWN"
     },
