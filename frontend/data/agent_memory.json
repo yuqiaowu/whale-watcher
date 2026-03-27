@@ -1,26 +1,5 @@
 [
   {
-    "id": "ETH_1773893397",
-    "timestamp": "2026-03-19T12:09:57.129336",
-    "symbol": "ETH",
-    "action": "adjust_sl_tp",
-    "entry_price": 2205.26,
-    "leverage": 1,
-    "reason": {
-      "zh": "\u3010\u5f3a\u5236\u3011\u5ba3\u8bfboriginal_invalidation_rule\uff1a'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' \u5f53\u524d\u4ef7\u683c2201.91\u9ad8\u4e8e2100\uff0c\u8d44\u91d1\u8d39\u7387-0.0044%\u672a\u4f4e\u4e8e-0.02%\uff0cRSI 45.99\u9ad8\u4e8e30\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\uff1a\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u51fa\u770b\u6da8\uff0c\u4f46\u7a33\u5b9a\u5e01\u6d41\u51fa\u770b\u8dcc\uff0c\u6280\u672f\u9762\u652f\u6301\u6301\u6709\uff0c\u8c03\u6574\u6b62\u635f\u3002",
-      "en": "\u3010MANDATORY\u3011Read original_invalidation_rule: 'If price breaks below 2100 accompanied by funding rate turning extremely negative (<-0.02%) or RSI failing to rebound (<30 and not recovering), it indicates increased downside momentum, invalidating the long thesis, and exit immediately.' Current price 2201.91 > 2100, funding rate -0.0044% > -0.02%, RSI 45.99 > 30, no trigger. Additional: Whale token outflow bullish, but stablecoin outflow bearish, technicals support holding, adjust stop-loss."
-    },
-    "context": {
-      "rsi": 46.61214311984753,
-      "adx": 36.652879899668285,
-      "whale_flow": "?",
-      "funding_rate": -4.42941896809e-05,
-      "bb_width": "?",
-      "bb_trend": "UP"
-    },
-    "outcome": null
-  },
-  {
     "id": "ETH_1773907821",
     "timestamp": "2026-03-19T16:10:21.424155",
     "symbol": "ETH",
@@ -1048,5 +1027,26 @@
       "bb_trend": "DOWN"
     },
     "outcome": "Closed"
+  },
+  {
+    "id": "SOL_1774635025",
+    "timestamp": "2026-03-28T02:10:25.447758",
+    "symbol": "SOL",
+    "action": "adjust_sl_tp",
+    "entry_price": 82.27,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u5f53\u524d\u4ef7\u683c$82.92\u672a\u8dcc\u7834$80.0\uff0c\u8d44\u91d1\u8d39\u7387Z-Score -285.7%\u672a\u8f6c\u6b63>50%\uff0cRSI 29.34\u672a\u56de\u5347>50\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u8865\u5145\u7406\u7531\uff1a\u5e02\u573a\u8d85\u5356\uff0c\u8d1f\u8d44\u91d1\u8d39\u7387\u6781\u7aef\uff0c\u5b58\u5728\u7a7a\u5934\u8f67\u7a7a\u53ef\u80fd\uff0c\u8c03\u6574\u6b62\u635f\u81f3$81.0\uff08\u66f4\u7d27\uff09\u4ee5\u63a7\u5236\u98ce\u9669\uff0c\u6b62\u76c8\u81f3$85.0\u4ee5\u6355\u6349\u53cd\u5f39\u3002",
+      "en": "First, check original_invalidation_rule: current price $82.92 not below $80.0, funding Z-Score -285.7% not positive >50%, RSI 29.34 not above 50, no trigger. Additional reasoning: market oversold, extreme negative funding, short squeeze potential, adjust SL to $81.0 (tighter) for risk control, TP to $85.0 to capture bounce."
+    },
+    "context": {
+      "rsi": 27.907271940843685,
+      "adx": 30.57998205281865,
+      "whale_flow": "?",
+      "funding_rate": -0.0003789747937228,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
   }
 ]
