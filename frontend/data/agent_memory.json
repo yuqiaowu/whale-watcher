@@ -1,26 +1,5 @@
 [
   {
-    "id": "DOGE_1774123844",
-    "timestamp": "2026-03-22T04:10:44.869234",
-    "symbol": "DOGE",
-    "action": "open_long",
-    "entry_price": 0.09398,
-    "leverage": 1,
-    "reason": {
-      "zh": "Qlib\u6392\u540d\u7b2c\u4e00\uff08-0.109\uff09\uff0c\u6280\u672f\u8d85\u5356\uff08RSI 43.11\uff09\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\uff08-0.0066%\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd40.23\u663e\u793a\u7a7a\u5934\u7206\u4ed3\u5df2\u53d1\u751f\u3002\u6301\u4ed3L/S\u6bd4\u8d26\u6237\u6bd41.55\u663e\u793a\u591a\u5934\u62e5\u6324\uff0c\u4f46\u8d1f\u8d44\u91d1\u8d39\u7387\u53ef\u80fd\u6291\u5236\u8f67\u7a7a\uff0c\u652f\u6301\u5747\u503c\u56de\u5f52\u53cd\u5f39\u3002",
-      "en": "Qlib rank 1 (-0.109), technicals oversold (RSI 43.11), funding negative (-0.0066%), liquidation ratio 0.23 indicates short liquidations occurred. L/S ratio account 1.55 shows crowded long, but negative funding may limit squeeze, supporting mean reversion bounce."
-    },
-    "context": {
-      "rsi": 43.11233062476864,
-      "adx": 25.964294049101074,
-      "whale_flow": "?",
-      "funding_rate": -6.5701225595e-05,
-      "bb_width": "?",
-      "bb_trend": "DOWN"
-    },
-    "outcome": null
-  },
-  {
     "id": "ETH_1774138155",
     "timestamp": "2026-03-22T08:09:15.769460",
     "symbol": "ETH",
@@ -1044,6 +1023,27 @@
       "adx": 34.88916163502266,
       "whale_flow": "?",
       "funding_rate": -0.0002677702617326,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
+  },
+  {
+    "id": "DOGE_1774671024",
+    "timestamp": "2026-03-28T12:10:24.593841",
+    "symbol": "DOGE",
+    "action": "adjust_sl_tp",
+    "entry_price": 0.08977,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u5f53\u524d\u4ef7\u683c0.0898\u9ad8\u4e8e\u6b62\u635f0.088\uff0c\u8d44\u91d1\u8d39\u7387Z-Score 11.12%\u672a\u8d85\u8fc750%\uff0cRSI 35.77\u672a\u8d85\u8fc750\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u4f46\u9274\u4e8e\u8d44\u91d1\u8d39\u7387\u6b63\u4e14\u7206\u4ed3\u6bd4\u9ad8\uff0c\u591a\u5934\u62e5\u6324\u98ce\u9669\u5927\uff0c\u8c03\u6574\u6b62\u635f\u81f30.0885\uff08\u66f4\u7d27\uff09\u4ee5\u63a7\u5236\u98ce\u9669\uff0c\u6b62\u76c8\u4fdd\u63010.092\u3002\u8865\u5145\u7406\u7531\uff1a\u6280\u672f\u9762\u8d85\u5356\u4f46\u8d44\u91d1\u9762\u4e0d\u5229\uff0c\u51cf\u4ed3\u610f\u613f\u5f3a\u3002",
+      "en": "First, check original_invalidation_rule: current price 0.0898 above SL 0.088, funding Z-Score 11.12% not >50%, RSI 35.77 not >50, not triggered. However, given positive funding and high liquidation ratio, long crowding risk is high, adjust SL to 0.0885 (tighter) to manage risk, keep TP 0.092. Additional reasoning: technical oversold but unfavorable funding, strong reduction intent."
+    },
+    "context": {
+      "rsi": 35.77395354204215,
+      "adx": 24.003571746527165,
+      "whale_flow": "?",
+      "funding_rate": -3.54069923396e-05,
       "bb_width": "?",
       "bb_trend": "DOWN"
     },
