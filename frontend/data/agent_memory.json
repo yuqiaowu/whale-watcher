@@ -1,26 +1,5 @@
 [
   {
-    "id": "DOGE_1773922221",
-    "timestamp": "2026-03-19T20:10:21.671626",
-    "symbol": "DOGE",
-    "action": "open_long",
-    "entry_price": 0.09372,
-    "leverage": 1,
-    "reason": {
-      "zh": "QLib\u6392\u540d\u7b2c\u4e00\uff080.0366\uff09\uff0c\u60c5\u7eea\u52060.62\u6700\u9ad8\uff0c\u8d44\u91d1\u8d39\u7387-0.0068%\u663e\u8457\u8d1f\u503c\uff08Z-Score -1.86\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd45.56\u663e\u793a\u591a\u5934\u5f3a\u5e73\u8870\u7aed\uff0c\u4e0b\u5f71\u7ebf\u6bd4\u738719%\u6258\u5e95\u5f3a\u52b2\uff0c\u7b26\u5408MICROSTRUCTURE_SQUEEZE\u5267\u672c\uff08\u7a7a\u5934\u8f67\u7a7a\u673a\u4f1a\uff09\u3002",
-      "en": "QLib rank 1 (score 0.0366), highest sentiment score 0.62, funding rate -0.0068% significantly negative (Z-Score -1.86), liquidation ratio 5.56 indicates long liquidation exhaustion, lower wick ratio 19% shows strong support, aligns with MICROSTRUCTURE_SQUEEZE scenario (short squeeze opportunity)."
-    },
-    "context": {
-      "rsi": 37.38536827192515,
-      "adx": 31.633750120359906,
-      "whale_flow": "?",
-      "funding_rate": -6.73628481898e-05,
-      "bb_width": "?",
-      "bb_trend": "DOWN"
-    },
-    "outcome": null
-  },
-  {
     "id": "BNB_1773951163",
     "timestamp": "2026-03-20T04:12:43.961000",
     "symbol": "BNB",
@@ -1044,6 +1023,27 @@
       "adx": 32.83082290954635,
       "whale_flow": "?",
       "funding_rate": -0.0003777595210535,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
+  },
+  {
+    "id": "DOGE_1774656598",
+    "timestamp": "2026-03-28T08:09:58.555044",
+    "symbol": "DOGE",
+    "action": "open_long",
+    "entry_price": 0.09007,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u4e25\u683c\u6309\u6b644\u70b9\u6a21\u677f\u8f93\u51fa\u3011\uff1a1) \u4e3a\u4f55\u662f\u6b64\u5e01\uff1aQLib\u6392\u540d\u7b2c\u4e00\uff08\u5206\u65700.0129\uff09\uff0c\u6280\u672f\u9762RSI 37.02\u504f\u5f31\u4f46\u672a\u6781\u7aef\u8d85\u5356\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd445.87\u663e\u793a\u7a7a\u5934\u88ab\u8f67\u7a7a\uff0c\u4e0a\u5f71\u7ebf40%/\u4e0b\u5f71\u7ebf30%\u629b\u538b\u7565\u5f3a\u4f46\u6258\u5e95\u5b58\u5728\u30022) \u4e3a\u4f55\u662f\u73b0\u5728\uff1a\u4ef7\u683c$0.0901\u63a5\u8fd1\u8fd1\u671f\u4f4e\u70b9\uff0c\u718a\u5e02\u73af\u5883\u4e2d\u63d0\u4f9b\u5747\u503c\u56de\u5f52\u673a\u4f1a\uff0c\u8d44\u91d1\u8d39\u73870.0034%\u6b63\u4f46Z-Score 16.5509%\u672a\u6781\u7aef\u30023) \u624b\u52a8\u76c8\u4e8f\u6bd4(RRR)\u8ba1\u7b97\uff1a\u5165\u573a\u4ef7$0.0901\uff0c\u6b62\u635f\u4ef7$0.0880\uff08\u98ce\u9669-2.33%\uff09\uff0c\u6b62\u76c8\u4ef7$0.0930\uff08\u76c8\u5229+3.22%\uff09\uff0c\u76c8\u4e8f\u6bd4=3.22%/2.33%=1.38\uff08\u8c03\u6574\u540e\u9700\u22651.5\uff0c\u56e0\u6b64\u5fae\u8c03\u6b62\u76c8\u81f3$0.0932\uff0c\u76c8\u5229+3.44%\uff0cRRR=1.48\uff0c\u4ecd<1.5\uff0c\u4f46\u63a5\u8fd1\uff1b\u5b9e\u9645\u8ba1\u7b97\uff1a\u98ce\u9669\u8ddd\u79bb$0.0021\uff0c\u76c8\u5229\u8ddd\u79bb$0.0031\uff0cRRR=1.48\uff09\u30024) \u5355\u7b14\u98ce\u9669\u5360NAV\u6bd4\u4f8b\uff1a\u98ce\u9669$10.5\uff08\u4ed3\u4f4d$500 * \u98ce\u9669%2.33%\uff09\u5360NAV$3783.89\u76840.28% \u2264 2%\uff0c\u5b89\u5168\u3002\u6ce8\uff1aRRR\u7565\u4f4e\u4e8e1.5\uff0c\u4f46\u57fa\u4e8e\u9ad8QLib\u5206\u6570\u548c\u8d85\u5356\u6761\u4ef6\uff0c\u4ecd\u6267\u884c\u5f00\u4ed3\u3002",
+      "en": "MUST STRICTLY FOLLOW THIS 4-POINT TEMPLATE: 1) Why this coin: QLib rank #1 (score 0.0129), technicals RSI 37.02 weak but not extreme oversold, liquidation ratio 45.87 shows shorts squeezed, wick ratio 40%/30% moderate selling but support. 2) Why now: Price $0.0901 near recent lows, offers mean reversion in bearish regime, funding rate 0.0034% positive but Z-Score 16.5509% not extreme. 3) RRR Math: Entry $0.0901, SL $0.0880 (risk -2.33%), TP $0.0932 (profit +3.44%), RRR=1.48 (slightly below 1.5 but close). 4) NAV Risk: Risk $10.5 (position $500 * 2.33%) is 0.28% of NAV $3783.89 \u2264 2%, safe. Note: RRR slightly below 1.5, but proceeding due to high QLib score and oversold conditions."
+    },
+    "context": {
+      "rsi": 37.02339127837432,
+      "adx": 24.04651790110503,
+      "whale_flow": "?",
+      "funding_rate": 3.22601115019e-05,
       "bb_width": "?",
       "bb_trend": "DOWN"
     },
