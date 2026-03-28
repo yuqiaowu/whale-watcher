@@ -1,47 +1,5 @@
 [
   {
-    "id": "ETH_1774138155",
-    "timestamp": "2026-03-22T08:09:15.769460",
-    "symbol": "ETH",
-    "action": "open_long",
-    "entry_price": 2066.49,
-    "leverage": 1,
-    "reason": {
-      "zh": "\u6280\u672f\u8d85\u5356\uff08RSI 28.8\uff09\uff0c\u4e0b\u5f71\u7ebf\u6bd4\u738754%\u652f\u6491\u5f3a\uff0c\u5747\u7ebf\u4e56\u79bb\u7387-4.53%\u504f\u79bb\u5927\uff1b\u9cb8\u9c7c\u4ee3\u5e01\u6301\u7eed\u6d41\u51fa\uff087\u5929-7.1M ETH\uff09\uff0c\u7a33\u5b9a\u5e01\u6d41\u51fa\u53ef\u80fd\u4e3a\u79ef\u7d2f\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\u503c\uff08-0.0031%\uff09\uff1b\u7206\u4ed3\u591a\u7a7a\u6bd441.46\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u4f46\u672a\u6781\u7aef\u9ad8\uff0c\u5b89\u5168\u8fb9\u9645\u8f83\u597d\u3002",
-      "en": "Technically oversold (RSI 28.8), lower wick ratio 54% strong support, SMA deviation -4.53% large; whale tokens flowing out (7d -7.1M ETH), stablecoin outflow possibly accumulation, funding negative (-0.0031%); liquidation ratio 41.46 shows long pain but not extreme, good safety margin."
-    },
-    "context": {
-      "rsi": 28.81657603943853,
-      "adx": 27.53535458524131,
-      "whale_flow": "?",
-      "funding_rate": -2.96762970182e-05,
-      "bb_width": "?",
-      "bb_trend": "DOWN"
-    },
-    "outcome": null
-  },
-  {
-    "id": "SOL_1774253549",
-    "timestamp": "2026-03-23T16:12:29.509362",
-    "symbol": "SOL",
-    "action": "open_long",
-    "entry_price": 86.0,
-    "leverage": 1,
-    "reason": {
-      "zh": "Qlib\u6392\u540d\u7b2c\u4e00\uff08\u76f8\u5bf9\u5f3a\u5ea6\u6700\u4f73\uff09\uff0c\u6280\u672f\u9762\u8d85\u5356\uff08RSI 35.7\uff09\uff0c\u7206\u4ed3\u6bd432.81\u6781\u9ad8\uff08\u591a\u5934\u75db\u82e6\u53ef\u80fd\u53cd\u5f39\uff09\uff0c\u8d44\u91d1\u8d39\u7387\u8d1f\uff08-0.0050%\uff09\uff0c\u4e0a\u5f71\u7ebf44%/\u4e0b\u5f71\u7ebf25%\u663e\u793a\u6709\u6258\u5e95\u3002\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5165\u4f46\u7a33\u5b9a\u5e01\u5c0f\u5e45\u6d41\u5165\uff0c\u53ef\u80fd\u4e3a\u9707\u8361\u671f\u51c6\u5907\u3002",
-      "en": "Qlib rank 1 (best relative strength), technicals oversold (RSI 35.7), liquidation ratio 32.81 extremely high (long pain potential bounce), funding negative (-0.0050%), wick ratio 44% upper/25% lower shows support. Whale token inflow but stablecoin slight inflow, possibly preparation during consolidation."
-    },
-    "context": {
-      "rsi": 35.703784152244495,
-      "adx": 34.896793808766255,
-      "whale_flow": "?",
-      "funding_rate": -5.00831290402e-05,
-      "bb_width": "?",
-      "bb_trend": "DOWN"
-    },
-    "outcome": null
-  },
-  {
     "id": "SOL_1774261452",
     "timestamp": "2026-03-23T18:24:12.983562",
     "symbol": "SOL",
@@ -1044,6 +1002,48 @@
       "adx": 24.003571746527165,
       "whale_flow": "?",
       "funding_rate": -3.54069923396e-05,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
+  },
+  {
+    "id": "DOGE_1774678225",
+    "timestamp": "2026-03-28T14:10:25.468052",
+    "symbol": "DOGE",
+    "action": "adjust_sl_tp",
+    "entry_price": 0.09025,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u4ef7\u683c\u672a\u8dcc\u7834$0.0880\uff08\u5f53\u524d$0.0898\uff09\uff0c\u8d44\u91d1\u8d39\u7387Z-Score 11.1177%\u672a>50%\uff0cRSI 35.77\u672a>50\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u3002\u8865\u5145\u7406\u7531\uff1a\u6280\u672f\u9762\u8d85\u5356\uff08RSI 35.77\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd445.39\u9ad8\u4f46\u663e\u793a\u591a\u5934\u75db\u82e6\u53ef\u80fd\u7f13\u89e3\uff0cQlib\u5206\u6570\u6700\u9ad8\uff080.0083\uff09\uff0c\u4f46\u98ce\u9669\u4ecd\u5b58\uff0c\u8c03\u6574\u6b62\u635f\u6b62\u76c8\u4ee5\u9501\u5b9a\u5229\u6da6\u5e76\u964d\u4f4e\u98ce\u9669\u3002",
+      "en": "First, check original_invalidation_rule: price not below $0.0880 (current $0.0898), funding Z-Score 11.1177% not >50%, RSI 35.77 not >50, no trigger. Additional reasoning: oversold technicals (RSI 35.77), high liquidation ratio 45.39 but long pain may ease, highest Qlib score (0.0083), but risks remain, adjust SL/TP to lock profits and reduce risk."
+    },
+    "context": {
+      "rsi": 38.80985826202605,
+      "adx": 24.046124335114524,
+      "whale_flow": "?",
+      "funding_rate": 1.3010623726e-06,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
+  },
+  {
+    "id": "SOL_1774678227",
+    "timestamp": "2026-03-28T14:10:27.469890",
+    "symbol": "SOL",
+    "action": "adjust_sl_tp",
+    "entry_price": 82.69,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a\u4ef7\u683c\u672a\u8dcc\u7834$80.0\uff08\u5f53\u524d$82.42\uff09\uff0c\u8d44\u91d1\u8d39\u7387Z-Score -205.0571%\u672a>50%\uff08\u4e3a\u8d1f\uff09\uff0cRSI 29.04\u672a>50\uff0c\u672a\u89e6\u53d1\u79bb\u573a\u3002\u8865\u5145\u7406\u7531\uff1a\u6280\u672f\u9762\u8d85\u5356\uff08RSI 29.04\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd4163.30\u6781\u9ad8\u663e\u793a\u7a7a\u5934\u62e5\u6324\uff0c\u4f46\u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411\u5145\u5e01\u629b\u552e\uff08-988,782.8 SOL\uff09\u4e3a\u8d1f\u9762\u4fe1\u53f7\uff0c\u8c03\u6574\u6b62\u635f\u6b62\u76c8\u4ee5\u7ba1\u7406\u4e0b\u884c\u98ce\u9669\u3002",
+      "en": "First, check original_invalidation_rule: price not below $80.0 (current $82.42), funding Z-Score -205.0571% not >50% (negative), RSI 29.04 not >50, no trigger. Additional reasoning: oversold technicals (RSI 29.04), extreme liquidation ratio 163.30 (crowded shorts), but whale token flow to exchange (-988,782.8 SOL) is negative, adjust SL/TP to manage downside risk."
+    },
+    "context": {
+      "rsi": 30.342366970674576,
+      "adx": 36.8004761658221,
+      "whale_flow": "?",
+      "funding_rate": -0.000214624959258,
       "bb_width": "?",
       "bb_trend": "DOWN"
     },
