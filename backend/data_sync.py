@@ -3,6 +3,11 @@ import json
 import base64
 import requests
 import datetime
+from dotenv import load_dotenv
+
+# Load environment variables
+env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
+load_dotenv(dotenv_path=env_path)
 
 # Configuration
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")

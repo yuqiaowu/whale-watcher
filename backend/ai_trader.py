@@ -577,6 +577,8 @@ Constraints:
 4. **SCENARIO DISCIPLINE**: Your `hypothesis_scenario` must match your actions.
 5. **DYNAMIC CAPITAL ALLOCATION**: You have FULL AUTONOMY to decide `position_size_usd` and `leverage` based on your confidence level against the provided `total_equity`. If you have high conviction, you may size up; if you are uncertain, size down or `monitor`.
 6. **INVALIDATION REQUIRED**: Every `open_long` or `open_short` action MUST include a non-empty `invalidation`.
+7. **PROFIT PROTECTION GUARD**: You MUST NOT generate `adjust_sl_tp` or tighten a stop-loss into profit/break-even if the current `pnl_percent` is less than +2.0%. Give the trade space to breathe until it reaches a clear trend.
+8. **COOL-DOWN AWARENESS**: If you recently closed a symbol at a profit/loss, do NOT immediately re-open it in the same direction within 4 hours unless there is a major whale-flow reversal.
 
 *** STYLE GUIDELINES ***
 - **CLEAN TEXT**: Avoid redundant nested bolding like `** 【Header】 **`. Use simple brackets `[Header]` for section titles.
@@ -1138,6 +1140,37 @@ def validate_and_enforce_decision(decision, whale_data_obj, whale_context, fear_
             validated_actions.append(action)
             continue
             
+        # --- NEW Layer: Cooldown Guard (Anti-Churn) ---
+        # Prevents re-entering a symbol if it was closed in the last 4 hours
+        try:
+            if act_type.startswith("open_"):
+                cooldown_hours = 4.0
+                if os.path.exists(TRADE_HISTORY_PATH):
+                    with open(TRADE_HISTORY_PATH, "r") as f:
+                        recent_trades = json.load(f)
+                    
+                    # Sort by exitTime desc
+                    def parse_t(s):
+                        try: return datetime.strptime(s, "%Y-%m-%d %H:%M:%S")
+                        except: return datetime.min
+                    
+                    symbol_trades = [t for t in recent_trades if t.get("symbol", "").upper() == symbol.upper()]
+                    if symbol_trades:
+                        symbol_trades.sort(key=lambda x: parse_t(x.get("exitTime", "")), reverse=True)
+                        last_exit = parse_t(symbol_trades[0].get("exitTime", ""))
+                        
+                        time_since_exit = (datetime.now() - last_exit).total_seconds() / 3600
+                        if time_since_exit < cooldown_hours:
+                            reason = f"🛡️ COOLDOWN ENABLED: {symbol} was closed only {time_since_exit:.1f}h ago. Cooldown period {cooldown_hours}h. Waiting for price action to stabilize. REJECTED."
+                            print(f"{reason} Skipping {symbol}.")
+                            action["action"] = "REJECTED"
+                            action["reason"] = reason
+                            rejection_report.append({"symbol": symbol, "reason": "COOLDOWN ACTIVE", "detail": reason})
+                            validated_actions.append(action)
+                            continue
+        except Exception as cooldown_err:
+             print(f"⚠️ Cooldown guard failed: {cooldown_err}")
+
         # --- NEW Layer: Whale Dump Guard (Token vs Stable Flow) ---
         # Prevents "Inflow to Sell" traps
         sym_upper = symbol.upper()

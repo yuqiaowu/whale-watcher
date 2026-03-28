@@ -61,11 +61,20 @@ class OKXExecutor:
         """
         Internal helper to send signed requests to OKX.
         """
-        url = self.base_url + path
-        timestamp = self._get_timestamp()
-        body = json.dumps(params) if params else ""
+        from urllib.parse import urlencode
         
-        sign = self._sign(timestamp, method, path, body)
+        timestamp = self._get_timestamp()
+        
+        if method == "GET" and params:
+            query = urlencode(params)
+            full_path = f"{path}?{query}"
+            body = ""
+        else:
+            full_path = path
+            body = json.dumps(params) if params else ""
+            
+        url = self.base_url + full_path
+        sign = self._sign(timestamp, method, full_path, body)
         
         headers = {
             "OK-ACCESS-KEY": self.api_key,
@@ -79,10 +88,6 @@ class OKXExecutor:
         if self.trading_mode == "DEMO":
             headers["x-simulated-trading"] = "1"
         
-        # Simulation flag in header is custom logic, but standard OKX also has a separate demo trading URL.
-        # Here we just use the shadow mode boolean to block requests.
-        
-        # print(f"📡 Sending {method} {path}...") # Muted to prevent log spam
         try:
             if method == "GET":
                 response = requests.get(url, headers=headers, timeout=HTTP_TIMEOUT)

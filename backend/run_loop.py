@@ -10,6 +10,11 @@ from datetime import datetime, timedelta
 import requests
 from stats_calculator import calculate_stats
 from db_client import db
+from dotenv import load_dotenv
+
+# Load environment variables
+env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
+load_dotenv(dotenv_path=env_path)
 
 # Configuration
 INTERVAL_HOURS = 2
@@ -384,6 +389,7 @@ def run_script(script_name):
             [sys.executable, "-u", script_path], # -u for unbuffered stdout
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT, # Merge stderr into stdout
+            stdin=subprocess.DEVNULL, # Prevent "Bad file descriptor" error on some environments
             text=True,
             bufsize=1 # Line buffered
         )
