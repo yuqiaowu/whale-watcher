@@ -3,23 +3,6 @@
     "id": "ETH_2026-02-27 12:08:28",
     "timestamp": "2026-02-27 12:08:28",
     "symbol": "ETH",
-    "action": "close_short",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u5173\u95edETH\u7a7a\u5934\uff1a\u8f67\u7a7a\u4fe1\u53f7\u5f3a\u70c8\uff08\u591a\u7a7a\u7206\u4ed3\u6bd40.20\uff0c\u7a7a\u5934\u7206\u4ed3$1.09\u4ebf\uff09\uff0c\u9cb8\u9c7c\u7a33\u5b9a\u5e01\u6d41\u5165$4450\u4e07\u63d0\u4f9b\u652f\u6491\uff0cQlib\u6392\u540d\u7b2c1\u4f46\u6210\u4ea4\u91cfZ-Score\u5f31\uff0c\u53f3\u4fa7\u786e\u8ba4\u4ef7\u683c\u7a81\u7834\u524d\u9ad8$2050\u3002",
-      "en": "Close ETH short: Strong squeeze signal (L/S ratio 0.20, short liquidations $109M), whale stablecoin inflow $44.5M provides support, Qlib rank #1 but weak volume Z-Score, right-side confirmation on break above prior high $2050."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
-    "id": "ETH_2026-02-27 12:08:28",
-    "timestamp": "2026-02-27 12:08:28",
-    "symbol": "ETH",
     "action": "open_long",
     "entry_price": "MARKET",
     "reason": {
@@ -1024,6 +1007,27 @@
       "adx": 43.0492147047063,
       "whale_flow": "?",
       "funding_rate": -5.55903355081e-05,
+      "bb_width": "?",
+      "bb_trend": "DOWN"
+    },
+    "outcome": null
+  },
+  {
+    "id": "SOL_1774814983",
+    "timestamp": "2026-03-30T04:09:43.021265",
+    "symbol": "SOL",
+    "action": "adjust_sl_tp",
+    "entry_price": 81.71,
+    "leverage": 1,
+    "reason": {
+      "zh": "\u3010\u5f3a\u5236\u3011\u9996\u5148\u68c0\u67e5original_invalidation_rule\uff1a1) \u4ef7\u683c$81.74 > \u6b62\u635f\u4f4d$80.0\uff0c\u672a\u89e6\u53d1\uff1b2) \u9cb8\u9c7c\u4ee3\u5e01\u6d41\u5411-664,608.9 SOL\uff08\u5145\u5e01\u629b\u552e\uff09\u4e3a\u8d1f\u503c\uff0c\u4f46\u89c4\u5219\u8981\u6c42\u51c0\u6d41\u5165\u53d8\u4e3a\u6b63\u503c\u624d\u89e6\u53d1\uff0c\u5f53\u524d\u4e3a\u8d1f\uff0c\u672a\u89e6\u53d1\uff1b3) RSI 34.97 < 50\uff0c\u672a\u89e6\u53d1\u3002\u672a\u89e6\u53d1\u79bb\u573a\u7ea2\u7ebf\u3002\u4f46SOL\u6280\u672f\u9762\u6076\u5316\uff08RSI 34.97\u8d85\u5356\uff0c\u504f\u79bbSMA50 -6.28%\uff09\uff0c\u9cb8\u9c7c\u6301\u7eed\u629b\u552e\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd467.11\u663e\u793a\u7a7a\u5934\u5df2\u8f67\u5e73\u4f46\u4ef7\u683c\u672a\u53cd\u5f39\uff0c\u98ce\u9669\u589e\u52a0\u3002\u8c03\u6574\u6b62\u635f\u4ece$80.5\u81f3$80.0\uff08\u66f4\u7d27\uff09\uff0c\u6b62\u76c8\u4ece$86.0\u81f3$84.0\uff08\u66f4\u73b0\u5b9e\uff09\uff0c\u4ee5\u63a7\u5236\u98ce\u9669\u3002",
+      "en": "\u3010MANDATORY\u3011First, check original_invalidation_rule: 1) price $81.74 > SL $80.0, not triggered; 2) whale token flow -664,608.9 SOL (deposit/selling) negative, but rule requires net inflow turn positive to trigger, currently negative, not triggered; 3) RSI 34.97 < 50, not triggered. No trigger. But SOL technicals deteriorating (RSI 34.97 oversold, SMA deviation -6.28%), whale selling continues, liquidation ratio 67.11 shows shorts squeezed but price not rebounding, risk increasing. Adjust SL from $80.5 to $80.0 (tighter), TP from $86.0 to $84.0 (more realistic) to manage risk."
+    },
+    "context": {
+      "rsi": 34.76651435331377,
+      "adx": 44.08306912708895,
+      "whale_flow": "?",
+      "funding_rate": -0.0001203693650478,
       "bb_width": "?",
       "bb_trend": "DOWN"
     },
