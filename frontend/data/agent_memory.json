@@ -1,5 +1,22 @@
 [
   {
+    "id": "BNB_2026-02-27 04:07:59",
+    "timestamp": "2026-02-27 04:07:59",
+    "symbol": "BNB",
+    "action": "open_long",
+    "entry_price": "MARKET",
+    "reason": {
+      "zh": "\u9cb8\u9c7c\u79ef\u7d2f\u4fe1\u53f7\uff1a24\u5c0f\u65f6\u7a33\u5b9a\u5e01\u51c0\u6d41\u5165$44M\uff08ETH\u5173\u8054\uff09\uff0c\u4f46BNB\u81ea\u8eabL/S\u6bd4\u73870.20\u663e\u793a\u6781\u7aef\u7a7a\u5934\u6e05\u7b97\u538b\u529b\uff0c\u8d44\u91d1\u8d39\u73870.0100%\u672a\u8fc7\u5ea6\u62e5\u6324\uff0cQlib\u6392\u540d\u7b2c3\u652f\u6301\u76f8\u5bf9\u5f3a\u52bf\u3002\u53f3\u4fa7\u786e\u8ba4\uff1a\u4ef7\u683c\u7a81\u7834\u524d\u9ad8$630\uff08\u5f53\u524d$625\uff09\uff0cADX 25.2\u6ee1\u8db3\u8d8b\u52bf\u6761\u4ef6\u3002",
+      "en": "Whale accumulation signal: 24h stablecoin net inflow $44M (ETH-related), but BNB's own L/S ratio 0.20 shows extreme short liquidation pressure, funding rate 0.0100% not overly crowded, Qlib rank #3 supports relative strength. Right-side confirmation: price break above prior high $630 (current $625), ADX 25.2 satisfies trend condition."
+    },
+    "context": {
+      "rsi": 50,
+      "adx": 20,
+      "whale_flow": "?"
+    },
+    "outcome": "Logged from DB"
+  },
+  {
     "id": "ETH_2026-02-27 08:08:13",
     "timestamp": "2026-02-27 08:08:13",
     "symbol": "ETH",
@@ -984,42 +1001,21 @@
     "outcome": null
   },
   {
-    "id": "SOL_1774772970",
-    "timestamp": "2026-03-29T16:29:30.835833",
-    "symbol": "SOL",
+    "id": "ETH_1774771690",
+    "timestamp": "2026-03-29T16:08:10.854676",
+    "symbol": "ETH",
     "action": "open_long",
-    "entry_price": 82.42,
+    "entry_price": 2005.09,
     "leverage": 1,
     "reason": {
-      "zh": "1) \u4e3a\u4f55\u662f\u6b64\u5e01\uff1aSOL\u6280\u672f\u9762\u8d85\u5356\uff08RSI 36.54\uff09\uff0c\u7a7a\u5934\u62e5\u6324\uff08\u8d44\u91d1\u8d39\u7387-0.0140%\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd41.87\u663e\u793a\u591a\u5934\u75db\u82e6\uff0c\u5b58\u5728\u8f67\u7a7a\u673a\u4f1a\uff1bQlib\u5206\u65700.0064\u6392\u540d\u7b2c\u4e8c\u30022) \u4e3a\u4f55\u662f\u73b0\u5728\uff1a\u4ef7\u683c$82.45\u63a5\u8fd1\u8fd1\u671f\u4f4e\u70b9\uff0c\u4e0a\u5f71\u7ebf\u6bd4\u738748%\u663e\u793a\u629b\u538b\u4f46\u672a\u8dcc\u7834\uff0c\u53ef\u80fd\u53cd\u5f39\u89e6\u53d1\u7a7a\u5934\u5e73\u4ed3\u30023) \u624b\u52a8\u76c8\u4e8f\u6bd4(RRR)\u8ba1\u7b97\uff1a\u5165\u573a\u4ef7$82.45\uff0c\u6b62\u635f\u4ef7$80.0\uff08\u98ce\u96692.97%\uff09\uff0c\u6b62\u76c8\u4ef7$86.0\uff08\u76c8\u52294.31%\uff09\uff0c\u76c8\u4e8f\u6bd4=4.31%/2.97%=1.45\u30024) \u5355\u7b14\u98ce\u9669\u5360NAV\u6bd4\u4f8b\uff1a\u98ce\u9669\u91d1\u989d$500 * 2.97% = $14.85\uff0c\u5360NAV $3785.26\u76840.39% <= 2%\u3002",
-      "en": "1) Why this coin: SOL oversold (RSI 36.54), crowded shorts (funding -0.0140%), liquidation ratio 1.87 shows long pain, squeeze potential; Qlib score 0.0064 rank 2. 2) Why now: Price $82.45 near recent lows, upper wick 48% indicates selling pressure but holding, potential rebound to trigger short covering. 3) RRR Math: Entry $82.45, SL $80.0 (risk 2.97%), TP $86.0 (profit 4.31%), RRR=4.31%/2.97%=1.45. 4) NAV Risk: Risk $500 * 2.97% = $14.85, 0.39% of NAV $3785.26 <= 2%."
+      "zh": "1) \u4e3a\u4f55\u662f\u6b64\u5e01\uff1a\u6280\u672f\u9762\u8d85\u5356\uff08RSI 39.3\uff0c\u5747\u7ebf\u504f\u79bb-3.94%\uff09\uff0c\u4e0a\u5f71\u7ebf\u6bd4\u738779%\u663e\u793a\u629b\u538b\u4f46\u53ef\u80fd\u8870\u7aed\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd41.15\uff08\u591a\u5934\u7565\u53d7\u538b\uff09\uff0c\u9cb8\u9c7c\u4ee3\u5e01\u51c0\u6d41\u5165+58,875.3 ETH\uff08\u63d0\u5e01\u56e4\u8d27\uff09\u548c\u7a33\u5b9a\u5e01\u6d41\u5165+$89,950\uff08\u51c6\u5907\u6284\u5e95\uff09\uff0c\u652f\u6301\u79ef\u7d2f\u53d9\u4e8b\u3002\n2) \u4e3a\u4f55\u662f\u73b0\u5728\uff1a\u4ef7\u683c\u5728$2005.09\uff0c\u5904\u4e8e\u8fd1\u671f\u4f4e\u70b9\uff0c\u6280\u672f\u6307\u6807\u6781\u7aef\uff0c\u53ef\u80fd\u89e6\u53d1\u5747\u503c\u56de\u5f52\u53cd\u5f39\u3002\n3) \u624b\u52a8\u76c8\u4e8f\u6bd4(RRR)\u8ba1\u7b97\uff1a\u5165\u573a\u4ef7$2005.09\uff0c\u6b62\u635f\u4ef7$1950\uff08\u98ce\u96692.75%\uff09\uff0c\u6b62\u76c8\u4ef7$2100\uff08\u76c8\u52294.73%\uff09\uff0c\u76c8\u4e8f\u6bd4=4.73%/2.75%=1.72\u3002\n4) \u5355\u7b14\u98ce\u9669\u5360NAV\u6bd4\u4f8b\uff1a\u98ce\u9669\u91d1\u989d=$500 * 2.75% = $13.75\uff0c\u5360NAV $3786.14\u76840.36% <= 2%\uff0c\u7b26\u5408\u98ce\u9669\u9650\u5236\u3002",
+      "en": "1) Why this coin: Technically oversold (RSI 39.3, SMA deviation -3.94%), upper wick ratio 79% shows selling pressure possibly exhausting, liquidation ratio 1.15 (longs slightly pressured), whale token net inflow +58,875.3 ETH (withdrawal accumulation) and stablecoin inflow +$89,950 (ready to buy), supporting accumulation narrative.\n2) Why now: Price at $2005.09, near recent lows, technical extremes may trigger mean reversion bounce.\n3) RRR Math: Entry $2005.09, SL $1950 (risk 2.75%), TP $2100 (profit 4.73%), RRR=4.73%/2.75%=1.72.\n4) NAV Risk: Risk amount=$500 * 2.75% = $13.75, vs NAV $3786.14 is 0.36% <= 2%, within risk limits."
     },
     "context": {
-      "rsi": 36.36693328819834,
-      "adx": 40.88686286687149,
+      "rsi": 39.306895306055516,
+      "adx": 31.013872530669403,
       "whale_flow": "?",
-      "funding_rate": -0.0001334287939425,
-      "bb_width": "?",
-      "bb_trend": "DOWN"
-    },
-    "outcome": null
-  },
-  {
-    "id": "DOGE_1774778994",
-    "timestamp": "2026-03-29T18:09:54.078020",
-    "symbol": "DOGE",
-    "action": "open_long",
-    "entry_price": 0.09079,
-    "leverage": 1,
-    "reason": {
-      "zh": "\u3010\u5f3a\u5236\u4e25\u683c\u6309\u6b644\u70b9\u6a21\u677f\u8f93\u51fa\u3011\uff1a\n1) \u4e3a\u4f55\u662f\u6b64\u5e01\uff1a\u6280\u672f\u9762\u652f\u6491\u5f3a\uff08RSI 45.84\u63a5\u8fd1\u8d85\u5356\uff0c\u52a8\u91cf12\u4e3a0.0125\u6b63\uff09\uff0c\u7206\u4ed3\u591a\u7a7a\u6bd40.47\u663e\u793a\u7a7a\u5934\u88ab\u6324\u538b\uff0cQlib\u6392\u540d\u7b2c\u4e00\uff08\u5206\u65700.0067\uff09\u3002\n2) \u4e3a\u4f55\u662f\u73b0\u5728\uff1a\u4ef7\u683c$0.0912\u63a5\u8fd1\u8fd1\u671f\u4f4e\u70b9\uff0c\u504f\u79bbSMA50 -1.62%\uff0c\u5904\u4e8e\u8d85\u5356\u533a\u57df\uff0c\u53ef\u80fd\u53cd\u5f39\u3002\n3) \u624b\u52a8\u76c8\u4e8f\u6bd4(RRR)\u8ba1\u7b97\uff1a\u5165\u573a\u4ef7$0.0912\uff0c\u6b62\u635f\u4ef7$0.0890\uff08\u98ce\u9669-2.41%\uff09\uff0c\u6b62\u76c8\u4ef7$0.0950\uff08\u76c8\u52294.17%\uff09\uff0c\u76c8\u4e8f\u6bd4=4.17%/2.41%=1.73\u3002\n4) \u5355\u7b14\u98ce\u9669\u5360NAV\u6bd4\u4f8b\uff1a\u98ce\u9669$12.10\uff08500 * 2.41%\uff09\u5360NAV $3781.84\u76840.32% <= 2%\u3002",
-      "en": "MUST STRICTLY FOLLOW THIS 4-POINT TEMPLATE:\n1) Why this coin: Strong technical support (RSI 45.84 near oversold, momentum_12 0.0125 positive), liquidation ratio 0.47 shows shorts squeezed, Qlib rank 1 (score 0.0067).\n2) Why now: Price $0.0912 near recent lows, deviation from SMA50 -1.62%, oversold area, potential bounce.\n3) RRR Math: Entry $0.0912, SL $0.0890 (risk -2.41%), TP $0.0950 (profit 4.17%), RRR=4.17%/2.41%=1.73.\n4) NAV Risk: Risk $12.10 (500 * 2.41%) is 0.32% of NAV $3781.84 <= 2%."
-    },
-    "context": {
-      "rsi": 44.33070148045803,
-      "adx": 17.89699034779136,
-      "whale_flow": "?",
-      "funding_rate": 8.92230472941e-05,
+      "funding_rate": 1.74883661349e-05,
       "bb_width": "?",
       "bb_trend": "DOWN"
     },
