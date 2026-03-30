@@ -17,7 +17,7 @@ env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
 load_dotenv(dotenv_path=env_path)
 
 # Configuration
-INTERVAL_HOURS = 2
+INTERVAL_HOURS = 4
 INTERVAL_SECONDS = INTERVAL_HOURS * 3600
 PORT = int(os.getenv("PORT", 5001))
 VERSION = "2026.03.25.1220" # Version for tracking deployments
@@ -650,9 +650,9 @@ def main():
         now = datetime.now()
         current_hour = now.hour
         
-        # Find next 2-hour block
-        # e.g. if hour is 13, next is 14. If 14, next is 16.
-        next_slot_hour = ((current_hour // 2) + 1) * 2
+        # Find next 4-hour block
+        # e.g. if hour is 13, next is 16. If 16, next is 20.
+        next_slot_hour = ((current_hour // 4) + 1) * 4
         
         # Calculate target time
         # If next_slot_hour is 24, it means 00:00 tomorrow
