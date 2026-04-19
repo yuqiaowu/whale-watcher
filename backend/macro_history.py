@@ -23,6 +23,7 @@ class MacroHistory:
 
     def save(self):
         try:
+            os.makedirs(os.path.dirname(self.filepath), exist_ok=True)
             with open(self.filepath, "w") as f:
                 json.dump(self.history, f, indent=2)
         except Exception as e:
