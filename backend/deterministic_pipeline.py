@@ -30,8 +30,8 @@ GLOBAL_CONFIG = {
     "timeframe": "4h",
     "min_rrr": 1.8,
     "global_leverage_min": 1.0,
-    "global_leverage_max": 5.0,
-    "approved_risk_fraction": 0.01,
+    "global_leverage_max": 8.0,
+    "approved_risk_fraction": 0.02,
     "default_position_size_fraction": 0.10,
     "max_position_size_fraction": 0.25,
     "qlib_rank_bucket_size": 3,
@@ -1012,7 +1012,7 @@ def _evaluate_rules(snapshot: Dict[str, Any], candidate_batch: Dict[str, Any]) -
             rule_trace.append({"rule": "REGIME_PERMISSION_CHECK", "passed": False, "detail": "macro_long_only"})
             continue
 
-        leverage = min(GLOBAL_CONFIG["global_leverage_max"], max(GLOBAL_CONFIG["global_leverage_min"], 2.0))
+        leverage = min(GLOBAL_CONFIG["global_leverage_max"], max(GLOBAL_CONFIG["global_leverage_min"], 3.0))
         liq_buffer = _estimate_pretrade_liq_buffer(entry, sl, leverage)
         if liq_buffer <= 0.05:
             passed = False
@@ -1057,6 +1057,15 @@ def _estimate_pretrade_liq_buffer(entry_price: float, stop_loss: float, leverage
     risk_fraction = abs(entry_price - stop_loss) / max(entry_price, 1e-9)
     base_buffer = max(0.03, 1.0 / max(leverage, 1.0))
     return round(base_buffer - risk_fraction, 4)
+
+
+def _cap_position_size_by_max_loss(account_equity: float, entry_price: float, stop_loss: float, requested_size_usd: float) -> float:
+    stop_fraction = abs(entry_price - stop_loss) / max(entry_price, 1e-9)
+    if stop_fraction <= 0:
+        return 0.0
+    max_loss_usd = account_equity * GLOBAL_CONFIG["approved_risk_fraction"]
+    risk_capped_size = max_loss_usd / stop_fraction
+    return min(requested_size_usd, risk_capped_size)
 
 
 def _build_risk_review(snapshot: Dict[str, Any], rule_evaluation: Dict[str, Any]) -> Dict[str, Any]:
@@ -1109,9 +1118,18 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
     approved_risk_fraction = GLOBAL_CONFIG["approved_risk_fraction"]
     raw_size = account_equity * GLOBAL_CONFIG["default_position_size_fraction"]
     approved_position_size_usd = min(raw_size, account_equity * GLOBAL_CONFIG["max_position_size_fraction"])
-    leverage = 2.0
+    approved_position_size_usd = _cap_position_size_by_max_loss(
+        account_equity=account_equity,
+        entry_price=_safe_float(candidate.get("proposed_entry_price")),
+        stop_loss=_safe_float(candidate.get("proposed_sl_price")),
+        requested_size_usd=approved_position_size_usd,
+    )
+    leverage = 3.0
     max_holding_bars = 3 if snapshot["decision_ready_features"].get("macro_mode") == "EVENT_DRIVEN" else 6
-    review_note = f"approved from {candidate['trigger_source']} with deterministic risk defaults"
+    review_note = (
+        f"approved from {candidate['trigger_source']} with deterministic risk defaults; "
+        f"max loss capped at {round(approved_risk_fraction * 100, 1)}% of equity"
+    )
     candidate_structure = rule_evaluation.get("candidate_structure", {}) or {}
 
     if research_output:
@@ -1122,7 +1140,7 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
             review_note = "research flagged low thesis strength; reduced size and leverage"
         elif research_output.get("thesis_strength") == "MEDIUM":
             approved_position_size_usd *= 0.75
-            leverage = 1.5
+            leverage = 2.0
             max_holding_bars = min(max_holding_bars, 4)
             review_note = "research flagged medium thesis strength; reduced size and duration"
 
@@ -1138,6 +1156,14 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
         review_note = (
             f"{review_note}; same-direction resonance increased size by {round(resonance_bonus * 100, 1)}%"
         )
+
+    approved_position_size_usd = _cap_position_size_by_max_loss(
+        account_equity=account_equity,
+        entry_price=_safe_float(candidate.get("proposed_entry_price")),
+        stop_loss=_safe_float(candidate.get("proposed_sl_price")),
+        requested_size_usd=approved_position_size_usd,
+    )
+    leverage = min(GLOBAL_CONFIG["global_leverage_max"], max(GLOBAL_CONFIG["global_leverage_min"], leverage))
 
     execution_action = "OPEN_LONG" if candidate["decision_intent"] == "LONG" else "OPEN_SHORT"
 

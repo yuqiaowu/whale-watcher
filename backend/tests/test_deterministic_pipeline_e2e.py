@@ -369,6 +369,48 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertIn("same-direction resonance increased size", risk_review["review_note"])
         self.assertEqual(risk_review["candidate_structure"]["overall_state"], "same_direction_resonance")
 
+    def test_risk_review_caps_max_loss_at_two_percent_of_equity_and_uses_three_x_default_leverage(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "decision_ready_features": {"macro_mode": "MIXED"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {
+                "overall_state": "single_signal",
+                "has_directional_conflict": False,
+                "long_count": 0,
+                "short_count": 1,
+                "resonance_groups": {"LONG": [], "SHORT": ["Blueprint_E2"]},
+                "approved_groups": {"LONG": [], "SHORT": ["Blueprint_E2"]},
+                "approved_resonance_strength": 1,
+            },
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "Blueprint_E2",
+                    "entry_type": "MARKET",
+                    "rationale": "wide stop short",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 150,
+                    "proposed_tp_price": 80,
+                    "reference_values": {},
+                    "invalidation_basis": "invalid",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                },
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertTrue(risk_review["approved"])
+        self.assertEqual(risk_review["approved_risk_fraction"], 0.02)
+        self.assertEqual(risk_review["leverage"], 3.0)
+        self.assertEqual(risk_review["approved_position_size_usd"], 40.0)
+        self.assertEqual(abs(100 - 150) / 100 * risk_review["approved_position_size_usd"], 20.0)
+
     def test_e2_uses_percentile_not_raw_small_score_scale(self):
         snapshot = {
             "symbol": "ETH-USDT",
