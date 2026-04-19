@@ -33,6 +33,31 @@ class DBClient:
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         return os.path.join(base_dir, "frontend", "data", f"{collection_name}.json")
 
+    def _normalize_local_list_for_runtime(self, collection_name, data):
+        if not isinstance(data, list):
+            return data
+        if collection_name in ["trade_decision_records", "decision_cycles_v2"]:
+            field = "created_at" if collection_name == "trade_decision_records" else "generated_at"
+            return sorted(
+                data,
+                key=lambda item: str(item.get(field) or item.get("cycleId") or ""),
+                reverse=True,
+            )
+        return data
+
+    def _normalize_list_for_local_storage(self, collection_name, data):
+        if not isinstance(data, list):
+            return data
+        if collection_name in ["trade_decision_records", "decision_cycles_v2"]:
+            field = "created_at" if collection_name == "trade_decision_records" else "generated_at"
+            # Keep historical JSON files chronologically ordered so opening the
+            # file directly is not misleading.
+            return sorted(
+                data,
+                key=lambda item: str(item.get(field) or item.get("cycleId") or ""),
+            )
+        return data
+
     # --- Read / Get ---
     def get_data(self, collection_name, default_value=None):
         if default_value is None:
@@ -49,10 +74,12 @@ class DBClient:
                         return doc
                     # If MongoDB is empty for this, fall through to local fallback
                 else:
-                    # Logs, nav history, trade history are arrays of documents
+                    # Array-like collections: histories, decision cycles, ledgers
                     cursor = collection.find({}, {"_id": 0})
-                    if collection_name in ["agent_decision_log", "agent_decisions"]:
-                        cursor = cursor.sort("timestamp", -1) # newest first
+                    if collection_name == "trade_decision_records":
+                        cursor = cursor.sort("created_at", -1)
+                    elif collection_name == "decision_cycles_v2":
+                        cursor = cursor.sort("generated_at", -1)
                     
                     data = list(cursor)
                     if data:
@@ -66,7 +93,8 @@ class DBClient:
         if os.path.exists(path):
             try:
                 with open(path, "r") as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    return self._normalize_local_list_for_runtime(collection_name, data)
             except:
                 pass
         return default_value
@@ -78,7 +106,7 @@ class DBClient:
         os.makedirs(os.path.dirname(path), exist_ok=True)
         try:
             with open(path, "w") as f:
-                json.dump(data, f, indent=2)
+                json.dump(self._normalize_list_for_local_storage(collection_name, data), f, indent=2)
         except Exception as e:
             print(f"⚠️ Failed to write local json {collection_name}: {e}")
 

@@ -14,6 +14,56 @@ QLIB_DATA_DIR = BASE_DIR / "qlib_data"
 CSV_PATH = QLIB_DATA_DIR / "multi_coin_features.csv"
 BIN_DIR = QLIB_DATA_DIR / "bin_multi_coin"
 SYMBOLS = ["BTC", "ETH", "SOL", "BNB", "DOGE"]
+SCHEMA_COLUMNS = [
+    'datetime', 'instrument', 'open', 'high', 'low', 'close', 'volume',
+    'ret', 'log_return', 'ma_5', 'ma_20', 'ma_60', 'ma_cross', 'momentum_12',
+    'macd', 'macd_signal', 'macd_hist', 'atr_14', 'bb_width_20', 'bb_pos_20',
+    'volatility_20', 'rsi_14', 'volume_ma_20', 'rel_volume_20', 'price_position_20',
+    'funding_rate', 'funding_rate_zscore', 'open_interest', 'oi_change', 'oi_rsi',
+    'btc_corr_24h', 'natr_14', 'buy_stars', 'sell_stars',
+    'volume_usd_4h', 'liquidation_long_usd', 'liquidation_short_usd',
+    'liquidation_long_to_volume_4h', 'liquidation_short_to_volume_4h',
+    'token_net_flow_4h', 'stablecoin_net_flow_4h',
+    'token_net_flow_24h', 'stablecoin_net_flow_24h',
+    'future_4h_ret', 'future_24h_ret'
+]
+
+
+def ensure_csv_schema():
+    if not CSV_PATH.exists():
+        return
+
+    df = pd.read_csv(CSV_PATH)
+    changed = False
+
+    if 'volume_usd_4h' not in df.columns:
+        # Existing `volume` already uses OKX volCcyQuote, which is the quote-currency notional.
+        df['volume_usd_4h'] = df['volume']
+        changed = True
+
+    for col in [
+        'liquidation_long_usd',
+        'liquidation_short_usd',
+        'liquidation_long_to_volume_4h',
+        'liquidation_short_to_volume_4h',
+        'token_net_flow_4h',
+        'stablecoin_net_flow_4h',
+        'token_net_flow_24h',
+        'stablecoin_net_flow_24h',
+    ]:
+        if col not in df.columns:
+            df[col] = np.nan
+            changed = True
+
+    missing_cols = [col for col in SCHEMA_COLUMNS if col not in df.columns]
+    for col in missing_cols:
+        df[col] = np.nan
+        changed = True
+
+    if changed or list(df.columns) != SCHEMA_COLUMNS:
+        df = df[SCHEMA_COLUMNS]
+        df.to_csv(CSV_PATH, index=False)
+        print("✅ Qlib CSV schema updated with volume/liquidation columns.")
 
 def get_last_date_from_csv():
     if not CSV_PATH.exists():
@@ -116,6 +166,8 @@ def fetch_and_process_missing_data(start_date):
         # Volume
         df_feats['volume_ma_20'] = df_feats['volume'].rolling(20).mean()
         df_feats['rel_volume_20'] = df_feats['volume'] / df_feats['volume_ma_20']
+        # OKX `volCcyQuote` is quote-currency notional, so reuse it as 4H USD volume proxy.
+        df_feats['volume_usd_4h'] = df_feats['volume']
         
         # Range Pos
         roll_min = df_feats['low'].rolling(20).min()
@@ -183,6 +235,33 @@ def fetch_and_process_missing_data(start_date):
             df_feats['oi_change'] = 0.0
             df_feats['oi_rsi'] = 50.0
 
+        # Liquidation snapshot is available for the latest market state, but not as full historical 4H series.
+        # Keep historical rows empty unless we are appending the newest bar, where a point-in-time snapshot is acceptable.
+        df_feats['liquidation_long_usd'] = np.nan
+        df_feats['liquidation_short_usd'] = np.nan
+        df_feats['liquidation_long_to_volume_4h'] = np.nan
+        df_feats['liquidation_short_to_volume_4h'] = np.nan
+        try:
+            liq_data = client.fetch_liquidation_data(f"{symbol}-USDT")
+            if liq_data and not df_feats.empty:
+                latest_idx = df_feats.index[-1]
+                long_liq = float(liq_data.get("long_vol_usd", 0.0) or 0.0)
+                short_liq = float(liq_data.get("short_vol_usd", 0.0) or 0.0)
+                latest_volume_usd = float(df_feats.loc[latest_idx, 'volume_usd_4h'] or 0.0)
+                denom = latest_volume_usd if latest_volume_usd > 0 else np.nan
+                df_feats.loc[latest_idx, 'liquidation_long_usd'] = long_liq
+                df_feats.loc[latest_idx, 'liquidation_short_usd'] = short_liq
+                df_feats.loc[latest_idx, 'liquidation_long_to_volume_4h'] = long_liq / denom if pd.notna(denom) else np.nan
+                df_feats.loc[latest_idx, 'liquidation_short_to_volume_4h'] = short_liq / denom if pd.notna(denom) else np.nan
+        except Exception as e:
+            print(f"⚠️ Error fetching liquidation snapshot for {symbol}: {e}")
+
+        # Historical chain flow is backfilled by a separate script.
+        df_feats['token_net_flow_4h'] = np.nan
+        df_feats['stablecoin_net_flow_4h'] = np.nan
+        df_feats['token_net_flow_24h'] = np.nan
+        df_feats['stablecoin_net_flow_24h'] = np.nan
+
         df_feats['btc_corr_24h'] = 1.0 # default
         
         # Targets (set to 0 for inference)
@@ -192,20 +271,10 @@ def fetch_and_process_missing_data(start_date):
         # Prepare for merging
         df_feats['instrument'] = symbol
         
-        # Final Column Order matching multi_coin_features.csv
-        cols = [
-            'datetime', 'instrument', 'open', 'high', 'low', 'close', 'volume',
-            'ret', 'log_return', 'ma_5', 'ma_20', 'ma_60', 'ma_cross', 'momentum_12',
-            'macd', 'macd_signal', 'macd_hist', 'atr_14', 'bb_width_20', 'bb_pos_20',
-            'volatility_20', 'rsi_14', 'volume_ma_20', 'rel_volume_20', 'price_position_20',
-            'funding_rate', 'funding_rate_zscore', 'open_interest', 'oi_change', 'oi_rsi',
-            'btc_corr_24h', 'natr_14', 'buy_stars', 'sell_stars', 'future_4h_ret', 'future_24h_ret'
-        ]
-        
         # Filter only NEW data
         new_df = df_feats[df_feats['datetime'] > start_date].copy()
         if not new_df.empty:
-            all_new_rows.append(new_df[cols])
+            all_new_rows.append(new_df[SCHEMA_COLUMNS])
             
     if all_new_rows:
         combined_new = pd.concat(all_new_rows)
@@ -229,6 +298,7 @@ def update_qlib_binary():
         print(f"❌ Failed to update binaries: {e}")
 
 def main():
+    ensure_csv_schema()
     last_date = get_last_date_from_csv()
     if not last_date:
         print("❌ Could not find starting date in CSV.")

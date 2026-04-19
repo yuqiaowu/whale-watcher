@@ -10,7 +10,7 @@ DATA_DIR = os.path.join(PROJECT_ROOT, "frontend", "data")
 
 WHALE_PATH = os.path.join(DATA_DIR, "whale_analysis.json")
 PORTFOLIO_PATH = os.path.join(DATA_DIR, "portfolio_state.json")
-DECISION_LOG_PATH = os.path.join(DATA_DIR, "agent_decision_log.json")
+LATEST_RECORD_PATH = os.path.join(DATA_DIR, "latest_trade_decision_record.json")
 
 def load_json(path):
     if os.path.exists(path):
@@ -40,11 +40,10 @@ def generate_report():
     # 1. Load Data
     whale_data = load_json(WHALE_PATH)
     portfolio = load_json(PORTFOLIO_PATH)
-    decisions = load_json(DECISION_LOG_PATH)
-    
-    # Get latest decision
-    latest_decision = decisions[0] if isinstance(decisions, list) and decisions else {}
-    ai_summary = latest_decision.get("analysis_summary", {}).get("zh", "无最新分析")
+    latest_record = load_json(LATEST_RECORD_PATH)
+
+    research = latest_record.get("researchOutput", {}) if isinstance(latest_record, dict) else {}
+    ai_summary = research.get("summary", "无最新研究结论")
     
     # 2. Portfolio Stats
     equity = portfolio.get("total_equity", 0)
@@ -55,8 +54,7 @@ def generate_report():
     pos_str = ""
     if positions:
         for p in positions:
-            pnl_pct = p.get("pnlPercent", 0) # Shadow prop? Or need calculation
-            # Try to get live PnL if available or just list basic
+            pnl_pct = p.get("pnlPercent", 0)
             direction = "🟢 Long" if p["type"] == "long" else "🔴 Short"
             pos_str += f"• {direction} {p['symbol']} ({p['leverage']}x)\n"
     else:

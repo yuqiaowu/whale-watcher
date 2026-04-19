@@ -21,8 +21,10 @@ BRANCH_NAME = "data-history"
 
 FILES_TO_PULL = [
     "frontend/data/trade_history.json",
-    "frontend/data/agent_decision_log.json",
-    "frontend/data/agent_memory.json",
+    "frontend/data/trade_decision_records.json",
+    "frontend/data/latest_trade_decision_record.json",
+    "frontend/data/decision_cycles_v2.json",
+    "frontend/data/latest_decision_cycle_v2.json",
     "frontend/data/nav_history.json",
     "frontend/data/portfolio_state.json",
     "frontend/data/whale_analysis.json"

@@ -11,16 +11,23 @@ import requests
 from stats_calculator import calculate_stats
 from db_client import db
 from dotenv import load_dotenv
+from deterministic_pipeline import run_deterministic_cycle
+from execution_reconciliation import run_execution_reconciliation
+from post_trade_review import run_post_trade_review
+from position_runtime import run_in_position_runtime
 
 # Load environment variables
 env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
 load_dotenv(dotenv_path=env_path)
 
 # Configuration
-INTERVAL_HOURS = 4
+INTERVAL_HOURS = int(os.getenv("RUN_INTERVAL_HOURS", "2"))
 INTERVAL_SECONDS = INTERVAL_HOURS * 3600
+DECISION_TIMEFRAME_HOURS = int(os.getenv("DECISION_TIMEFRAME_HOURS", "4"))
+SKIP_DUPLICATE_DECISION_CYCLE = os.getenv("SKIP_DUPLICATE_DECISION_CYCLE", "1").lower() in {"1", "true", "yes"}
 PORT = int(os.getenv("PORT", 5001))
 VERSION = "2026.03.25.1220" # Version for tracking deployments
+ENABLE_V2_PIPELINE = os.getenv("ENABLE_V2_PIPELINE", "1").lower() in {"1", "true", "yes"}
 
 # --- DATA INITIALIZATION ---
 def init_data_files():
@@ -66,31 +73,10 @@ def init_data_files():
         db.save_data("trade_history", [])
         print("✅ Initialized trade_history in DB")
         
-    # 3. Agent Decision Log (agent_decisions is the new primary)
-    log = db.get_data("agent_decisions")
-    if not log:
-        # Fallback to check old log
-        log = db.get_data("agent_decision_log")
-        
-    if not log:
-        dummy_log = [{
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "analysis_summary": {
-                "zh": " Dolores 交易代理已启动。正在等待第一次 4H 周期数据分析...",
-                "en": "Dolores Trading Agent online. Waiting for the first 4H interval analysis..."
-            },
-            "actions": [],
-            "context_analysis": {
-                "technical_signal": {"zh": "数据抓取中...", "en": "Acquiring technical indicators..."},
-                "macro_onchain": {"zh": "数据抓取中...", "en": "Acquiring whale flow data..."}, 
-                "portfolio_status": {"zh": "账户连接成功", "en": "Account connected."},
-                "reflection": {"zh": "就绪", "en": "Ready."}
-            }
-        }]
-        # Initialize both for compatibility
-        db.save_data("agent_decisions", dummy_log)
-        db.save_data("agent_decision_log", dummy_log)
-        print("✅ Initialized agent_decisions (and log) in DB")
+    # 3. V2 ledger bootstrap
+    latest_record = db.get_data("latest_trade_decision_record", {})
+    if not latest_record:
+        print("ℹ️ No V2 trade record found yet. It will be created on the first deterministic cycle.")
 
     # 4. NAV History
     nav = db.get_data("nav_history", [])
@@ -323,18 +309,13 @@ def get_trade_history():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/agent-decision', methods=['GET'])
-def get_agent_decisions():
+def get_trade_decision_records_compat():
     try:
-        # User requested to pull from 'agent_decisions' collection (online source)
-        decisions = db.get_data("agent_decisions", [])
-        if not decisions:
-             # Fallback to local log if online is empty
-             decisions = db.get_data("agent_decision_log", [])
-             
-        if isinstance(decisions, list):
-            return jsonify(decisions[:10]) # First 10 (Newest first)
-        else:
-            return jsonify([decisions])
+        records = db.get_data("trade_decision_records", [])
+        if isinstance(records, list) and records:
+            return jsonify(records[:10])
+        latest_cycle = db.get_data("latest_decision_cycle_v2", {})
+        return jsonify([latest_cycle] if latest_cycle else [])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
         
@@ -343,6 +324,69 @@ def get_nav_history():
     try:
         history = db.get_data("nav_history", [])
         return jsonify(history)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/v2/latest-cycle', methods=['GET'])
+def get_latest_v2_cycle():
+    try:
+        cycle = db.get_data("latest_decision_cycle_v2", {})
+        return jsonify(cycle if cycle else {})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/v2/trade-records', methods=['GET'])
+def get_v2_trade_records():
+    try:
+        records = db.get_data("trade_decision_records", [])
+        if isinstance(records, list):
+            return jsonify(records[:20])
+        return jsonify([records])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/v2/latest-trade-record', methods=['GET'])
+def get_latest_v2_trade_record():
+    try:
+        record = db.get_data("latest_trade_decision_record", {})
+        return jsonify(record if record else {})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/health', methods=['GET'])
+def get_health():
+    try:
+        latest_run = db.get_data("latest_system_run", {})
+        latest_cycle = db.get_data("latest_decision_cycle_v2", {})
+        return jsonify({
+            "status": "ok",
+            "version": VERSION,
+            "mongo_connected": db.is_connected,
+            "latest_run_status": latest_run.get("status"),
+            "latest_run_at": latest_run.get("completed_at") or latest_run.get("started_at"),
+            "latest_cycle_id": latest_cycle.get("cycleId"),
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "error": str(e)}), 500
+
+
+@app.route('/api/admin/latest-run', methods=['GET'])
+def get_latest_system_run():
+    try:
+        run = db.get_data("latest_system_run", {})
+        return jsonify(run if run else {})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/admin/runs', methods=['GET'])
+def get_system_runs():
+    try:
+        runs = db.get_data("system_run_history", [])
+        if isinstance(runs, list):
+            return jsonify(runs[:50])
+        return jsonify([runs])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -362,6 +406,38 @@ def start_web_server():
     """Start the Flask server to serve APIs and frontend files."""
     print(f"🌍 Flask Server starting on port {PORT}...")
     app.run(host='0.0.0.0', port=PORT, debug=False, use_reloader=False)
+
+
+def _utc_iso_now() -> str:
+    return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _local_iso_now() -> str:
+    return datetime.now().astimezone().strftime("%Y-%m-%dT%H:%M:%S%z")
+
+
+def _aligned_cycle_id(now=None, block_hours: int = DECISION_TIMEFRAME_HOURS) -> str:
+    now = now or datetime.utcnow()
+    block_hour = (now.hour // block_hours) * block_hours
+    aligned = now.replace(hour=block_hour, minute=0, second=0, microsecond=0)
+    return f"cycle_{aligned.strftime('%Y-%m-%d_%H00')}"
+
+
+def _append_system_run(entry):
+    history = db.get_data("system_run_history", [])
+    if not isinstance(history, list):
+        history = []
+    history.insert(0, entry)
+    deduped = []
+    seen = set()
+    for item in history:
+        run_id = str(item.get("runId") or "")
+        if not run_id or run_id in seen:
+            continue
+        seen.add(run_id)
+        deduped.append(item)
+    db.save_data("system_run_history", deduped[:200])
+    db.save_data("latest_system_run", entry)
 
 def write_status(status, detail=""):
     """Write status to frontend/debug.txt for UI display"""
@@ -414,6 +490,23 @@ def run_script(script_name):
         write_status("CRASHED", str(e))
         return False
 
+def run_v2_cycle():
+    """Run the deterministic v2 decision chain and persist cycle outputs."""
+    print(">> Step 2: Deterministic V2 Pipeline (snapshot -> candidate -> rule -> risk -> execution request)...")
+    try:
+        result = run_deterministic_cycle(executor=executor)
+        approved = sum(1 for item in result.get("risk_reviews", []) if item.get("approved"))
+        print(
+            f"✅ V2 cycle completed: {result.get('cycleId')} | "
+            f"records={result.get('record_count', 0)} | approved={approved} | "
+            f"reviewed={result.get('post_trade_review', {}).get('evaluated_count', 0)}"
+        )
+        return {"success": True, "result": result}
+    except Exception as e:
+        print(f"❌ V2 pipeline failed: {e}")
+        write_status("ERROR", f"V2 pipeline failed: {e}")
+        return {"success": False, "error": str(e)}
+
 def background_sync_loop():
     """
     Independent background thread to sync trade history and positions every 10 minutes.
@@ -447,6 +540,18 @@ def background_sync_loop():
             except: pass
             
             db.save_data("portfolio_state", state)
+            reconciliation_summary = run_execution_reconciliation()
+            if reconciliation_summary.get("updated_count", 0) > 0:
+                print(
+                    f"🧾 [Execution Reconcile] updated {reconciliation_summary['updated_count']} / "
+                    f"{reconciliation_summary['record_count']} execution states"
+                )
+            review_summary = run_post_trade_review()
+            if review_summary.get("evaluated_count", 0) > 0:
+                print(
+                    f"🧾 [Background Review] updated {review_summary['evaluated_count']} / "
+                    f"{review_summary['record_count']} trade evaluations"
+                )
             print(f"🔄 [Background Sync] Stats updated at {datetime.now().strftime('%H:%M:%S')}")
             
         except Exception as e:
@@ -493,6 +598,20 @@ def main():
     
     while True:
         cycle_start = datetime.now()
+        run_entry = {
+            "runId": f"run_{cycle_start.strftime('%Y%m%dT%H%M%S')}",
+            "started_at": _utc_iso_now(),
+            "started_at_local": _local_iso_now(),
+            "status": "running",
+            "version": VERSION,
+            "interval_hours": INTERVAL_HOURS,
+            "decision_timeframe_hours": DECISION_TIMEFRAME_HOURS,
+            "target_cycle_id": _aligned_cycle_id(),
+            "data_update_ok": False,
+            "qlib_ok": False,
+            "v2_cycle_status": "not_started",
+            "sync_status": "not_started",
+        }
         
         # --- Linux / Apple Silicon Pickle Architecture Healing ---
         import os
@@ -534,6 +653,7 @@ def main():
         # 1. Update Market Reality (crypto_brain)
         print(">> Step 1: Updating Market Reality (crypto_brain)...")
         success_data = run_script("crypto_brain.py")
+        run_entry["data_update_ok"] = bool(success_data)
         
         # 1.25 Run Qlib Database Update (Automated 4H Data Ingestion)
         if success_data:
@@ -544,115 +664,146 @@ def main():
         # 1.5 Run Qlib Strategy Ranking
         if success_data:
             print(">> Step 1.5: Running Qlib Strategy Ranking...")
-            run_script("inference_qlib_model.py")
-        
-        # 2. Run AI Execution (ai_trader)
-        if success_data:
-            print(">> Step 2: AI Thinking & Execution (ai_trader)...")
-            success_trade = run_script("ai_trader.py")
-            if success_trade:
-                print(">> Step 2.5: Syncing Trade History (Real/Shadow)...")
-                try:
-                    executor.sync_trade_history()
-                except Exception as e:
-                    print(f"⚠️ History sync failed: {e}")
+            run_entry["qlib_ok"] = bool(run_script("inference_qlib_model.py"))
 
-                print(">> Step 2.75: Appending NAV History...")
-                try:
-                    nav_history = db.get_data("nav_history", [])
-                    current_eq = executor.get_account_equity()
-                    
-                    # Get latest BTC price for benchmark
-                    btc_price = 0
-                    whale_data = db.get_data("whale_analysis", {})
-                    if whale_data and isinstance(whale_data, dict):
-                        btc_price = whale_data.get("btc", {}).get("market", {}).get("price", 0)
-                    
-                    # Fallback to direct OKX fetch if DB is stale/missing price
-                    if btc_price <= 0:
-                        try:
-                            from market_data import get_strategy_metrics
-                            btc_m = get_strategy_metrics("BTC")
-                            if btc_m:
-                                btc_price = btc_m.get("price", 0)
-                                print(f"ℹ️ Fetched BTC price from OKX fallback: {btc_price}")
-                        except:
-                            pass
-                    
-                    nav_history.append({
-                        "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-                        "nav": round(current_eq, 2),
-                        "btc_price": btc_price
-                    })
-                    
-                    # Keep last 150 points (about 25 days of 4H data)
-                    if len(nav_history) > 150:
-                        nav_history = nav_history[-150:]
-                        
-                    db.save_data("nav_history", nav_history)
-                    
-                    # --- NEW: Keep current_state in sync with Real OKX ---
-                    state = db.get_data("portfolio_state", {})
-                    state["total_equity"] = round(current_eq, 2)
-                    
-                    # Sync active positions list with Invalidation Rule persistence
-                    try:
-                        old_positions = state.get("positions", [])
-                        # Map symbol -> rule for lookup
-                        rule_map = { p["symbol"]: p.get("invalidation_rule") for p in old_positions if p.get("invalidation_rule") }
-                        
-                        active_positions = executor.get_all_positions()
-                        
-                        # Enrichment: Merge old AI rules into the new real-time position list
-                        for p in active_positions:
-                             sym = p.get("symbol")
-                             if sym in rule_map:
-                                  p["invalidation_rule"] = rule_map[sym]
-                                  print(f"🔗 Re-attached AI Invalidation Rule to active {sym} position.")
-                        
-                        state["positions"] = active_positions
-                        print(f"✅ Synced {len(active_positions)} active positions from OKX (with rule persistence).")
-                    except Exception as e:
-                        print(f"⚠️ Failed to sync active positions: {e}")
-
-                    # Sync cash (available balance) as well
-                    try:
-                        balances = executor._request("GET", "/api/v5/account/balance")
-                        if balances.get("code") == "0" and balances.get("data"):
-                             avail = float(balances["data"][0].get("totalEq", current_eq)) # fallback to totalEq
-                             for d in balances["data"][0].get("details", []):
-                                 if d.get("ccy") == "USDT":
-                                     avail = float(d.get("availBal", avail))
-                             state["cash"] = round(avail, 2)
-                    except:
-                        state["cash"] = round(current_eq * 0.8, 2) # rough fallback
-                        
-                    db.save_data("portfolio_state", state)
-                    print(f"✅ NAV History & Portfolio State Updated (${current_eq:.2f})")
-                except Exception as e:
-                    print(f"⚠️ Failed to append NAV history: {e}")
-
-                print(">> Step 3: Syncing Data to GitHub (data-history)...")
-                run_script("data_sync.py")
-
-                # print(">> Step 4: Sending 4H Market Report...")
-                # run_script("daily_report.py") # Deactivated redundant simplified report
-
-                write_status("SLEEPING", f"Cycle completed successfully.\nNext Run: {(datetime.now() + timedelta(seconds=INTERVAL_SECONDS)).strftime('%H:%M:%S')}")
+        # 1.75 Run deterministic v2 pipeline. Safe by default because execution is disabled
+        # unless ENABLE_V2_EXECUTION is explicitly enabled.
+        v2_result = None
+        if success_data and ENABLE_V2_PIPELINE:
+            latest_cycle = db.get_data("latest_decision_cycle_v2", {})
+            latest_cycle_id = latest_cycle.get("cycleId") if isinstance(latest_cycle, dict) else None
+            if SKIP_DUPLICATE_DECISION_CYCLE and latest_cycle_id == run_entry["target_cycle_id"]:
+                print(f"⏭️  No new {DECISION_TIMEFRAME_HOURS}H decision bar yet. Skipping duplicate cycle {latest_cycle_id}.")
+                run_entry["v2_cycle_status"] = "skipped_duplicate_cycle"
+                run_entry["cycle_id"] = latest_cycle_id
             else:
-                write_status("ERROR", "AI Trader failed to execute.")
+                v2_result = run_v2_cycle()
+                run_entry["v2_cycle_status"] = "completed" if v2_result.get("success") else "failed"
+                if v2_result.get("success"):
+                    result = v2_result.get("result") or {}
+                    run_entry["cycle_id"] = result.get("cycleId")
+                    run_entry["record_count"] = result.get("record_count", 0)
+                    run_entry["approved_symbols"] = result.get("approved_symbols", [])
+                    run_entry["post_trade_review"] = result.get("post_trade_review")
+                else:
+                    run_entry["error"] = v2_result.get("error")
+
+        # 2. Sync portfolio and append NAV history after deterministic cycle.
+        if success_data:
+            run_entry["sync_status"] = "running"
+            print(">> Step 2.5: Syncing Trade History (Real/Shadow)...")
+            try:
+                executor.sync_trade_history()
+            except Exception as e:
+                print(f"⚠️ History sync failed: {e}")
+
+            print(">> Step 2.55: Reconciling Execution Receipts...")
+            try:
+                reconciliation_summary = run_execution_reconciliation()
+                print(
+                    f"✅ Execution reconciliation complete "
+                    f"(updated={reconciliation_summary.get('updated_count', 0)}, "
+                    f"records={reconciliation_summary.get('record_count', 0)})"
+                )
+            except Exception as e:
+                print(f"⚠️ Execution reconciliation failed: {e}")
+
+            print(">> Step 2.6: Running In-Position Runtime Rules...")
+            try:
+                runtime_summary = run_in_position_runtime(executor)
+                print(
+                    f"✅ In-position runtime complete "
+                    f"(updated={runtime_summary.get('updated_count', 0)}, "
+                    f"actions={len(runtime_summary.get('actions', []))})"
+                )
+            except Exception as e:
+                print(f"⚠️ In-position runtime failed: {e}")
+
+            print(">> Step 2.65: Running Post-Trade Review...")
+            try:
+                review_summary = run_post_trade_review()
+                print(
+                    f"✅ Post-trade review complete "
+                    f"(evaluated={review_summary.get('evaluated_count', 0)}, "
+                    f"records={review_summary.get('record_count', 0)})"
+                )
+            except Exception as e:
+                print(f"⚠️ Post-trade review failed: {e}")
+
+            print(">> Step 2.75: Appending NAV History...")
+            try:
+                nav_history = db.get_data("nav_history", [])
+                current_eq = executor.get_account_equity()
+
+                btc_price = 0
+                whale_data = db.get_data("whale_analysis", {})
+                if whale_data and isinstance(whale_data, dict):
+                    btc_price = whale_data.get("btc", {}).get("market", {}).get("price", 0)
+
+                if btc_price <= 0:
+                    try:
+                        from market_data import get_strategy_metrics
+                        btc_m = get_strategy_metrics("BTC")
+                        if btc_m:
+                            btc_price = btc_m.get("price", 0)
+                    except Exception:
+                        pass
+
+                nav_history.append({
+                    "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+                    "nav": round(current_eq, 2),
+                    "btc_price": btc_price
+                })
+                if len(nav_history) > 150:
+                    nav_history = nav_history[-150:]
+                db.save_data("nav_history", nav_history)
+
+                state = db.get_data("portfolio_state", {})
+                state["total_equity"] = round(current_eq, 2)
+                try:
+                    state["positions"] = executor.get_all_positions()
+                except Exception as e:
+                    print(f"⚠️ Failed to sync active positions: {e}")
+
+                try:
+                    balances = executor._request("GET", "/api/v5/account/balance")
+                    if balances.get("code") == "0" and balances.get("data"):
+                        avail = float(balances["data"][0].get("totalEq", current_eq))
+                        for d in balances["data"][0].get("details", []):
+                            if d.get("ccy") == "USDT":
+                                avail = float(d.get("availBal", avail))
+                        state["cash"] = round(avail, 2)
+                except Exception:
+                    state["cash"] = round(current_eq * 0.8, 2)
+
+                db.save_data("portfolio_state", state)
+                print(f"✅ NAV History & Portfolio State Updated (${current_eq:.2f})")
+            except Exception as e:
+                print(f"⚠️ Failed to append NAV history: {e}")
+
+            print(">> Step 3: Syncing Data to GitHub (data-history)...")
+            run_script("data_sync.py")
+            run_entry["sync_status"] = "completed"
+            if run_entry.get("v2_cycle_status") == "failed":
+                run_entry["status"] = "failed"
+            else:
+                run_entry["status"] = "completed"
+            write_status("SLEEPING", f"V2 cycle completed successfully.\nNext Run: {(datetime.now() + timedelta(seconds=INTERVAL_SECONDS)).strftime('%H:%M:%S')}")
         else:
             print("⚠️ Skipping AI step because data update failed.")
+            run_entry["status"] = "failed"
+            run_entry["sync_status"] = "skipped"
             write_status("ERROR", "Data update (crypto_brain) failed.")
+
+        run_entry["completed_at"] = _utc_iso_now()
+        run_entry["completed_at_local"] = _local_iso_now()
+        _append_system_run(run_entry)
             
-        # 3. Calculate sleep time to align with next 4-hour mark (plus 5 min offset)
-        # Target hours: 0, 4, 8, 12, 16, 20
+        # 3. Calculate sleep time to align with next interval mark (plus 5 min offset)
         now = datetime.now()
         current_hour = now.hour
         
-        # Find next 4-hour block
-        # e.g. if hour is 13, next is 16. If 16, next is 20.
-        next_slot_hour = ((current_hour // 4) + 1) * 4
+        next_slot_hour = ((current_hour // INTERVAL_HOURS) + 1) * INTERVAL_HOURS
         
         # Calculate target time
         # If next_slot_hour is 24, it means 00:00 tomorrow
@@ -664,14 +815,14 @@ def main():
         target_time = now.replace(hour=next_slot_hour, minute=5, second=0, microsecond=0) + timedelta(days=days_ahead)
         
         # If we are already past the target (e.g. current is 04:06, target computed as 04:05 today), 
-        # we need to jump to the NEXT block (08:05)
+        # we need to jump to the NEXT block
         if target_time <= now:
-            target_time += timedelta(hours=4)
+            target_time += timedelta(hours=INTERVAL_HOURS)
             
         sleep_time = (target_time - now).total_seconds()
         
         print(f"\n💤 Cycle complete. System sleeping to align with candle close.")
-        print(f"⏰ Next Run: {target_time.strftime('%Y-%m-%d %H:%M:%S')} (Aligned 4H + 5m)")
+        print(f"⏰ Next Run: {target_time.strftime('%Y-%m-%d %H:%M:%S')} (Aligned {INTERVAL_HOURS}H + 5m)")
         
         try:
             time.sleep(sleep_time)

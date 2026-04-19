@@ -141,9 +141,7 @@ def notify_cycle_summary(sentiment, confidence, portfolio_heat, regime="", monit
     if monitor_msgs:
         msg += f"\n<b>最新标的观望分析 (Monitor Logics):</b>\n"
         for m in monitor_msgs:
-            # Note: m already contains <b> tags from elsewhere, but the actual logic body should be escaped.
-            # However, looking at the call site, m is built with <b>tags</b> already.
-            # I will modify the call site in ai_trader.py to be safer.
+            # monitor_msgs are already formatted before reaching this layer.
             msg += f"{m}\n\n"
             
     msg += f"\n<i>Analysis cycle complete. Check dashboard for details.</i>\n<code>v{version}</code>"

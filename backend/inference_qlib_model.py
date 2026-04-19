@@ -16,7 +16,14 @@ from pathlib import Path
 from typing import List
 import sys
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from qlib_config import QLIB_FEATURES, FEATURE_EXPRESSIONS, FIT_START_TIME
+from direction_model import (
+    heuristic_direction_probabilities,
+    load_direction_model,
+    predict_direction_probabilities,
+    train_direction_model,
+)
 try:
     import qlib
     from qlib.data import D
@@ -89,6 +96,8 @@ CSV_PATH = QLIB_DATA_DIR / "multi_coin_features.csv"
 MODEL_PATH = QLIB_DATA_DIR / "model_latest.pkl"
 HANDLER_PATH = QLIB_DATA_DIR / "handler_latest.pkl"
 PAYLOAD_PATH = QLIB_DATA_DIR / "deepseek_payload.json"
+LOCAL_TZ_NAME = "Asia/Shanghai"
+LOCAL_TZ = ZoneInfo(LOCAL_TZ_NAME)
 
 # Initialize Qlib (only if available)
 if HAS_QLIB:
@@ -246,6 +255,18 @@ def predict_and_export():
     result = pred_reset[['score']].join(current_feats, how='left')
     result = result.sort_values("score", ascending=False)
 
+    direction_probs = predict_direction_probabilities(current_feats)
+    direction_model_meta = None
+    if not direction_probs:
+        if not load_direction_model():
+            try:
+                direction_model_meta = train_direction_model()
+                direction_probs = predict_direction_probabilities(current_feats)
+            except Exception as exc:
+                print(f"⚠️ Direction model train/load failed: {exc}. Falling back to heuristic direction probabilities.")
+        if not direction_probs:
+            direction_probs = heuristic_direction_probabilities(current_feats, result["score"])
+
     # 5. Construct JSON Payload
     # Select columns that are useful for the Agent
     context_cols = [
@@ -295,8 +316,19 @@ def predict_and_export():
         # Recommend Shorting the weakest or holding cash
         recommendations.append({"symbol": "CASH", "weight": 1.0, "reason": "All scores negative"})
 
+    as_of_value = str(result['datetime'].iloc[0] if not result.empty and 'datetime' in result.columns else latest_str)
+    try:
+        as_of_local = pd.Timestamp(as_of_value).tz_localize("UTC").tz_convert(LOCAL_TZ).strftime("%Y-%m-%d %H:%M:%S %Z")
+    except Exception:
+        try:
+            as_of_local = pd.Timestamp(as_of_value).tz_convert(LOCAL_TZ).strftime("%Y-%m-%d %H:%M:%S %Z")
+        except Exception:
+            as_of_local = as_of_value
+
     payload = {
-        "as_of": str(result['datetime'].iloc[0] if not result.empty and 'datetime' in result.columns else latest_str),
+        "as_of": as_of_value,
+        "as_of_local": as_of_local,
+        "local_timezone": LOCAL_TZ_NAME,
         "strategy": "Multi-Coin Relative Strength",
         
         # --- Suggestion A: Model Meta ---
@@ -305,7 +337,10 @@ def predict_and_export():
             "target": "next_24h_relative_return",
             "feature_count": len(QLIB_FEATURES),
             "model_type": "LightGBM Ranker",
-            "status": "up-to-date"
+            "status": "up-to-date",
+            "direction_target": "future_8h_direction",
+            "direction_model_type": "LightGBM Multiclass" if load_direction_model() else "heuristic_proxy",
+            "direction_model_meta": direction_model_meta,
         },
         
         "market_summary": market_summary,
@@ -321,6 +356,14 @@ def predict_and_export():
             "rank": int(result.index.get_loc(inst)) + 1,
             "market_data": {}
         }
+        direction = direction_probs.get(str(inst), {})
+        coin_data.update({
+            "qlib_relative_score_8h": coin_data["qlib_score"],
+            "p_up_8h": direction.get("p_up_8h"),
+            "p_down_8h": direction.get("p_down_8h"),
+            "p_flat_8h": direction.get("p_flat_8h"),
+            "confidence_8h": direction.get("confidence_8h"),
+        })
         
         for col in context_cols:
             if col in row:
@@ -408,12 +451,19 @@ def fetch_live_context_and_predict():
     
     # 2. Advanced Composite Scoring (Scientific Fallback)
     # Weights: Trend(40%), Explosion(30%), Contra-Sentiment(30%)
+    try:
+        current_time_local = pd.Timestamp(current_time).tz_localize("UTC").tz_convert(LOCAL_TZ).strftime("%Y-%m-%d %H:%M:%S %Z")
+    except Exception:
+        current_time_local = current_time
     payload = {
         "as_of": current_time,
+        "as_of_local": current_time_local,
+        "local_timezone": LOCAL_TZ_NAME,
         "strategy": "Live Proxy Ranking (Compound Formula)",
         "model_meta": {
             "type": "Heuristic Composite (Trend+Explosion+Sentiment)",
-            "source": f"Live Market Data Snapshot @ {current_time}"
+            "source": f"Live Market Data Snapshot @ {current_time}",
+            "direction_model_type": "heuristic_proxy"
         },
         "market_summary": {
            "trend": "evaluating",
@@ -460,6 +510,7 @@ def fetch_live_context_and_predict():
         scored_coins.append({
             "symbol": symbol,
             "qlib_score": round(final_score, 4),
+            "qlib_relative_score_8h": round(final_score, 4),
             "trend_s": round(trend_score, 2),
             "explosion_s": round(explosion_score, 2),
             "sentiment_s": round(sentiment_score, 2),
@@ -475,11 +526,19 @@ def fetch_live_context_and_predict():
 
     # Sort
     scored_coins = sorted(scored_coins, key=lambda x: x["qlib_score"], reverse=True)
+    scores = pd.Series({coin["symbol"]: coin["qlib_score"] for coin in scored_coins})
+    feature_frame = live_df.set_index("instrument")
+    direction_probs = heuristic_direction_probabilities(feature_frame, scores)
     
     # Update Payload
     payload["coins"] = []
     for i, coin in enumerate(scored_coins):
         coin["rank"] = i + 1
+        direction = direction_probs.get(coin["symbol"], {})
+        coin["p_up_8h"] = direction.get("p_up_8h")
+        coin["p_down_8h"] = direction.get("p_down_8h")
+        coin["p_flat_8h"] = direction.get("p_flat_8h")
+        coin["confidence_8h"] = direction.get("confidence_8h")
         payload["coins"].append(coin)
     
     # Save

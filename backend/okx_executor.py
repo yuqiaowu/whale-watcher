@@ -48,6 +48,9 @@ class OKXExecutor:
     def _get_timestamp(self):
         return datetime.datetime.utcnow().isoformat("T", "milliseconds") + "Z"
 
+    def _new_shadow_id(self, prefix="shadow"):
+        return f"{prefix}_{int(time.time() * 1000)}"
+
     def _sign(self, timestamp, method, request_path, body):
         message = str(timestamp) + str(method) + str(request_path) + str(body)
         mac = hmac.new(
@@ -319,7 +322,7 @@ class OKXExecutor:
                     print(f"✅ [SHADOW] Successfully adjusted SL to {stop_loss} for {symbol}")
                 else:
                     print(f"⚠️ [SHADOW] Adjust SL failed: No open position found for {symbol}")
-                return "SHADOW_ADJUSTED"
+                return self._new_shadow_id("shadow_adjust")
             else:
                 # REAL MODE
                 info = self.get_instrument_info(instId)
@@ -552,7 +555,9 @@ class OKXExecutor:
                     print(f"⚠️ [SHADOW] No position found to close/reduce for {symbol}")
 
             self._save_shadow_state(state)
-            return "SHADOW_ORDER_ID"
+            if "close" in action or "reduce_" in action:
+                return self._new_shadow_id("shadow_close")
+            return self._new_shadow_id("shadow_open")
 
         # REAL MODE EXECUTION
         info = self.get_instrument_info(instId)
