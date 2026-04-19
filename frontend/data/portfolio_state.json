@@ -1,44 +1,7 @@
 {
-  "total_equity": 3741.99,
-  "cash": 3745.43,
-  "positions": [
-    {
-      "symbol": "SOL",
-      "instId": "SOL-USDT-SWAP",
-      "leverage": 3,
-      "type": "long",
-      "entryPrice": 84.31,
-      "currentPrice": 84.31,
-      "pnl": 0.0,
-      "pnlPercent": 0.0,
-      "amount": 5.93,
-      "margin": 166.66666666666666,
-      "stopLoss": 82.0,
-      "takeProfit": 88.0,
-      "name": "SOL",
-      "invalidation_rule": {
-        "zh": "\u82e5\u4ef7\u683c\u8dcc\u7834$82.00\uff08\u6b62\u635f\u4ef7\uff09\uff0c\u6216\u4ee3\u5e01\u6d41\u5411\u8f6c\u4e3a\u66f4\u8d1f\uff08\u4f8b\u598224h\u51c0\u6d41\u5411\u4f4e\u4e8e-700,000 SOL\uff09\uff0c\u6216\u7206\u4ed3\u591a\u7a7a\u6bd4\u964d\u81f31.5\u4ee5\u4e0b\uff0c\u5219\u591a\u5934\u8bba\u70b9\u5931\u6548\uff0c\u5e94\u7acb\u5373\u79bb\u573a\u3002",
-        "en": "If price breaks below $82.00 (stop-loss), or token flow becomes more negative (e.g., 24h net flow below -700,000 SOL), or liquidation ratio drops below 1.5, the long thesis is invalidated, exit immediately.",
-        "conditions": [
-          {
-            "metric": "price",
-            "operator": "<=",
-            "value": 82.0
-          },
-          {
-            "metric": "token_net_flow",
-            "operator": "<=",
-            "value": -700000.0
-          },
-          {
-            "metric": "liq_long_short_ratio",
-            "operator": "<=",
-            "value": 1.5
-          }
-        ]
-      }
-    }
-  ],
+  "total_equity": 95532.97,
+  "cash": 95496.68,
+  "positions": [],
   "initial_equity": 3905.0,
   "start_time": "2026-02-22T00:00:00Z"
 }
