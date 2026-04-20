@@ -7,6 +7,7 @@ import json
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 import requests
 from stats_calculator import calculate_stats
 from db_client import db
@@ -26,7 +27,8 @@ INTERVAL_SECONDS = INTERVAL_HOURS * 3600
 DECISION_TIMEFRAME_HOURS = int(os.getenv("DECISION_TIMEFRAME_HOURS", "4"))
 SKIP_DUPLICATE_DECISION_CYCLE = os.getenv("SKIP_DUPLICATE_DECISION_CYCLE", "1").lower() in {"1", "true", "yes"}
 PORT = int(os.getenv("PORT", 5001))
-VERSION = "2026.03.25.1220" # Version for tracking deployments
+LOCAL_TZ_NAME = os.getenv("LOCAL_TIMEZONE", "Asia/Shanghai")
+VERSION = (os.getenv("RAILWAY_GIT_COMMIT_SHA") or os.getenv("APP_VERSION") or "2026.04.20.local")[:12]
 ENABLE_V2_PIPELINE = os.getenv("ENABLE_V2_PIPELINE", "1").lower() in {"1", "true", "yes"}
 
 # --- DATA INITIALIZATION ---
@@ -413,7 +415,7 @@ def _utc_iso_now() -> str:
 
 
 def _local_iso_now() -> str:
-    return datetime.now().astimezone().strftime("%Y-%m-%dT%H:%M:%S%z")
+    return datetime.now(ZoneInfo(LOCAL_TZ_NAME)).strftime("%Y-%m-%dT%H:%M:%S%z")
 
 
 def _aligned_cycle_id(now=None, block_hours: int = DECISION_TIMEFRAME_HOURS) -> str:
