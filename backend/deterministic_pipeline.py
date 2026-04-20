@@ -1311,7 +1311,12 @@ def _save_cycle_bundle(cycle_id: str, bundle: Dict[str, Any]) -> None:
 
 def _execute_if_enabled(executor: OKXExecutor, execution: Dict[str, Any], risk_review: Dict[str, Any]) -> Dict[str, Any]:
     history = execution.setdefault("history", [])
-    enabled = os.getenv("ENABLE_V2_EXECUTION", "0").lower() in {"1", "true", "yes"}
+    execution_flag = os.getenv("ENABLE_V2_EXECUTION")
+    trading_mode = os.getenv("TRADING_MODE", "SHADOW").upper()
+    if execution_flag is None:
+        enabled = trading_mode in {"DEMO", "REAL"}
+    else:
+        enabled = execution_flag.lower() in {"1", "true", "yes"}
     if not enabled or execution["execution_action"] == "DO_NOTHING":
         execution["order_status"] = "SKIPPED"
         execution["sync_status"] = "SKIPPED"

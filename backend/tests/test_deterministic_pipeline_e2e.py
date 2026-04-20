@@ -549,6 +549,35 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertNotIn("Blueprint_F1", [c["trigger_source"] for c in sol_batch["candidate_proposals"]])
         self.assertNotIn("Blueprint_F2", [c["trigger_source"] for c in sol_batch["candidate_proposals"]])
 
+    def test_demo_mode_executes_when_v2_flag_is_unset(self):
+        execution = {
+            "symbol": "ETH-USDT",
+            "execution_action": "OPEN_LONG",
+            "requested_size_usd": 1000.0,
+            "requested_leverage": 3.0,
+            "requested_protection": {"stop_loss": 2400.0, "take_profit": 2600.0},
+            "history": [],
+        }
+        risk_review = {
+            "approved_candidate": {
+                "trigger_source": "Blueprint_E1",
+                "proposed_sl_price": 2400.0,
+                "proposed_tp_price": 2600.0,
+            }
+        }
+
+        class MiniExecutor:
+            def execute_trade(self, **kwargs):
+                return "demo-order-1"
+
+        with patch.dict(os.environ, {"TRADING_MODE": "DEMO"}, clear=False):
+            os.environ.pop("ENABLE_V2_EXECUTION", None)
+            result = dp._execute_if_enabled(MiniExecutor(), execution, risk_review)
+
+        self.assertEqual(result["order_status"], "SUBMITTED")
+        self.assertIsNone(result.get("failure_reason"))
+        self.assertEqual(result["exchange_order_id"], "demo-order-1")
+
 
 if __name__ == "__main__":
     unittest.main()
