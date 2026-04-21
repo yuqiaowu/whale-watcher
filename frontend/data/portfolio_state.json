@@ -1,44 +1,7 @@
 {
-  "total_equity": 95519.74,
-  "cash": 90489.18,
-  "positions": [
-    {
-      "symbol": "BTC",
-      "instId": "BTC-USDT-SWAP",
-      "leverage": 3,
-      "type": "long",
-      "entryPrice": 75616.2,
-      "currentPrice": 75616.2,
-      "pnl": 0.0,
-      "pnlPercent": 0.0,
-      "amount": 19.84,
-      "margin": 5000.0,
-      "stopLoss": 74238.35856988058,
-      "takeProfit": 78000.0,
-      "name": "BTC",
-      "invalidation_rule": {
-        "zh": "\u82e5\u4ef7\u683c\u8dcc\u7834$74500\uff08\u6b62\u635f\u4f4d\uff09\uff0c\u6216RSI\u8dcc\u783445\u8868\u660e\u52a8\u80fd\u4e27\u5931\uff0c\u6216\u8d44\u91d1\u8d39\u7387\u8f6c\u6b63\u8d85\u8fc70.01%\u5438\u5f15\u7a7a\u5934\u56de\u6d41\uff0c\u5219\u591a\u5934\u8bba\u70b9\u5931\u6548\uff0c\u5e94\u7acb\u5373\u79bb\u573a\u3002",
-        "en": "If price breaks below $74500 (SL), or RSI falls below 45 indicating momentum loss, or funding rate turns positive above 0.01% attracting shorts back, the long thesis is invalidated, exit immediately.",
-        "conditions": [
-          {
-            "metric": "price",
-            "operator": "<=",
-            "value": 74500.0
-          },
-          {
-            "metric": "rsi",
-            "operator": "<=",
-            "value": 45.0
-          },
-          {
-            "metric": "funding_rate",
-            "operator": ">",
-            "value": 0.0001
-          }
-        ]
-      }
-    }
-  ],
+  "total_equity": 95529.15,
+  "cash": 95496.68,
+  "positions": [],
   "initial_equity": 3905.0,
   "start_time": "2026-02-22T00:00:00Z"
 }
