@@ -220,33 +220,66 @@
       "symbol": "BTC-USDT",
       "cycleId": "cycle_2026-04-13_0800",
       "execution_action": "OPEN_SHORT",
-      "order_status": "SKIPPED",
+      "order_status": "FILLED",
       "requested_size_usd": 374.2,
       "requested_leverage": 2.0,
       "entry_type": "MARKET",
       "proposed_entry_price": 66699.6,
       "proposed_sl_price": 68751.5714,
       "proposed_tp_price": 62595.6572,
-      "avg_fill_price": null,
-      "filled_size": 0.0,
+      "avg_fill_price": 77524.9,
+      "filled_size": 0.09240000000000001,
       "exchange_order_id": null,
       "executed_at": null,
-      "sync_status": "SKIPPED",
-      "failure_reason": "v2_execution_disabled"
+      "sync_status": "PENDING_CLOSE_SYNC",
+      "failure_reason": "v2_execution_disabled",
+      "position_side": "SHORT",
+      "live_position_detected_at": "2026-04-22T04:13:38Z",
+      "filled_stop_loss": 78230.1,
+      "filled_take_profit": 75419.4,
+      "protection_last_synced_at": "2026-04-22T05:14:55Z",
+      "protection_status": "OPEN",
+      "history": [
+        {
+          "type": "EXECUTION_FILLED_RECONCILED",
+          "at": "2026-04-22T04:13:38Z",
+          "payload": {
+            "entry_price": 77524.9,
+            "filled_size": 0.09240000000000001,
+            "position_side": "SHORT",
+            "protection_status": "OPEN"
+          }
+        },
+        {
+          "type": "EXECUTION_OPEN_POSITION_SYNCED",
+          "at": "2026-04-22T04:23:51Z",
+          "payload": {
+            "symbol": "BTC-USDT",
+            "protection_status": "OPEN"
+          }
+        }
+      ]
     },
     "evaluation": {
-      "result_label": "OPEN_MONITORING",
-      "primary_cause": "TRADE_STILL_OPEN",
+      "result_label": "LOSS",
+      "primary_cause": "CANDIDATE_OR_MARKET_MISS",
       "layer_attribution": {
-        "data": 0.0,
-        "candidate": 0.0,
-        "rule": 0.0,
-        "research": 0.0,
-        "risk": 0.0,
-        "execution": 0.0
+        "data": 0.1,
+        "candidate": 0.35,
+        "rule": 0.1,
+        "research": 0.2,
+        "risk": 0.15,
+        "execution": 0.1
       },
-      "improvement_targets": [],
-      "improvement_note": "execution submitted or simulated; no closed trade matched yet",
+      "improvement_targets": [
+        "candidate",
+        "research"
+      ],
+      "improvement_note": "closed trade finished negative; review thesis quality and setup quality",
+      "pnl": -65.98,
+      "pnl_percent": -1.84,
+      "matched_trade_id": "3500822311347687424",
+      "matched_trade_exit_time": "2026-04-22 05:17:15",
       "traceability": {
         "candidate_structure": {},
         "proposed_trigger_sources": [
@@ -262,11 +295,22 @@
         "risk_review_note": "approved from Blueprint_E2 with deterministic risk defaults",
         "execution_action": "OPEN_SHORT"
       },
-      "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "feedback_packets": [
+        {
+          "target_layer": "candidate",
+          "packet_type": "BLUEPRINT_REVIEW",
+          "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
+        },
+        {
+          "target_layer": "research",
+          "packet_type": "PROMPT_AND_CONFLICT_REVIEW",
+          "message": "review prompt constraints, conflict handling, and no-trade examples"
+        }
+      ],
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T11:34:17Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_0800_ETH",
@@ -532,10 +576,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T11:34:19Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_0800_SOL",
@@ -779,10 +823,10 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T11:34:21Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_0800_BNB",
@@ -1005,33 +1049,66 @@
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-04-13_0800",
       "execution_action": "OPEN_SHORT",
-      "order_status": "SKIPPED",
+      "order_status": "FILLED",
       "requested_size_usd": 374.2,
       "requested_leverage": 2.0,
       "entry_type": "MARKET",
       "proposed_entry_price": 605.9,
       "proposed_sl_price": 621.7714,
       "proposed_tp_price": 574.1572,
-      "avg_fill_price": null,
-      "filled_size": 0.0,
+      "avg_fill_price": 639.4064285714286,
+      "filled_size": 11.200000000000001,
       "exchange_order_id": null,
       "executed_at": null,
-      "sync_status": "SKIPPED",
-      "failure_reason": "v2_execution_disabled"
+      "sync_status": "PENDING_CLOSE_SYNC",
+      "failure_reason": "v2_execution_disabled",
+      "position_side": "SHORT",
+      "live_position_detected_at": "2026-04-22T04:13:38Z",
+      "filled_stop_loss": 644.3,
+      "filled_take_profit": 626.3,
+      "protection_last_synced_at": "2026-04-22T05:45:36Z",
+      "protection_status": "OPEN",
+      "history": [
+        {
+          "type": "EXECUTION_FILLED_RECONCILED",
+          "at": "2026-04-22T04:13:38Z",
+          "payload": {
+            "entry_price": 639.4064285714286,
+            "filled_size": 11.200000000000001,
+            "position_side": "SHORT",
+            "protection_status": "OPEN"
+          }
+        },
+        {
+          "type": "EXECUTION_OPEN_POSITION_SYNCED",
+          "at": "2026-04-22T04:23:51Z",
+          "payload": {
+            "symbol": "BNB-USDT",
+            "protection_status": "OPEN"
+          }
+        }
+      ]
     },
     "evaluation": {
-      "result_label": "OPEN_MONITORING",
-      "primary_cause": "TRADE_STILL_OPEN",
+      "result_label": "LOSS",
+      "primary_cause": "CANDIDATE_OR_MARKET_MISS",
       "layer_attribution": {
-        "data": 0.0,
-        "candidate": 0.0,
-        "rule": 0.0,
-        "research": 0.0,
-        "risk": 0.0,
-        "execution": 0.0
+        "data": 0.1,
+        "candidate": 0.35,
+        "rule": 0.1,
+        "research": 0.2,
+        "risk": 0.15,
+        "execution": 0.1
       },
-      "improvement_targets": [],
-      "improvement_note": "execution submitted or simulated; no closed trade matched yet",
+      "improvement_targets": [
+        "candidate",
+        "research"
+      ],
+      "improvement_note": "closed trade finished negative; review thesis quality and setup quality",
+      "pnl": -54.81,
+      "pnl_percent": -1.53,
+      "matched_trade_id": "3500880828834254848",
+      "matched_trade_exit_time": "2026-04-22 05:46:19",
       "traceability": {
         "candidate_structure": {},
         "proposed_trigger_sources": [
@@ -1047,11 +1124,22 @@
         "risk_review_note": "approved from Blueprint_E2 with deterministic risk defaults",
         "execution_action": "OPEN_SHORT"
       },
-      "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "feedback_packets": [
+        {
+          "target_layer": "candidate",
+          "packet_type": "BLUEPRINT_REVIEW",
+          "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
+        },
+        {
+          "target_layer": "research",
+          "packet_type": "PROMPT_AND_CONFLICT_REVIEW",
+          "message": "review prompt constraints, conflict handling, and no-trade examples"
+        }
+      ],
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T11:34:24Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_0800_DOGE",
@@ -1317,10 +1405,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T11:34:26Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_1200_BTC",
@@ -1620,18 +1708,18 @@
       "symbol": "BTC-USDT",
       "cycleId": "cycle_2026-04-13_1200",
       "execution_action": "OPEN_SHORT",
-      "order_status": "SKIPPED",
+      "order_status": "FILLED",
       "requested_size_usd": 374.2,
       "requested_leverage": 2.0,
       "entry_type": "MARKET",
       "proposed_entry_price": 66699.6,
       "proposed_sl_price": 68751.5714,
       "proposed_tp_price": 62595.6572,
-      "avg_fill_price": null,
-      "filled_size": 0.0,
+      "avg_fill_price": 77524.9,
+      "filled_size": 0.09240000000000001,
       "exchange_order_id": null,
       "executed_at": null,
-      "sync_status": "SKIPPED",
+      "sync_status": "PENDING_CLOSE_SYNC",
       "failure_reason": "v2_execution_disabled",
       "history": [
         {
@@ -1650,8 +1738,32 @@
             "reason": "v2_execution_disabled",
             "execution_action": "OPEN_SHORT"
           }
+        },
+        {
+          "type": "EXECUTION_FILLED_RECONCILED",
+          "at": "2026-04-22T04:13:38Z",
+          "payload": {
+            "entry_price": 77524.9,
+            "filled_size": 0.09240000000000001,
+            "position_side": "SHORT",
+            "protection_status": "OPEN"
+          }
+        },
+        {
+          "type": "EXECUTION_OPEN_POSITION_SYNCED",
+          "at": "2026-04-22T04:23:51Z",
+          "payload": {
+            "symbol": "BTC-USDT",
+            "protection_status": "OPEN"
+          }
         }
-      ]
+      ],
+      "position_side": "SHORT",
+      "live_position_detected_at": "2026-04-22T04:13:38Z",
+      "filled_stop_loss": 78230.1,
+      "filled_take_profit": 75419.4,
+      "protection_last_synced_at": "2026-04-22T05:14:55Z",
+      "protection_status": "OPEN"
     },
     "evaluation": {
       "result_label": "OPEN_MONITORING",
@@ -1684,10 +1796,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T14:45:53Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_1200_ETH",
@@ -2051,10 +2163,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T14:45:57Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_1200_SOL",
@@ -2368,10 +2480,10 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T14:45:59Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_1200_BNB",
@@ -2671,18 +2783,18 @@
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-04-13_1200",
       "execution_action": "OPEN_SHORT",
-      "order_status": "SKIPPED",
+      "order_status": "FILLED",
       "requested_size_usd": 374.2,
       "requested_leverage": 2.0,
       "entry_type": "MARKET",
       "proposed_entry_price": 605.9,
       "proposed_sl_price": 621.7714,
       "proposed_tp_price": 574.1572,
-      "avg_fill_price": null,
-      "filled_size": 0.0,
+      "avg_fill_price": 639.4064285714286,
+      "filled_size": 11.200000000000001,
       "exchange_order_id": null,
       "executed_at": null,
-      "sync_status": "SKIPPED",
+      "sync_status": "PENDING_CLOSE_SYNC",
       "failure_reason": "v2_execution_disabled",
       "history": [
         {
@@ -2701,8 +2813,32 @@
             "reason": "v2_execution_disabled",
             "execution_action": "OPEN_SHORT"
           }
+        },
+        {
+          "type": "EXECUTION_FILLED_RECONCILED",
+          "at": "2026-04-22T04:13:38Z",
+          "payload": {
+            "entry_price": 639.4064285714286,
+            "filled_size": 11.200000000000001,
+            "position_side": "SHORT",
+            "protection_status": "OPEN"
+          }
+        },
+        {
+          "type": "EXECUTION_OPEN_POSITION_SYNCED",
+          "at": "2026-04-22T04:23:51Z",
+          "payload": {
+            "symbol": "BNB-USDT",
+            "protection_status": "OPEN"
+          }
         }
-      ]
+      ],
+      "position_side": "SHORT",
+      "live_position_detected_at": "2026-04-22T04:13:38Z",
+      "filled_stop_loss": 644.3,
+      "filled_take_profit": 626.3,
+      "protection_last_synced_at": "2026-04-22T05:45:36Z",
+      "protection_status": "OPEN"
     },
     "evaluation": {
       "result_label": "OPEN_MONITORING",
@@ -2735,10 +2871,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T14:46:02Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_1200_DOGE",
@@ -3102,10 +3238,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T14:46:05Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_1600_BTC",
@@ -3336,10 +3472,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T18:53:50Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_1600_ETH",
@@ -3570,10 +3706,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T18:53:53Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_1600_SOL",
@@ -3841,10 +3977,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T18:53:55Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_1600_BNB",
@@ -4181,7 +4317,7 @@
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-04-13_1600",
       "execution_action": "OPEN_SHORT",
-      "order_status": "SKIPPED",
+      "order_status": "FILLED",
       "requested_size_usd": 374.2,
       "requested_leverage": 2.0,
       "entry_type": "MARKET",
@@ -4192,13 +4328,13 @@
         "stop_loss": 618.6,
         "take_profit": 580.5
       },
-      "avg_fill_price": null,
-      "filled_size": 0.0,
+      "avg_fill_price": 639.4064285714286,
+      "filled_size": 11.200000000000001,
       "exchange_order_id": null,
       "executed_at": null,
-      "sync_status": "SKIPPED",
+      "sync_status": "PENDING_CLOSE_SYNC",
       "failure_reason": "v2_execution_disabled",
-      "protection_status": "SKIPPED",
+      "protection_status": "OPEN",
       "history": [
         {
           "type": "EXECUTION_REQUEST_CREATED",
@@ -4220,8 +4356,31 @@
             "reason": "v2_execution_disabled",
             "execution_action": "OPEN_SHORT"
           }
+        },
+        {
+          "type": "EXECUTION_FILLED_RECONCILED",
+          "at": "2026-04-22T04:13:38Z",
+          "payload": {
+            "entry_price": 639.4064285714286,
+            "filled_size": 11.200000000000001,
+            "position_side": "SHORT",
+            "protection_status": "OPEN"
+          }
+        },
+        {
+          "type": "EXECUTION_OPEN_POSITION_SYNCED",
+          "at": "2026-04-22T04:23:51Z",
+          "payload": {
+            "symbol": "BNB-USDT",
+            "protection_status": "OPEN"
+          }
         }
-      ]
+      ],
+      "position_side": "SHORT",
+      "live_position_detected_at": "2026-04-22T04:13:38Z",
+      "filled_stop_loss": 644.3,
+      "filled_take_profit": 626.3,
+      "protection_last_synced_at": "2026-04-22T05:45:36Z"
     },
     "evaluation": {
       "result_label": "OPEN_MONITORING",
@@ -4254,10 +4413,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T18:53:57Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-13_1600_DOGE",
@@ -4488,10 +4647,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-13T18:53:59Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-14_0800_BTC",
@@ -4797,10 +4956,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-14T10:46:07Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-14_0800_ETH",
@@ -5107,10 +5266,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-14T10:46:10Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-14_0800_SOL",
@@ -5453,10 +5612,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-14T10:46:12Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-14_0800_BNB",
@@ -5761,10 +5920,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-14T10:46:15Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-14_0800_DOGE",
@@ -6071,10 +6230,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-14T10:46:17Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-14_1600_BTC",
@@ -6393,10 +6552,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-14T17:02:05Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-14_1600_ETH",
@@ -6717,10 +6876,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-14T17:02:09Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-14_1600_SOL",
@@ -7076,10 +7235,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-14T17:02:12Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-14_1600_BNB",
@@ -7397,10 +7556,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-14T17:02:15Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-14_1600_DOGE",
@@ -7720,10 +7879,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-14T17:02:17Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-18_0800_BTC",
@@ -8188,7 +8347,7 @@
       "symbol": "BTC-USDT",
       "cycleId": "cycle_2026-04-18_0800",
       "execution_action": "OPEN_SHORT",
-      "order_status": "SKIPPED",
+      "order_status": "FILLED",
       "requested_size_usd": 280.65,
       "requested_leverage": 1.5,
       "entry_type": "MARKET",
@@ -8199,13 +8358,13 @@
         "stop_loss": 67314.1453,
         "take_profit": 64778.8571
       },
-      "avg_fill_price": null,
-      "filled_size": 0.0,
+      "avg_fill_price": 77524.9,
+      "filled_size": 0.09240000000000001,
       "exchange_order_id": null,
       "executed_at": null,
-      "sync_status": "SKIPPED",
+      "sync_status": "PENDING_CLOSE_SYNC",
       "failure_reason": "v2_execution_disabled",
-      "protection_status": "SKIPPED",
+      "protection_status": "OPEN",
       "history": [
         {
           "type": "EXECUTION_REQUEST_CREATED",
@@ -8227,8 +8386,31 @@
             "reason": "v2_execution_disabled",
             "execution_action": "OPEN_SHORT"
           }
+        },
+        {
+          "type": "EXECUTION_FILLED_RECONCILED",
+          "at": "2026-04-22T04:13:38Z",
+          "payload": {
+            "entry_price": 77524.9,
+            "filled_size": 0.09240000000000001,
+            "position_side": "SHORT",
+            "protection_status": "OPEN"
+          }
+        },
+        {
+          "type": "EXECUTION_OPEN_POSITION_SYNCED",
+          "at": "2026-04-22T04:23:51Z",
+          "payload": {
+            "symbol": "BTC-USDT",
+            "protection_status": "OPEN"
+          }
         }
-      ]
+      ],
+      "position_side": "SHORT",
+      "live_position_detected_at": "2026-04-22T04:13:38Z",
+      "filled_stop_loss": 78230.1,
+      "filled_take_profit": 75419.4,
+      "protection_last_synced_at": "2026-04-22T05:14:55Z"
     },
     "evaluation": {
       "result_label": "OPEN_MONITORING",
@@ -8261,10 +8443,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T08:10:12Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-18_0800_ETH",
@@ -8638,10 +8820,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T08:10:15Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-18_0800_SOL",
@@ -9052,10 +9234,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T08:10:17Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-18_0800_BNB",
@@ -9520,7 +9702,7 @@
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-04-18_0800",
       "execution_action": "OPEN_SHORT",
-      "order_status": "SKIPPED",
+      "order_status": "FILLED",
       "requested_size_usd": 280.65,
       "requested_leverage": 1.5,
       "entry_type": "MARKET",
@@ -9531,13 +9713,13 @@
         "stop_loss": 610.8479,
         "take_profit": 590.9857
       },
-      "avg_fill_price": null,
-      "filled_size": 0.0,
+      "avg_fill_price": 639.4064285714286,
+      "filled_size": 11.200000000000001,
       "exchange_order_id": null,
       "executed_at": null,
-      "sync_status": "SKIPPED",
+      "sync_status": "PENDING_CLOSE_SYNC",
       "failure_reason": "v2_execution_disabled",
-      "protection_status": "SKIPPED",
+      "protection_status": "OPEN",
       "history": [
         {
           "type": "EXECUTION_REQUEST_CREATED",
@@ -9559,8 +9741,31 @@
             "reason": "v2_execution_disabled",
             "execution_action": "OPEN_SHORT"
           }
+        },
+        {
+          "type": "EXECUTION_FILLED_RECONCILED",
+          "at": "2026-04-22T04:13:38Z",
+          "payload": {
+            "entry_price": 639.4064285714286,
+            "filled_size": 11.200000000000001,
+            "position_side": "SHORT",
+            "protection_status": "OPEN"
+          }
+        },
+        {
+          "type": "EXECUTION_OPEN_POSITION_SYNCED",
+          "at": "2026-04-22T04:23:51Z",
+          "payload": {
+            "symbol": "BNB-USDT",
+            "protection_status": "OPEN"
+          }
         }
-      ]
+      ],
+      "position_side": "SHORT",
+      "live_position_detected_at": "2026-04-22T04:13:38Z",
+      "filled_stop_loss": 644.3,
+      "filled_take_profit": 626.3,
+      "protection_last_synced_at": "2026-04-22T05:45:36Z"
     },
     "evaluation": {
       "result_label": "OPEN_MONITORING",
@@ -9593,10 +9798,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T08:10:20Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-18_0800_DOGE",
@@ -9972,10 +10177,10 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T08:10:22Z",
-    "updated_at": "2026-04-22T04:08:10Z"
+    "updated_at": "2026-04-22T06:07:51Z"
   },
   {
     "decisionId": "cycle_2026-04-18_1600_BTC",
@@ -10329,11 +10534,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T19:56:00Z",
     "created_at_local": "2026-04-19T03:56:00+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T03:56:00+0800"
   },
   {
@@ -10689,11 +10894,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T19:56:03Z",
     "created_at_local": "2026-04-19T03:56:03+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T03:56:03+0800"
   },
   {
@@ -11086,11 +11291,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T19:56:05Z",
     "created_at_local": "2026-04-19T03:56:05+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T03:56:05+0800"
   },
   {
@@ -11446,11 +11651,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T19:56:07Z",
     "created_at_local": "2026-04-19T03:56:07+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T03:56:07+0800"
   },
   {
@@ -11804,11 +12009,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T19:56:09Z",
     "created_at_local": "2026-04-19T03:56:09+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T03:56:09+0800"
   },
   {
@@ -12165,11 +12370,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T20:00:07Z",
     "created_at_local": "2026-04-19T04:00:07+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T04:00:07+0800"
   },
   {
@@ -12527,11 +12732,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T20:00:10Z",
     "created_at_local": "2026-04-19T04:00:10+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T04:00:10+0800"
   },
   {
@@ -12926,11 +13131,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T20:00:13Z",
     "created_at_local": "2026-04-19T04:00:13+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T04:00:13+0800"
   },
   {
@@ -13288,11 +13493,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T20:00:15Z",
     "created_at_local": "2026-04-19T04:00:15+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T04:00:15+0800"
   },
   {
@@ -13648,11 +13853,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-18T20:00:18Z",
     "created_at_local": "2026-04-19T04:00:18+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T04:00:18+0800"
   },
   {
@@ -14007,11 +14212,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T15:11:56Z",
     "created_at_local": "2026-04-19T23:11:56+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T23:11:56+0800"
   },
   {
@@ -14365,11 +14570,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T15:11:58Z",
     "created_at_local": "2026-04-19T23:11:58+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T23:11:58+0800"
   },
   {
@@ -14723,11 +14928,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T15:11:59Z",
     "created_at_local": "2026-04-19T23:11:59+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T23:11:59+0800"
   },
   {
@@ -15082,11 +15287,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T15:12:00Z",
     "created_at_local": "2026-04-19T23:12:00+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T23:12:00+0800"
   },
   {
@@ -15440,11 +15645,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T15:12:01Z",
     "created_at_local": "2026-04-19T23:12:01+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-19T23:12:01+0800"
   },
   {
@@ -15798,11 +16003,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T16:07:35Z",
     "created_at_local": "2026-04-20T00:07:35+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T00:07:35+0800"
   },
   {
@@ -16156,11 +16361,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T16:07:38Z",
     "created_at_local": "2026-04-20T00:07:38+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T00:07:38+0800"
   },
   {
@@ -16515,11 +16720,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T16:07:39Z",
     "created_at_local": "2026-04-20T00:07:39+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T00:07:39+0800"
   },
   {
@@ -16874,11 +17079,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T16:07:40Z",
     "created_at_local": "2026-04-20T00:07:40+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T00:07:40+0800"
   },
   {
@@ -17232,11 +17437,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T16:07:41Z",
     "created_at_local": "2026-04-20T00:07:41+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T00:07:41+0800"
   },
   {
@@ -17593,11 +17798,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T20:07:40Z",
     "created_at_local": "2026-04-20T04:07:40+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T04:07:40+0800"
   },
   {
@@ -17955,11 +18160,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T20:07:43Z",
     "created_at_local": "2026-04-20T04:07:43+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T04:07:43+0800"
   },
   {
@@ -18315,11 +18520,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T20:07:44Z",
     "created_at_local": "2026-04-20T04:07:44+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T04:07:44+0800"
   },
   {
@@ -18676,11 +18881,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T20:07:45Z",
     "created_at_local": "2026-04-20T04:07:45+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T04:07:45+0800"
   },
   {
@@ -19035,11 +19240,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-19T20:07:47Z",
     "created_at_local": "2026-04-20T04:07:47+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T04:07:47+0800"
   },
   {
@@ -19393,11 +19598,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T00:07:12Z",
     "created_at_local": "2026-04-20T08:07:12+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T08:07:12+0800"
   },
   {
@@ -19753,11 +19958,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T00:07:14Z",
     "created_at_local": "2026-04-20T08:07:14+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T08:07:14+0800"
   },
   {
@@ -20112,11 +20317,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T00:07:15Z",
     "created_at_local": "2026-04-20T08:07:15+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T08:07:15+0800"
   },
   {
@@ -20471,11 +20676,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T00:07:17Z",
     "created_at_local": "2026-04-20T08:07:17+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T08:07:17+0800"
   },
   {
@@ -20830,11 +21035,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T00:07:18Z",
     "created_at_local": "2026-04-20T08:07:18+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T08:07:18+0800"
   },
   {
@@ -21189,11 +21394,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T04:07:21Z",
     "created_at_local": "2026-04-20T12:07:21+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T12:07:21+0800"
   },
   {
@@ -21548,11 +21753,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T04:07:24Z",
     "created_at_local": "2026-04-20T12:07:24+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T12:07:24+0800"
   },
   {
@@ -21906,11 +22111,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T04:07:25Z",
     "created_at_local": "2026-04-20T12:07:25+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T12:07:25+0800"
   },
   {
@@ -22265,11 +22470,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T04:07:26Z",
     "created_at_local": "2026-04-20T12:07:26+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T12:07:26+0800"
   },
   {
@@ -22623,11 +22828,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T04:07:27Z",
     "created_at_local": "2026-04-20T12:07:27+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T12:07:27+0800"
   },
   {
@@ -22984,11 +23189,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T08:07:41Z",
     "created_at_local": "2026-04-20T16:07:41+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T16:07:41+0800"
   },
   {
@@ -23344,11 +23549,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T08:07:43Z",
     "created_at_local": "2026-04-20T16:07:43+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T16:07:43+0800"
   },
   {
@@ -23704,11 +23909,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T08:07:45Z",
     "created_at_local": "2026-04-20T16:07:45+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T16:07:45+0800"
   },
   {
@@ -24065,11 +24270,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T08:07:46Z",
     "created_at_local": "2026-04-20T16:07:46+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T16:07:46+0800"
   },
   {
@@ -24425,11 +24630,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T08:07:47Z",
     "created_at_local": "2026-04-20T16:07:47+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T16:07:47+0800"
   },
   {
@@ -24786,11 +24991,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T12:08:02Z",
     "created_at_local": "2026-04-20T20:08:02+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T20:08:02+0800"
   },
   {
@@ -25148,11 +25353,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T12:08:04Z",
     "created_at_local": "2026-04-20T20:08:04+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T20:08:04+0800"
   },
   {
@@ -25509,11 +25714,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T12:08:05Z",
     "created_at_local": "2026-04-20T20:08:05+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T20:08:05+0800"
   },
   {
@@ -25870,11 +26075,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T12:08:07Z",
     "created_at_local": "2026-04-20T20:08:07+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T20:08:07+0800"
   },
   {
@@ -26229,11 +26434,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T12:08:08Z",
     "created_at_local": "2026-04-20T20:08:08+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-20T20:08:08+0800"
   },
   {
@@ -26589,11 +26794,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T16:07:48Z",
     "created_at_local": "2026-04-21T00:07:48+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T00:07:48+0800"
   },
   {
@@ -26950,11 +27155,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T16:07:50Z",
     "created_at_local": "2026-04-21T00:07:50+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T00:07:50+0800"
   },
   {
@@ -27311,11 +27516,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T16:07:51Z",
     "created_at_local": "2026-04-21T00:07:51+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T00:07:51+0800"
   },
   {
@@ -27672,11 +27877,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T16:07:52Z",
     "created_at_local": "2026-04-21T00:07:52+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T00:07:52+0800"
   },
   {
@@ -28031,11 +28236,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T16:07:54Z",
     "created_at_local": "2026-04-21T00:07:54+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T00:07:54+0800"
   },
   {
@@ -28390,11 +28595,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T20:07:49Z",
     "created_at_local": "2026-04-21T04:07:49+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T04:07:49+0800"
   },
   {
@@ -28752,11 +28957,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T20:07:53Z",
     "created_at_local": "2026-04-21T04:07:53+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T04:07:53+0800"
   },
   {
@@ -29113,11 +29318,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T20:07:57Z",
     "created_at_local": "2026-04-21T04:07:57+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T04:07:57+0800"
   },
   {
@@ -29474,11 +29679,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T20:08:00Z",
     "created_at_local": "2026-04-21T04:08:00+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T04:08:00+0800"
   },
   {
@@ -29835,11 +30040,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-20T20:08:04Z",
     "created_at_local": "2026-04-21T04:08:04+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T04:08:04+0800"
   },
   {
@@ -30193,11 +30398,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T00:07:18Z",
     "created_at_local": "2026-04-21T08:07:18+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T08:07:18+0800"
   },
   {
@@ -30553,11 +30758,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T00:07:20Z",
     "created_at_local": "2026-04-21T08:07:20+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T08:07:20+0800"
   },
   {
@@ -30912,11 +31117,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T00:07:22Z",
     "created_at_local": "2026-04-21T08:07:22+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T08:07:22+0800"
   },
   {
@@ -31271,11 +31476,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T00:07:24Z",
     "created_at_local": "2026-04-21T08:07:24+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T08:07:24+0800"
   },
   {
@@ -31629,11 +31834,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T00:07:25Z",
     "created_at_local": "2026-04-21T08:07:25+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T08:07:25+0800"
   },
   {
@@ -31986,11 +32191,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T04:07:43Z",
     "created_at_local": "2026-04-21T12:07:43+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T12:07:43+0800"
   },
   {
@@ -32346,11 +32551,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T04:07:48Z",
     "created_at_local": "2026-04-21T12:07:48+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T12:07:48+0800"
   },
   {
@@ -32705,11 +32910,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T04:07:52Z",
     "created_at_local": "2026-04-21T12:07:52+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T12:07:52+0800"
   },
   {
@@ -33064,11 +33269,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T04:07:55Z",
     "created_at_local": "2026-04-21T12:07:55+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T12:07:55+0800"
   },
   {
@@ -33423,11 +33628,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T04:07:59Z",
     "created_at_local": "2026-04-21T12:07:59+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T12:07:59+0800"
   },
   {
@@ -33782,11 +33987,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T08:07:47Z",
     "created_at_local": "2026-04-21T16:07:47+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T16:07:47+0800"
   },
   {
@@ -34142,11 +34347,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T08:07:52Z",
     "created_at_local": "2026-04-21T16:07:52+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T16:07:52+0800"
   },
   {
@@ -34501,11 +34706,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T08:07:56Z",
     "created_at_local": "2026-04-21T16:07:56+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T16:07:56+0800"
   },
   {
@@ -34860,11 +35065,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T08:07:59Z",
     "created_at_local": "2026-04-21T16:07:59+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T16:07:59+0800"
   },
   {
@@ -35218,11 +35423,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T08:08:03Z",
     "created_at_local": "2026-04-21T16:08:03+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T16:08:03+0800"
   },
   {
@@ -35577,11 +35782,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T12:07:34Z",
     "created_at_local": "2026-04-21T20:07:34+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T20:07:34+0800"
   },
   {
@@ -35937,11 +36142,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T12:07:38Z",
     "created_at_local": "2026-04-21T20:07:38+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T20:07:38+0800"
   },
   {
@@ -36295,11 +36500,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T12:07:42Z",
     "created_at_local": "2026-04-21T20:07:42+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T20:07:42+0800"
   },
   {
@@ -36654,11 +36859,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T12:07:46Z",
     "created_at_local": "2026-04-21T20:07:46+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T20:07:46+0800"
   },
   {
@@ -37013,11 +37218,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T12:07:50Z",
     "created_at_local": "2026-04-21T20:07:50+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-21T20:07:50+0800"
   },
   {
@@ -37372,11 +37577,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T16:08:05Z",
     "created_at_local": "2026-04-22T00:08:05+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T00:08:05+0800"
   },
   {
@@ -37732,11 +37937,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T16:08:10Z",
     "created_at_local": "2026-04-22T00:08:10+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T00:08:10+0800"
   },
   {
@@ -38091,11 +38296,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T16:08:14Z",
     "created_at_local": "2026-04-22T00:08:14+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T00:08:14+0800"
   },
   {
@@ -38449,11 +38654,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T16:08:18Z",
     "created_at_local": "2026-04-22T00:08:18+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T00:08:18+0800"
   },
   {
@@ -38808,11 +39013,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T16:08:22Z",
     "created_at_local": "2026-04-22T00:08:22+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T00:08:22+0800"
   },
   {
@@ -39169,11 +39374,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T20:07:44Z",
     "created_at_local": "2026-04-22T04:07:44+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T04:07:44+0800"
   },
   {
@@ -39530,11 +39735,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T20:07:49Z",
     "created_at_local": "2026-04-22T04:07:49+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T04:07:49+0800"
   },
   {
@@ -39891,11 +40096,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T20:07:52Z",
     "created_at_local": "2026-04-22T04:07:52+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T04:07:52+0800"
   },
   {
@@ -40252,11 +40457,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T20:07:56Z",
     "created_at_local": "2026-04-22T04:07:56+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T04:07:56+0800"
   },
   {
@@ -40613,11 +40818,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-21T20:08:00Z",
     "created_at_local": "2026-04-22T04:08:00+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T04:08:00+0800"
   },
   {
@@ -40972,11 +41177,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-22T00:07:21Z",
     "created_at_local": "2026-04-22T08:07:21+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T08:07:21+0800"
   },
   {
@@ -41331,11 +41536,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-22T00:07:25Z",
     "created_at_local": "2026-04-22T08:07:25+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T08:07:25+0800"
   },
   {
@@ -41690,11 +41895,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-22T00:07:30Z",
     "created_at_local": "2026-04-22T08:07:30+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T08:07:30+0800"
   },
   {
@@ -42049,11 +42254,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-22T00:07:34Z",
     "created_at_local": "2026-04-22T08:07:34+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T08:07:34+0800"
   },
   {
@@ -42408,11 +42613,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-22T00:07:38Z",
     "created_at_local": "2026-04-22T08:07:38+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T08:07:38+0800"
   },
   {
@@ -42424,7 +42629,7 @@
     "snapshot_time": "2026-04-22T04:07:32Z",
     "snapshot_time_local": "2026-04-22T12:07:32+0800",
     "local_timezone": "Asia/Shanghai",
-    "positionState": "approved",
+    "positionState": "closed",
     "snapshot": {
       "decision_id": "cycle_2026-04-22_0400_BTC",
       "symbol": "BTC-USDT",
@@ -42899,7 +43104,7 @@
       "symbol": "BTC-USDT",
       "cycleId": "cycle_2026-04-22_0400",
       "execution_action": "OPEN_SHORT",
-      "order_status": "SUBMITTED",
+      "order_status": "CLOSED",
       "requested_size_usd": 7163.61,
       "requested_leverage": 2.0,
       "entry_type": "MARKET",
@@ -42910,13 +43115,13 @@
         "stop_loss": 78230.0549,
         "take_profit": 75419.3714
       },
-      "avg_fill_price": null,
-      "filled_size": 0.0,
+      "avg_fill_price": 77524.9,
+      "filled_size": 0.09240000000000001,
       "exchange_order_id": "3500682079960829952",
       "executed_at": "2026-04-22T04:07:36Z",
-      "sync_status": "SUBMITTED",
+      "sync_status": "CLOSED",
       "failure_reason": null,
-      "protection_status": "PENDING_SYNC",
+      "protection_status": "CLOSED",
       "history": [
         {
           "type": "EXECUTION_REQUEST_CREATED",
@@ -42938,8 +43143,45 @@
             "exchange_order_id": "3500682079960829952",
             "execution_action": "OPEN_SHORT"
           }
+        },
+        {
+          "type": "EXECUTION_FILLED_RECONCILED",
+          "at": "2026-04-22T04:13:38Z",
+          "payload": {
+            "entry_price": 77524.9,
+            "filled_size": 0.09240000000000001,
+            "position_side": "SHORT",
+            "protection_status": "OPEN"
+          }
+        },
+        {
+          "type": "EXECUTION_OPEN_POSITION_SYNCED",
+          "at": "2026-04-22T04:23:51Z",
+          "payload": {
+            "symbol": "BTC-USDT",
+            "protection_status": "OPEN"
+          }
+        },
+        {
+          "type": "EXECUTION_CLOSED_RECONCILED",
+          "at": "2026-04-22T05:25:10Z",
+          "payload": {
+            "trade_id": "3500822311347687424",
+            "pnl": -65.98,
+            "pnl_percent": -1.84
+          }
         }
-      ]
+      ],
+      "position_side": "SHORT",
+      "live_position_detected_at": "2026-04-22T04:13:38Z",
+      "filled_stop_loss": 78230.1,
+      "filled_take_profit": 75419.4,
+      "protection_last_synced_at": "2026-04-22T05:14:55Z",
+      "closed_trade_id": "3500822311347687424",
+      "closed_at": "2026-04-22 05:17:15",
+      "realized_pnl": -65.98,
+      "realized_pnl_percent": -1.84,
+      "avg_exit_price": 78239.0
     },
     "evaluation": {
       "result_label": "OPEN_MONITORING",
@@ -42990,11 +43232,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-22T04:07:36Z",
     "created_at_local": "2026-04-22T12:07:36+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T12:07:36+0800"
   },
   {
@@ -43352,11 +43594,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-22T04:07:40Z",
     "created_at_local": "2026-04-22T12:07:40+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T12:07:40+0800"
   },
   {
@@ -43713,11 +43955,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-22T04:07:43Z",
     "created_at_local": "2026-04-22T12:07:43+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T12:07:43+0800"
   },
   {
@@ -43729,7 +43971,7 @@
     "snapshot_time": "2026-04-22T04:07:46Z",
     "snapshot_time_local": "2026-04-22T12:07:46+0800",
     "local_timezone": "Asia/Shanghai",
-    "positionState": "approved",
+    "positionState": "closed",
     "snapshot": {
       "decision_id": "cycle_2026-04-22_0400_BNB",
       "symbol": "BNB-USDT",
@@ -44205,7 +44447,7 @@
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-04-22_0400",
       "execution_action": "OPEN_SHORT",
-      "order_status": "SUBMITTED",
+      "order_status": "CLOSED",
       "requested_size_usd": 7163.61,
       "requested_leverage": 2.0,
       "entry_type": "MARKET",
@@ -44216,13 +44458,13 @@
         "stop_loss": 644.3254,
         "take_profit": 626.3429
       },
-      "avg_fill_price": null,
-      "filled_size": 0.0,
+      "avg_fill_price": 639.4064285714286,
+      "filled_size": 11.200000000000001,
       "exchange_order_id": "3500682512175468544",
       "executed_at": "2026-04-22T04:07:48Z",
-      "sync_status": "SUBMITTED",
+      "sync_status": "CLOSED",
       "failure_reason": null,
-      "protection_status": "PENDING_SYNC",
+      "protection_status": "CLOSED",
       "history": [
         {
           "type": "EXECUTION_REQUEST_CREATED",
@@ -44244,8 +44486,45 @@
             "exchange_order_id": "3500682512175468544",
             "execution_action": "OPEN_SHORT"
           }
+        },
+        {
+          "type": "EXECUTION_FILLED_RECONCILED",
+          "at": "2026-04-22T04:13:38Z",
+          "payload": {
+            "entry_price": 639.4064285714286,
+            "filled_size": 11.200000000000001,
+            "position_side": "SHORT",
+            "protection_status": "OPEN"
+          }
+        },
+        {
+          "type": "EXECUTION_OPEN_POSITION_SYNCED",
+          "at": "2026-04-22T04:23:51Z",
+          "payload": {
+            "symbol": "BNB-USDT",
+            "protection_status": "OPEN"
+          }
+        },
+        {
+          "type": "EXECUTION_CLOSED_RECONCILED",
+          "at": "2026-04-22T05:55:50Z",
+          "payload": {
+            "trade_id": "3500880828834254848",
+            "pnl": -54.81,
+            "pnl_percent": -1.53
+          }
         }
-      ]
+      ],
+      "position_side": "SHORT",
+      "live_position_detected_at": "2026-04-22T04:13:38Z",
+      "filled_stop_loss": 644.3,
+      "filled_take_profit": 626.3,
+      "protection_last_synced_at": "2026-04-22T05:45:36Z",
+      "closed_trade_id": "3500880828834254848",
+      "closed_at": "2026-04-22 05:46:19",
+      "realized_pnl": -54.81,
+      "realized_pnl_percent": -1.53,
+      "avg_exit_price": 644.3
     },
     "evaluation": {
       "result_label": "OPEN_MONITORING",
@@ -44296,11 +44575,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-22T04:07:48Z",
     "created_at_local": "2026-04-22T12:07:48+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T12:07:48+0800"
   },
   {
@@ -44657,11 +44936,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-04-22T04:08:10Z"
+      "generated_at": "2026-04-22T06:07:51Z"
     },
     "created_at": "2026-04-22T04:07:53Z",
     "created_at_local": "2026-04-22T12:07:53+0800",
-    "updated_at": "2026-04-22T04:08:10Z",
+    "updated_at": "2026-04-22T06:07:51Z",
     "updated_at_local": "2026-04-22T12:07:53+0800"
   }
 ]
