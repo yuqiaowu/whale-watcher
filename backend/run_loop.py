@@ -377,7 +377,7 @@ def get_health():
 def get_latest_system_run():
     try:
         run = db.get_data("latest_system_run", {})
-        return jsonify(run if run else {})
+        return jsonify(_hydrate_run_entry(run) if run else {})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -387,8 +387,8 @@ def get_system_runs():
     try:
         runs = db.get_data("system_run_history", [])
         if isinstance(runs, list):
-            return jsonify(runs[:50])
-        return jsonify([runs])
+            return jsonify([_hydrate_run_entry(run) for run in runs[:50]])
+        return jsonify([_hydrate_run_entry(runs)])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -440,6 +440,36 @@ def _append_system_run(entry):
         deduped.append(item)
     db.save_data("system_run_history", deduped[:200])
     db.save_data("latest_system_run", entry)
+
+
+def _approved_symbols_for_cycle(cycle_id):
+    if not cycle_id:
+        return []
+    records = db.get_data("trade_decision_records", [])
+    if not isinstance(records, list):
+        return []
+
+    approved_symbols = []
+    for record in records:
+        if record.get("cycleId") != cycle_id:
+            continue
+        risk_review = record.get("riskReview") or {}
+        if risk_review.get("approved"):
+            symbol = record.get("symbol")
+            if symbol and symbol not in approved_symbols:
+                approved_symbols.append(symbol)
+    return approved_symbols
+
+
+def _hydrate_run_entry(entry):
+    if not isinstance(entry, dict):
+        return entry
+    hydrated = dict(entry)
+    approved_symbols = hydrated.get("approved_symbols")
+    cycle_id = hydrated.get("cycle_id") or hydrated.get("target_cycle_id")
+    if cycle_id and (not isinstance(approved_symbols, list) or not approved_symbols):
+        hydrated["approved_symbols"] = _approved_symbols_for_cycle(cycle_id)
+    return hydrated
 
 def write_status(status, detail=""):
     """Write status to frontend/debug.txt for UI display"""
@@ -685,7 +715,11 @@ def main():
                     result = v2_result.get("result") or {}
                     run_entry["cycle_id"] = result.get("cycleId")
                     run_entry["record_count"] = result.get("record_count", 0)
-                    run_entry["approved_symbols"] = result.get("approved_symbols", [])
+                    run_entry["approved_symbols"] = [
+                        review["symbol"]
+                        for review in result.get("risk_reviews", [])
+                        if review.get("approved") and review.get("symbol")
+                    ]
                     run_entry["post_trade_review"] = result.get("post_trade_review")
                 else:
                     run_entry["error"] = v2_result.get("error")
