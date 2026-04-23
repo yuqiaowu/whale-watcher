@@ -1,5 +1,6 @@
+import os
 import json
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from db_client import db
 from llm_client import call_llm_json
@@ -12,7 +13,7 @@ ALLOWED_MACRO_MODE = {"RISK_ON", "RISK_OFF", "EVENT_DRIVEN", "MIXED", "NO_CLEAR_
 ALLOWED_MACRO_PERMISSION = {"ALLOW_LONG", "ALLOW_SHORT", "ALLOW_BOTH", "ALLOW_NEITHER"}
 ALLOWED_CONFLICT_STATE = {"none", "candidate_conflict", "macro_vs_onchain", "macro_vs_technical"}
 ALLOWED_SCENARIO_LABELS = {"trend_following", "mean_reversion", "countertrend_rebound", "countertrend_breakdown", "wait_no_trade"}
-ALLOWED_ALIGNMENT = {"SUPPORT", "NEUTRAL", "CONFLICT"}
+ALLOWED_ALIGNMENT = {"SUPPORT", "NEUTRAL", "CONFLICT", "UNAVAILABLE"}
 ALLOWED_TECH = {"STRONG", "WEAK", "NONE"}
 ALLOWED_STRENGTH = {"HIGH", "MEDIUM", "LOW"}
 ALLOWED_HOLDING = {"SHORT", "SWING", "MULTI_DAY"}
@@ -26,6 +27,30 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
         return float(value)
     except Exception:
         return default
+
+
+def _flow_alignment_for_intent(intent: str, features: Dict[str, Any], onchain: Dict[str, Any]) -> Tuple[str, bool]:
+    flow_data_available = bool(
+        features.get("flow_data_available")
+        or onchain.get("flow_data_available")
+    )
+    if not flow_data_available:
+        return "UNAVAILABLE", False
+
+    token_flow = _safe_float(onchain.get("token_net_flow"))
+    stablecoin_flow = _safe_float(onchain.get("stablecoin_net_flow"))
+    if intent == "LONG":
+        if token_flow > 0 or stablecoin_flow > 0:
+            return "SUPPORT", True
+        if token_flow < 0 or stablecoin_flow < 0:
+            return "CONFLICT", False
+        return "NEUTRAL", False
+
+    if token_flow < 0 or stablecoin_flow < 0:
+        return "SUPPORT", True
+    if token_flow > 0 or stablecoin_flow > 0:
+        return "CONFLICT", False
+    return "NEUTRAL", False
 
 
 def _find_previous_research_output(symbol: str, cycle_id: str) -> Optional[Dict[str, Any]]:
@@ -136,6 +161,7 @@ def _deterministic_research_output(
     position_snapshot = snapshot.get("position_snapshot", {}) or {}
     market = snapshot.get("market_snapshot", {}) or {}
     macro_snapshot = snapshot.get("macro_snapshot", {}) or {}
+    onchain_snapshot = snapshot.get("onchain_snapshot", {}) or {}
     candidate_structure = rule_evaluation.get("candidate_structure", {}) or _fallback_candidate_structure(approved_candidates)
 
     macro_permission = features.get("macro_permission", "ALLOW_BOTH")
@@ -150,7 +176,8 @@ def _deterministic_research_output(
 
     def _scenario_for_candidate(candidate: Dict[str, Any]) -> Dict[str, Any]:
         intent = candidate["decision_intent"]
-        flow_support = bool(features.get("flow_support_long" if intent == "LONG" else "flow_support_short"))
+        flow_alignment, flow_support = _flow_alignment_for_intent(intent, features, onchain_snapshot)
+        flow_data_available = flow_alignment != "UNAVAILABLE"
         breakdown = {
             "rrr_component": 0.0,
             "macro_component": 0.0,
@@ -169,8 +196,6 @@ def _deterministic_research_output(
             macro_alignment = "CONFLICT"
         else:
             macro_alignment = "SUPPORT"
-
-        flow_alignment = "SUPPORT" if flow_support else "CONFLICT"
         if macro_alignment == "CONFLICT":
             scenario_label = "countertrend_rebound" if intent == "LONG" else "countertrend_breakdown"
         elif technical_confirmation == "STRONG" and flow_support:
@@ -220,10 +245,14 @@ def _deterministic_research_output(
             breakdown["flow_component"] = 0.20
             score += breakdown["flow_component"]
             support_reasons.append("flow_support")
-        else:
+        elif flow_alignment == "CONFLICT":
             breakdown["flow_component"] = -0.10
             score += breakdown["flow_component"]
-            risk_reasons.append("flow_not_supporting")
+            risk_reasons.append("flow_conflict")
+        elif flow_alignment == "NEUTRAL":
+            support_reasons.append("flow_neutral")
+        else:
+            risk_reasons.append("flow_unavailable")
 
         if macro_mode == "EVENT_DRIVEN":
             breakdown["event_component"] = -0.10
@@ -237,6 +266,7 @@ def _deterministic_research_output(
             "macro_alignment": macro_alignment,
             "technical_confirmation": technical_confirmation,
             "flow_alignment": flow_alignment,
+            "flow_data_available": flow_data_available,
             "support_reasons": support_reasons,
             "risk_reasons": risk_reasons,
             "score_breakdown": {k: round(v, 2) for k, v in breakdown.items()},
@@ -268,6 +298,7 @@ def _deterministic_research_output(
 
     macro_alignment = selected_scenario["macro_alignment"]
     flow_alignment = selected_scenario["flow_alignment"]
+    flow_data_available = bool(selected_scenario.get("flow_data_available"))
     scenario_label = selected_scenario["scenario_label"]
     if selected_intent in {"NO_TRADE", "WAIT_FOR_CONFIRMATION"}:
         scenario_label = "wait_no_trade"
@@ -318,7 +349,7 @@ def _deterministic_research_output(
     context = _build_onchain_derivatives_context(snapshot)
     summary = (
         f"{selected.get('trigger_source')} selected with {scenario_label}; "
-        f"macro={macro_mode}, regime={regime_1d}, flow_support={flow_support}."
+        f"macro={macro_mode}, regime={regime_1d}, flow_alignment={flow_alignment}."
     )
     if selected_intent == "WAIT_FOR_CONFIRMATION":
         summary = "approved candidates remain conflicted; wait for confirmation before allocating risk."
@@ -337,10 +368,11 @@ def _deterministic_research_output(
         "scenario_label": scenario_label,
         "conflict_state": conflict_state,
         "primary_driver": "technical_confirmation" if technical_confirmation == "STRONG" else "macro_filter",
-        "secondary_driver": "flow_support" if flow_support else "macro_headwind",
+        "secondary_driver": "flow_support" if flow_support else "flow_unavailable" if not flow_data_available else "macro_headwind",
         "macro_alignment": macro_alignment,
         "technical_confirmation": technical_confirmation,
         "flow_alignment": flow_alignment,
+        "flow_data_available": flow_data_available,
         "thesis_strength": thesis_strength,
         "holding_horizon": holding_horizon,
         "thesis_change": thesis_change,
@@ -352,6 +384,13 @@ def _deterministic_research_output(
         "onchain_context": context["onchain_context"],
         "derivatives_context": context["derivatives_context"],
         "context_summary": context["context_summary"],
+        "provenance": {
+            "generation_mode": "deterministic_only",
+            "llm_enabled": os.getenv("ENABLE_RESEARCH_LLM", "").strip() == "1",
+            "llm_attempted": False,
+            "llm_applied": False,
+            "llm_override_fields": [],
+        },
     }
 
 
@@ -398,6 +437,7 @@ def _llm_refine_research_output(
                 "macro_alignment": "SUPPORT",
                 "technical_confirmation": "WEAK",
                 "flow_alignment": "SUPPORT",
+                "flow_data_available": True,
                 "thesis_strength": "MEDIUM",
                 "holding_horizon": "SHORT",
                 "thesis_change": "WEAKENED",
@@ -424,6 +464,7 @@ def _llm_refine_research_output(
                 "macro_alignment": "SUPPORT",
                 "technical_confirmation": "STRONG",
                 "flow_alignment": "SUPPORT",
+                "flow_data_available": True,
                 "thesis_strength": "HIGH",
                 "holding_horizon": "SWING",
                 "thesis_change": "STRENGTHENED",
@@ -447,10 +488,11 @@ def _llm_refine_research_output(
                 "scenario_label": "wait_no_trade",
                 "conflict_state": "candidate_conflict",
                 "primary_driver": "macro_filter",
-                "secondary_driver": "macro_headwind",
+                "secondary_driver": "flow_unavailable",
                 "macro_alignment": "NEUTRAL",
                 "technical_confirmation": "WEAK",
-                "flow_alignment": "CONFLICT",
+                "flow_alignment": "UNAVAILABLE",
+                "flow_data_available": False,
                 "thesis_strength": "LOW",
                 "holding_horizon": "SHORT",
                 "thesis_change": "UNCHANGED",
@@ -468,12 +510,13 @@ def _llm_refine_research_output(
         "If candidates conflict, internally compare at least three scenarios: trend_following, countertrend, wait_no_trade, then return one final structured answer only. "
         "Return only valid JSON with keys: selected_intent, selected_trigger_sources, scenario_label, "
         "conflict_state, primary_driver, secondary_driver, macro_alignment, technical_confirmation, "
-        "flow_alignment, thesis_strength, holding_horizon, thesis_change, change_reason, risk_note, summary.\n\n"
+        "flow_alignment, flow_data_available, thesis_strength, holding_horizon, thesis_change, change_reason, risk_note, summary.\n\n"
         f"FEW_SHOT_EXAMPLES: {json.dumps(few_shot_examples, ensure_ascii=False)}\n"
         f"ALLOWED_SELECTED_INTENTS: {json.dumps(sorted(set(allowed_intents) | {'NO_TRADE', 'WAIT_FOR_CONFIRMATION'}))}\n"
         f"ALLOWED_TRIGGER_SOURCES: {json.dumps(allowed_sources)}\n"
         f"INPUT: {json.dumps(payload, ensure_ascii=False)}"
     )
+    llm_enabled = os.getenv("ENABLE_RESEARCH_LLM", "").strip() == "1"
     result = call_llm_json(
         prompt,
         system_prompt="Use fixed reasoning order: macro -> technical -> onchain -> conflict -> continuity -> final output.",
@@ -481,19 +524,32 @@ def _llm_refine_research_output(
         enable_env_flag="ENABLE_RESEARCH_LLM",
     )
     if not isinstance(result, dict):
-        return deterministic_output
+        merged = dict(deterministic_output)
+        merged["provenance"] = {
+            "generation_mode": "deterministic_only",
+            "llm_enabled": llm_enabled,
+            "llm_attempted": llm_enabled,
+            "llm_applied": False,
+            "llm_override_fields": [],
+        }
+        return merged
 
     merged = dict(deterministic_output)
+    override_fields: List[str] = []
     selected_intent = result.get("selected_intent")
     if isinstance(selected_intent, str) and selected_intent in ALLOWED_SELECTED_INTENTS and (
         selected_intent in allowed_intents or selected_intent in {"NO_TRADE", "WAIT_FOR_CONFIRMATION"}
     ):
+        if merged.get("selected_intent") != selected_intent:
+            override_fields.append("selected_intent")
         merged["selected_intent"] = selected_intent
 
     trigger_sources = result.get("selected_trigger_sources")
     if isinstance(trigger_sources, list):
         safe_sources = [s for s in trigger_sources if isinstance(s, str) and s in allowed_sources]
         if safe_sources:
+            if merged.get("selected_trigger_sources") != safe_sources:
+                override_fields.append("selected_trigger_sources")
             merged["selected_trigger_sources"] = safe_sources
 
     enum_fields = {
@@ -513,12 +569,31 @@ def _llm_refine_research_output(
     for field, allowed in enum_fields.items():
         value = result.get(field)
         if isinstance(value, str) and value in allowed:
+            if merged.get(field) != value:
+                override_fields.append(field)
             merged[field] = value
 
     for field in ["primary_driver", "secondary_driver", "change_reason", "risk_note", "summary"]:
         value = result.get(field)
         if isinstance(value, str) and value.strip():
-            merged[field] = value.strip()
+            cleaned = value.strip()
+            if merged.get(field) != cleaned:
+                override_fields.append(field)
+            merged[field] = cleaned
+
+    flow_data_available = result.get("flow_data_available")
+    if isinstance(flow_data_available, bool):
+        if merged.get("flow_data_available") != flow_data_available:
+            override_fields.append("flow_data_available")
+        merged["flow_data_available"] = flow_data_available
+
+    merged["provenance"] = {
+        "generation_mode": "llm_refined" if override_fields else "llm_noop",
+        "llm_enabled": llm_enabled,
+        "llm_attempted": llm_enabled,
+        "llm_applied": bool(override_fields),
+        "llm_override_fields": sorted(set(override_fields)),
+    }
 
     return merged
 

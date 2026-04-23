@@ -103,6 +103,12 @@ def _validate_record(record: Dict[str, Any]) -> List[str]:
         issues.append("missing_researchOutput")
     if research_output and not research_output.get("selected_intent"):
         issues.append("research_selected_intent_missing")
+    if research_output:
+        flow_alignment = research_output.get("flow_alignment")
+        if flow_alignment not in {"SUPPORT", "NEUTRAL", "CONFLICT", "UNAVAILABLE"}:
+            issues.append("research_flow_alignment_invalid")
+        if not isinstance(research_output.get("flow_data_available"), bool):
+            issues.append("research_flow_data_available_missing")
 
     return issues
 

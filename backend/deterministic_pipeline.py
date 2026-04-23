@@ -110,6 +110,18 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
         return default
 
 
+def _has_numeric_value(value: Any) -> bool:
+    if value is None:
+        return False
+    if isinstance(value, str) and value.replace("%", "").replace(",", "").strip().upper() in {"", "N/A", "NONE", "NULL"}:
+        return False
+    try:
+        float(str(value).replace("%", "").replace(",", "").strip())
+        return True
+    except Exception:
+        return False
+
+
 def _read_json(path: Path, default: Any) -> Any:
     if not path.exists():
         return deepcopy(default)
@@ -364,8 +376,11 @@ def _build_decision_snapshot(
 
     funding_rate = _safe_float(market.get("funding_rate"), _safe_float(market_data.get("funding_rate")))
     funding_zscore = _safe_float(market.get("funding_zscore"), _safe_float(market_data.get("funding_rate_zscore")) / 100.0)
-    token_flow = _safe_float(stats24.get("token_net_flow"))
-    stable_flow = _safe_float(stats24.get("stablecoin_net_flow"))
+    raw_token_flow = stats24.get("token_net_flow")
+    raw_stable_flow = stats24.get("stablecoin_net_flow")
+    token_flow = _safe_float(raw_token_flow)
+    stable_flow = _safe_float(raw_stable_flow)
+    flow_data_available = _has_numeric_value(raw_token_flow) or _has_numeric_value(raw_stable_flow)
     qlib_score = _safe_float(qlib_coin.get("qlib_relative_score_8h"), _safe_float(qlib_coin.get("qlib_score")))
     qlib_percentile = _safe_float(qlib_coin.get("qlib_percentile"))
     p_up_8h = _safe_float(qlib_coin.get("p_up_8h"))
@@ -407,6 +422,7 @@ def _build_decision_snapshot(
     onchain_snapshot = {
         "token_net_flow": token_flow,
         "stablecoin_net_flow": stable_flow,
+        "flow_data_available": flow_data_available,
         "sentiment_score": _safe_float(stats24.get("sentiment_score")),
         "liquidation_long_usd": _safe_float(stats24.get("liquidation_long_usd")),
         "liquidation_short_usd": _safe_float(stats24.get("liquidation_short_usd")),
@@ -438,8 +454,9 @@ def _build_decision_snapshot(
         "event_risk_active": bool(macro_snapshot["macro_event_window"]),
         "usd_strength_flag": "USD_STRENGTH" in (macro_snapshot.get("key_events") or []) or macro_snapshot.get("dxy_trend") == "UP",
         "yen_stress_flag": "YEN_STRESS" in (macro_snapshot.get("key_events") or []) or macro_snapshot.get("usdjpy_trend") == "DOWN",
-        "flow_support_long": token_flow > 0 or stable_flow > 0,
-        "flow_support_short": token_flow < 0 or stable_flow < 0,
+        "flow_data_available": flow_data_available,
+        "flow_support_long": flow_data_available and (token_flow > 0 or stable_flow > 0),
+        "flow_support_short": flow_data_available and (token_flow < 0 or stable_flow < 0),
         "qlib_relative_score_8h": qlib_score,
         "qlib_percentile_8h": qlib_percentile,
         "p_up_8h": p_up_8h,
