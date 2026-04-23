@@ -68,7 +68,7 @@ class ResearchAgentTests(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertEqual(result["selected_intent"], "SHORT")
         self.assertEqual(result["selected_trigger_sources"], ["Blueprint_A2"])
-        self.assertIn(result["scenario_label"], {"trend_following", "mean_reversion", "countertrend_breakdown", "wait_no_trade"})
+        self.assertIn(result["scenario_label"], {"trend_following", "mean_reversion", "trend_breakdown", "wait_no_trade"})
         self.assertEqual(result["macro_permission"], "ALLOW_SHORT")
         self.assertNotIn(result["selected_intent"], {"LONG"})
         self.assertEqual(result["onchain_context"]["bias"], "MIXED_FLOW")

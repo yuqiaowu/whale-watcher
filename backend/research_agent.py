@@ -12,7 +12,7 @@ ALLOWED_MACRO_HORIZON = {"INTRADAY", "SWING", "MULTI_DAY", "NOISE"}
 ALLOWED_MACRO_MODE = {"RISK_ON", "RISK_OFF", "EVENT_DRIVEN", "MIXED", "NO_CLEAR_IMPACT"}
 ALLOWED_MACRO_PERMISSION = {"ALLOW_LONG", "ALLOW_SHORT", "ALLOW_BOTH", "ALLOW_NEITHER"}
 ALLOWED_CONFLICT_STATE = {"none", "candidate_conflict", "macro_vs_onchain", "macro_vs_technical"}
-ALLOWED_SCENARIO_LABELS = {"trend_following", "mean_reversion", "countertrend_rebound", "countertrend_breakdown", "wait_no_trade"}
+ALLOWED_SCENARIO_LABELS = {"trend_following", "mean_reversion", "countertrend_rebound", "trend_breakdown", "wait_no_trade"}
 ALLOWED_ALIGNMENT = {"SUPPORT", "NEUTRAL", "CONFLICT", "UNAVAILABLE"}
 ALLOWED_TECH = {"STRONG", "WEAK", "NONE"}
 ALLOWED_STRENGTH = {"HIGH", "MEDIUM", "LOW"}
@@ -220,7 +220,7 @@ def _deterministic_research_output(
         else:
             macro_alignment = "SUPPORT"
         if macro_alignment == "CONFLICT":
-            scenario_label = "countertrend_rebound" if intent == "LONG" else "countertrend_breakdown"
+            scenario_label = "countertrend_rebound" if intent == "LONG" else "trend_breakdown"
         elif technical_confirmation == "STRONG" and flow_support:
             scenario_label = "trend_following"
         else:
@@ -453,7 +453,7 @@ def _llm_refine_research_output(
             "expected_output": {
                 "selected_intent": "SHORT",
                 "selected_trigger_sources": ["Blueprint_A2"],
-                "scenario_label": "countertrend_breakdown",
+                "scenario_label": "trend_breakdown",
                 "conflict_state": "candidate_conflict",
                 "primary_driver": "macro_filter",
                 "secondary_driver": "flow_support",
