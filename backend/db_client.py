@@ -8,6 +8,14 @@ import certifi
 
 load_dotenv()
 
+SINGLETON_COLLECTIONS = {
+    "portfolio_state",
+    "whale_analysis",
+    "latest_trade_decision_record",
+    "latest_decision_cycle_v2",
+    "latest_system_run",
+}
+
 class DBClient:
     def __init__(self):
         self.uri = os.getenv("MONGODB_URI")
@@ -61,12 +69,12 @@ class DBClient:
     # --- Read / Get ---
     def get_data(self, collection_name, default_value=None):
         if default_value is None:
-            default_value = [] if collection_name != "portfolio_state" else {}
+            default_value = {} if collection_name in SINGLETON_COLLECTIONS else []
 
         if self.is_connected:
             try:
                 collection = self.db[collection_name]
-                if collection_name in ["portfolio_state", "whale_analysis"]:
+                if collection_name in SINGLETON_COLLECTIONS:
                     # Fetch the latest state document
                     doc = collection.find_one({"_id": "current_state"})
                     if doc:
@@ -114,24 +122,26 @@ class DBClient:
         if self.is_connected:
             try:
                 collection = self.db[collection_name]
-                if collection_name == "portfolio_state":
+                if collection_name in SINGLETON_COLLECTIONS:
                     # Update a single master document
-                    data["_id"] = "current_state" 
-                    collection.replace_one({"_id": "current_state"}, data, upsert=True)
+                    safe_data = data.copy() if isinstance(data, dict) else {"value": data}
+                    safe_data["_id"] = "current_state"
+                    collection.replace_one({"_id": "current_state"}, safe_data, upsert=True)
                 else:
                     # For arrays (logs, history), if we pass the whole array, we'd need to clear and insert
                     # Or better: just replace everything. Since array sizes are small right now.
                     # A better way for large arrays is to use insert_one when a new log arrives, 
                     # but since the current architecture dumps the whole list, we drop and insert many.
-                    if isinstance(data, list) and len(data) > 0:
+                    if isinstance(data, list):
                         collection.delete_many({})
-                        # MongoDB modification: Ensure no internal `_id` conflicts
-                        safe_data = []
-                        for item in data:
-                            safe_item = item.copy()
-                            safe_item.pop("_id", None)
-                            safe_data.append(safe_item)
-                        collection.insert_many(safe_data)
+                        if data:
+                            # MongoDB modification: Ensure no internal `_id` conflicts
+                            safe_data = []
+                            for item in data:
+                                safe_item = item.copy()
+                                safe_item.pop("_id", None)
+                                safe_data.append(safe_item)
+                            collection.insert_many(safe_data)
             except Exception as e:
                 print(f"⚠️ [MongoDB Sync Error] {collection_name}: {e}")
 
