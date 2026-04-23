@@ -7,7 +7,11 @@ BACKEND_DIR = Path(__file__).resolve().parents[1]
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from macro_news_pipeline import build_macro_news_snapshot
+from macro_news_pipeline import (
+    _market_impact,
+    _policy_stance,
+    build_macro_news_snapshot,
+)
 
 
 class MacroNewsPipelineTests(unittest.TestCase):
@@ -40,8 +44,8 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertEqual(result["market_impact"], "RISK_OFF")
         self.assertEqual(result["macro_mode"], "RISK_OFF")
         self.assertEqual(result["macro_permission"], "ALLOW_SHORT")
-        self.assertEqual(result["impact_horizon"], "INTRADAY")
-        self.assertEqual(result["macro_horizon"], "INTRADAY")
+        self.assertEqual(result["impact_horizon"], "MULTI_DAY")
+        self.assertEqual(result["macro_horizon"], "MULTI_DAY")
         self.assertEqual(result["policy_stance"], "HAWKISH")
         self.assertIn("FED_HAWKISH", result["key_tags"])
         self.assertIn("USD_STRENGTH", result["key_tags"])
@@ -74,6 +78,26 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertIn(result["market_impact"], {"NO_CLEAR_IMPACT", "MIXED"})
         self.assertEqual(result["macro_permission"], "ALLOW_BOTH")
         self.assertIn("MACRO_NOISE", result["key_tags"])
+        self.assertEqual(result["crypto_relevance"], "LOW")
+
+    def test_policy_stance_ignores_negated_dovish_keyword(self):
+        macro = {
+            "fed_futures": {
+                "trend": "The Fed is not dovish and policy is still restrictive",
+                "change_5d_bps": 0,
+            }
+        }
+
+        result = _policy_stance(macro)
+
+        self.assertEqual(result, "HAWKISH")
+
+    def test_market_impact_uses_weighted_scoring_not_single_conflict_mixed(self):
+        tags = ["FED_DOVISH", "CPI_COOL", "LIQUIDITY_EXPANDING", "USD_STRENGTH"]
+
+        result = _market_impact(tags)
+
+        self.assertEqual(result, "RISK_ON")
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from typing import Any, Dict, List
 
 from llm_client import call_llm_json_with_audit
@@ -35,6 +36,58 @@ def _event_headlines(news_obj: Dict[str, Any], limit: int = 5) -> List[str]:
     return deduped[:limit]
 
 
+def _nested_float(obj: Dict[str, Any], *path: str, default: float = 0.0) -> float:
+    current: Any = obj
+    for key in path:
+        if not isinstance(current, dict):
+            return default
+        current = current.get(key)
+    return _safe_float(current, default)
+
+
+def _first_positive_float(values: List[float], default: float = 0.0) -> float:
+    for value in values:
+        if value > 0:
+            return value
+    return default
+
+
+def _scaled_threshold(*, baseline: float, floor: float, scale: float = 1.0) -> float:
+    return max(floor, baseline * scale)
+
+
+def _stable_flow_thresholds(macro_data: Dict[str, Any]) -> Dict[str, float]:
+    liquidity = macro_data.get("liquidity_monitor", {}) or {}
+    market_cap = _first_positive_float([
+        _safe_float(macro_data.get("global_stable_market_cap")),
+        _safe_float(macro_data.get("global_stablecoin_market_cap")),
+        _safe_float(macro_data.get("total_stablecoin_market_cap")),
+        _safe_float(liquidity.get("global_stable_market_cap")),
+    ])
+    flow_std = _first_positive_float([
+        _safe_float(macro_data.get("global_stable_flow_30d_std")),
+        _safe_float(macro_data.get("global_stable_flow_std")),
+        _safe_float(liquidity.get("global_stable_flow_30d_std")),
+    ])
+    return {
+        "tag": max(100_000_000, market_cap * 0.001, flow_std * 1.5),
+        "high_relevance": max(150_000_000, market_cap * 0.0015, flow_std * 2.0),
+        "swing": max(250_000_000, market_cap * 0.003, flow_std * 2.5),
+    }
+
+
+def _contains_unnegated(text: str, keywords: List[str]) -> bool:
+    negations = r"(?:not|no|less|non|without|isn't|aren't|wasn't|weren't|never)"
+    for keyword in keywords:
+        pattern = rf"(?<!\w){re.escape(keyword)}(?!\w)"
+        for match in re.finditer(pattern, text):
+            prefix = text[max(0, match.start() - 24):match.start()]
+            if re.search(rf"{negations}\s+(?:\w+\s+){{0,2}}$", prefix):
+                continue
+            return True
+    return False
+
+
 def _base_event_facts(fear_greed: Dict[str, Any], macro_data: Dict[str, Any]) -> Dict[str, Any]:
     fed = macro_data.get("fed_futures", {}) or {}
     japan = macro_data.get("japan_macro", {}) or {}
@@ -42,6 +95,13 @@ def _base_event_facts(fear_greed: Dict[str, Any], macro_data: Dict[str, Any]) ->
     dxy = liquidity.get("dxy", {}) or {}
     vix = liquidity.get("vix", {}) or {}
     us10y = liquidity.get("us10y", {}) or {}
+    stable_market_cap = _first_positive_float([
+        _safe_float(macro_data.get("global_stable_market_cap")),
+        _safe_float(macro_data.get("global_stablecoin_market_cap")),
+        _safe_float(macro_data.get("total_stablecoin_market_cap")),
+        _safe_float(liquidity.get("global_stable_market_cap")),
+    ])
+    stable_flow = _safe_float(macro_data.get("global_stable_flow"))
     return {
         "fear_greed_index": _safe_float(fear_greed.get("value"), 50.0),
         "fear_greed_state": str(fear_greed.get("value_classification") or "NEUTRAL").upper(),
@@ -55,7 +115,9 @@ def _base_event_facts(fear_greed: Dict[str, Any], macro_data: Dict[str, Any]) ->
         "vix_change_5d_pct": _safe_float(vix.get("change_5d_pct")),
         "us10y_level": _safe_float(us10y.get("price")),
         "us10y_change_5d_pct": _safe_float(us10y.get("change_5d_pct")),
-        "global_stable_flow": _safe_float(macro_data.get("global_stable_flow")),
+        "global_stable_flow": stable_flow,
+        "global_stable_market_cap": stable_market_cap,
+        "global_stable_flow_ratio_pct": (stable_flow / stable_market_cap * 100.0) if stable_market_cap > 0 else 0.0,
     }
 
 
@@ -74,9 +136,17 @@ def _policy_stance(macro_data: Dict[str, Any]) -> str:
         for key in ["trend", "trend_zh", "zone", "zone_zh"]
     ).lower()
     change_bps = _safe_float(fed.get("change_5d_bps"))
-    if any(token in text for token in ["restrictive", "高位", "hawk"]) or change_bps > 2:
+    move_threshold = _scaled_threshold(
+        baseline=_first_positive_float([
+            _safe_float(fed.get("change_30d_std_bps")),
+            _safe_float(fed.get("vol_30d_bps")),
+            _safe_float(fed.get("change_std_bps")),
+        ], default=4.0),
+        floor=2.5,
+    )
+    if _contains_unnegated(text, ["restrictive", "hawkish", "hawk"]) or "高位" in text or change_bps >= move_threshold:
         return "HAWKISH"
-    if any(token in text for token in ["easing", "dovish", "宽松"]) or change_bps < -5:
+    if _contains_unnegated(text, ["easing", "dovish"]) or "宽松" in text or change_bps <= -move_threshold:
         return "DOVISH"
     return "NEUTRAL"
 
@@ -84,19 +154,34 @@ def _policy_stance(macro_data: Dict[str, Any]) -> str:
 def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List[str]) -> List[str]:
     tags: List[str] = []
     stance = _policy_stance(macro_data)
+    dxy_threshold = _scaled_threshold(
+        baseline=_first_positive_float([
+            _nested_float(macro_data, "liquidity_monitor", "dxy", "change_30d_std_pct"),
+            _nested_float(macro_data, "liquidity_monitor", "dxy", "vol_30d_pct"),
+        ], default=0.35),
+        floor=0.25,
+    )
+    yen_threshold = _scaled_threshold(
+        baseline=_first_positive_float([
+            _nested_float(macro_data, "japan_macro", "change_30d_std_pct"),
+            _nested_float(macro_data, "japan_macro", "vol_30d_pct"),
+        ], default=0.6),
+        floor=0.45,
+    )
+    stable_flow_thresholds = _stable_flow_thresholds(macro_data)
     if stance == "HAWKISH":
         tags.append("FED_HAWKISH")
     elif stance == "DOVISH":
         tags.append("FED_DOVISH")
 
-    if facts["dxy_change_5d_pct"] >= 0.2:
+    if facts["dxy_change_5d_pct"] >= dxy_threshold:
         tags.append("USD_STRENGTH")
-    elif facts["dxy_change_5d_pct"] <= -0.2:
+    elif facts["dxy_change_5d_pct"] <= -dxy_threshold:
         tags.append("USD_WEAKNESS")
 
-    if facts["usdjpy_change_5d_pct"] <= -0.4:
+    if facts["usdjpy_change_5d_pct"] <= -yen_threshold:
         tags.append("YEN_STRESS")
-    elif facts["usdjpy_change_5d_pct"] >= 0.4:
+    elif facts["usdjpy_change_5d_pct"] >= yen_threshold:
         tags.append("YEN_RELIEF")
 
     if facts["fear_greed_index"] <= 35 or facts["vix_level"] >= 24 or facts["vix_change_5d_pct"] >= 8:
@@ -104,9 +189,9 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
     elif facts["fear_greed_index"] >= 65 and facts["vix_level"] < 18:
         tags.append("RISK_ON_NEWS")
 
-    if facts["global_stable_flow"] >= 50_000_000:
+    if facts["global_stable_flow"] >= stable_flow_thresholds["tag"]:
         tags.append("LIQUIDITY_EXPANDING")
-    elif facts["global_stable_flow"] <= -50_000_000:
+    elif facts["global_stable_flow"] <= -stable_flow_thresholds["tag"]:
         tags.append("LIQUIDITY_CONTRACTING")
 
     joined = " ".join(headlines).lower()
@@ -121,36 +206,71 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
 
 
 def _market_impact(tags: List[str]) -> str:
-    risk_off = {"FED_HAWKISH", "USD_STRENGTH", "YEN_STRESS", "RISK_OFF_NEWS", "LIQUIDITY_CONTRACTING", "CPI_HOT"}
-    risk_on = {"FED_DOVISH", "USD_WEAKNESS", "YEN_RELIEF", "RISK_ON_NEWS", "LIQUIDITY_EXPANDING", "CPI_COOL"}
-    off = len(risk_off.intersection(tags))
-    on = len(risk_on.intersection(tags))
-    if off and on:
-        return "MIXED"
-    if off:
+    weights = {
+        "FED_HAWKISH": -5,
+        "FED_DOVISH": 5,
+        "USD_STRENGTH": -2,
+        "USD_WEAKNESS": 2,
+        "YEN_STRESS": -2,
+        "YEN_RELIEF": 2,
+        "RISK_OFF_NEWS": -3,
+        "RISK_ON_NEWS": 3,
+        "LIQUIDITY_CONTRACTING": -4,
+        "LIQUIDITY_EXPANDING": 4,
+        "CPI_HOT": -4,
+        "CPI_COOL": 4,
+    }
+    score = sum(weights.get(tag, 0) for tag in tags)
+    positive = any(weights.get(tag, 0) > 0 for tag in tags)
+    negative = any(weights.get(tag, 0) < 0 for tag in tags)
+    if score <= -3:
         return "RISK_OFF"
-    if on:
+    if score >= 3:
         return "RISK_ON"
+    if positive and negative:
+        return "MIXED"
+    if score != 0:
+        return "MIXED"
     return "NO_CLEAR_IMPACT"
 
 
 def _impact_horizon(facts: Dict[str, Any], tags: List[str], headlines: List[str]) -> str:
     joined = " ".join(headlines).lower()
-    if any(token in joined for token in ["fomc", "powell", "cpi", "payroll", "pce"]) or "FED_HAWKISH" in tags or "FED_DOVISH" in tags:
+    major_macro_event = any(token in joined for token in ["fomc", "powell", "cpi", "payroll", "pce", "nonfarm", "inflation"])
+    directional_macro = any(tag in tags for tag in [
+        "FED_HAWKISH", "FED_DOVISH", "CPI_HOT", "CPI_COOL", "LIQUIDITY_EXPANDING", "LIQUIDITY_CONTRACTING"
+    ])
+    strong_cross_asset_move = (
+        abs(facts["dxy_change_5d_pct"]) >= 0.6
+        or abs(facts["usdjpy_change_5d_pct"]) >= 0.8
+        or abs(facts["global_stable_flow"]) >= 250_000_000
+    )
+    if major_macro_event and directional_macro:
+        return "MULTI_DAY"
+    if major_macro_event:
         return "INTRADAY"
-    if abs(facts["dxy_change_5d_pct"]) >= 0.6 or abs(facts["usdjpy_change_5d_pct"]) >= 0.6 or abs(facts["global_stable_flow"]) >= 200_000_000:
+    if strong_cross_asset_move:
         return "SWING"
-    if "MACRO_NOISE" in tags:
+    if "MACRO_NOISE" in tags and not directional_macro:
         return "NOISE"
-    return "SWING"
+    if directional_macro:
+        return "SWING"
+    return "NOISE"
 
 
 def _crypto_relevance(tags: List[str], facts: Dict[str, Any]) -> str:
-    if any(tag in tags for tag in ["FED_HAWKISH", "FED_DOVISH", "USD_STRENGTH", "USD_WEAKNESS", "YEN_STRESS", "RISK_OFF_NEWS", "RISK_ON_NEWS"]):
+    if tags == ["MACRO_NOISE"]:
+        return "LOW"
+    if any(tag in tags for tag in ["FED_HAWKISH", "FED_DOVISH", "CPI_HOT", "CPI_COOL"]):
         return "HIGH"
-    if abs(facts["global_stable_flow"]) >= 100_000_000:
+    if abs(facts["global_stable_flow"]) >= max(150_000_000, facts.get("global_stable_market_cap", 0.0) * 0.0015):
         return "HIGH"
-    if any(tag in tags for tag in ["LIQUIDITY_EXPANDING", "LIQUIDITY_CONTRACTING", "MACRO_NOISE"]):
+    if (
+        any(tag in tags for tag in ["RISK_OFF_NEWS", "RISK_ON_NEWS", "USD_STRENGTH", "USD_WEAKNESS", "YEN_STRESS", "YEN_RELIEF"])
+        and (abs(facts["dxy_change_5d_pct"]) >= 0.5 or abs(facts["usdjpy_change_5d_pct"]) >= 0.8)
+    ):
+        return "HIGH"
+    if any(tag in tags for tag in ["LIQUIDITY_EXPANDING", "LIQUIDITY_CONTRACTING", "RISK_OFF_NEWS", "RISK_ON_NEWS", "USD_STRENGTH", "USD_WEAKNESS", "YEN_STRESS", "YEN_RELIEF"]):
         return "MEDIUM"
     return "LOW"
 
@@ -171,6 +291,8 @@ def _brief_rationale(tags: List[str], facts: Dict[str, Any], market_impact: str,
         parts.append(f"fear/vix imply risk-off ({facts['fear_greed_index']:.0f}, VIX {facts['vix_level']:.2f})")
     if "RISK_ON_NEWS" in tags:
         parts.append(f"sentiment supports risk-on ({facts['fear_greed_index']:.0f}, VIX {facts['vix_level']:.2f})")
+    if "LIQUIDITY_EXPANDING" in tags or "LIQUIDITY_CONTRACTING" in tags:
+        parts.append(f"stablecoin flow is ${facts['global_stable_flow']:,.0f}")
     if not parts:
         parts.append("macro inputs are mixed and lack a dominant directional signal")
     return f"{'; '.join(parts)}. Classified as {market_impact} with {impact_horizon} horizon."

@@ -393,13 +393,14 @@ def fetch_solana_swaps():
     return all_swaps
 
 def fetch_defillama_global_flows():
-    """Fetch global stablecoin market cap change (24h) from DefiLlama."""
+    """Fetch 24h stablecoin flow and current market cap from DefiLlama."""
     try:
         url = "https://stablecoins.llama.fi/stablecoins?includePrices=true"
         response = requests.get(url, timeout=(5, 10))
         data = response.json()
         
         total_change = 0
+        total_market_cap = 0
         count = 0
         
         # We focus on the Top 2: USDT, USDC which represent majority of flow
@@ -409,21 +410,28 @@ def fetch_defillama_global_flows():
                      curr = coin.get("circulating", {}).get("peggedUSD", 0)
                      prev = coin.get("circulatingPrevDay", {}).get("peggedUSD", 0)
                      
+                     if curr:
+                         total_market_cap += curr
                      if curr and prev:
-                         change = curr - prev
-                         total_change += change
+                         total_change += curr - prev
+                     if curr or prev:
                          count += 1
                  except: pass
         
         if count > 0:
             print(f"✅ DefiLlama Global Stablecoin Flow (24h): ${total_change:,.0f}")
-            return total_change
+            if total_market_cap > 0:
+                print(f"✅ DefiLlama Stablecoin Market Cap (USDT+USDC): ${total_market_cap:,.0f}")
+            return {
+                "global_stable_flow": total_change,
+                "global_stable_market_cap": total_market_cap,
+            }
             
         print("⚠️ DefiLlama: No valid stablecoin data found.")
-        return 0
+        return {}
     except Exception as e:
         print(f"❌ DefiLlama Error: {e}")
-        return 0
+        return {}
 
 def fetch_fear_greed_index():
     """Fetch Bitcoin Fear & Greed Index from alternative.me (Today + Yesterday for change)."""
@@ -1171,6 +1179,7 @@ def main():
 
     # 2. Fetch News & Macro Data (Layer 1 & 2)
     print("\n=== LAYER 1 & 2: GLOBAL MACRO & NEWS ===")
+    mh = None
     try:
         print("Fetching Macro Data (Fed, Liquidity)...")
         macro_data = {
@@ -1180,8 +1189,9 @@ def main():
         }
         
         # --- Macro History Persistence ---
+        data_dir_path = os.path.join(base_dir, "../frontend/data")
+        mh = None
         try:
-             data_dir_path = os.path.join(base_dir, "../frontend/data")
              mh = MacroHistory(data_dir_path)
              mh.add_snapshot(
                  macro_data.get("fed_futures", {}), 
@@ -1336,9 +1346,26 @@ def main():
 
     # [NEW] Inject DefiLlama Macro Flow Data (Global Liquidity)
     print("Fetching DefiLlama Global Flows...")
-    global_stable_flow = fetch_defillama_global_flows()
-    if global_stable_flow != 0:
-        macro_data["global_stable_flow"] = global_stable_flow
+    stable_metrics = fetch_defillama_global_flows()
+    if stable_metrics:
+        macro_data.update(stable_metrics)
+        try:
+            if mh is None:
+                data_dir_path = os.path.join(base_dir, "../frontend/data")
+                mh = MacroHistory(data_dir_path)
+            mh.update_latest_snapshot(stable_metrics)
+            flow_std = mh.get_std("global_stable_flow", days=30)
+            if flow_std is not None:
+                macro_data["global_stable_flow_30d_std"] = round(flow_std, 2)
+            market_cap_change_pct = mh.get_change_percentage(
+                "global_stable_market_cap",
+                macro_data.get("global_stable_market_cap"),
+                days=5,
+            )
+            if market_cap_change_pct is not None:
+                macro_data["global_stable_market_cap_change_5d_pct"] = round(market_cap_change_pct, 2)
+        except Exception as e:
+            print(f"⚠️ Stablecoin macro history update failed: {e}")
 
     # 5. Generate AI Narrative (V2 Tri-Layer)
     ai_summary = {"en": "AI disabled or failed.", "zh": "AI 分析暂时不可用。"}

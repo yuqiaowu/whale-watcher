@@ -1,5 +1,6 @@
 import json
 import os
+from statistics import pstdev
 from datetime import datetime, timedelta
 
 class MacroHistory:
@@ -29,10 +30,11 @@ class MacroHistory:
         except Exception as e:
             print(f"⚠️ Failed to save macro history: {e}")
 
-    def add_snapshot(self, fed_data, japan_data, liquidity_data):
+    def add_snapshot(self, fed_data, japan_data, liquidity_data, stable_data=None):
         """
         Record a snapshot of current macro data.
         """
+        stable_data = stable_data or {}
         snapshot = {
             "timestamp": datetime.utcnow().isoformat(),
             "fed": fed_data.get("price"),
@@ -40,10 +42,21 @@ class MacroHistory:
             "japan": japan_data.get("price"),
             "dxy": liquidity_data.get("dxy", {}).get("price"),
             "vix": liquidity_data.get("vix", {}).get("price"),
-            "us10y": liquidity_data.get("us10y", {}).get("price")
+            "us10y": liquidity_data.get("us10y", {}).get("price"),
+            "global_stable_flow": stable_data.get("global_stable_flow"),
+            "global_stable_market_cap": stable_data.get("global_stable_market_cap"),
         }
         self.history.append(snapshot)
         self._prune()
+        self.save()
+
+    def update_latest_snapshot(self, updates):
+        """
+        Patch the newest snapshot with late-arriving fields from the same run.
+        """
+        if not self.history or not isinstance(updates, dict):
+            return
+        self.history[-1].update(updates)
         self.save()
 
     def _prune(self, max_days=60, max_records=500):
@@ -140,3 +153,34 @@ class MacroHistory:
              return current_val - float(closest_record[key])
              
         return None
+
+    def get_recent_values(self, key, days=30):
+        """
+        Return numeric values within the recent window for simple dynamic thresholds.
+        """
+        cutoff = datetime.utcnow() - timedelta(days=days)
+        values = []
+        for record in self.history:
+            try:
+                ts = datetime.fromisoformat(record["timestamp"])
+                if ts < cutoff:
+                    continue
+                value = record.get(key)
+                if value is None:
+                    continue
+                values.append(float(value))
+            except Exception:
+                continue
+        return values
+
+    def get_std(self, key, days=30):
+        """
+        Return population standard deviation for the recent window.
+        """
+        values = self.get_recent_values(key, days=days)
+        if len(values) < 2:
+            return None
+        try:
+            return float(pstdev(values))
+        except Exception:
+            return None
