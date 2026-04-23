@@ -32,6 +32,41 @@ class FakeExecutor:
 
 
 class DeterministicPipelineE2ETests(unittest.TestCase):
+    def test_build_decision_snapshot_maps_flow_into_fixed_semantics(self):
+        whale_analysis = {
+            "fear_greed": {"value": 50, "value_classification": "Neutral"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": 0, "trend": "flat", "implied_rate": 3.5},
+                "japan_macro": {"price": 145.0, "change_5d_pct": 0.0},
+                "liquidity_monitor": {
+                    "dxy": {"price": 104.0, "change_5d_pct": 0.0},
+                    "vix": {"price": 18.0, "change_5d_pct": 0.0},
+                    "us10y": {"price": 4.1, "change_5d_pct": 0.0},
+                },
+                "global_stable_flow": 0,
+            },
+            "news": {"macro": {"items": []}, "calendar": {"items": []}},
+            "eth": {
+                "market": {"price": 2400, "rsi_4h": 48, "adx_14": 22, "volume_ratio": 1.1},
+                "stats_24h": {"token_net_flow": -100000, "stablecoin_net_flow": 50000},
+            },
+        }
+
+        snapshot = dp._build_decision_snapshot(
+            "ETH",
+            whale_analysis,
+            {"qlib_score": 0.001, "rank": 2, "p_up_8h": 0.52, "p_down_8h": 0.24, "p_flat_8h": 0.24, "market_data": {"atr_14": 35, "close": 2400}},
+            {"positions": [], "total_equity": 10000},
+            "cycle_test",
+        )
+
+        self.assertEqual(snapshot["onchain_snapshot"]["token_flow_semantic"], "DISTRIBUTION_PRESSURE")
+        self.assertEqual(snapshot["onchain_snapshot"]["stablecoin_flow_semantic"], "BUYING_POWER")
+        self.assertEqual(snapshot["onchain_snapshot"]["flow_composite_semantic"], "MIXED")
+        self.assertFalse(snapshot["decision_ready_features"]["flow_support_long"])
+        self.assertFalse(snapshot["decision_ready_features"]["flow_support_short"])
+        self.assertTrue(snapshot["decision_ready_features"]["flow_signal_mixed"])
+
     def test_a2_only_emits_for_bnb_btc_sol_with_bear_regime_and_rsi_above_60(self):
         def build_snapshot(symbol: str, regime: str, rsi: float, wick_upper: float) -> dict:
             return {

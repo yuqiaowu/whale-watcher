@@ -37,6 +37,20 @@ def _flow_alignment_for_intent(intent: str, features: Dict[str, Any], onchain: D
     if not flow_data_available:
         return "UNAVAILABLE", False
 
+    composite_semantic = str(
+        features.get("flow_composite_semantic")
+        or onchain.get("flow_composite_semantic")
+        or ""
+    ).upper()
+    if composite_semantic == "LONG_SUPPORT":
+        return ("SUPPORT", True) if intent == "LONG" else ("CONFLICT", False)
+    if composite_semantic == "SHORT_SUPPORT":
+        return ("SUPPORT", True) if intent == "SHORT" else ("CONFLICT", False)
+    if composite_semantic == "MIXED":
+        return "NEUTRAL", False
+    if composite_semantic == "NEUTRAL":
+        return "NEUTRAL", False
+
     token_flow = _safe_float(onchain.get("token_net_flow"))
     stablecoin_flow = _safe_float(onchain.get("stablecoin_net_flow"))
     if intent == "LONG":
@@ -74,20 +88,25 @@ def _build_onchain_derivatives_context(snapshot: Dict[str, Any]) -> Dict[str, An
 
     token_flow = _safe_float(onchain.get("token_net_flow"))
     stablecoin_flow = _safe_float(onchain.get("stablecoin_net_flow"))
+    token_semantic = str(onchain.get("token_flow_semantic") or "UNAVAILABLE")
+    stable_semantic = str(onchain.get("stablecoin_flow_semantic") or "UNAVAILABLE")
+    composite_semantic = str(onchain.get("flow_composite_semantic") or "UNAVAILABLE")
     short_liq_ratio = _safe_float(onchain.get("liquidation_short_to_volume_4h"))
     long_liq_ratio = _safe_float(onchain.get("liquidation_long_to_volume_4h"))
     funding_zscore = _safe_float(market.get("funding_zscore"))
     oi_change = _safe_float(market.get("delta_oi_24h_percent"))
 
     onchain_bias = "NEUTRAL"
-    if token_flow <= -5_000_000 and stablecoin_flow >= 0:
-        onchain_bias = "BULLISH_ACCUMULATION"
-    elif token_flow >= 5_000_000 and stablecoin_flow <= 0:
-        onchain_bias = "BEARISH_DISTRIBUTION"
-    elif stablecoin_flow > 0:
-        onchain_bias = "LIQUIDITY_INFLOW"
-    elif stablecoin_flow < 0:
-        onchain_bias = "LIQUIDITY_OUTFLOW"
+    if composite_semantic == "LONG_SUPPORT":
+        onchain_bias = "LONG_SUPPORT"
+    elif composite_semantic == "SHORT_SUPPORT":
+        onchain_bias = "SHORT_SUPPORT"
+    elif composite_semantic == "MIXED":
+        onchain_bias = "MIXED_FLOW"
+    elif stable_semantic == "BUYING_POWER":
+        onchain_bias = "BUYING_POWER"
+    elif stable_semantic == "CAPITAL_WITHDRAWAL":
+        onchain_bias = "CAPITAL_WITHDRAWAL"
 
     derivatives_bias = "NEUTRAL"
     if funding_zscore <= -1.5 and short_liq_ratio >= long_liq_ratio:
@@ -101,7 +120,8 @@ def _build_onchain_derivatives_context(snapshot: Dict[str, Any]) -> Dict[str, An
 
     context_summary = (
         f"onchain={onchain_bias}, derivatives={derivatives_bias}, "
-        f"token_flow={round(token_flow, 2)}, stablecoin_flow={round(stablecoin_flow, 2)}, "
+        f"token_flow={round(token_flow, 2)}[{token_semantic}], "
+        f"stablecoin_flow={round(stablecoin_flow, 2)}[{stable_semantic}], "
         f"funding_z={round(funding_zscore, 2)}, oi_change={round(oi_change, 4)}, "
         f"short_liq_ratio={round(short_liq_ratio, 4)}, long_liq_ratio={round(long_liq_ratio, 4)}"
     )
@@ -110,6 +130,9 @@ def _build_onchain_derivatives_context(snapshot: Dict[str, Any]) -> Dict[str, An
         "onchain_context": {
             "token_net_flow": token_flow,
             "stablecoin_net_flow": stablecoin_flow,
+            "token_flow_semantic": token_semantic,
+            "stablecoin_flow_semantic": stable_semantic,
+            "flow_composite_semantic": composite_semantic,
             "bias": onchain_bias,
         },
         "derivatives_context": {

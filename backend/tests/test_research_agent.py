@@ -23,6 +23,9 @@ class ResearchAgentTests(unittest.TestCase):
             "onchain_snapshot": {
                 "token_net_flow": -6_000_000,
                 "stablecoin_net_flow": 2_500_000,
+                "token_flow_semantic": "DISTRIBUTION_PRESSURE",
+                "stablecoin_flow_semantic": "BUYING_POWER",
+                "flow_composite_semantic": "MIXED",
                 "liquidation_short_to_volume_4h": 0.012,
                 "liquidation_long_to_volume_4h": 0.003,
             },
@@ -37,7 +40,9 @@ class ResearchAgentTests(unittest.TestCase):
                 "macro_horizon": "SWING",
                 "macro_permission": "ALLOW_SHORT",
                 "regime_1d": "BEAR",
-                "flow_support_long": True,
+                "flow_data_available": True,
+                "flow_composite_semantic": "MIXED",
+                "flow_support_long": False,
                 "flow_support_short": False,
             },
         }
@@ -66,7 +71,7 @@ class ResearchAgentTests(unittest.TestCase):
         self.assertIn(result["scenario_label"], {"trend_following", "mean_reversion", "countertrend_breakdown", "wait_no_trade"})
         self.assertEqual(result["macro_permission"], "ALLOW_SHORT")
         self.assertNotIn(result["selected_intent"], {"LONG"})
-        self.assertEqual(result["onchain_context"]["bias"], "BULLISH_ACCUMULATION")
+        self.assertEqual(result["onchain_context"]["bias"], "MIXED_FLOW")
         self.assertEqual(result["derivatives_context"]["bias"], "SHORT_CROWDING")
         self.assertIn("funding_z=", result["context_summary"])
 

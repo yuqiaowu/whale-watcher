@@ -25,6 +25,7 @@ QLOB_FEATURES_PATH = BASE_DIR / "qlib_data" / "multi_coin_features.csv"
 
 TRACKED_SYMBOLS = ["BTC", "ETH", "SOL", "BNB", "DOGE"]
 BLUEPRINT_A2_ENABLED_SYMBOLS = {"BNB-USDT", "BTC-USDT", "SOL-USDT"}
+FLOW_SCHEMA_VERSION = "flow_semantics_v1"
 
 GLOBAL_CONFIG = {
     "timeframe": "4h",
@@ -108,6 +109,62 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
         return float(value)
     except Exception:
         return default
+
+
+def _token_flow_semantic(token_flow: float, flow_data_available: bool) -> str:
+    if not flow_data_available:
+        return "UNAVAILABLE"
+    if token_flow > 0:
+        return "ACCUMULATION_HINT"
+    if token_flow < 0:
+        return "DISTRIBUTION_PRESSURE"
+    return "NEUTRAL"
+
+
+def _stable_flow_semantic(stable_flow: float, flow_data_available: bool) -> str:
+    if not flow_data_available:
+        return "UNAVAILABLE"
+    if stable_flow > 0:
+        return "BUYING_POWER"
+    if stable_flow < 0:
+        return "CAPITAL_WITHDRAWAL"
+    return "NEUTRAL"
+
+
+def _build_flow_semantics(token_flow: float, stable_flow: float, flow_data_available: bool) -> Dict[str, Any]:
+    token_semantic = _token_flow_semantic(token_flow, flow_data_available)
+    stable_semantic = _stable_flow_semantic(stable_flow, flow_data_available)
+    long_votes = 0
+    short_votes = 0
+    if token_semantic == "ACCUMULATION_HINT":
+        long_votes += 1
+    elif token_semantic == "DISTRIBUTION_PRESSURE":
+        short_votes += 1
+    if stable_semantic == "BUYING_POWER":
+        long_votes += 1
+    elif stable_semantic == "CAPITAL_WITHDRAWAL":
+        short_votes += 1
+
+    if not flow_data_available:
+        composite = "UNAVAILABLE"
+    elif long_votes and short_votes:
+        composite = "MIXED"
+    elif long_votes:
+        composite = "LONG_SUPPORT"
+    elif short_votes:
+        composite = "SHORT_SUPPORT"
+    else:
+        composite = "NEUTRAL"
+
+    return {
+        "schema_version": FLOW_SCHEMA_VERSION,
+        "token_semantic": token_semantic,
+        "stablecoin_semantic": stable_semantic,
+        "composite_semantic": composite,
+        "long_support": composite == "LONG_SUPPORT",
+        "short_support": composite == "SHORT_SUPPORT",
+        "mixed_signal": composite == "MIXED",
+    }
 
 
 def _has_numeric_value(value: Any) -> bool:
@@ -381,6 +438,7 @@ def _build_decision_snapshot(
     token_flow = _safe_float(raw_token_flow)
     stable_flow = _safe_float(raw_stable_flow)
     flow_data_available = _has_numeric_value(raw_token_flow) or _has_numeric_value(raw_stable_flow)
+    flow_semantics = _build_flow_semantics(token_flow, stable_flow, flow_data_available)
     qlib_score = _safe_float(qlib_coin.get("qlib_relative_score_8h"), _safe_float(qlib_coin.get("qlib_score")))
     qlib_percentile = _safe_float(qlib_coin.get("qlib_percentile"))
     p_up_8h = _safe_float(qlib_coin.get("p_up_8h"))
@@ -423,6 +481,11 @@ def _build_decision_snapshot(
         "token_net_flow": token_flow,
         "stablecoin_net_flow": stable_flow,
         "flow_data_available": flow_data_available,
+        "flow_schema_version": flow_semantics["schema_version"],
+        "token_flow_semantic": flow_semantics["token_semantic"],
+        "stablecoin_flow_semantic": flow_semantics["stablecoin_semantic"],
+        "flow_composite_semantic": flow_semantics["composite_semantic"],
+        "flow_signal_mixed": flow_semantics["mixed_signal"],
         "sentiment_score": _safe_float(stats24.get("sentiment_score")),
         "liquidation_long_usd": _safe_float(stats24.get("liquidation_long_usd")),
         "liquidation_short_usd": _safe_float(stats24.get("liquidation_short_usd")),
@@ -455,8 +518,13 @@ def _build_decision_snapshot(
         "usd_strength_flag": "USD_STRENGTH" in (macro_snapshot.get("key_events") or []) or macro_snapshot.get("dxy_trend") == "UP",
         "yen_stress_flag": "YEN_STRESS" in (macro_snapshot.get("key_events") or []) or macro_snapshot.get("usdjpy_trend") == "DOWN",
         "flow_data_available": flow_data_available,
-        "flow_support_long": flow_data_available and (token_flow > 0 or stable_flow > 0),
-        "flow_support_short": flow_data_available and (token_flow < 0 or stable_flow < 0),
+        "flow_schema_version": flow_semantics["schema_version"],
+        "flow_token_semantic": flow_semantics["token_semantic"],
+        "flow_stablecoin_semantic": flow_semantics["stablecoin_semantic"],
+        "flow_composite_semantic": flow_semantics["composite_semantic"],
+        "flow_signal_mixed": flow_semantics["mixed_signal"],
+        "flow_support_long": flow_semantics["long_support"],
+        "flow_support_short": flow_semantics["short_support"],
         "qlib_relative_score_8h": qlib_score,
         "qlib_percentile_8h": qlib_percentile,
         "p_up_8h": p_up_8h,
