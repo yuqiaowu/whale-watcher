@@ -1,39 +1,7 @@
 {
-  "total_equity": 95106.73,
-  "cash": 91277.46265999999,
-  "positions": [
-    {
-      "symbol": "DOGE",
-      "instId": "DOGE-USDT-SWAP",
-      "leverage": 5,
-      "type": "long",
-      "entryPrice": 0.09576,
-      "currentPrice": 0.09577,
-      "pnl": 1.99,
-      "pnlPercent": 0.05,
-      "amount": 198.67,
-      "margin": 3804.536,
-      "stopLoss": 0.0935762484440207,
-      "takeProfit": 0.098,
-      "name": "DOGE",
-      "invalidation_rule": {
-        "zh": "\u82e5\u4ef7\u683c\u8dcc\u7834$0.0940\uff08\u6b62\u635f\u4f4d\uff09\uff0c\u6216\u8d44\u91d1\u8d39\u7387Z-Score\u56de\u5347\u81f3-100%\u4ee5\u4e0a\uff08\u7a7a\u5934\u60c5\u7eea\u7f13\u89e3\uff09\uff0c\u5219\u591a\u5934\u8f67\u7a7a\u8bba\u70b9\u5931\u6548\uff0c\u5e94\u7acb\u5373\u79bb\u573a\u3002",
-        "en": "If price breaks below $0.0940 (SL level), or funding Z-Score recovers above -100% (short sentiment eases), the long squeeze thesis is invalidated, exit immediately.",
-        "conditions": [
-          {
-            "metric": "price",
-            "operator": "<=",
-            "value": 0.094
-          },
-          {
-            "metric": "funding_zscore",
-            "operator": ">=",
-            "value": -100
-          }
-        ]
-      }
-    }
-  ],
+  "total_equity": 95110.53,
+  "cash": 95091.51,
+  "positions": [],
   "initial_equity": 3905.0,
   "start_time": "2026-02-22T00:00:00Z"
 }
