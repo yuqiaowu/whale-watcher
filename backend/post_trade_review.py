@@ -1,10 +1,11 @@
 import copy
 import json
+import os
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Set
 
 from db_client import db
-from llm_client import call_llm_json
+from llm_client import call_llm_json_with_audit
 
 
 ALLOWED_RESULT_LABELS = {
@@ -294,32 +295,60 @@ def _llm_refine_evaluation(replay_context: Dict[str, Any], base_evaluation: Dict
         f"ALLOWED_IMPROVEMENT_TARGETS: {json.dumps(sorted(ALLOWED_IMPROVEMENT_TARGETS))}\n"
         f"INPUT: {json.dumps(payload, ensure_ascii=False)}"
     )
-    result = call_llm_json(
+    result, llm_audit = call_llm_json_with_audit(
         prompt,
         system_prompt="Use fixed reasoning order: replay facts -> rule -> research -> risk -> execution -> final attribution. Return JSON only.",
         temperature=0.0,
         enable_env_flag="ENABLE_EVALUATION_LLM",
     )
     if not isinstance(result, dict):
-        return base_evaluation
+        merged = copy.deepcopy(base_evaluation)
+        merged["provenance"] = {
+            "generation_mode": "deterministic_only",
+            "llm_enabled": os.getenv("ENABLE_EVALUATION_LLM", "").strip() == "1",
+            "llm_attempted": os.getenv("ENABLE_EVALUATION_LLM", "").strip() == "1",
+            "llm_applied": False,
+            "llm_override_fields": [],
+            "llm_audit": llm_audit,
+        }
+        return merged
 
     merged = copy.deepcopy(base_evaluation)
+    override_fields = []
     result_label = result.get("result_label")
     if isinstance(result_label, str) and result_label in ALLOWED_RESULT_LABELS:
+        if merged.get("result_label") != result_label:
+            override_fields.append("result_label")
         merged["result_label"] = result_label
 
     primary_cause = result.get("primary_cause")
     if isinstance(primary_cause, str) and primary_cause in ALLOWED_PRIMARY_CAUSES:
+        if merged.get("primary_cause") != primary_cause:
+            override_fields.append("primary_cause")
         merged["primary_cause"] = primary_cause
 
     targets = result.get("improvement_targets")
     if isinstance(targets, list):
         safe_targets = [t for t in targets if isinstance(t, str) and t in ALLOWED_IMPROVEMENT_TARGETS]
+        if merged.get("improvement_targets") != list(dict.fromkeys(safe_targets)):
+            override_fields.append("improvement_targets")
         merged["improvement_targets"] = list(dict.fromkeys(safe_targets))
 
     improvement_note = result.get("improvement_note")
     if isinstance(improvement_note, str) and improvement_note.strip():
-        merged["improvement_note"] = improvement_note.strip()
+        cleaned = improvement_note.strip()
+        if merged.get("improvement_note") != cleaned:
+            override_fields.append("improvement_note")
+        merged["improvement_note"] = cleaned
+
+    merged["provenance"] = {
+        "generation_mode": "llm_refined" if override_fields else "llm_noop",
+        "llm_enabled": os.getenv("ENABLE_EVALUATION_LLM", "").strip() == "1",
+        "llm_attempted": os.getenv("ENABLE_EVALUATION_LLM", "").strip() == "1",
+        "llm_applied": bool(override_fields),
+        "llm_override_fields": sorted(set(override_fields)),
+        "llm_audit": llm_audit,
+    }
 
     return merged
 

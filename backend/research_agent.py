@@ -3,7 +3,7 @@ import json
 from typing import Any, Dict, List, Optional, Tuple
 
 from db_client import db
-from llm_client import call_llm_json
+from llm_client import call_llm_json_with_audit
 
 
 ALLOWED_SELECTED_INTENTS = {"LONG", "SHORT", "NO_TRADE", "WAIT_FOR_CONFIRMATION"}
@@ -517,7 +517,7 @@ def _llm_refine_research_output(
         f"INPUT: {json.dumps(payload, ensure_ascii=False)}"
     )
     llm_enabled = os.getenv("ENABLE_RESEARCH_LLM", "").strip() == "1"
-    result = call_llm_json(
+    result, llm_audit = call_llm_json_with_audit(
         prompt,
         system_prompt="Use fixed reasoning order: macro -> technical -> onchain -> conflict -> continuity -> final output.",
         temperature=0.0,
@@ -531,6 +531,7 @@ def _llm_refine_research_output(
             "llm_attempted": llm_enabled,
             "llm_applied": False,
             "llm_override_fields": [],
+            "llm_audit": llm_audit,
         }
         return merged
 
@@ -593,6 +594,7 @@ def _llm_refine_research_output(
         "llm_attempted": llm_enabled,
         "llm_applied": bool(override_fields),
         "llm_override_fields": sorted(set(override_fields)),
+        "llm_audit": llm_audit,
     }
 
     return merged

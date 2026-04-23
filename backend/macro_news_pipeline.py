@@ -1,7 +1,8 @@
 import json
+import os
 from typing import Any, Dict, List
 
-from llm_client import call_llm_json
+from llm_client import call_llm_json_with_audit
 
 
 def _safe_float(value: Any, default: float = 0.0) -> float:
@@ -213,8 +214,17 @@ def _deterministic_classification(fear_greed: Dict[str, Any], macro_data: Dict[s
 
 
 def _llm_summary_override(classification: Dict[str, Any], headlines: List[str]) -> Dict[str, Any]:
+    llm_enabled = os.getenv("ENABLE_MACRO_NEWS_LLM", "").strip() == "1"
     if not headlines:
-        return classification
+        merged = dict(classification)
+        merged["provenance"] = {
+            "generation_mode": "deterministic_only",
+            "llm_enabled": llm_enabled,
+            "llm_attempted": False,
+            "llm_applied": False,
+            "llm_override_fields": [],
+        }
+        return merged
     few_shot_examples = [
         {
             "headline": "Powell says rates may stay higher for longer as inflation remains sticky",
@@ -264,7 +274,7 @@ def _llm_summary_override(classification: Dict[str, Any], headlines: List[str]) 
         f"CURRENT_CLASSIFICATION: {json.dumps(classification, ensure_ascii=False)}\n"
         f"CANDIDATE_TAGS: {json.dumps(classification['key_tags'], ensure_ascii=False)}"
     )
-    result = call_llm_json(
+    result, llm_audit = call_llm_json_with_audit(
         prompt,
         system_prompt=(
             "You are a constrained macro-news classifier. "
@@ -275,18 +285,41 @@ def _llm_summary_override(classification: Dict[str, Any], headlines: List[str]) 
         enable_env_flag="ENABLE_MACRO_NEWS_LLM",
     )
     if not isinstance(result, dict):
-        return classification
+        merged = dict(classification)
+        merged["provenance"] = {
+            "generation_mode": "deterministic_only",
+            "llm_enabled": llm_enabled,
+            "llm_attempted": llm_enabled,
+            "llm_applied": False,
+            "llm_override_fields": [],
+            "llm_audit": llm_audit,
+        }
+        return merged
+
     merged = dict(classification)
+    override_fields: List[str] = []
     for key in ["news_summary", "brief_rationale", "market_impact", "impact_horizon", "crypto_relevance"]:
         value = result.get(key)
         if isinstance(value, str) and value:
+            if merged.get(key) != value:
+                override_fields.append(key)
             merged[key] = value
     tags = result.get("key_tags")
     if isinstance(tags, list) and tags:
         filtered_tags = [tag for tag in tags if isinstance(tag, str) and tag in classification["key_tags"]]
         if filtered_tags:
+            if sorted(set(filtered_tags)) != merged.get("key_tags"):
+                override_fields.append("key_tags")
             merged["key_tags"] = sorted(set(filtered_tags))
             merged["key_events"] = merged["key_tags"]
+    merged["provenance"] = {
+        "generation_mode": "llm_refined" if override_fields else "llm_noop",
+        "llm_enabled": llm_enabled,
+        "llm_attempted": llm_enabled,
+        "llm_applied": bool(override_fields),
+        "llm_override_fields": sorted(set(override_fields)),
+        "llm_audit": llm_audit,
+    }
     return merged
 
 
