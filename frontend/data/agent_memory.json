@@ -1,22 +1,5 @@
 [
   {
-    "id": "DOGE_2026-02-28 04:08:35",
-    "timestamp": "2026-02-28 04:08:35",
-    "symbol": "DOGE",
-    "action": "open_long",
-    "entry_price": "MARKET",
-    "reason": {
-      "zh": "\u57fa\u4e8eSAFE_MR\u5747\u503c\u56de\u5f52\u673a\u4f1a\uff1a1) RSI 40.05\u63a5\u8fd1\u8d85\u5356\uff1b2) \u8d44\u91d1\u8d39\u7387\u8d1f(-0.0086%)\uff0c\u96f6\u552e\u505a\u7a7a\u62e5\u6324\uff0c\u5b58\u5728\u8f67\u7a7a\u71c3\u6599\uff1b3) \u7206\u4ed3\u6bd4\u5e73\u8861\uff08\u65e0\u6781\u7aef\u591a\u5934\u8e29\u8e0f\uff09\uff1b4) Qlib\u6392\u540d\u7b2c\u4e94\u4f46Z-Score\u5f02\u5e38\uff08funding_z -1.56\uff09\u7edf\u8ba1\u663e\u8457\u3002\u7b49\u5f85\u53f3\u4fa7\u786e\u8ba4\uff1a\u4ef7\u683c\u7a81\u78344H\u524d\u9ad8$0.0935\u3002",
-      "en": "Based on SAFE_MR mean reversion: 1) RSI 40.05 near oversold; 2) Funding negative (-0.0086%), retail shorts crowded, squeeze fuel present; 3) Balanced liquidation ratio (no extreme long flush); 4) Qlib rank #5 but Z-Score anomaly (funding_z -1.56) statistically significant. Await right-side confirmation: price break above 4H prior high $0.0935."
-    },
-    "context": {
-      "rsi": 50,
-      "adx": 20,
-      "whale_flow": "?"
-    },
-    "outcome": "Logged from DB"
-  },
-  {
     "id": "SOL_2026-02-28 20:09:23",
     "timestamp": "2026-02-28 20:09:23",
     "symbol": "SOL",
@@ -1038,6 +1021,27 @@
       "funding_rate": 6.64074112137e-05,
       "bb_width": "?",
       "bb_trend": "DOWN"
+    },
+    "outcome": null
+  },
+  {
+    "id": "DOGE_1776917490",
+    "timestamp": "2026-04-23T12:11:30.516810",
+    "symbol": "DOGE",
+    "action": "open_long",
+    "entry_price": 0.09555,
+    "leverage": 1,
+    "reason": {
+      "zh": "1) \u4e3a\u4f55\u662f\u6b64\u5e01\uff1a\u6280\u672f\u9762RSI=49.09\u4e2d\u6027\uff0c\u4e0a/\u4e0b\u5f71\u7ebf\u6bd4\u738747%/40%\u663e\u793a\u591a\u7a7a\u535a\u5f08\uff0c\u4f46\u8d44\u91d1\u8d39\u7387-0.0072%\u4e14Z-Score -215.9%\u6781\u7aef\u8d1f\u503c\uff0c\u663e\u793a\u7a7a\u5934\u8fc7\u5ea6\u62e5\u6324\uff1b\u7206\u4ed3\u591a\u7a7a\u6bd41.01\u5e73\u8861\uff0c\u4f46\u7a7a\u5934\u53ef\u80fd\u88ab\u6324\u538b\u3002QLib\u5206\u65700.0082\u6392\u540d\u7b2c\u4e00\uff0c\u76f8\u5bf9\u5f3a\u52bf\u30022) \u4e3a\u4f55\u662f\u73b0\u5728\uff1a\u4ef7\u683c$0.0956\u63a5\u8fd1\u5747\u7ebf\uff08\u504f\u79bb-0.47%\uff09\uff0c\u5728\u9707\u8361\u4e2d\u7a7a\u5934\u6781\u7aef\u60c5\u7eea\u53ef\u80fd\u89e6\u53d1\u8f67\u7a7a\u53cd\u5f39\u30023) \u624b\u52a8\u76c8\u4e8f\u6bd4(RRR)\u8ba1\u7b97\uff1a\u5165\u573a\u4ef7$0.0956\uff0c\u6b62\u635f\u4ef7$0.0940\uff08\u98ce\u9669-1.67%\uff09\uff0c\u6b62\u76c8\u4ef7$0.0980\uff08\u76c8\u5229+2.51%\uff09\uff0c\u76c8\u4e8f\u6bd4=2.51%/1.67%=1.50\u30024) \u5355\u7b14\u98ce\u9669\u5360NAV\u6bd4\u4f8b\uff1a\u98ce\u9669$19022.68*1.67%=$317.68\uff0c\u5360NAV $95113.38\u76840.33% <= 2%\u3002",
+      "en": "1) Why this coin: Technicals RSI=49.09 neutral, wick ratio 47%/40% shows long-short\u535a\u5f08, but funding -0.0072% and Z-Score -215.9% extreme negative, showing overcrowded shorts; liquidation ratio 1.01 balanced, but shorts may be squeezed. QLib score 0.0082 rank 1, relative strength. 2) Why now: Price $0.0956 near SMA (deviation -0.47%), in oscillation extreme short sentiment may trigger squeeze\u53cd\u5f39. 3) RRR Math: Entry $0.0956, SL $0.0940 (risk -1.67%), TP $0.0980 (profit +2.51%), RRR=2.51%/1.67%=1.50. 4) NAV Risk: Risk $19022.68*1.67%=$317.68, vs NAV $95113.38 is 0.33% <= 2%."
+    },
+    "context": {
+      "rsi": 48.81913593313957,
+      "adx": 13.633704537501078,
+      "whale_flow": "?",
+      "funding_rate": -0.000143667454672,
+      "bb_width": "?",
+      "bb_trend": "UP"
     },
     "outcome": null
   }
