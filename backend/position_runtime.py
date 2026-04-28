@@ -411,6 +411,8 @@ def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str,
         execution = record.get("execution") or {}
         if risk_review.get("approved") is not True:
             continue
+        if record.get("positionState") == "closed" or execution.get("order_status") == "CLOSED":
+            continue
         if execution.get("execution_action") not in {"OPEN_LONG", "OPEN_SHORT", "START_GRID_BOT"}:
             continue
 

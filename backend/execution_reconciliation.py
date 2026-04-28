@@ -237,6 +237,8 @@ def run_execution_reconciliation() -> Dict[str, Any]:
         risk_review = record.get("riskReview") or {}
         if risk_review.get("approved") is not True:
             continue
+        if record.get("positionState") == "closed" or execution.get("order_status") == "CLOSED":
+            continue
         if execution.get("execution_action") == "START_GRID_BOT":
             before = {
                 "order_status": execution.get("order_status"),

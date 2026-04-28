@@ -150,6 +150,49 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(record["execution"]["filled_stop_loss"], 2450.0)
         self.assertEqual(record["execution"]["filled_take_profit"], 2600.0)
 
+    def test_closed_record_is_not_reopened_by_later_live_position_sync(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "old_btc",
+                    "cycleId": "cycle_1",
+                    "symbol": "BTC-USDT",
+                    "created_at": "2026-04-27T00:00:00Z",
+                    "positionState": "closed",
+                    "riskReview": {"approved": True, "final_intent": "SHORT"},
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "CLOSED",
+                        "sync_status": "CLOSED",
+                        "closed_trade_id": "old_trade",
+                        "history": [],
+                    },
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "BTC",
+                        "type": "short",
+                        "entryPrice": 79000,
+                        "amount": 0.0036,
+                        "stopLoss": 79500,
+                        "takeProfit": 77500,
+                    }
+                ]
+            },
+            "trade_history": [],
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db):
+            result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 0)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["positionState"], "closed")
+        self.assertEqual(record["execution"]["order_status"], "CLOSED")
+        self.assertEqual(record["execution"]["history"], [])
+
     def test_marks_closed_trade_as_closed(self):
         store = {
             "trade_decision_records": [
