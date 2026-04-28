@@ -1,9 +1,12 @@
 import os
 import sys
+import tempfile
 import unittest
 from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
+
+import pandas as pd
 
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
@@ -32,6 +35,44 @@ class FakeExecutor:
 
 
 class DeterministicPipelineE2ETests(unittest.TestCase):
+    def test_chart_feature_context_backfills_adx_delta_when_csv_lacks_adx(self):
+        rows = []
+        base_time = pd.Timestamp("2026-01-01 00:00:00")
+        for idx in range(90):
+            close = 2400 + ((idx % 12) - 6) * 8
+            rows.append(
+                {
+                    "datetime": base_time + pd.Timedelta(hours=4 * idx),
+                    "instrument": "ETH",
+                    "open": close - 4,
+                    "high": close + 18,
+                    "low": close - 18,
+                    "close": close,
+                    "volume": 1000000 + idx * 1000,
+                    "macd": 0.1,
+                    "macd_signal": 0.05,
+                    "macd_hist": 0.05,
+                    "atr_14": 35,
+                    "bb_width_20": 0.06,
+                    "bb_pos_20": 0.5,
+                    "rsi_14": 50,
+                    "volume_usd_4h": 1000000 + idx * 1000,
+                }
+            )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            csv_path = Path(tmpdir) / "multi_coin_features.csv"
+            pd.DataFrame(rows).to_csv(csv_path, index=False)
+
+            with patch.object(dp, "QLOB_FEATURES_PATH", csv_path):
+                context = dp._load_chart_feature_context_map()
+
+        eth_context = context["ETH"]
+        self.assertTrue(eth_context["grid_preflight_data_ok"])
+        self.assertEqual([], eth_context["grid_preflight_missing_fields"])
+        self.assertGreater(eth_context["adx_14_4h"], 0)
+        self.assertIsInstance(eth_context["adx_delta"], float)
+
     def test_build_decision_snapshot_maps_flow_into_fixed_semantics(self):
         whale_analysis = {
             "fear_greed": {"value": 50, "value_classification": "Neutral"},

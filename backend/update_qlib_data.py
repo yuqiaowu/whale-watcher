@@ -17,7 +17,7 @@ SYMBOLS = ["BTC", "ETH", "SOL", "BNB", "DOGE"]
 SCHEMA_COLUMNS = [
     'datetime', 'instrument', 'open', 'high', 'low', 'close', 'volume',
     'ret', 'log_return', 'ma_5', 'ma_20', 'ma_60', 'ma_cross', 'momentum_12',
-    'macd', 'macd_signal', 'macd_hist', 'atr_14', 'bb_width_20', 'bb_pos_20',
+    'macd', 'macd_signal', 'macd_hist', 'atr_14', 'adx_14', 'bb_width_20', 'bb_pos_20',
     'volatility_20', 'rsi_14', 'volume_ma_20', 'rel_volume_20', 'price_position_20',
     'funding_rate', 'funding_rate_zscore', 'open_interest', 'oi_change', 'oi_rsi',
     'btc_corr_24h', 'natr_14', 'buy_stars', 'sell_stars',
@@ -147,6 +147,23 @@ def fetch_and_process_missing_data(start_date):
         tr = pd.concat([tr0, tr1, tr2], axis=1).max(axis=1)
         df_feats['atr_14'] = tr.rolling(14).mean()
         df_feats['natr_14'] = (df_feats['atr_14'] / df_feats['close']) * 100
+
+        up_move = df_feats['high'] - df_feats['high'].shift(1)
+        down_move = df_feats['low'].shift(1) - df_feats['low']
+        positive_dm = pd.Series(
+            np.where((up_move > down_move) & (up_move > 0), up_move, 0.0),
+            index=df_feats.index,
+        )
+        negative_dm = pd.Series(
+            np.where((down_move > up_move) & (down_move > 0), down_move, 0.0),
+            index=df_feats.index,
+        )
+        tr_ema = tr.ewm(alpha=1 / 14, adjust=False).mean().replace(0, np.nan)
+        positive_di = 100 * positive_dm.ewm(alpha=1 / 14, adjust=False).mean() / tr_ema
+        negative_di = 100 * negative_dm.ewm(alpha=1 / 14, adjust=False).mean() / tr_ema
+        di_sum = (positive_di + negative_di).replace(0, np.nan)
+        dx = 100 * (positive_di - negative_di).abs() / di_sum
+        df_feats['adx_14'] = dx.ewm(alpha=1 / 14, adjust=False).mean()
         
         # Bollinger
         df_feats['ma_20_std'] = df_feats['close'].rolling(20).std()

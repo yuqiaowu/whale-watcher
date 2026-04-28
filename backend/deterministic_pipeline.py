@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from zoneinfo import ZoneInfo
 
+import numpy as np
 import pandas as pd
 
 from db_client import db
@@ -334,6 +335,39 @@ def _compute_volume_confirmed_levels(
     return pd.Series(support_values, index=lows.index), pd.Series(resistance_values, index=highs.index)
 
 
+def _compute_adx_series(frame: pd.DataFrame, period: int = 14) -> pd.Series:
+    required = {"high", "low", "close"}
+    if not required.issubset(frame.columns):
+        return pd.Series(pd.NA, index=frame.index)
+
+    high = pd.to_numeric(frame["high"], errors="coerce")
+    low = pd.to_numeric(frame["low"], errors="coerce")
+    close = pd.to_numeric(frame["close"], errors="coerce")
+
+    tr0 = (high - low).abs()
+    tr1 = (high - close.shift(1)).abs()
+    tr2 = (low - close.shift(1)).abs()
+    tr = pd.concat([tr0, tr1, tr2], axis=1).max(axis=1)
+
+    up_move = high - high.shift(1)
+    down_move = low.shift(1) - low
+    positive_dm = pd.Series(
+        np.where((up_move > down_move) & (up_move > 0), up_move, 0.0),
+        index=frame.index,
+    )
+    negative_dm = pd.Series(
+        np.where((down_move > up_move) & (down_move > 0), down_move, 0.0),
+        index=frame.index,
+    )
+
+    tr_ema = tr.ewm(alpha=1 / period, adjust=False).mean().replace(0, np.nan)
+    positive_di = 100 * positive_dm.ewm(alpha=1 / period, adjust=False).mean() / tr_ema
+    negative_di = 100 * negative_dm.ewm(alpha=1 / period, adjust=False).mean() / tr_ema
+    di_sum = (positive_di + negative_di).replace(0, np.nan)
+    dx = 100 * (positive_di - negative_di).abs() / di_sum
+    return dx.ewm(alpha=1 / period, adjust=False).mean()
+
+
 def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
     if not QLOB_FEATURES_PATH.exists():
         return {}
@@ -354,8 +388,13 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
         frame["bb_pct_b"] = frame["bb_pos_20"] if "bb_pos_20" in frame.columns else 0.5
         frame["bb_mid_20"] = frame["close"].rolling(20, min_periods=20).mean()
         frame["bb_mid_slope_pct"] = (frame["bb_mid_20"] - frame["bb_mid_20"].shift(3)) / frame["bb_mid_20"].replace(0, pd.NA)
-        if "adx_14" not in frame.columns:
-            frame["adx_14"] = pd.NA
+        if "adx_14" not in frame.columns or frame["adx_14"].isna().all():
+            frame["adx_14"] = _compute_adx_series(frame)
+        else:
+            frame["adx_14"] = pd.to_numeric(frame["adx_14"], errors="coerce")
+            missing_adx = frame["adx_14"].isna()
+            if missing_adx.any():
+                frame.loc[missing_adx, "adx_14"] = _compute_adx_series(frame).loc[missing_adx]
         frame["adx_delta"] = frame["adx_14"] - frame["adx_14"].shift(3)
         close_mean_7 = frame["close"].rolling(7, min_periods=7).mean()
         frame["recent_close_drift_pct"] = (frame["close"] - frame["close"].shift(6)) / close_mean_7.replace(0, pd.NA)
