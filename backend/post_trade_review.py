@@ -59,6 +59,11 @@ def replay_builder(record: Dict[str, Any], matched_trade: Optional[Dict[str, Any
         "decisionId": record.get("decisionId"),
         "symbol": record.get("symbol"),
         "created_at": record.get("created_at"),
+        "strategy_family": (
+            (record.get("riskReview") or {}).get("strategy_family")
+            or (record.get("researchOutput") or {}).get("strategy_family")
+            or (record.get("execution") or {}).get("strategy_family")
+        ),
         "snapshot": record.get("snapshot", {}),
         "candidate": record.get("candidate", {}),
         "ruleEvaluation": record.get("ruleEvaluation", {}),
@@ -82,6 +87,7 @@ def _build_traceability_context(replay_context: Dict[str, Any]) -> Dict[str, Any
     proposed_trigger_sources = [str(item.get("trigger_source") or "") for item in proposals if item.get("trigger_source")]
 
     return {
+        "strategy_family": replay_context.get("strategy_family"),
         "candidate_structure": (
             research_output.get("candidate_structure")
             or rule_evaluation.get("candidate_structure")
@@ -104,6 +110,7 @@ def attribution_rules(replay_context: Dict[str, Any]) -> Dict[str, Any]:
     risk_review = replay_context.get("riskReview", {}) or {}
     execution = replay_context.get("execution", {}) or {}
     matched_trade = replay_context.get("matched_trade")
+    strategy_family = replay_context.get("strategy_family") or "DIRECTIONAL"
 
     if not rule_evaluation.get("passed"):
         return {
@@ -183,7 +190,11 @@ def attribution_rules(replay_context: Dict[str, Any]) -> Dict[str, Any]:
                 "execution": 0.0,
             },
             "improvement_targets": [],
-            "improvement_note": "execution submitted or simulated; no closed trade matched yet",
+            "improvement_note": (
+                "grid bot submitted or simulated; review should defer to grid runtime metrics"
+                if strategy_family == "GRID"
+                else "execution submitted or simulated; no closed trade matched yet"
+            ),
         }
 
     pnl = float(matched_trade.get("pnl", 0.0))

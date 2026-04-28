@@ -6,13 +6,13 @@ from db_client import db
 from llm_client import call_llm_json_with_audit
 
 
-ALLOWED_SELECTED_INTENTS = {"LONG", "SHORT", "NO_TRADE", "WAIT_FOR_CONFIRMATION"}
+ALLOWED_SELECTED_INTENTS = {"LONG", "SHORT", "GRID_NEUTRAL", "NO_TRADE", "WAIT_FOR_CONFIRMATION"}
 ALLOWED_MACRO_BIAS = {"LONG_BIAS", "SHORT_BIAS", "NEUTRAL"}
 ALLOWED_MACRO_HORIZON = {"INTRADAY", "SWING", "MULTI_DAY", "NOISE"}
 ALLOWED_MACRO_MODE = {"RISK_ON", "RISK_OFF", "EVENT_DRIVEN", "MIXED", "NO_CLEAR_IMPACT"}
 ALLOWED_MACRO_PERMISSION = {"ALLOW_LONG", "ALLOW_SHORT", "ALLOW_BOTH", "ALLOW_NEITHER"}
 ALLOWED_CONFLICT_STATE = {"none", "candidate_conflict", "macro_vs_onchain", "macro_vs_technical"}
-ALLOWED_SCENARIO_LABELS = {"trend_following", "mean_reversion", "countertrend_rebound", "trend_breakdown", "wait_no_trade"}
+ALLOWED_SCENARIO_LABELS = {"trend_following", "range_rotation", "countertrend_rebound", "trend_breakdown", "wait_no_trade"}
 ALLOWED_ALIGNMENT = {"SUPPORT", "NEUTRAL", "CONFLICT", "UNAVAILABLE"}
 ALLOWED_TECH = {"STRONG", "WEAK", "NONE"}
 ALLOWED_STRENGTH = {"HIGH", "MEDIUM", "LOW"}
@@ -42,6 +42,12 @@ def _flow_alignment_for_intent(intent: str, features: Dict[str, Any], onchain: D
         or onchain.get("flow_composite_semantic")
         or ""
     ).upper()
+    if intent == "GRID_NEUTRAL":
+        if composite_semantic in {"LONG_SUPPORT", "SHORT_SUPPORT"}:
+            return "CONFLICT", False
+        if composite_semantic in {"MIXED", "NEUTRAL"}:
+            return "NEUTRAL", False
+        return "UNAVAILABLE", False
     if composite_semantic == "LONG_SUPPORT":
         return ("SUPPORT", True) if intent == "LONG" else ("CONFLICT", False)
     if composite_semantic == "SHORT_SUPPORT":
@@ -80,6 +86,10 @@ def _find_previous_research_output(symbol: str, cycle_id: str) -> Optional[Dict[
         if isinstance(research, dict) and research:
             return research
     return None
+
+
+def _strategy_family_for_intent(intent: str) -> str:
+    return "GRID" if intent == "GRID_NEUTRAL" else "DIRECTIONAL"
 
 
 def _build_onchain_derivatives_context(snapshot: Dict[str, Any]) -> Dict[str, Any]:
@@ -195,6 +205,7 @@ def _deterministic_research_output(
 
     long_candidates = [c for c in approved_candidates if c.get("decision_intent") == "LONG"]
     short_candidates = [c for c in approved_candidates if c.get("decision_intent") == "SHORT"]
+    grid_candidates = [c for c in approved_candidates if c.get("decision_intent") == "GRID_NEUTRAL"]
     technical_confirmation = "STRONG" if _safe_float(market.get("adx_14"), 0.0) >= 25 else "WEAK"
 
     def _scenario_for_candidate(candidate: Dict[str, Any]) -> Dict[str, Any]:
@@ -209,7 +220,9 @@ def _deterministic_research_output(
             "event_component": 0.0,
         }
 
-        if macro_permission == "ALLOW_SHORT" and intent == "LONG":
+        if intent == "GRID_NEUTRAL":
+            macro_alignment = "CONFLICT" if macro_mode == "EVENT_DRIVEN" else "NEUTRAL"
+        elif macro_permission == "ALLOW_SHORT" and intent == "LONG":
             macro_alignment = "CONFLICT"
         elif macro_permission == "ALLOW_LONG" and intent == "SHORT":
             macro_alignment = "CONFLICT"
@@ -219,18 +232,24 @@ def _deterministic_research_output(
             macro_alignment = "CONFLICT"
         else:
             macro_alignment = "SUPPORT"
-        if macro_alignment == "CONFLICT":
+        if intent == "GRID_NEUTRAL":
+            scenario_label = "range_rotation"
+        elif macro_alignment == "CONFLICT":
             scenario_label = "countertrend_rebound" if intent == "LONG" else "trend_breakdown"
         elif technical_confirmation == "STRONG" and flow_support:
             scenario_label = "trend_following"
         else:
-            scenario_label = "mean_reversion"
+            scenario_label = "range_rotation"
 
         score = 0.0
         support_reasons: List[str] = []
         risk_reasons: List[str] = []
         rrr = _safe_float(candidate.get("rrr"), 0.0)
-        if rrr >= 2.2:
+        if intent == "GRID_NEUTRAL":
+            breakdown["rrr_component"] = 0.10
+            score += breakdown["rrr_component"]
+            support_reasons.append("grid_inventory_rotation")
+        elif rrr >= 2.2:
             breakdown["rrr_component"] = 0.20
             score += breakdown["rrr_component"]
             support_reasons.append("strong_rrr")
@@ -255,7 +274,14 @@ def _deterministic_research_output(
             score += breakdown["macro_component"]
             risk_reasons.append("macro_conflict")
 
-        if technical_confirmation == "STRONG":
+        if intent == "GRID_NEUTRAL":
+            breakdown["technical_component"] = 0.10 if _safe_float(features.get("p_flat_8h")) >= 0.55 else -0.10
+            score += breakdown["technical_component"]
+            if breakdown["technical_component"] > 0:
+                support_reasons.append("range_regime_confirmed")
+            else:
+                risk_reasons.append("range_regime_weakening")
+        elif technical_confirmation == "STRONG":
             breakdown["technical_component"] = 0.20
             score += breakdown["technical_component"]
             support_reasons.append("technical_confirmation")
@@ -312,6 +338,8 @@ def _deterministic_research_output(
     selected_intent = selected["decision_intent"]
     if macro_permission == "ALLOW_NEITHER":
         selected_intent = "NO_TRADE"
+    elif selected_intent == "GRID_NEUTRAL" and macro_mode == "EVENT_DRIVEN":
+        selected_intent = "WAIT_FOR_CONFIRMATION"
     elif conflict_state == "candidate_conflict" and macro_permission == "ALLOW_BOTH":
         selected_intent = "WAIT_FOR_CONFIRMATION"
     elif conflict_state == "candidate_conflict" and macro_permission == "ALLOW_SHORT":
@@ -331,7 +359,9 @@ def _deterministic_research_output(
     elif conflict_state == "none" and macro_alignment == "CONFLICT" and technical_confirmation == "STRONG":
         conflict_state = "macro_vs_technical"
 
-    if macro_mode == "EVENT_DRIVEN":
+    if selected_intent == "GRID_NEUTRAL":
+        holding_horizon = "SHORT"
+    elif macro_mode == "EVENT_DRIVEN":
         holding_horizon = "SHORT"
     elif scenario_label == "trend_following" and macro_alignment != "CONFLICT":
         holding_horizon = "SWING"
@@ -346,7 +376,9 @@ def _deterministic_research_output(
         thesis_strength = "LOW"
 
     risk_note = ""
-    if macro_alignment == "CONFLICT":
+    if selected_intent == "GRID_NEUTRAL":
+        risk_note = "grid valid only while range and event conditions remain stable"
+    elif macro_alignment == "CONFLICT":
         risk_note = "macro headwind limits size and duration"
     elif position_side != "NONE":
         risk_note = "existing position requires conservative sizing"
@@ -378,10 +410,13 @@ def _deterministic_research_output(
         summary = "approved candidates remain conflicted; wait for confirmation before allocating risk."
     elif selected_intent == "NO_TRADE":
         summary = "macro permission denies current candidate set; no trade is allowed."
+    elif selected_intent == "GRID_NEUTRAL":
+        summary = "range regime remains intact; prefer neutral grid rotation over directional breakout trades."
 
     return {
         "symbol": snapshot["symbol"],
         "cycleId": snapshot["cycleId"],
+        "strategy_family": _strategy_family_for_intent(selected_intent),
         "selected_intent": selected_intent,
         "selected_trigger_sources": [selected.get("trigger_source")],
         "macro_direction_bias": "LONG_BIAS" if macro_permission == "ALLOW_LONG" else "SHORT_BIAS" if macro_permission == "ALLOW_SHORT" else "NEUTRAL",
@@ -402,7 +437,7 @@ def _deterministic_research_output(
         "change_reason": change_reason,
         "risk_note": risk_note,
         "summary": summary,
-        "scenario_candidates": scenario_candidates[:3],
+        "scenario_candidates": scenario_candidates[:4],
         "candidate_structure": candidate_structure,
         "onchain_context": context["onchain_context"],
         "derivatives_context": context["derivatives_context"],

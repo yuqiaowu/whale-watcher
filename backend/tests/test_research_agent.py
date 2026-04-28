@@ -68,7 +68,7 @@ class ResearchAgentTests(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertEqual(result["selected_intent"], "SHORT")
         self.assertEqual(result["selected_trigger_sources"], ["Blueprint_A2"])
-        self.assertIn(result["scenario_label"], {"trend_following", "mean_reversion", "trend_breakdown", "wait_no_trade"})
+        self.assertIn(result["scenario_label"], {"trend_following", "range_rotation", "trend_breakdown", "wait_no_trade"})
         self.assertEqual(result["macro_permission"], "ALLOW_SHORT")
         self.assertNotIn(result["selected_intent"], {"LONG"})
         self.assertEqual(result["onchain_context"]["bias"], "MIXED_FLOW")
@@ -136,6 +136,31 @@ class ResearchAgentTests(unittest.TestCase):
                 for item in result["scenario_candidates"]
             )
         )
+
+    def test_grid_candidate_produces_range_rotation_research_output(self):
+        snapshot = self._base_snapshot()
+        snapshot["decision_ready_features"]["macro_permission"] = "ALLOW_BOTH"
+        snapshot["decision_ready_features"]["macro_mode"] = "MIXED"
+        snapshot["decision_ready_features"]["p_flat_8h"] = 0.61
+        candidate_batch = {
+            "candidate_proposals": [
+                {"decision_intent": "GRID_NEUTRAL", "trigger_source": "Blueprint_G1"},
+            ]
+        }
+        rule_evaluation = {
+            "passed": True,
+            "approved_candidates": [
+                {"decision_intent": "GRID_NEUTRAL", "trigger_source": "Blueprint_G1", "rrr": 1.9},
+            ],
+        }
+
+        result = build_research_output(snapshot, candidate_batch, rule_evaluation, previous_research=None)
+
+        self.assertEqual(result["strategy_family"], "GRID")
+        self.assertEqual(result["selected_intent"], "GRID_NEUTRAL")
+        self.assertEqual(result["scenario_label"], "range_rotation")
+        self.assertEqual(result["holding_horizon"], "SHORT")
+        self.assertIn("grid", result["summary"].lower())
 
 
 if __name__ == "__main__":

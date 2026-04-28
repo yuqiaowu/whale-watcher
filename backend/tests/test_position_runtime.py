@@ -29,8 +29,281 @@ class FakeExecutor:
     def execute_trade(self, **kwargs):
         return "runtime_order_1"
 
+    def stop_grid_bot(self, **kwargs):
+        return "runtime_grid_stop_1"
+
 
 class PositionRuntimeTests(unittest.TestCase):
+    def test_grid_range_breakout_triggers_stop(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "g0",
+                    "symbol": "ETH-USDT",
+                    "created_at": "2026-04-13T00:00:00Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "ETH-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "strategy_family": "GRID",
+                        "final_intent": "GRID_NEUTRAL",
+                        "max_holding_bars": 12,
+                        "approved_candidate": {
+                            "trigger_source": "Blueprint_G1",
+                            "reference_values": {
+                                "range_lower_bound": 2320.0,
+                                "range_upper_bound": 2480.0,
+                                "grid_count": 8,
+                            },
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "START_GRID_BOT",
+                        "exchange_algo_id": "grid_algo_1",
+                        "order_status": "SUBMITTED",
+                        "sync_status": "RUNNING",
+                        "executed_at": "2026-04-13T00:00:00Z",
+                        "history": [],
+                    },
+                    "researchOutput": {"strategy_family": "GRID", "selected_intent": "GRID_NEUTRAL"},
+                }
+            ],
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "ETH-USDT",
+                        "market_snapshot": {"price": 2495.0},
+                        "decision_ready_features": {
+                            "macro_mode": "MIXED",
+                            "p_flat_8h": 0.58,
+                            "p_up_8h": 0.20,
+                            "p_down_8h": 0.22,
+                        },
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db):
+            result = pr.run_in_position_runtime(executor=FakeExecutor())
+
+        self.assertEqual(result["updated_count"], 1)
+        self.assertEqual(result["actions"][0]["action"], "STOP_GRID_BOT")
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["positionState"], "exit_pending")
+        self.assertEqual(record["execution"]["runtime_reason"], "grid_range_breakout")
+        self.assertEqual(record["execution"]["last_runtime_order_id"], "runtime_grid_stop_1")
+        self.assertTrue(any(event["type"] == "GRID_RUNTIME_EXIT_TRIGGERED" for event in record["execution"]["history"]))
+
+    def test_grid_event_window_triggers_stop(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "g1",
+                    "symbol": "BTC-USDT",
+                    "created_at": "2026-04-13T00:00:00Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "BTC-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "strategy_family": "GRID",
+                        "final_intent": "GRID_NEUTRAL",
+                        "max_holding_bars": 12,
+                        "approved_candidate": {
+                            "trigger_source": "Blueprint_G1",
+                            "reference_values": {
+                                "range_lower_bound": 68000.0,
+                                "range_upper_bound": 70500.0,
+                                "grid_count": 10,
+                            },
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "START_GRID_BOT",
+                        "exchange_algo_id": "grid_algo_2",
+                        "order_status": "SUBMITTED",
+                        "sync_status": "RUNNING",
+                        "executed_at": "2026-04-13T00:00:00Z",
+                        "history": [],
+                    },
+                    "researchOutput": {"strategy_family": "GRID", "selected_intent": "GRID_NEUTRAL"},
+                }
+            ],
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "BTC-USDT",
+                        "market_snapshot": {"price": 69200.0},
+                        "decision_ready_features": {
+                            "macro_mode": "EVENT_DRIVEN",
+                            "p_flat_8h": 0.56,
+                            "p_up_8h": 0.18,
+                            "p_down_8h": 0.21,
+                        },
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db):
+            result = pr.run_in_position_runtime(executor=FakeExecutor())
+
+        self.assertEqual(result["updated_count"], 1)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["execution"]["runtime_reason"], "grid_event_window")
+        self.assertEqual(record["positionState"], "exit_pending")
+
+    def test_grid_macro_trend_gate_triggers_stop(self):
+        record = {
+            "riskReview": {
+                "max_holding_bars": 12,
+                "approved_candidate": {
+                    "reference_values": {
+                        "range_lower_bound": 2320.0,
+                        "range_upper_bound": 2480.0,
+                    }
+                },
+            },
+            "execution": {"execution_action": "START_GRID_BOT"},
+        }
+        snapshot = {
+            "market_snapshot": {"price": 2400.0},
+            "decision_ready_features": {
+                "macro_mode": "RISK_ON",
+                "grid_macro_trend_ok": False,
+                "grid_macro_block_reasons": ["bullish_liquidity_macro_cluster"],
+                "p_flat_8h": 0.58,
+                "p_up_8h": 0.20,
+                "p_down_8h": 0.22,
+            },
+        }
+
+        signal = pr._grid_runtime_signal(record, snapshot, held_bars=2)
+
+        self.assertIsNotNone(signal)
+        self.assertEqual(signal[1], "grid_macro_trend_blocked")
+        self.assertEqual(signal[2]["macro_block_reasons"], ["bullish_liquidity_macro_cluster"])
+
+    def test_grid_review_point_allows_extension_when_flat_regime_persists(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "g2",
+                    "symbol": "ETH-USDT",
+                    "created_at": "2026-04-13T00:00:00Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "ETH-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "strategy_family": "GRID",
+                        "final_intent": "GRID_NEUTRAL",
+                        "max_holding_bars": 15,
+                        "approved_candidate": {
+                            "trigger_source": "Blueprint_G1",
+                            "reference_values": {
+                                "range_lower_bound": 2320.0,
+                                "range_upper_bound": 2480.0,
+                                "grid_count": 8,
+                                "review_after_hours": 36,
+                                "extension_step_hours": 12,
+                                "max_lifetime_hours": 60,
+                            },
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "START_GRID_BOT",
+                        "exchange_algo_id": "grid_algo_3",
+                        "order_status": "SUBMITTED",
+                        "sync_status": "RUNNING",
+                        "executed_at": "2026-04-13T00:00:00Z",
+                        "history": [],
+                    },
+                    "researchOutput": {"strategy_family": "GRID", "selected_intent": "GRID_NEUTRAL"},
+                }
+            ],
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "ETH-USDT",
+                        "market_snapshot": {"price": 2400.0},
+                        "decision_ready_features": {
+                            "macro_mode": "MIXED",
+                            "p_flat_8h": 0.58,
+                            "p_up_8h": 0.20,
+                            "p_down_8h": 0.22,
+                        },
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db), patch.object(pr, "_bars_since", return_value=9):
+            result = pr.run_in_position_runtime(executor=FakeExecutor())
+
+        self.assertEqual(result["updated_count"], 0)
+        self.assertEqual(fake_db.store["trade_decision_records"][0]["positionState"], "entered")
+
+    def test_grid_review_point_stops_when_flat_regime_no_longer_dominates(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "g3",
+                    "symbol": "ETH-USDT",
+                    "created_at": "2026-04-13T00:00:00Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "ETH-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "strategy_family": "GRID",
+                        "final_intent": "GRID_NEUTRAL",
+                        "max_holding_bars": 15,
+                        "approved_candidate": {
+                            "trigger_source": "Blueprint_G1",
+                            "reference_values": {
+                                "range_lower_bound": 2320.0,
+                                "range_upper_bound": 2480.0,
+                                "grid_count": 8,
+                                "review_after_hours": 36,
+                                "extension_step_hours": 12,
+                                "max_lifetime_hours": 60,
+                            },
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "START_GRID_BOT",
+                        "exchange_algo_id": "grid_algo_4",
+                        "order_status": "SUBMITTED",
+                        "sync_status": "RUNNING",
+                        "executed_at": "2026-04-13T00:00:00Z",
+                        "history": [],
+                    },
+                    "researchOutput": {"strategy_family": "GRID", "selected_intent": "GRID_NEUTRAL"},
+                }
+            ],
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "ETH-USDT",
+                        "market_snapshot": {"price": 2400.0},
+                        "decision_ready_features": {
+                            "macro_mode": "MIXED",
+                            "p_flat_8h": 0.42,
+                            "p_up_8h": 0.50,
+                            "p_down_8h": 0.08,
+                        },
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db), patch.object(pr, "_bars_since", return_value=9):
+            result = pr.run_in_position_runtime(executor=FakeExecutor())
+
+        self.assertEqual(result["updated_count"], 1)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["execution"]["runtime_reason"], "grid_extension_rejected")
+        self.assertEqual(record["positionState"], "exit_pending")
+
     def test_missing_protection_triggers_repair(self):
         store = {
             "trade_decision_records": [

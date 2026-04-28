@@ -23,6 +23,7 @@ class PostTradeReviewTests(unittest.TestCase):
 
     def test_evaluation_agent_merges_llm_refinement(self):
         replay_context = {
+            "strategy_family": "DIRECTIONAL",
             "snapshot": {"symbol": "ETH-USDT"},
             "candidate": {"candidate_proposals": [{"trigger_source": "Blueprint_A1"}, {"trigger_source": "Blueprint_A2"}]},
             "ruleEvaluation": {
@@ -51,7 +52,7 @@ class PostTradeReviewTests(unittest.TestCase):
             "improvement_targets": ["execution", "research", "bad_target"],
             "improvement_note": "execution sync likely distorted the final outcome",
         }
-        with patch.object(ptr, "call_llm_json", return_value=llm_result):
+        with patch.object(ptr, "call_llm_json_with_audit", return_value=(llm_result, {"provider": "test"})):
             result = ptr.evaluation_agent(replay_context, base)
 
         self.assertEqual(result["primary_cause"], "EXECUTION_SLIPPAGE_OR_SYNC")
@@ -61,6 +62,20 @@ class PostTradeReviewTests(unittest.TestCase):
         self.assertEqual(result["traceability"]["candidate_structure"]["overall_state"], "directional_conflict")
         self.assertEqual(result["traceability"]["selected_trigger_sources"], ["Blueprint_A2"])
         self.assertEqual(result["traceability"]["proposed_trigger_sources"], ["Blueprint_A1", "Blueprint_A2"])
+
+    def test_grid_open_monitoring_note_uses_grid_language(self):
+        replay_context = {
+            "strategy_family": "GRID",
+            "ruleEvaluation": {"passed": True, "approved_candidates": [{"trigger_source": "Blueprint_G1"}]},
+            "researchOutput": {"selected_intent": "GRID_NEUTRAL", "strategy_family": "GRID"},
+            "riskReview": {"approved": True, "strategy_family": "GRID"},
+            "execution": {"order_status": "SUBMITTED", "exchange_algo_id": "grid_1"},
+        }
+
+        result = ptr.attribution_rules(replay_context)
+
+        self.assertEqual(result["result_label"], "OPEN_MONITORING")
+        self.assertIn("grid", result["improvement_note"].lower())
 
 
 if __name__ == "__main__":

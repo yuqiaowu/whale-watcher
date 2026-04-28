@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Set
 
 from db_client import db
+from okx_executor import OKXExecutor
 
 
 def _iso_now() -> str:
@@ -130,6 +131,92 @@ def _match_closed_trade(record: Dict[str, Any], trade_history: List[Dict[str, An
     return candidates[0]
 
 
+def _normalize_grid_state(value: Any) -> str:
+    return str(value or "").strip().lower()
+
+
+def _reconcile_grid_execution(record: Dict[str, Any], executor: OKXExecutor) -> bool:
+    execution = record.get("execution") or {}
+    algo_id = execution.get("exchange_algo_id")
+    if not algo_id or not hasattr(executor, "get_grid_bot_details"):
+        return False
+
+    details = executor.get_grid_bot_details(algo_id, algo_ord_type="contract_grid")
+    if not isinstance(details, dict) or details.get("code") != "0":
+        return False
+    data = details.get("data") or []
+    if not isinstance(data, list) or not data:
+        return False
+
+    detail = data[0] if isinstance(data[0], dict) else {}
+    state = _normalize_grid_state(detail.get("state"))
+    if not state:
+        return False
+
+    changed = False
+    execution["grid_state"] = state
+    execution["grid_last_synced_at"] = _iso_now()
+    execution["avg_fill_price"] = _safe_float(detail.get("avgPx"), execution.get("avg_fill_price"))
+    execution["filled_size"] = _safe_float(detail.get("sz"), execution.get("filled_size"))
+
+    if state in {"running", "effective", "live"}:
+        if execution.get("order_status") != "FILLED":
+            execution["order_status"] = "FILLED"
+            changed = True
+        if execution.get("sync_status") != "RUNNING":
+            execution["sync_status"] = "RUNNING"
+            changed = True
+        if record.get("positionState") != "entered":
+            record["positionState"] = "entered"
+            changed = True
+        if changed:
+            _append_execution_event(record, "GRID_EXECUTION_RUNNING_SYNCED", {
+                "algo_id": algo_id,
+                "state": state,
+            })
+    elif state in {"stopping", "stop_pending"}:
+        if execution.get("sync_status") != "STOP_REQUESTED":
+            execution["sync_status"] = "STOP_REQUESTED"
+            changed = True
+            _append_execution_event(record, "GRID_EXECUTION_STOP_PENDING_SYNCED", {
+                "algo_id": algo_id,
+                "state": state,
+            })
+    elif state in {"stopped", "cancelled", "canceled", "closed"}:
+        if execution.get("order_status") != "CLOSED":
+            execution["order_status"] = "CLOSED"
+            changed = True
+        if execution.get("sync_status") != "CLOSED":
+            execution["sync_status"] = "CLOSED"
+            changed = True
+        if execution.get("protection_status") != "CLOSED":
+            execution["protection_status"] = "CLOSED"
+            changed = True
+        if record.get("positionState") != "closed":
+            record["positionState"] = "closed"
+            changed = True
+        if changed:
+            _append_execution_event(record, "GRID_EXECUTION_CLOSED_SYNCED", {
+                "algo_id": algo_id,
+                "state": state,
+            })
+    elif state in {"failed", "pause_failed"}:
+        if execution.get("order_status") != "FAILED":
+            execution["order_status"] = "FAILED"
+            changed = True
+        if execution.get("sync_status") != "FAILED":
+            execution["sync_status"] = "FAILED"
+            changed = True
+        if changed:
+            _append_execution_event(record, "GRID_EXECUTION_FAILED_SYNCED", {
+                "algo_id": algo_id,
+                "state": state,
+            })
+
+    record["execution"] = execution
+    return changed
+
+
 def run_execution_reconciliation() -> Dict[str, Any]:
     records = db.get_data("trade_decision_records", [])
     if not isinstance(records, list):
@@ -143,11 +230,37 @@ def run_execution_reconciliation() -> Dict[str, Any]:
     used_trade_ids: Set[str] = set()
     updated_count = 0
     actions: List[Dict[str, Any]] = []
+    executor = OKXExecutor()
 
     for record in records:
         execution = record.get("execution") or {}
         risk_review = record.get("riskReview") or {}
         if risk_review.get("approved") is not True:
+            continue
+        if execution.get("execution_action") == "START_GRID_BOT":
+            before = {
+                "order_status": execution.get("order_status"),
+                "sync_status": execution.get("sync_status"),
+                "grid_state": execution.get("grid_state"),
+                "exchange_algo_id": execution.get("exchange_algo_id"),
+            }
+            changed = _reconcile_grid_execution(record, executor)
+            record["updated_at"] = _iso_now()
+            after_execution = record.get("execution") or {}
+            after = {
+                "order_status": after_execution.get("order_status"),
+                "sync_status": after_execution.get("sync_status"),
+                "grid_state": after_execution.get("grid_state"),
+                "exchange_algo_id": after_execution.get("exchange_algo_id"),
+            }
+            if changed and before != after:
+                updated_count += 1
+                actions.append({
+                    "decisionId": record.get("decisionId"),
+                    "symbol": record.get("symbol"),
+                    "before": before,
+                    "after": after,
+                })
             continue
         if execution.get("execution_action") not in {"OPEN_LONG", "OPEN_SHORT"}:
             continue

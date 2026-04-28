@@ -219,6 +219,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             "cycleId": snapshot["cycleId"],
             "candidate_proposals": [
                 {
+                    "strategy_family": "DIRECTIONAL",
                     "decision_intent": "LONG",
                     "trigger_source": "Blueprint_F1",
                     "rrr": 2.2,
@@ -231,6 +232,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
                     "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
                 },
                 {
+                    "strategy_family": "DIRECTIONAL",
                     "decision_intent": "SHORT",
                     "trigger_source": "Blueprint_E2",
                     "rrr": 2.1,
@@ -272,6 +274,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             "cycleId": "cycle_test",
             "candidate_proposals": [
                 {
+                    "strategy_family": "DIRECTIONAL",
                     "decision_intent": "LONG",
                     "trigger_source": "Blueprint_F1",
                     "entry_type": "MARKET",
@@ -284,6 +287,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
                     "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
                 },
                 {
+                    "strategy_family": "DIRECTIONAL",
                     "decision_intent": "SHORT",
                     "trigger_source": "Blueprint_E2",
                     "entry_type": "MARKET",
@@ -318,6 +322,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             "cycleId": "cycle_test",
             "candidate_proposals": [
                 {
+                    "strategy_family": "DIRECTIONAL",
                     "decision_intent": "SHORT",
                     "trigger_source": "Blueprint_A2",
                     "entry_type": "MARKET",
@@ -330,6 +335,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
                     "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
                 },
                 {
+                    "strategy_family": "DIRECTIONAL",
                     "decision_intent": "SHORT",
                     "trigger_source": "Blueprint_E2",
                     "entry_type": "MARKET",
@@ -495,6 +501,334 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         diagnostic = batch["e_strategy_diagnostic"]
         self.assertTrue(diagnostic["short_path"]["eligible"])
         self.assertEqual(diagnostic["summary"], "Blueprint_E2 eligible")
+
+    def test_g1_emits_grid_candidate_when_flat_regime_dominates(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "timeframe": "4h",
+            "snapshot_timestamp": 1712743200,
+            "market_snapshot": {
+                "price": 2400,
+                "atr_14": 35,
+                "funding_zscore": 0.1,
+                "rsi_4h": 49,
+                "adx_14": 18,
+            },
+            "onchain_snapshot": {
+                "token_net_flow": 0.0,
+                "stablecoin_net_flow": 0.0,
+                "qlib_relative_score_8h": 0.001,
+                "qlib_rank_8h": 3,
+                "qlib_percentile_8h": 0.5,
+                "p_up_8h": 0.22,
+                "p_down_8h": 0.18,
+                "p_flat_8h": 0.60,
+            },
+            "macro_snapshot": {},
+            "position_snapshot": {"position_side": "NONE"},
+            "decision_ready_features": {
+                "regime_1d": "CHOP",
+                "macro_mode": "MIXED",
+                "macro_permission": "ALLOW_BOTH",
+                "range_regime": True,
+                "grid_candidate_eligible": True,
+                "range_lower_bound": 2320.0,
+                "range_upper_bound": 2480.0,
+                "range_width_pct": 0.066,
+                "grid_mode": "ARITHMETIC",
+                "grid_count": 8,
+                "grid_spacing_pct": 0.0082,
+                "min_profitable_spacing_pct": 0.0034,
+                "grid_review_after_hours": 36,
+                "grid_extension_step_hours": 12,
+                "grid_max_lifetime_hours": 60,
+                "grid_preflight_data_ok": True,
+                "flow_support_long": False,
+                "flow_support_short": False,
+            },
+        }
+        batch = dp._build_candidate_proposals(snapshot)
+        grid_candidates = [c for c in batch["candidate_proposals"] if c["trigger_source"] == "Blueprint_G1"]
+        self.assertEqual(len(grid_candidates), 1)
+        self.assertEqual(grid_candidates[0]["decision_intent"], "GRID_NEUTRAL")
+        self.assertEqual(grid_candidates[0]["entry_type"], "GRID_BOT")
+        self.assertEqual(grid_candidates[0]["reference_values"]["grid_count"], 8)
+        self.assertGreater(
+            grid_candidates[0]["reference_values"]["grid_spacing_pct"],
+            grid_candidates[0]["reference_values"]["min_profitable_spacing_pct"],
+        )
+
+    def test_g1_does_not_emit_when_spacing_cannot_cover_fee_and_slippage(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "timeframe": "4h",
+            "snapshot_timestamp": 1712743200,
+            "market_snapshot": {
+                "price": 2400,
+                "atr_14": 10,
+                "funding_zscore": 0.1,
+                "rsi_4h": 49,
+                "adx_14": 18,
+            },
+            "onchain_snapshot": {
+                "token_net_flow": 0.0,
+                "stablecoin_net_flow": 0.0,
+                "qlib_relative_score_8h": 0.001,
+                "qlib_rank_8h": 3,
+                "qlib_percentile_8h": 0.5,
+                "p_up_8h": 0.22,
+                "p_down_8h": 0.18,
+                "p_flat_8h": 0.60,
+            },
+            "macro_snapshot": {},
+            "position_snapshot": {"position_side": "NONE"},
+            "decision_ready_features": {
+                "regime_1d": "CHOP",
+                "macro_mode": "MIXED",
+                "macro_permission": "ALLOW_BOTH",
+                "range_regime": False,
+                "grid_candidate_eligible": False,
+                "range_lower_bound": 2390.0,
+                "range_upper_bound": 2410.0,
+                "range_width_pct": 0.0083,
+                "grid_mode": "ARITHMETIC",
+                "grid_count": 6,
+                "grid_spacing_pct": 0.0013,
+                "min_profitable_spacing_pct": 0.0034,
+                "grid_review_after_hours": 36,
+                "grid_extension_step_hours": 12,
+                "grid_max_lifetime_hours": 60,
+                "flow_support_long": False,
+                "flow_support_short": False,
+            },
+        }
+        batch = dp._build_candidate_proposals(snapshot)
+        self.assertNotIn("Blueprint_G1", [c["trigger_source"] for c in batch["candidate_proposals"]])
+
+    def test_g1_does_not_emit_when_macro_trend_gate_blocks(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "timeframe": "4h",
+            "snapshot_timestamp": 1712743200,
+            "market_snapshot": {"price": 2400, "atr_14": 35, "funding_zscore": 0.1},
+            "onchain_snapshot": {"p_up_8h": 0.22, "p_down_8h": 0.18, "p_flat_8h": 0.60},
+            "macro_snapshot": {},
+            "position_snapshot": {"position_side": "NONE"},
+            "decision_ready_features": {
+                "macro_mode": "RISK_ON",
+                "range_regime": True,
+                "grid_candidate_eligible": True,
+                "grid_preflight_data_ok": True,
+                "grid_macro_trend_ok": False,
+                "grid_macro_block_reasons": ["bullish_liquidity_macro_cluster"],
+                "range_lower_bound": 2320.0,
+                "range_upper_bound": 2480.0,
+                "range_width_pct": 0.066,
+                "grid_count": 8,
+                "grid_spacing_pct": 0.0082,
+                "min_profitable_spacing_pct": 0.0034,
+            },
+        }
+        batch = dp._build_candidate_proposals(snapshot)
+        self.assertNotIn("Blueprint_G1", [c["trigger_source"] for c in batch["candidate_proposals"]])
+
+    def test_g1_does_not_emit_during_grid_cooldown(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "timeframe": "4h",
+            "snapshot_timestamp": 1712743200,
+            "market_snapshot": {"price": 2400, "atr_14": 35, "funding_zscore": 0.1},
+            "onchain_snapshot": {"p_up_8h": 0.22, "p_down_8h": 0.18, "p_flat_8h": 0.60},
+            "macro_snapshot": {},
+            "position_snapshot": {"position_side": "NONE"},
+            "decision_ready_features": {
+                "macro_mode": "MIXED",
+                "range_regime": True,
+                "grid_candidate_eligible": True,
+                "grid_preflight_data_ok": True,
+                "grid_macro_trend_ok": True,
+                "range_lower_bound": 2320.0,
+                "range_upper_bound": 2480.0,
+                "range_width_pct": 0.066,
+                "grid_count": 8,
+                "grid_spacing_pct": 0.0082,
+                "min_profitable_spacing_pct": 0.0034,
+            },
+        }
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "grid_failed",
+                    "symbol": "ETH-USDT",
+                    "positionState": "exit_pending",
+                    "updated_at": dp._iso_now(),
+                    "riskReview": {"strategy_family": "GRID"},
+                    "execution": {
+                        "execution_action": "START_GRID_BOT",
+                        "runtime_reason": "grid_range_breakout",
+                    },
+                },
+                {
+                    "decisionId": "grid_failed_again",
+                    "symbol": "ETH-USDT",
+                    "positionState": "exit_pending",
+                    "updated_at": dp._iso_now(),
+                    "riskReview": {"strategy_family": "GRID"},
+                    "execution": {
+                        "execution_action": "START_GRID_BOT",
+                        "runtime_reason": "grid_extension_rejected",
+                    },
+                }
+            ]
+        }
+        fake_db = FakeDB(store)
+        with patch.object(dp, "db", fake_db):
+            batch = dp._build_candidate_proposals(snapshot)
+        self.assertNotIn("Blueprint_G1", [c["trigger_source"] for c in batch["candidate_proposals"]])
+
+    def test_g1_does_not_emit_when_preflight_data_missing(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "timeframe": "4h",
+            "snapshot_timestamp": 1712743200,
+            "market_snapshot": {"price": 2400, "atr_14": 35, "funding_zscore": 0.1},
+            "onchain_snapshot": {"p_up_8h": 0.22, "p_down_8h": 0.18, "p_flat_8h": 0.60},
+            "macro_snapshot": {},
+            "position_snapshot": {"position_side": "NONE"},
+            "decision_ready_features": {
+                "macro_mode": "MIXED",
+                "range_regime": True,
+                "grid_candidate_eligible": True,
+                "grid_preflight_data_ok": False,
+                "grid_preflight_missing_fields": ["adx_delta"],
+                "grid_macro_trend_ok": True,
+                "range_lower_bound": 2320.0,
+                "range_upper_bound": 2480.0,
+                "range_width_pct": 0.066,
+                "grid_count": 8,
+                "grid_spacing_pct": 0.0082,
+                "min_profitable_spacing_pct": 0.0034,
+            },
+        }
+        batch = dp._build_candidate_proposals(snapshot)
+        self.assertNotIn("Blueprint_G1", [c["trigger_source"] for c in batch["candidate_proposals"]])
+
+    def test_grid_setup_blocks_daily_ma_cross(self):
+        setup = dp._derive_grid_setup(
+            symbol="ETH-USDT",
+            price=2400,
+            atr=35,
+            adx_14=18,
+            p_up_8h=0.22,
+            p_down_8h=0.18,
+            p_flat_8h=0.60,
+            macro_mode="MIXED",
+            support_level=2320,
+            resistance_level=2480,
+            bb_width=0.06,
+            bb_mid_slope_pct=0.002,
+            ma5_cross_up_ma10_1d=True,
+            preflight_data_ok=True,
+        )
+        self.assertFalse(setup["grid_candidate_eligible"])
+        self.assertFalse(setup["macro_trend_ok"])
+        self.assertIn("ma5_cross_up_ma10_1d", setup["macro_block_reasons"])
+
+    def test_grid_candidate_maps_to_start_grid_bot_risk_review(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "timeframe": "4h",
+            "snapshot_timestamp": 1712743200,
+            "decision_ready_features": {"macro_mode": "MIXED"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "approved_candidates": [
+                {
+                    "decision_intent": "GRID_NEUTRAL",
+                    "trigger_source": "Blueprint_G1",
+                    "entry_type": "GRID_BOT",
+                    "proposed_entry_price": 2400,
+                    "proposed_sl_price": 2300,
+                    "proposed_tp_price": 2500,
+                    "reference_values": {
+                        "range_lower_bound": 2320.0,
+                        "range_upper_bound": 2480.0,
+                        "grid_count": 8,
+                        "grid_mode": "ARITHMETIC",
+                        "grid_spacing_pct": 0.0082,
+                        "min_profitable_spacing_pct": 0.0034,
+                        "review_after_hours": 36,
+                        "extension_step_hours": 12,
+                        "max_lifetime_hours": 60,
+                    },
+                    "invalidation_basis": "range broken",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                    "rrr": 1.8,
+                }
+            ],
+            "candidate_structure": {"overall_state": "single_signal"},
+        }
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 10000.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+            execution = dp._build_execution_request(snapshot, risk_review)
+
+        self.assertTrue(risk_review["approved"])
+        self.assertEqual(risk_review["strategy_family"], "GRID")
+        self.assertEqual(risk_review["final_intent"], "GRID_NEUTRAL")
+        self.assertEqual(risk_review["execution_action"], "START_GRID_BOT")
+        self.assertEqual(risk_review["leverage"], 3.0)
+        self.assertEqual(execution["strategy_family"], "GRID")
+        self.assertEqual(execution["execution_action"], "START_GRID_BOT")
+        self.assertEqual(execution["grid_config"]["grid_mode"], "ARITHMETIC")
+        self.assertEqual(risk_review["approved_candidate"]["reference_values"]["per_grid_notional_usd"], 62.5)
+
+    def test_grid_candidate_rejected_when_per_grid_notional_too_small(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "timeframe": "4h",
+            "snapshot_timestamp": 1712743200,
+            "decision_ready_features": {"macro_mode": "MIXED"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "approved_candidates": [
+                {
+                    "strategy_family": "GRID",
+                    "decision_intent": "GRID_NEUTRAL",
+                    "trigger_source": "Blueprint_G1",
+                    "entry_type": "GRID_BOT",
+                    "proposed_entry_price": 2400,
+                    "proposed_sl_price": 2300,
+                    "proposed_tp_price": 2500,
+                    "reference_values": {
+                        "range_lower_bound": 2320.0,
+                        "range_upper_bound": 2480.0,
+                        "grid_count": 8,
+                        "grid_mode": "ARITHMETIC",
+                        "review_after_hours": 36,
+                        "extension_step_hours": 12,
+                        "max_lifetime_hours": 60,
+                    },
+                    "invalidation_basis": "range broken",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                    "rrr": 1.8,
+                }
+            ],
+            "candidate_structure": {"overall_state": "single_signal"},
+        }
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 200.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertFalse(risk_review["approved"])
+        self.assertIn("per-cell", risk_review["review_note"])
 
     def test_cycle_bundle_includes_e_strategy_diagnostic(self):
         store = {

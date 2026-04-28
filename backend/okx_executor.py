@@ -51,6 +51,31 @@ class OKXExecutor:
     def _new_shadow_id(self, prefix="shadow"):
         return f"{prefix}_{int(time.time() * 1000)}"
 
+    def _format_decimal_str(self, value, precision=8):
+        """
+        Format numeric values for OKX payloads without scientific notation.
+        """
+        if value is None:
+            return None
+        try:
+            numeric = float(value)
+        except (TypeError, ValueError):
+            return str(value)
+        text = f"{numeric:.{precision}f}".rstrip("0").rstrip(".")
+        return text or "0"
+
+    def _grid_inst_id(self, symbol, grid_config=None):
+        grid_config = grid_config or {}
+        inst_id = str(grid_config.get("instId") or "").strip()
+        if inst_id:
+            return inst_id
+        cleaned = str(symbol or "").strip().upper()
+        if cleaned.endswith("-USDT-SWAP") or cleaned.endswith("-USD-SWAP"):
+            return cleaned
+        if cleaned.endswith("-USDT"):
+            cleaned = cleaned[:-5]
+        return f"{cleaned}-USDT-SWAP"
+
     def _sign(self, timestamp, method, request_path, body):
         message = str(timestamp) + str(method) + str(request_path) + str(body)
         mac = hmac.new(
@@ -242,6 +267,138 @@ class OKXExecutor:
             db.save_data("portfolio_state", state)
         except Exception as e:
             print(f"⚠️ Failed to save shadow state: {e}")
+
+    def execute_grid_bot(self, symbol, amount_usd, leverage, grid_config=None):
+        """
+        Minimal grid bot execution stub.
+        Shadow mode returns a synthetic algo id so deterministic v2 can persist
+        a real START_GRID_BOT execution record without pretending it was a normal order.
+        """
+        grid_config = grid_config or {}
+        if self.shadow_mode:
+            algo_id = self._new_shadow_id("shadow_grid")
+            print(
+                f"🌑 [SHADOW] Start Grid Bot: {symbol} | ${amount_usd:.2f} | "
+                f"{leverage}x | range={grid_config.get('range_lower_bound')}~{grid_config.get('range_upper_bound')} | "
+                f"grids={grid_config.get('grid_count')}"
+            )
+            return algo_id
+
+        grid_config = grid_config or {}
+        inst_id = self._grid_inst_id(symbol, grid_config)
+        lower_bound = grid_config.get("range_lower_bound")
+        upper_bound = grid_config.get("range_upper_bound")
+        grid_count = int(grid_config.get("grid_count") or 0)
+        algo_ord_type = str(grid_config.get("algoOrdType") or "contract_grid")
+        grid_mode = str(grid_config.get("grid_mode") or "ARITHMETIC").upper()
+        run_type = "2" if grid_mode in {"GEOMETRIC", "GEOMETRIC_GRID"} else "1"
+        direction = str(grid_config.get("direction") or "neutral").lower()
+        base_pos = bool(grid_config.get("basePos")) if "basePos" in grid_config else direction != "neutral"
+        if lower_bound is None or upper_bound is None or grid_count < 2:
+            print(
+                f"⚠️ Invalid grid config for {symbol}: "
+                f"lower={lower_bound}, upper={upper_bound}, grids={grid_count}"
+            )
+            return None
+
+        info = self.get_instrument_info(inst_id)
+        tick_sz = info["tickSz"] if info else None
+        max_px = float(upper_bound)
+        min_px = float(lower_bound)
+        if tick_sz:
+            max_px = self.round_step_size(max_px, tick_sz)
+            min_px = self.round_step_size(min_px, tick_sz)
+
+        body = {
+            "instId": inst_id,
+            "algoOrdType": algo_ord_type,
+            "maxPx": self._format_decimal_str(max_px),
+            "minPx": self._format_decimal_str(min_px),
+            "gridNum": str(grid_count),
+            "runType": run_type,
+            "direction": direction,
+            "lever": self._format_decimal_str(leverage, precision=4),
+            "sz": self._format_decimal_str(amount_usd, precision=4),
+            "algoClOrdId": str(grid_config.get("algoClOrdId") or f"grid_{int(time.time() * 1000)}"),
+        }
+        if algo_ord_type == "contract_grid":
+            body["triggerParams"] = [{"triggerAction": "start", "triggerStrategy": "instant"}]
+            body["basePos"] = base_pos
+        else:
+            print(f"⚠️ Unsupported grid algo type for executor: {algo_ord_type}")
+            return None
+
+        res = self._request("POST", "/api/v5/tradingBot/grid/order-algo", body)
+        if res.get("code") == "0" and res.get("data"):
+            first = res["data"][0]
+            if str(first.get("sCode", "0")) == "0":
+                algo_id = first.get("algoId")
+                print(
+                    f"✅ Grid Bot Started: {inst_id} | algoId={algo_id} | "
+                    f"range={body['minPx']}~{body['maxPx']} | grids={body['gridNum']}"
+                )
+                return algo_id
+            print(f"❌ Grid Bot Create Failed: {first.get('sMsg')} (Code: {first.get('sCode')})")
+            return None
+
+        print(f"❌ Grid Bot Create Failed: {res.get('msg')} (Code: {res.get('code')})")
+        return None
+
+    def stop_grid_bot(self, symbol, algo_id=None, inst_id=None, stop_type="1", algo_ord_type="contract_grid"):
+        """
+        Stop a running OKX grid bot.
+        """
+        if self.shadow_mode:
+            stop_id = self._new_shadow_id("shadow_grid_stop")
+            print(f"🌑 [SHADOW] Stop Grid Bot: {symbol} | algo_id={algo_id}")
+            return stop_id
+
+        target_inst_id = inst_id or self._grid_inst_id(symbol)
+        payload = [{
+            "algoId": str(algo_id),
+            "algoOrdType": str(algo_ord_type or "contract_grid"),
+            "instId": target_inst_id,
+            "stopType": str(stop_type or "1"),
+        }]
+        res = self._request("POST", "/api/v5/tradingBot/grid/stop-order-algo", payload)
+        if res.get("code") == "0" and res.get("data"):
+            first = res["data"][0]
+            if str(first.get("sCode", "0")) == "0":
+                print(f"✅ Grid Bot Stop Requested: {target_inst_id} | algoId={algo_id}")
+                return first.get("algoId") or str(algo_id)
+            print(f"❌ Grid Bot Stop Failed: {first.get('sMsg')} (Code: {first.get('sCode')})")
+            return None
+
+        print(f"❌ Grid Bot Stop Failed: {res.get('msg')} (Code: {res.get('code')})")
+        return None
+
+    def get_grid_bot_orders(self, algo_ord_type="contract_grid", status="active", inst_id=None, algo_id=None):
+        """
+        List active or historical OKX grid bots.
+        """
+        path = (
+            "/api/v5/tradingBot/grid/orders-algo-history"
+            if str(status).lower() == "history"
+            else "/api/v5/tradingBot/grid/orders-algo-pending"
+        )
+        params = {
+            "algoOrdType": str(algo_ord_type or "contract_grid"),
+        }
+        if inst_id:
+            params["instId"] = inst_id
+        if algo_id:
+            params["algoId"] = str(algo_id)
+        return self._request("GET", path, params)
+
+    def get_grid_bot_details(self, algo_id, algo_ord_type="contract_grid"):
+        """
+        Query a single grid bot detail payload.
+        """
+        return self._request(
+            "GET",
+            "/api/v5/tradingBot/grid/orders-algo-details",
+            {"algoOrdType": str(algo_ord_type or "contract_grid"), "algoId": str(algo_id)},
+        )
 
     def execute_trade(self, symbol, action, amount_usd, leverage, stop_loss=None, take_profit=None, natr_percent=None, pos_side=None, invalidation_rule=None):
         """

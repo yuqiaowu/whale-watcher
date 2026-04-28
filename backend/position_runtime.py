@@ -284,6 +284,12 @@ def _apply_reduce(executor: OKXExecutor, symbol: str, side: str, ratio: float, l
     )
 
 
+def _apply_stop_grid(executor: OKXExecutor, symbol: str, algo_id: Optional[str]) -> Optional[str]:
+    if hasattr(executor, "stop_grid_bot"):
+        return executor.stop_grid_bot(symbol=symbol, algo_id=algo_id)
+    return None
+
+
 def _bars_since(timestamp: Any) -> Optional[int]:
     dt = _parse_dt(timestamp)
     if dt is None:
@@ -335,6 +341,60 @@ def _thesis_weakened(record: Dict[str, Any], snapshot: Dict[str, Any], live_posi
     return False, ""
 
 
+def _grid_runtime_signal(record: Dict[str, Any], snapshot: Dict[str, Any], held_bars: Optional[int]) -> Optional[Tuple[str, str, Dict[str, Any]]]:
+    execution = record.get("execution") or {}
+    risk_review = record.get("riskReview") or {}
+    approved_candidate = risk_review.get("approved_candidate", {}) or {}
+    reference_values = approved_candidate.get("reference_values", {}) or execution.get("grid_config", {}) or {}
+    features = snapshot.get("decision_ready_features", {}) or {}
+    market = snapshot.get("market_snapshot", {}) or {}
+
+    current_price = _safe_float(market.get("price"))
+    lower_bound = _safe_float(reference_values.get("range_lower_bound"))
+    upper_bound = _safe_float(reference_values.get("range_upper_bound"))
+    p_flat_8h = _safe_float(features.get("p_flat_8h"), _safe_float(reference_values.get("p_flat_8h")))
+    p_up_8h = _safe_float(features.get("p_up_8h"), _safe_float(reference_values.get("p_up_8h")))
+    p_down_8h = _safe_float(features.get("p_down_8h"), _safe_float(reference_values.get("p_down_8h")))
+    max_holding_bars = int((risk_review or {}).get("max_holding_bars") or 0)
+    review_after_bars = max(1, int(_safe_float(reference_values.get("review_after_hours"), 36) / 4))
+    extension_step_bars = max(1, int(_safe_float(reference_values.get("extension_step_hours"), 12) / 4))
+
+    if features.get("macro_mode") == "EVENT_DRIVEN":
+        return "STOP_GRID_BOT", "grid_event_window", {"macro_mode": "EVENT_DRIVEN"}
+    if features.get("grid_macro_trend_ok") is False:
+        return "STOP_GRID_BOT", "grid_macro_trend_blocked", {
+            "macro_block_reasons": features.get("grid_macro_block_reasons") or [],
+            "ma5_cross_up_ma10_1d": bool(features.get("ma5_cross_up_ma10_1d")),
+            "ma5_cross_down_ma10_1d": bool(features.get("ma5_cross_down_ma10_1d")),
+        }
+    if lower_bound > 0 and current_price > 0 and current_price <= lower_bound:
+        return "STOP_GRID_BOT", "grid_range_breakdown", {"current_price": current_price, "range_lower_bound": lower_bound}
+    if upper_bound > 0 and current_price > 0 and current_price >= upper_bound:
+        return "STOP_GRID_BOT", "grid_range_breakout", {"current_price": current_price, "range_upper_bound": upper_bound}
+    if p_flat_8h < 0.45 and max(p_up_8h, p_down_8h) >= 0.55:
+        return "STOP_GRID_BOT", "grid_regime_deterioration", {
+            "p_flat_8h": p_flat_8h,
+            "p_up_8h": p_up_8h,
+            "p_down_8h": p_down_8h,
+        }
+    if (
+        held_bars is not None
+        and held_bars >= review_after_bars
+        and (held_bars - review_after_bars) % extension_step_bars == 0
+    ):
+        if p_flat_8h < max(p_up_8h, p_down_8h):
+            return "STOP_GRID_BOT", "grid_extension_rejected", {
+                "held_bars": held_bars,
+                "review_after_bars": review_after_bars,
+                "p_flat_8h": p_flat_8h,
+                "p_up_8h": p_up_8h,
+                "p_down_8h": p_down_8h,
+            }
+    if max_holding_bars > 0 and held_bars is not None and held_bars >= max_holding_bars:
+        return "STOP_GRID_BOT", "grid_max_lifetime_stop", {"held_bars": held_bars, "max_holding_bars": max_holding_bars}
+    return None
+
+
 def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str, Any]:
     executor = executor or OKXExecutor()
     records = db.get_data("trade_decision_records", [])
@@ -351,7 +411,31 @@ def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str,
         execution = record.get("execution") or {}
         if risk_review.get("approved") is not True:
             continue
-        if execution.get("execution_action") not in {"OPEN_LONG", "OPEN_SHORT"}:
+        if execution.get("execution_action") not in {"OPEN_LONG", "OPEN_SHORT", "START_GRID_BOT"}:
+            continue
+
+        if execution.get("execution_action") == "START_GRID_BOT":
+            snapshot = snapshot_map.get(record.get("symbol"), record.get("snapshot", {}))
+            held_bars = _bars_since(execution.get("executed_at") or record.get("created_at"))
+            signal = _grid_runtime_signal(record, snapshot, held_bars)
+            if signal is None:
+                continue
+            runtime_action, runtime_reason, runtime_detail = signal
+            stop_order_id = _apply_stop_grid(executor, _normalize_symbol(record.get("symbol")), execution.get("exchange_algo_id"))
+            execution["runtime_action"] = runtime_action
+            execution["last_runtime_order_id"] = stop_order_id
+            execution["runtime_reason"] = runtime_reason
+            execution["sync_status"] = "STOP_REQUESTED"
+            record["positionState"] = "exit_pending"
+            _append_execution_event(record, "GRID_RUNTIME_EXIT_TRIGGERED", {
+                **runtime_detail,
+                "order_id": stop_order_id,
+                "reason": runtime_reason,
+            })
+            actions.append({"decisionId": record.get("decisionId"), "action": runtime_action})
+            record["execution"] = execution
+            record["updated_at"] = _iso_now()
+            updated_count += 1
             continue
 
         side = _normalize_side(risk_review.get("final_intent"))

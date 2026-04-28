@@ -3,7 +3,7 @@ import math
 import os
 from copy import deepcopy
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from zoneinfo import ZoneInfo
@@ -25,7 +25,50 @@ QLOB_FEATURES_PATH = BASE_DIR / "qlib_data" / "multi_coin_features.csv"
 
 TRACKED_SYMBOLS = ["BTC", "ETH", "SOL", "BNB", "DOGE"]
 BLUEPRINT_A2_ENABLED_SYMBOLS = {"BNB-USDT", "BTC-USDT", "SOL-USDT"}
+GRID_ENABLED_SYMBOLS = {"ETH-USDT", "SOL-USDT", "DOGE-USDT"}
+GRID_COOLDOWN_FAILURE_REASONS = {
+    "grid_range_breakdown",
+    "grid_range_breakout",
+    "grid_event_window",
+    "grid_macro_trend_blocked",
+    "grid_regime_deterioration",
+    "grid_extension_rejected",
+    "grid_max_lifetime_stop",
+    "grid_time_stop",
+}
+GRID_SYMBOL_CONFIG = {
+    "ETH-USDT": {
+        "grid_width_min_pct": 0.035,
+        "grid_width_max_pct": 0.070,
+        "grid_price_position_min": 0.25,
+        "grid_price_position_max": 0.75,
+        "grid_review_after_hours": 24,
+        "grid_extension_step_hours": 12,
+        "grid_max_lifetime_hours": 48,
+    },
+    "SOL-USDT": {
+        "grid_width_min_pct": 0.030,
+        "grid_width_max_pct": 0.090,
+        "grid_price_position_min": 0.25,
+        "grid_price_position_max": 0.75,
+        "grid_review_after_hours": 36,
+        "grid_extension_step_hours": 12,
+        "grid_max_lifetime_hours": 60,
+    },
+    "DOGE-USDT": {
+        "grid_width_min_pct": 0.030,
+        "grid_width_max_pct": 0.090,
+        "grid_price_position_min": 0.40,
+        "grid_price_position_max": 0.60,
+        "grid_recent_drift_max_pct": 0.015,
+        "grid_review_after_hours": 36,
+        "grid_extension_step_hours": 12,
+        "grid_max_lifetime_hours": 60,
+    },
+}
 FLOW_SCHEMA_VERSION = "flow_semantics_v1"
+STRATEGY_FAMILY_DIRECTIONAL = "DIRECTIONAL"
+STRATEGY_FAMILY_GRID = "GRID"
 
 GLOBAL_CONFIG = {
     "timeframe": "4h",
@@ -40,6 +83,38 @@ GLOBAL_CONFIG = {
     "qlib_prob_gap_threshold": 0.15,
     "qlib_flat_max_threshold": 0.40,
     "qlib_invalidation_prob_threshold": 0.45,
+    "grid_flat_min_threshold": 0.55,
+    "grid_flat_exit_threshold": 0.45,
+    "grid_prob_ceiling": 0.55,
+    "grid_prob_gap_max": 0.12,
+    "grid_adx_max": 20.0,
+    "grid_width_min_pct": 0.030,
+    "grid_width_max_pct": 0.080,
+    "grid_price_position_min": 0.15,
+    "grid_price_position_max": 0.85,
+    "grid_bb_width_min_pct": 0.025,
+    "grid_bb_width_max_pct": 0.120,
+    "grid_bb_mid_slope_max_pct": 0.018,
+    "grid_adx_delta_max": 2.0,
+    "grid_recent_drift_max_pct": 0.025,
+    "grid_max_edge_close_count": 1,
+    "grid_block_macro_horizons": ("SWING", "MULTI_DAY"),
+    "grid_cooldown_single_failure_hours": 0,
+    "grid_cooldown_multi_failure_hours": 72,
+    "grid_cooldown_failure_lookback_hours": 168,
+    "grid_cooldown_failure_threshold": 2,
+    "grid_funding_zscore_max": 1.0,
+    "grid_review_after_hours": 36,
+    "grid_extension_step_hours": 12,
+    "grid_max_lifetime_hours": 60,
+    "grid_position_size_fraction": 0.05,
+    "grid_max_position_size_fraction": 0.10,
+    "grid_leverage_default": 3.0,
+    "grid_leverage_max": 3.0,
+    "grid_fee_rate": 0.0005,
+    "grid_slippage_rate": 0.0007,
+    "grid_profit_buffer_rate": 0.0010,
+    "grid_min_per_grid_notional_usd": 25.0,
 }
 LOCAL_TZ_NAME = os.getenv("LOCAL_TIMEZONE", "Asia/Shanghai")
 LOCAL_TZ = ZoneInfo(LOCAL_TZ_NAME)
@@ -63,6 +138,30 @@ def _iso_now() -> str:
 
 def _iso_now_local() -> str:
     return _now_utc().astimezone(LOCAL_TZ).strftime("%Y-%m-%dT%H:%M:%S%z")
+
+
+def _parse_dt(value: Any) -> Optional[datetime]:
+    if not value:
+        return None
+    if isinstance(value, datetime):
+        dt = value
+    else:
+        text = str(value).strip()
+        dt = None
+        for fmt in ("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S"):
+            try:
+                dt = datetime.strptime(text, fmt)
+                break
+            except ValueError:
+                continue
+        if dt is None:
+            try:
+                dt = datetime.fromisoformat(text.replace("Z", "+00:00"))
+            except ValueError:
+                return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
 
 
 def _snapshot_timestamp() -> int:
@@ -251,6 +350,22 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
         frame["volume_ma_60"] = frame["volume"].rolling(60, min_periods=60).mean()
         frame["rel_volume_60"] = frame["volume"] / frame["volume_ma_60"]
         frame["sma50_4h"] = frame["close"].rolling(50, min_periods=50).mean()
+        frame["bb_width"] = frame["bb_width_20"] if "bb_width_20" in frame.columns else pd.NA
+        frame["bb_pct_b"] = frame["bb_pos_20"] if "bb_pos_20" in frame.columns else 0.5
+        frame["bb_mid_20"] = frame["close"].rolling(20, min_periods=20).mean()
+        frame["bb_mid_slope_pct"] = (frame["bb_mid_20"] - frame["bb_mid_20"].shift(3)) / frame["bb_mid_20"].replace(0, pd.NA)
+        if "adx_14" not in frame.columns:
+            frame["adx_14"] = pd.NA
+        frame["adx_delta"] = frame["adx_14"] - frame["adx_14"].shift(3)
+        close_mean_7 = frame["close"].rolling(7, min_periods=7).mean()
+        frame["recent_close_drift_pct"] = (frame["close"] - frame["close"].shift(6)) / close_mean_7.replace(0, pd.NA)
+        frame["sma5_1d"] = frame["close"].rolling(30, min_periods=30).mean()
+        frame["sma10_1d"] = frame["close"].rolling(60, min_periods=60).mean()
+        ma_diff = frame["sma5_1d"] - frame["sma10_1d"]
+        prev_ma_diff = ma_diff.shift(1)
+        frame["ma5_cross_up_ma10_1d"] = (ma_diff > 0) & (prev_ma_diff <= 0)
+        frame["ma5_cross_down_ma10_1d"] = (ma_diff < 0) & (prev_ma_diff >= 0)
+        frame["ma5_10_gap_pct_1d"] = ma_diff / frame["close"].replace(0, pd.NA)
         prev_price_high = frame["high"].shift(1).rolling(8, min_periods=8).max()
         prev_price_low = frame["low"].shift(1).rolling(8, min_periods=8).min()
         prev_macd_high = frame["macd_hist"].shift(1).rolling(8, min_periods=8).max()
@@ -270,10 +385,29 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
         )
         frame["structure_support_12bar_volume_confirmed"] = support_level
         frame["structure_resistance_12bar_volume_confirmed"] = resistance_level
+        range_width = (resistance_level - support_level).replace(0, pd.NA)
+        range_position = (frame["close"] - support_level) / range_width
+        edge_close = (range_position <= 0.18) | (range_position >= 0.82)
+        frame["range_edge_close_count"] = edge_close.astype(int).rolling(3, min_periods=3).sum()
         latest = frame.iloc[-1]
         atr = _safe_float(latest.get("atr_14"))
         support = _safe_float(latest.get("structure_support_12bar_volume_confirmed"))
         resistance = _safe_float(latest.get("structure_resistance_12bar_volume_confirmed"))
+        grid_preflight_fields = [
+            "bb_width",
+            "bb_pct_b",
+            "bb_mid_slope_pct",
+            "adx_delta",
+            "recent_close_drift_pct",
+            "range_edge_close_count",
+            "sma5_1d",
+            "sma10_1d",
+            "ma5_10_gap_pct_1d",
+        ]
+        missing_preflight_fields = [
+            field for field in grid_preflight_fields
+            if field not in latest or pd.isna(latest.get(field))
+        ]
         result[str(instrument).upper()] = {
             "macd_line_4h": _safe_float(latest.get("macd")),
             "macd_signal_4h": _safe_float(latest.get("macd_signal")),
@@ -283,6 +417,17 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
             "atr_14": atr,
             "rel_volume_60": _safe_float(latest.get("rel_volume_60")),
             "sma50_4h": _safe_float(latest.get("sma50_4h")),
+            "bb_width": _safe_float(latest.get("bb_width")),
+            "bb_pct_b": _safe_float(latest.get("bb_pct_b"), 0.5),
+            "bb_mid_slope_pct": _safe_float(latest.get("bb_mid_slope_pct")),
+            "adx_delta": _safe_float(latest.get("adx_delta")),
+            "recent_close_drift_pct": _safe_float(latest.get("recent_close_drift_pct")),
+            "range_edge_close_count": int(_safe_float(latest.get("range_edge_close_count"))),
+            "sma5_1d": _safe_float(latest.get("sma5_1d")),
+            "sma10_1d": _safe_float(latest.get("sma10_1d")),
+            "ma5_cross_up_ma10_1d": bool(latest.get("ma5_cross_up_ma10_1d")),
+            "ma5_cross_down_ma10_1d": bool(latest.get("ma5_cross_down_ma10_1d")),
+            "ma5_10_gap_pct_1d": _safe_float(latest.get("ma5_10_gap_pct_1d")),
             "bearish_divergence_4h": bool(latest.get("bearish_divergence_4h")),
             "bullish_divergence_4h": bool(latest.get("bullish_divergence_4h")),
             "macd_cross_up_4h": bool(latest.get("macd_cross_up_4h")),
@@ -296,6 +441,8 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
             "structure_resistance_12bar_volume_confirmed": resistance,
             "structure_support_stop_long": round(support - 0.5 * atr, 4) if support > 0 and atr > 0 else None,
             "structure_resistance_stop_short": round(resistance + 0.5 * atr, 4) if resistance > 0 and atr > 0 else None,
+            "grid_preflight_data_ok": not missing_preflight_fields,
+            "grid_preflight_missing_fields": missing_preflight_fields,
         }
     return result
 
@@ -452,6 +599,12 @@ def _build_decision_snapshot(
         "rsi_4h": _safe_float(chart_context.get("rsi_4h"), _safe_float(market.get("rsi_4h"), _safe_float(market.get("rsi_14"), _safe_float(market_data.get("rsi_14"))))),
         "adx_14": _safe_float(chart_context.get("adx_14_4h"), _safe_float(market.get("adx_14"))),
         "volume_ratio": _safe_float(market.get("volume_ratio"), _safe_float(market.get("vol_ratio_20"), 1.0)),
+        "bb_width": _safe_float(chart_context.get("bb_width"), _safe_float(market.get("bb_width"), _safe_float(market_data.get("bb_width_20")))),
+        "bb_pct_b": _safe_float(chart_context.get("bb_pct_b"), _safe_float(market.get("bb_pct_b"), _safe_float(market_data.get("bb_pos_20"), 0.5))),
+        "bb_mid_slope_pct": _safe_float(chart_context.get("bb_mid_slope_pct"), _safe_float(market.get("bb_mid_slope_pct"))),
+        "adx_delta": _safe_float(chart_context.get("adx_delta"), _safe_float(market.get("adx_delta"))),
+        "recent_close_drift_pct": _safe_float(chart_context.get("recent_close_drift_pct"), _safe_float(market.get("recent_close_drift_pct"))),
+        "range_edge_close_count": int(_safe_float(chart_context.get("range_edge_close_count"), _safe_float(market.get("range_edge_close_count")))),
         "wick_ratio_lower": _safe_float(market.get("wick_ratio_lower")),
         "wick_ratio_upper": _safe_float(market.get("wick_ratio_upper")),
         "funding_rate": funding_rate,
@@ -468,6 +621,13 @@ def _build_decision_snapshot(
         "rel_volume_60": _safe_float(chart_context.get("rel_volume_60")),
         "volume_usd_4h": _safe_float(chart_context.get("volume_usd_4h")),
         "sma50_4h": _safe_float(chart_context.get("sma50_4h")),
+        "sma5_1d": _safe_float(chart_context.get("sma5_1d"), _safe_float(market.get("sma5_1d"))),
+        "sma10_1d": _safe_float(chart_context.get("sma10_1d"), _safe_float(market.get("sma10_1d"))),
+        "ma5_cross_up_ma10_1d": bool(chart_context.get("ma5_cross_up_ma10_1d", market.get("ma5_cross_up_ma10_1d"))),
+        "ma5_cross_down_ma10_1d": bool(chart_context.get("ma5_cross_down_ma10_1d", market.get("ma5_cross_down_ma10_1d"))),
+        "ma5_10_gap_pct_1d": _safe_float(chart_context.get("ma5_10_gap_pct_1d"), _safe_float(market.get("ma5_10_gap_pct_1d"))),
+        "grid_preflight_data_ok": bool(chart_context.get("grid_preflight_data_ok")),
+        "grid_preflight_missing_fields": chart_context.get("grid_preflight_missing_fields", []),
         "bearish_divergence_4h": bool(chart_context.get("bearish_divergence_4h")),
         "bullish_divergence_4h": bool(chart_context.get("bullish_divergence_4h")),
         "macd_cross_up_4h": bool(chart_context.get("macd_cross_up_4h")),
@@ -509,6 +669,31 @@ def _build_decision_snapshot(
         qlib_direction = "SHORT"
 
     regime_1d = _derive_regime_1d(macro_snapshot, market_snapshot)
+    grid_setup = _derive_grid_setup(
+        symbol=f"{symbol}-USDT",
+        price=market_snapshot["price"],
+        atr=_safe_float(market_snapshot.get("atr_14")),
+        adx_14=_safe_float(market_snapshot.get("adx_14")),
+        p_up_8h=p_up_8h,
+        p_down_8h=p_down_8h,
+        p_flat_8h=p_flat_8h,
+        macro_mode=macro_snapshot["macro_mode"],
+        support_level=market_snapshot.get("structure_support_12bar_volume_confirmed"),
+        resistance_level=market_snapshot.get("structure_resistance_12bar_volume_confirmed"),
+        bb_width=_safe_float(market_snapshot.get("bb_width")),
+        bb_pct_b=_safe_float(market_snapshot.get("bb_pct_b"), 0.5),
+        bb_mid_slope_pct=_safe_float(market_snapshot.get("bb_mid_slope_pct")),
+        adx_delta=_safe_float(market_snapshot.get("adx_delta")),
+        recent_close_drift_pct=_safe_float(market_snapshot.get("recent_close_drift_pct")),
+        range_edge_close_count=int(_safe_float(market_snapshot.get("range_edge_close_count"))),
+        macro_horizon=macro_snapshot.get("macro_horizon", "NOISE"),
+        macro_key_events=macro_snapshot.get("key_events") or macro_snapshot.get("key_tags") or [],
+        flow_composite_semantic=flow_semantics["composite_semantic"],
+        ma5_cross_up_ma10_1d=bool(market_snapshot.get("ma5_cross_up_ma10_1d")),
+        ma5_cross_down_ma10_1d=bool(market_snapshot.get("ma5_cross_down_ma10_1d")),
+        preflight_data_ok=bool(market_snapshot.get("grid_preflight_data_ok")),
+        preflight_missing_fields=market_snapshot.get("grid_preflight_missing_fields") or [],
+    )
     decision_ready_features = {
         "regime_1d": regime_1d,
         "macro_mode": macro_snapshot["macro_mode"],
@@ -535,6 +720,37 @@ def _build_decision_snapshot(
         "qlib_direction_confident": max(p_up_8h, p_down_8h) >= GLOBAL_CONFIG["qlib_prob_threshold"],
         "qlib_top_bucket": bool((qlib_coin.get("rank") or 999) <= GLOBAL_CONFIG["qlib_rank_bucket_size"]),
         "qlib_bottom_bucket": bool((qlib_coin.get("rank") or 0) >= len(TRACKED_SYMBOLS) - GLOBAL_CONFIG["qlib_rank_bucket_size"] + 1),
+        "range_regime": grid_setup["range_regime"],
+        "grid_candidate_eligible": grid_setup["grid_candidate_eligible"],
+        "range_lower_bound": grid_setup["range_lower_bound"],
+        "range_upper_bound": grid_setup["range_upper_bound"],
+        "range_width_pct": grid_setup["range_width_pct"],
+        "price_position_in_range": grid_setup["price_position_in_range"],
+        "grid_mode": grid_setup["grid_mode"],
+        "grid_count": grid_setup["grid_count"],
+        "grid_spacing_pct": grid_setup["grid_spacing_pct"],
+        "min_profitable_spacing_pct": grid_setup["min_profitable_spacing_pct"],
+        "grid_spacing_profitable": grid_setup["spacing_profitable"],
+        "grid_bb_width": grid_setup["bb_width"],
+        "grid_bb_pct_b": grid_setup["bb_pct_b"],
+        "grid_bb_mid_slope_pct": grid_setup["bb_mid_slope_pct"],
+        "grid_bb_width_ok": grid_setup["bb_width_ok"],
+        "grid_bb_slope_ok": grid_setup["bb_slope_ok"],
+        "grid_adx_delta": grid_setup["adx_delta"],
+        "grid_recent_close_drift_pct": grid_setup["recent_close_drift_pct"],
+        "grid_range_edge_close_count": grid_setup["range_edge_close_count"],
+        "grid_trend_risk_ok": grid_setup["trend_risk_ok"],
+        "grid_preflight_data_ok": grid_setup["preflight_data_ok"],
+        "grid_preflight_missing_fields": grid_setup["preflight_missing_fields"],
+        "grid_macro_trend_ok": grid_setup["macro_trend_ok"],
+        "grid_macro_block_reasons": grid_setup["macro_block_reasons"],
+        "ma5_cross_up_ma10_1d": bool(market_snapshot.get("ma5_cross_up_ma10_1d")),
+        "ma5_cross_down_ma10_1d": bool(market_snapshot.get("ma5_cross_down_ma10_1d")),
+        "ma5_10_gap_pct_1d": _safe_float(market_snapshot.get("ma5_10_gap_pct_1d")),
+        "max_profitable_grid_count": grid_setup["max_profitable_grid_count"],
+        "grid_review_after_hours": grid_setup["review_after_hours"],
+        "grid_extension_step_hours": grid_setup["extension_step_hours"],
+        "grid_max_lifetime_hours": grid_setup["max_lifetime_hours"],
     }
 
     snapshot_ts = _snapshot_timestamp()
@@ -588,6 +804,9 @@ def _rrr(intent: str, entry: float, sl: float, tp: float) -> float:
     if intent == "LONG":
         risk = entry - sl
         reward = tp - entry
+    elif intent == "GRID_NEUTRAL":
+        risk = abs(entry - sl)
+        reward = abs(tp - entry)
     else:
         risk = sl - entry
         reward = entry - tp
@@ -597,9 +816,290 @@ def _rrr(intent: str, entry: float, sl: float, tp: float) -> float:
 
 
 def _entry_type_for_blueprint(blueprint: str) -> str:
+    if blueprint == "Blueprint_G1":
+        return "GRID_BOT"
     if blueprint in {"Blueprint_A1", "Blueprint_A2"}:
         return "MARKET"
     return "MARKET"
+
+
+def _strategy_family_for_intent(intent: str) -> str:
+    return STRATEGY_FAMILY_GRID if intent == "GRID_NEUTRAL" else STRATEGY_FAMILY_DIRECTIONAL
+
+
+def _grid_symbol_config(symbol: str) -> Dict[str, float]:
+    return {**GLOBAL_CONFIG, **GRID_SYMBOL_CONFIG.get(symbol, {})}
+
+
+def _canonical_symbol(value: Any) -> str:
+    raw = str(value or "").upper()
+    if not raw:
+        return ""
+    if raw.endswith("-SWAP"):
+        raw = raw[:-5]
+    if raw.endswith("-USDT"):
+        return raw
+    return f"{raw}-USDT"
+
+
+def _grid_record_failure_reason(record: Dict[str, Any]) -> Optional[str]:
+    execution = record.get("execution") or {}
+    reason = str(execution.get("runtime_reason") or execution.get("failure_reason") or "").strip()
+    if reason in GRID_COOLDOWN_FAILURE_REASONS:
+        return reason
+    if reason == "grid_max_lifetime_stop" and _safe_float(execution.get("realized_pnl")) <= 0:
+        return reason
+    pnl = execution.get("realized_pnl")
+    if pnl is not None and _safe_float(pnl) < 0:
+        return "negative_realized_pnl"
+    return None
+
+
+def _grid_record_event_time(record: Dict[str, Any]) -> Optional[datetime]:
+    execution = record.get("execution") or {}
+    for key in ("closed_at", "updated_at", "executed_at"):
+        dt = _parse_dt(execution.get(key) or record.get(key))
+        if dt is not None:
+            return dt
+    return _parse_dt(record.get("updated_at") or record.get("created_at"))
+
+
+def _grid_cooldown_state(symbol: str, records: List[Dict[str, Any]], now: Optional[datetime] = None) -> Dict[str, Any]:
+    now = now or _now_utc()
+    target_symbol = _canonical_symbol(symbol)
+    lookback_since = now - timedelta(hours=float(GLOBAL_CONFIG["grid_cooldown_failure_lookback_hours"]))
+    failures: List[Dict[str, Any]] = []
+    for record in records if isinstance(records, list) else []:
+        risk_review = record.get("riskReview") or {}
+        execution = record.get("execution") or {}
+        if _canonical_symbol(record.get("symbol")) != target_symbol:
+            continue
+        if risk_review.get("strategy_family") != STRATEGY_FAMILY_GRID and execution.get("execution_action") != "START_GRID_BOT":
+            continue
+        reason = _grid_record_failure_reason(record)
+        if not reason:
+            continue
+        event_time = _grid_record_event_time(record)
+        if event_time is None or event_time < lookback_since or event_time > now:
+            continue
+        failures.append({
+            "decisionId": record.get("decisionId"),
+            "reason": reason,
+            "at": event_time,
+            "positionState": record.get("positionState"),
+            "realized_pnl": _safe_float(execution.get("realized_pnl")),
+        })
+
+    failures.sort(key=lambda item: item["at"], reverse=True)
+    if not failures:
+        return {"blocked": False, "failure_count": 0, "failure_reasons": [], "cooldown_until": None}
+
+    failure_count = len(failures)
+    threshold = int(GLOBAL_CONFIG["grid_cooldown_failure_threshold"])
+    cooldown_hours = (
+        float(GLOBAL_CONFIG["grid_cooldown_multi_failure_hours"])
+        if failure_count >= threshold
+        else float(GLOBAL_CONFIG["grid_cooldown_single_failure_hours"])
+    )
+    latest_failure_at = failures[0]["at"]
+    cooldown_until = latest_failure_at + timedelta(hours=cooldown_hours)
+    blocked = now < cooldown_until
+    return {
+        "blocked": blocked,
+        "failure_count": failure_count,
+        "failure_reasons": [item["reason"] for item in failures[:5]],
+        "last_failure_at": latest_failure_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "cooldown_until": cooldown_until.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "cooldown_hours": cooldown_hours,
+        "recent_failures": [
+            {
+                **{k: v for k, v in item.items() if k != "at"},
+                "at": item["at"].strftime("%Y-%m-%dT%H:%M:%SZ"),
+            }
+            for item in failures[:5]
+        ],
+    }
+
+
+def _derive_grid_macro_trend_gate(
+    *,
+    macro_mode: str,
+    macro_horizon: str,
+    macro_key_events: List[str],
+    flow_composite_semantic: str,
+    ma5_cross_up_ma10_1d: bool,
+    ma5_cross_down_ma10_1d: bool,
+) -> Dict[str, Any]:
+    tags = {str(tag).upper() for tag in (macro_key_events or [])}
+    reasons: List[str] = []
+    bullish_macro_cluster = (
+        "LIQUIDITY_EXPANDING" in tags
+        and bool(tags & {"FED_DOVISH", "CPI_COOL", "RISK_ON_NEWS", "USD_WEAKNESS"})
+    )
+    bearish_macro_cluster = (
+        "LIQUIDITY_CONTRACTING" in tags
+        and bool(tags & {"FED_HAWKISH", "CPI_HOT", "RISK_OFF_NEWS", "USD_STRENGTH", "YEN_STRESS"})
+    )
+    directional_swing_macro = (
+        macro_mode in {"RISK_ON", "RISK_OFF"}
+        and str(macro_horizon).upper() in GLOBAL_CONFIG["grid_block_macro_horizons"]
+    )
+    if bullish_macro_cluster:
+        reasons.append("bullish_liquidity_macro_cluster")
+    if bearish_macro_cluster:
+        reasons.append("bearish_liquidity_macro_cluster")
+    if directional_swing_macro:
+        reasons.append("directional_swing_macro")
+    if macro_mode == "RISK_ON" and flow_composite_semantic == "LONG_SUPPORT":
+        reasons.append("risk_on_with_long_flow_support")
+    if macro_mode == "RISK_OFF" and flow_composite_semantic == "SHORT_SUPPORT":
+        reasons.append("risk_off_with_short_flow_support")
+    if ma5_cross_up_ma10_1d:
+        reasons.append("ma5_cross_up_ma10_1d")
+    if ma5_cross_down_ma10_1d:
+        reasons.append("ma5_cross_down_ma10_1d")
+    return {
+        "ok": not reasons,
+        "reasons": reasons,
+    }
+
+
+def _derive_grid_setup(
+    symbol: str,
+    price: float,
+    atr: float,
+    adx_14: float,
+    p_up_8h: float,
+    p_down_8h: float,
+    p_flat_8h: float,
+    macro_mode: str,
+    support_level: Any,
+    resistance_level: Any,
+    bb_width: float = 0.0,
+    bb_pct_b: float = 0.5,
+    bb_mid_slope_pct: float = 0.0,
+    adx_delta: float = 0.0,
+    recent_close_drift_pct: float = 0.0,
+    range_edge_close_count: int = 0,
+    macro_horizon: str = "NOISE",
+    macro_key_events: Optional[List[str]] = None,
+    flow_composite_semantic: str = "MIXED",
+    ma5_cross_up_ma10_1d: bool = False,
+    ma5_cross_down_ma10_1d: bool = False,
+    preflight_data_ok: bool = False,
+    preflight_missing_fields: Optional[List[str]] = None,
+) -> Dict[str, Any]:
+    grid_config = _grid_symbol_config(symbol)
+    fallback_half_range = max(atr * 2.0, price * 0.025)
+    lower_bound = _safe_float(support_level)
+    upper_bound = _safe_float(resistance_level)
+    if lower_bound <= 0 or lower_bound >= price:
+        lower_bound = round(price - fallback_half_range, 4)
+    if upper_bound <= price:
+        upper_bound = round(price + fallback_half_range, 4)
+    if upper_bound <= lower_bound:
+        lower_bound = round(price - fallback_half_range, 4)
+        upper_bound = round(price + fallback_half_range, 4)
+
+    range_mid = max((upper_bound + lower_bound) / 2.0, 1e-9)
+    range_width_pct = (upper_bound - lower_bound) / range_mid
+    price_position_in_range = (price - lower_bound) / max(upper_bound - lower_bound, 1e-9)
+    fee_rate = float(GLOBAL_CONFIG["grid_fee_rate"])
+    slippage_rate = float(GLOBAL_CONFIG["grid_slippage_rate"])
+    profit_buffer_rate = float(GLOBAL_CONFIG["grid_profit_buffer_rate"])
+    min_profitable_spacing_pct = 2 * fee_rate + 2 * slippage_rate + profit_buffer_rate
+    width_ok = (
+        grid_config["grid_width_min_pct"]
+        <= range_width_pct
+        <= grid_config["grid_width_max_pct"]
+    )
+    flat_regime = (
+        p_flat_8h >= GLOBAL_CONFIG["grid_flat_min_threshold"]
+        and p_flat_8h >= max(p_up_8h, p_down_8h)
+        and max(p_up_8h, p_down_8h) < GLOBAL_CONFIG["grid_prob_ceiling"]
+        and abs(p_up_8h - p_down_8h) < GLOBAL_CONFIG["grid_prob_gap_max"]
+        and adx_14 <= GLOBAL_CONFIG["grid_adx_max"]
+    )
+    price_position_ok = (
+        grid_config["grid_price_position_min"]
+        <= price_position_in_range
+        <= grid_config["grid_price_position_max"]
+    )
+    bb_width_ok = (
+        bb_width <= 0
+        or (
+            GLOBAL_CONFIG["grid_bb_width_min_pct"]
+            <= bb_width
+            <= GLOBAL_CONFIG["grid_bb_width_max_pct"]
+        )
+    )
+    bb_slope_ok = abs(bb_mid_slope_pct) <= GLOBAL_CONFIG["grid_bb_mid_slope_max_pct"]
+    trend_risk_ok = (
+        adx_delta <= grid_config["grid_adx_delta_max"]
+        and abs(recent_close_drift_pct) <= grid_config["grid_recent_drift_max_pct"]
+        and range_edge_close_count <= grid_config["grid_max_edge_close_count"]
+    )
+    macro_trend_gate = _derive_grid_macro_trend_gate(
+        macro_mode=macro_mode,
+        macro_horizon=macro_horizon,
+        macro_key_events=macro_key_events or [],
+        flow_composite_semantic=flow_composite_semantic,
+        ma5_cross_up_ma10_1d=ma5_cross_up_ma10_1d,
+        ma5_cross_down_ma10_1d=ma5_cross_down_ma10_1d,
+    )
+    target_spacing_pct = max(min_profitable_spacing_pct * 1.5, 0.008)
+    raw_grid_count = int(round(range_width_pct / target_spacing_pct))
+    raw_grid_count = max(2, raw_grid_count)
+    max_profitable_grid_count = int(range_width_pct / max(min_profitable_spacing_pct, 1e-9))
+    max_profitable_grid_count = max(2, max_profitable_grid_count)
+    grid_count = min(24, raw_grid_count, max_profitable_grid_count)
+    grid_count = max(2, grid_count)
+    realized_grid_spacing_pct = range_width_pct / grid_count
+    spacing_profitable = realized_grid_spacing_pct > min_profitable_spacing_pct
+    range_regime = (
+        flat_regime
+        and macro_mode != "EVENT_DRIVEN"
+        and width_ok
+        and price_position_ok
+        and preflight_data_ok
+        and bb_width_ok
+        and bb_slope_ok
+        and trend_risk_ok
+        and macro_trend_gate["ok"]
+        and spacing_profitable
+    )
+
+    return {
+        "range_lower_bound": round(lower_bound, 4),
+        "range_upper_bound": round(upper_bound, 4),
+        "range_width_pct": round(range_width_pct, 4),
+        "price_position_in_range": round(price_position_in_range, 4),
+        "range_regime": range_regime,
+        "grid_candidate_eligible": range_regime,
+        "grid_mode": "ARITHMETIC",
+        "grid_count": grid_count,
+        "grid_spacing_pct": round(realized_grid_spacing_pct, 4),
+        "min_profitable_spacing_pct": round(min_profitable_spacing_pct, 4),
+        "spacing_profitable": spacing_profitable,
+        "price_position_ok": price_position_ok,
+        "bb_width": round(bb_width, 4),
+        "bb_pct_b": round(bb_pct_b, 4),
+        "bb_mid_slope_pct": round(bb_mid_slope_pct, 4),
+        "bb_width_ok": bb_width_ok,
+        "bb_slope_ok": bb_slope_ok,
+        "adx_delta": round(adx_delta, 4),
+        "recent_close_drift_pct": round(recent_close_drift_pct, 4),
+        "range_edge_close_count": range_edge_close_count,
+        "trend_risk_ok": trend_risk_ok,
+        "preflight_data_ok": preflight_data_ok,
+        "preflight_missing_fields": preflight_missing_fields or [],
+        "macro_trend_ok": macro_trend_gate["ok"],
+        "macro_block_reasons": macro_trend_gate["reasons"],
+        "max_profitable_grid_count": max_profitable_grid_count,
+        "review_after_hours": int(grid_config["grid_review_after_hours"]),
+        "extension_step_hours": int(grid_config["grid_extension_step_hours"]),
+        "max_lifetime_hours": int(grid_config["grid_max_lifetime_hours"]),
+    }
 
 
 def _build_candidate_proposals(snapshot: Dict[str, Any]) -> Dict[str, Any]:
@@ -615,6 +1115,7 @@ def _build_candidate_proposals(snapshot: Dict[str, Any]) -> Dict[str, Any]:
                       reference_values: Optional[Dict[str, float]] = None,
                       invalidation_basis: str = "", invalidation_conditions: Optional[Dict[str, Any]] = None) -> None:
         proposals.append({
+            "strategy_family": _strategy_family_for_intent(intent),
             "decision_intent": intent,
             "trigger_source": blueprint,
             "rationale": rationale,
@@ -625,6 +1126,100 @@ def _build_candidate_proposals(snapshot: Dict[str, Any]) -> Dict[str, Any]:
             "reference_values": reference_values or {},
             "invalidation_basis": invalidation_basis,
             "invalidation_conditions": invalidation_conditions or {"operator": "OR", "rules": [], "persistence": 1},
+        })
+
+    def add_grid_candidate() -> None:
+        if symbol not in GRID_ENABLED_SYMBOLS:
+            return
+        if features.get("grid_preflight_data_ok") is not True:
+            return
+        if features.get("grid_macro_trend_ok") is False:
+            return
+        recent_records = db.get_data("trade_decision_records", [])
+        cooldown = _grid_cooldown_state(symbol, recent_records if isinstance(recent_records, list) else [])
+        if cooldown.get("blocked"):
+            return
+        lower_bound = _safe_float(features.get("range_lower_bound"))
+        upper_bound = _safe_float(features.get("range_upper_bound"))
+        grid_count = int(features.get("grid_count") or 8)
+        review_after_hours = int(features.get("grid_review_after_hours") or GLOBAL_CONFIG["grid_review_after_hours"])
+        extension_step_hours = int(features.get("grid_extension_step_hours") or GLOBAL_CONFIG["grid_extension_step_hours"])
+        max_lifetime_hours = int(features.get("grid_max_lifetime_hours") or GLOBAL_CONFIG["grid_max_lifetime_hours"])
+        grid_spacing_pct = _safe_float(features.get("grid_spacing_pct"))
+        min_profitable_spacing_pct = _safe_float(features.get("min_profitable_spacing_pct"))
+        price_position_in_range = _safe_float(features.get("price_position_in_range"))
+        funding_zscore = abs(_safe_float(market.get("funding_zscore")))
+        if funding_zscore > GLOBAL_CONFIG["grid_funding_zscore_max"]:
+            return
+        stop_loss = round(max(0.0, lower_bound - 0.5 * atr), 4)
+        take_profit = round(upper_bound + 0.5 * atr, 4)
+        grid_bias = "NEUTRAL"
+        bb_pct_b = _safe_float(market.get("bb_pct_b"), 0.5)
+        volume_boundary_confirmed = lower_bound > 0 and upper_bound > 0 and (
+            market.get("structure_support_12bar_volume_confirmed") is not None
+            or market.get("structure_resistance_12bar_volume_confirmed") is not None
+        )
+        if price_position_in_range >= 0.65 or bb_pct_b >= 0.80:
+            grid_bias = "SHORT_BIASED"
+        elif 0 < price_position_in_range <= 0.35 or bb_pct_b <= 0.20:
+            grid_bias = "LONG_BIASED"
+        proposals.append({
+            "strategy_family": STRATEGY_FAMILY_GRID,
+            "decision_intent": "GRID_NEUTRAL",
+            "trigger_source": "Blueprint_G1",
+            "rationale": "high flat probability with contained range and low trend strength",
+            "entry_type": "GRID_BOT",
+            "proposed_entry_price": round(price, 4),
+            "proposed_sl_price": stop_loss,
+            "proposed_tp_price": take_profit,
+            "reference_values": {
+                "range_lower_bound": round(lower_bound, 4),
+                "range_upper_bound": round(upper_bound, 4),
+                "range_width_pct": _safe_float(features.get("range_width_pct")),
+                "grid_count": grid_count,
+                "grid_mode": str(features.get("grid_mode") or "ARITHMETIC"),
+                "grid_bias": grid_bias,
+                "grid_spacing_pct": grid_spacing_pct,
+                "min_profitable_spacing_pct": min_profitable_spacing_pct,
+                "price_position_in_range": price_position_in_range,
+                "bb_width": _safe_float(market.get("bb_width")),
+                "bb_pct_b": bb_pct_b,
+                "bb_mid_slope_pct": _safe_float(market.get("bb_mid_slope_pct")),
+                "adx_delta": _safe_float(market.get("adx_delta")),
+                "recent_close_drift_pct": _safe_float(market.get("recent_close_drift_pct")),
+                "range_edge_close_count": int(_safe_float(market.get("range_edge_close_count"))),
+                "preflight_data_ok": bool(features.get("grid_preflight_data_ok")),
+                "preflight_missing_fields": features.get("grid_preflight_missing_fields") or [],
+                "macro_trend_ok": bool(features.get("grid_macro_trend_ok", True)),
+                "macro_block_reasons": list(features.get("grid_macro_block_reasons") or []),
+                "ma5_cross_up_ma10_1d": bool(features.get("ma5_cross_up_ma10_1d")),
+                "ma5_cross_down_ma10_1d": bool(features.get("ma5_cross_down_ma10_1d")),
+                "ma5_10_gap_pct_1d": _safe_float(features.get("ma5_10_gap_pct_1d")),
+                "grid_cooldown_blocked": bool(cooldown.get("blocked")),
+                "grid_cooldown_failure_count": int(cooldown.get("failure_count") or 0),
+                "grid_cooldown_until": cooldown.get("cooldown_until"),
+                "grid_cooldown_failure_reasons": cooldown.get("failure_reasons") or [],
+                "volume_boundary_confirmed": volume_boundary_confirmed,
+                "funding_zscore": _safe_float(market.get("funding_zscore")),
+                "review_after_hours": review_after_hours,
+                "extension_step_hours": extension_step_hours,
+                "max_lifetime_hours": max_lifetime_hours,
+                "p_flat_8h": _safe_float(onchain.get("p_flat_8h")),
+                "p_up_8h": _safe_float(onchain.get("p_up_8h")),
+                "p_down_8h": _safe_float(onchain.get("p_down_8h")),
+            },
+            "invalidation_basis": "range breakout, event window activation, or flat regime deterioration",
+            "invalidation_conditions": {
+                "operator": "OR",
+                "rules": [
+                    {"field": "close_below_range_lower_2bars", "op": "==", "value": True},
+                    {"field": "close_above_range_upper_2bars", "op": "==", "value": True},
+                    {"field": "macro_mode", "op": "==", "value": "EVENT_DRIVEN"},
+                    {"field": "grid_macro_trend_ok", "op": "==", "value": False},
+                    {"field": "p_flat_8h", "op": "<", "value": GLOBAL_CONFIG["grid_flat_exit_threshold"]},
+                ],
+                "persistence": 1,
+            },
         })
 
     # Blueprint_A2
@@ -870,6 +1465,9 @@ def _build_candidate_proposals(snapshot: Dict[str, Any]) -> Dict[str, Any]:
             },
         )
 
+    if features.get("grid_candidate_eligible"):
+        add_grid_candidate()
+
     # Blueprint_F1 / F2 retained runtime variant
     macd_line = _safe_float(market.get("macd_line_4h"))
     macd_signal = _safe_float(market.get("macd_signal_4h"))
@@ -956,6 +1554,7 @@ def _build_candidate_proposals(snapshot: Dict[str, Any]) -> Dict[str, Any]:
 
 def _validate_candidate_schema(proposal: Dict[str, Any]) -> Tuple[bool, Optional[str]]:
     required = [
+        "strategy_family",
         "decision_intent",
         "trigger_source",
         "rationale",
@@ -970,23 +1569,25 @@ def _validate_candidate_schema(proposal: Dict[str, Any]) -> Tuple[bool, Optional
     for field in required:
         if field not in proposal:
             return False, f"missing_{field}"
-    if proposal["decision_intent"] not in {"LONG", "SHORT"}:
+    if proposal["strategy_family"] not in {STRATEGY_FAMILY_DIRECTIONAL, STRATEGY_FAMILY_GRID}:
+        return False, "invalid_strategy_family"
+    if proposal["decision_intent"] not in {"LONG", "SHORT", "GRID_NEUTRAL"}:
         return False, "invalid_decision_intent"
-    if proposal["entry_type"] not in {"MARKET", "LIMIT", "STOP"}:
+    if proposal["entry_type"] not in {"MARKET", "LIMIT", "STOP", "GRID_BOT"}:
         return False, "invalid_entry_type"
     return True, None
 
 
 def _summarize_candidate_structure(proposals: List[Dict[str, Any]], approved_candidates: Optional[List[Dict[str, Any]]] = None) -> Dict[str, Any]:
     approved_candidates = approved_candidates or []
-    intent_groups: Dict[str, List[str]] = {"LONG": [], "SHORT": []}
+    intent_groups: Dict[str, List[str]] = {"LONG": [], "SHORT": [], "GRID_NEUTRAL": []}
     for proposal in proposals:
         intent = str(proposal.get("decision_intent") or "")
         source = str(proposal.get("trigger_source") or "")
         if intent in intent_groups and source:
             intent_groups[intent].append(source)
 
-    approved_groups: Dict[str, List[str]] = {"LONG": [], "SHORT": []}
+    approved_groups: Dict[str, List[str]] = {"LONG": [], "SHORT": [], "GRID_NEUTRAL": []}
     for proposal in approved_candidates:
         intent = str(proposal.get("decision_intent") or "")
         source = str(proposal.get("trigger_source") or "")
@@ -995,11 +1596,12 @@ def _summarize_candidate_structure(proposals: List[Dict[str, Any]], approved_can
 
     has_long = bool(intent_groups["LONG"])
     has_short = bool(intent_groups["SHORT"])
+    has_grid = bool(intent_groups["GRID_NEUTRAL"])
     if has_long and has_short:
         overall_state = "directional_conflict"
     elif len(intent_groups["LONG"]) >= 2 or len(intent_groups["SHORT"]) >= 2:
         overall_state = "same_direction_resonance"
-    elif has_long or has_short:
+    elif has_long or has_short or has_grid:
         overall_state = "single_signal"
     else:
         overall_state = "no_candidate"
@@ -1009,15 +1611,22 @@ def _summarize_candidate_structure(proposals: List[Dict[str, Any]], approved_can
         "has_directional_conflict": has_long and has_short,
         "long_count": len(intent_groups["LONG"]),
         "short_count": len(intent_groups["SHORT"]),
+        "grid_count": len(intent_groups["GRID_NEUTRAL"]),
         "resonance_groups": {
             "LONG": intent_groups["LONG"],
             "SHORT": intent_groups["SHORT"],
+            "GRID_NEUTRAL": intent_groups["GRID_NEUTRAL"],
         },
         "approved_groups": {
             "LONG": approved_groups["LONG"],
             "SHORT": approved_groups["SHORT"],
+            "GRID_NEUTRAL": approved_groups["GRID_NEUTRAL"],
         },
-        "approved_resonance_strength": max(len(approved_groups["LONG"]), len(approved_groups["SHORT"])),
+        "approved_resonance_strength": max(
+            len(approved_groups["LONG"]),
+            len(approved_groups["SHORT"]),
+            len(approved_groups["GRID_NEUTRAL"]),
+        ),
     }
 
 
@@ -1067,6 +1676,54 @@ def _evaluate_rules(snapshot: Dict[str, Any], candidate_batch: Dict[str, Any]) -
         sl = _safe_float(proposal.get("proposed_sl_price"))
         tp = _safe_float(proposal.get("proposed_tp_price"))
         intent = proposal.get("decision_intent")
+
+        if intent == "GRID_NEUTRAL":
+            if not snapshot["decision_ready_features"].get("grid_candidate_eligible") or not snapshot["decision_ready_features"].get("range_regime"):
+                passed = False
+                reason_codes.append("CHOP_FILTER_BLOCKED")
+                rule_trace.append({"rule": "GRID_REGIME_CHECK", "passed": False, "detail": "range_regime_false"})
+                continue
+            range_width_pct = _safe_float(snapshot["decision_ready_features"].get("range_width_pct"))
+            grid_config = _grid_symbol_config(str(snapshot.get("symbol") or ""))
+            if not (
+                grid_config["grid_width_min_pct"]
+                <= range_width_pct
+                <= grid_config["grid_width_max_pct"]
+            ):
+                passed = False
+                reason_codes.append("GRID_WIDTH_INVALID")
+                rule_trace.append({"rule": "GRID_WIDTH_CHECK", "passed": False, "detail": {"range_width_pct": range_width_pct}})
+                continue
+            existing_side = position_snapshot.get("position_side")
+            if existing_side not in {None, "", "NONE"}:
+                passed = False
+                reason_codes.append("POSITION_CONFLICT")
+                rule_trace.append({"rule": "GRID_POSITION_MUTEX_CHECK", "passed": False, "detail": existing_side})
+                continue
+            if snapshot["decision_ready_features"].get("macro_mode") == "EVENT_DRIVEN":
+                passed = False
+                reason_codes.append("GRID_EVENT_RISK_BLOCKED")
+                rule_trace.append({"rule": "GRID_EVENT_WINDOW_CHECK", "passed": False, "detail": "event_driven"})
+                continue
+            if snapshot["decision_ready_features"].get("grid_preflight_data_ok") is not True:
+                passed = False
+                reason_codes.append("GRID_PREFLIGHT_DATA_MISSING")
+                rule_trace.append({
+                    "rule": "GRID_PREFLIGHT_DATA_CHECK",
+                    "passed": False,
+                    "detail": snapshot["decision_ready_features"].get("grid_preflight_missing_fields") or [],
+                })
+                continue
+            if snapshot["decision_ready_features"].get("grid_macro_trend_ok") is False:
+                passed = False
+                reason_codes.append("GRID_MACRO_TREND_BLOCKED")
+                rule_trace.append({
+                    "rule": "GRID_MACRO_TREND_CHECK",
+                    "passed": False,
+                    "detail": snapshot["decision_ready_features"].get("grid_macro_block_reasons") or [],
+                })
+                continue
+
         rrr = _rrr(intent, entry, sl, tp)
         if rrr < GLOBAL_CONFIG["min_rrr"]:
             passed = False
@@ -1097,7 +1754,8 @@ def _evaluate_rules(snapshot: Dict[str, Any], candidate_batch: Dict[str, Any]) -
             rule_trace.append({"rule": "REGIME_PERMISSION_CHECK", "passed": False, "detail": "macro_long_only"})
             continue
 
-        leverage = min(GLOBAL_CONFIG["global_leverage_max"], max(GLOBAL_CONFIG["global_leverage_min"], 3.0))
+        leverage_target = GLOBAL_CONFIG["grid_leverage_default"] if intent == "GRID_NEUTRAL" else 3.0
+        leverage = min(GLOBAL_CONFIG["global_leverage_max"], max(GLOBAL_CONFIG["global_leverage_min"], leverage_target))
         liq_buffer = _estimate_pretrade_liq_buffer(entry, sl, leverage)
         if liq_buffer <= 0.05:
             passed = False
@@ -1162,6 +1820,7 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
         return {
             "symbol": snapshot["symbol"],
             "cycleId": snapshot["cycleId"],
+            "strategy_family": None,
             "approved": False,
             "final_intent": "NO_TRADE",
             "approved_risk_fraction": 0.0,
@@ -1177,6 +1836,7 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
         return {
             "symbol": snapshot["symbol"],
             "cycleId": snapshot["cycleId"],
+            "strategy_family": None,
             "approved": False,
             "final_intent": research_output["selected_intent"],
             "approved_risk_fraction": 0.0,
@@ -1201,31 +1861,59 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
         account_equity = 1000.0
 
     approved_risk_fraction = GLOBAL_CONFIG["approved_risk_fraction"]
-    raw_size = account_equity * GLOBAL_CONFIG["default_position_size_fraction"]
-    approved_position_size_usd = min(raw_size, account_equity * GLOBAL_CONFIG["max_position_size_fraction"])
-    approved_position_size_usd = _cap_position_size_by_max_loss(
-        account_equity=account_equity,
-        entry_price=_safe_float(candidate.get("proposed_entry_price")),
-        stop_loss=_safe_float(candidate.get("proposed_sl_price")),
-        requested_size_usd=approved_position_size_usd,
-    )
-    leverage = 3.0
-    max_holding_bars = 3 if snapshot["decision_ready_features"].get("macro_mode") == "EVENT_DRIVEN" else 6
+    is_grid_candidate = candidate.get("decision_intent") == "GRID_NEUTRAL"
+    if is_grid_candidate:
+        approved_risk_fraction = min(approved_risk_fraction, 0.01)
+        raw_size = account_equity * GLOBAL_CONFIG["grid_position_size_fraction"]
+        approved_position_size_usd = min(raw_size, account_equity * GLOBAL_CONFIG["grid_max_position_size_fraction"])
+        leverage = min(GLOBAL_CONFIG["grid_leverage_default"], GLOBAL_CONFIG["grid_leverage_max"])
+        max_holding_bars = max(1, int((_safe_float(candidate.get("reference_values", {}).get("max_lifetime_hours"), GLOBAL_CONFIG["grid_max_lifetime_hours"])) / 4))
+    else:
+        raw_size = account_equity * GLOBAL_CONFIG["default_position_size_fraction"]
+        approved_position_size_usd = min(raw_size, account_equity * GLOBAL_CONFIG["max_position_size_fraction"])
+        approved_position_size_usd = _cap_position_size_by_max_loss(
+            account_equity=account_equity,
+            entry_price=_safe_float(candidate.get("proposed_entry_price")),
+            stop_loss=_safe_float(candidate.get("proposed_sl_price")),
+            requested_size_usd=approved_position_size_usd,
+        )
+        leverage = 3.0
+        max_holding_bars = 3 if snapshot["decision_ready_features"].get("macro_mode") == "EVENT_DRIVEN" else 6
     review_note = (
         f"approved from {candidate['trigger_source']} with deterministic risk defaults; "
         f"max loss capped at {round(approved_risk_fraction * 100, 1)}% of equity"
     )
     candidate_structure = rule_evaluation.get("candidate_structure", {}) or {}
+    if is_grid_candidate:
+        grid_count = max(int(candidate.get("reference_values", {}).get("grid_count") or 1), 1)
+        per_grid_notional = approved_position_size_usd / grid_count
+        candidate.setdefault("reference_values", {})
+        candidate["reference_values"]["per_grid_notional_usd"] = round(per_grid_notional, 2)
+        if per_grid_notional < GLOBAL_CONFIG["grid_min_per_grid_notional_usd"]:
+            return {
+                "symbol": snapshot["symbol"],
+                "cycleId": snapshot["cycleId"],
+                "strategy_family": STRATEGY_FAMILY_GRID,
+                "approved": False,
+                "final_intent": "NO_TRADE",
+                "approved_risk_fraction": 0.0,
+                "approved_position_size_usd": 0.0,
+                "leverage": 1.0,
+                "max_holding_bars": 0,
+                "execution_action": "DO_NOTHING",
+                "next_position_state": "candidate",
+                "review_note": "grid per-cell notional too small after fees/slippage sizing constraints",
+            }
 
     if research_output:
         if research_output.get("thesis_strength") == "LOW":
             approved_position_size_usd *= 0.5
-            leverage = 1.0
+            leverage = 1.0 if not is_grid_candidate else min(leverage, 2.0)
             max_holding_bars = min(max_holding_bars, 2)
             review_note = "research flagged low thesis strength; reduced size and leverage"
         elif research_output.get("thesis_strength") == "MEDIUM":
             approved_position_size_usd *= 0.75
-            leverage = 2.0
+            leverage = 2.0 if not is_grid_candidate else min(leverage, 2.5)
             max_holding_bars = min(max_holding_bars, 4)
             review_note = "research flagged medium thesis strength; reduced size and duration"
 
@@ -1242,19 +1930,31 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
             f"{review_note}; same-direction resonance increased size by {round(resonance_bonus * 100, 1)}%"
         )
 
-    approved_position_size_usd = _cap_position_size_by_max_loss(
-        account_equity=account_equity,
-        entry_price=_safe_float(candidate.get("proposed_entry_price")),
-        stop_loss=_safe_float(candidate.get("proposed_sl_price")),
-        requested_size_usd=approved_position_size_usd,
-    )
+    if not is_grid_candidate:
+        approved_position_size_usd = _cap_position_size_by_max_loss(
+            account_equity=account_equity,
+            entry_price=_safe_float(candidate.get("proposed_entry_price")),
+            stop_loss=_safe_float(candidate.get("proposed_sl_price")),
+            requested_size_usd=approved_position_size_usd,
+        )
     leverage = min(GLOBAL_CONFIG["global_leverage_max"], max(GLOBAL_CONFIG["global_leverage_min"], leverage))
 
-    execution_action = "OPEN_LONG" if candidate["decision_intent"] == "LONG" else "OPEN_SHORT"
+    if candidate["decision_intent"] == "GRID_NEUTRAL":
+        execution_action = "START_GRID_BOT"
+        review_note = (
+            f"approved grid bot from {candidate['trigger_source']}; "
+            f"range={candidate.get('reference_values', {}).get('range_lower_bound')}~{candidate.get('reference_values', {}).get('range_upper_bound')}, "
+            f"grid_count={candidate.get('reference_values', {}).get('grid_count')}, "
+            f"review_after_hours={candidate.get('reference_values', {}).get('review_after_hours')}, "
+            f"max_lifetime_hours={candidate.get('reference_values', {}).get('max_lifetime_hours')}"
+        )
+    else:
+        execution_action = "OPEN_LONG" if candidate["decision_intent"] == "LONG" else "OPEN_SHORT"
 
     return {
         "symbol": snapshot["symbol"],
         "cycleId": snapshot["cycleId"],
+        "strategy_family": _strategy_family_for_intent(candidate["decision_intent"]),
         "approved": True,
         "final_intent": candidate["decision_intent"],
         "approved_risk_fraction": approved_risk_fraction,
@@ -1274,6 +1974,7 @@ def _build_execution_request(snapshot: Dict[str, Any], risk_review: Dict[str, An
         return {
             "symbol": snapshot["symbol"],
             "cycleId": snapshot["cycleId"],
+            "strategy_family": risk_review.get("strategy_family"),
             "execution_action": "DO_NOTHING",
             "order_status": "NOT_REQUESTED",
             "requested_size_usd": 0.0,
@@ -1295,6 +1996,7 @@ def _build_execution_request(snapshot: Dict[str, Any], risk_review: Dict[str, An
     return {
         "symbol": snapshot["symbol"],
         "cycleId": snapshot["cycleId"],
+        "strategy_family": risk_review.get("strategy_family"),
         "execution_action": risk_review["execution_action"],
         "order_status": "PENDING_SUBMIT",
         "requested_size_usd": risk_review["approved_position_size_usd"],
@@ -1307,9 +2009,11 @@ def _build_execution_request(snapshot: Dict[str, Any], risk_review: Dict[str, An
             "stop_loss": candidate["proposed_sl_price"],
             "take_profit": candidate["proposed_tp_price"],
         },
+        "grid_config": candidate.get("reference_values") if candidate.get("entry_type") == "GRID_BOT" else None,
         "avg_fill_price": None,
         "filled_size": 0.0,
         "exchange_order_id": None,
+        "exchange_algo_id": None,
         "executed_at": None,
         "sync_status": "PENDING_SUBMIT",
         "failure_reason": None,
@@ -1415,6 +2119,41 @@ def _execute_if_enabled(executor: OKXExecutor, execution: Dict[str, Any], risk_r
         return execution
 
     candidate = risk_review.get("approved_candidate", {})
+    if execution["execution_action"] == "START_GRID_BOT":
+        grid_order_id = None
+        if hasattr(executor, "execute_grid_bot"):
+            grid_order_id = executor.execute_grid_bot(
+                symbol=execution["symbol"].replace("-USDT", ""),
+                amount_usd=execution["requested_size_usd"],
+                leverage=execution["requested_leverage"],
+                grid_config=execution.get("grid_config") or {},
+            )
+        elif getattr(executor, "shadow_mode", False):
+            grid_order_id = f"shadow_grid_{int(_now_utc().timestamp() * 1000)}"
+
+        if grid_order_id:
+            execution["exchange_algo_id"] = str(grid_order_id)
+            execution["order_status"] = "SUBMITTED"
+            execution["sync_status"] = "SUBMITTED"
+            execution["protection_status"] = "PENDING_SYNC"
+            execution["executed_at"] = _iso_now()
+            history.append(_execution_event("GRID_BOT_SUBMITTED", {
+                "exchange_algo_id": str(grid_order_id),
+                "execution_action": execution.get("execution_action"),
+                "grid_config": execution.get("grid_config"),
+            }))
+        else:
+            execution["order_status"] = "FAILED"
+            execution["sync_status"] = "FAILED"
+            execution["protection_status"] = "FAILED"
+            execution["failure_reason"] = "grid_executor_not_supported"
+            history.append(_execution_event("GRID_BOT_SUBMIT_FAILED", {
+                "execution_action": execution.get("execution_action"),
+                "failure_reason": execution["failure_reason"],
+            }))
+        execution["history"] = history[-50:]
+        return execution
+
     symbol = execution["symbol"].replace("-USDT", "")
     action_map = {
         "OPEN_LONG": "open_long",

@@ -25,7 +25,87 @@ class FakeDB:
         self.store[key] = deepcopy(data)
 
 
+class FakeGridExecutor:
+    def __init__(self, state="running"):
+        self.state = state
+
+    def get_grid_bot_details(self, algo_id, algo_ord_type="contract_grid"):
+        return {
+            "code": "0",
+            "data": [{
+                "algoId": algo_id,
+                "algoOrdType": algo_ord_type,
+                "state": self.state,
+                "avgPx": "2450",
+                "sz": "500",
+            }],
+        }
+
+
 class ExecutionReconciliationTests(unittest.TestCase):
+    def test_marks_grid_bot_as_running(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "g1",
+                    "cycleId": "cycle_1",
+                    "symbol": "ETH-USDT",
+                    "positionState": "entered",
+                    "riskReview": {"approved": True, "final_intent": "GRID_NEUTRAL"},
+                    "execution": {
+                        "execution_action": "START_GRID_BOT",
+                        "exchange_algo_id": "grid_1",
+                        "order_status": "SUBMITTED",
+                        "sync_status": "SUBMITTED",
+                        "history": [],
+                    },
+                }
+            ],
+            "portfolio_state": {"positions": []},
+            "trade_history": [],
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db), patch.object(er, "OKXExecutor", return_value=FakeGridExecutor("running")):
+            result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 1)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["execution"]["order_status"], "FILLED")
+        self.assertEqual(record["execution"]["sync_status"], "RUNNING")
+        self.assertEqual(record["execution"]["grid_state"], "running")
+        self.assertEqual(record["execution"]["filled_size"], 500.0)
+
+    def test_marks_grid_bot_as_closed(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "g2",
+                    "cycleId": "cycle_1",
+                    "symbol": "BTC-USDT",
+                    "positionState": "exit_pending",
+                    "riskReview": {"approved": True, "final_intent": "GRID_NEUTRAL"},
+                    "execution": {
+                        "execution_action": "START_GRID_BOT",
+                        "exchange_algo_id": "grid_2",
+                        "order_status": "FILLED",
+                        "sync_status": "STOP_REQUESTED",
+                        "history": [],
+                    },
+                }
+            ],
+            "portfolio_state": {"positions": []},
+            "trade_history": [],
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db), patch.object(er, "OKXExecutor", return_value=FakeGridExecutor("stopped")):
+            result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 1)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["execution"]["order_status"], "CLOSED")
+        self.assertEqual(record["execution"]["sync_status"], "CLOSED")
+        self.assertEqual(record["positionState"], "closed")
+
     def test_marks_open_position_as_filled(self):
         store = {
             "trade_decision_records": [
