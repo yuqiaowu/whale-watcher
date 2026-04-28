@@ -227,6 +227,49 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertTrue(any(record.get("researchOutput", {}).get("scenario_candidates") for record in saved_records if record.get("researchOutput")))
         self.assertIn("latest_decision_cycle_v2", fake_db.store)
 
+    def test_run_cycle_reuses_one_macro_snapshot_for_all_symbols(self):
+        whale_analysis = {
+            "fear_greed": {"value": 35, "value_classification": "Fear"},
+            "macro": {},
+            "news": {},
+            "btc": {"market": {"price": 65000}},
+            "eth": {"market": {"price": 2400}},
+            "sol": {"market": {"price": 80}},
+            "bnb": {"market": {"price": 600}},
+            "doge": {"market": {"price": 0.1}},
+        }
+        store = {
+            "whale_analysis": whale_analysis,
+            "portfolio_state": {"positions": [], "total_equity": 10000},
+        }
+        qlib_payload = {
+            "coins": [
+                {"symbol": symbol, "rank": idx + 1, "p_up_8h": 0.2, "p_down_8h": 0.2, "p_flat_8h": 0.6, "market_data": {"atr_14": 1, "close": 100}}
+                for idx, symbol in enumerate(dp.TRACKED_SYMBOLS)
+            ]
+        }
+        macro_snapshot = {
+            "macro_mode": "RISK_OFF",
+            "macro_horizon": "MULTI_DAY",
+            "macro_permission": "ALLOW_SHORT",
+            "macro_event_window": False,
+            "key_events": ["FED_HAWKISH", "RISK_OFF_NEWS"],
+            "risk_off_score": 0.8,
+        }
+        fake_db = FakeDB(store)
+
+        with patch.object(dp, "db", fake_db), \
+             patch.object(dp, "_load_qlib_payload", return_value=qlib_payload), \
+             patch.object(dp, "_build_macro_snapshot", return_value=macro_snapshot) as macro_mock, \
+             patch.object(dp, "run_post_trade_review", return_value={"evaluated_count": 0, "record_count": 0}):
+            result = dp.run_deterministic_cycle(executor=FakeExecutor())
+
+        self.assertEqual(1, macro_mock.call_count)
+        horizons = {snapshot["macro_snapshot"]["macro_horizon"] for snapshot in result["snapshots"]}
+        modes = {snapshot["macro_snapshot"]["macro_mode"] for snapshot in result["snapshots"]}
+        self.assertEqual({"MULTI_DAY"}, horizons)
+        self.assertEqual({"RISK_OFF"}, modes)
+
     def test_conflicted_research_waits_for_confirmation(self):
         store = {
             "whale_analysis": {

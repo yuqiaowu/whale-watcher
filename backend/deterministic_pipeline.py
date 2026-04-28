@@ -607,13 +607,14 @@ def _build_decision_snapshot(
     portfolio_state: Dict[str, Any],
     cycle_id: str,
     chart_context: Optional[Dict[str, Any]] = None,
+    macro_snapshot: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     sym_key = symbol.lower()
     coin_root = whale_analysis.get(sym_key, {}) if isinstance(whale_analysis.get(sym_key), dict) else {}
     market = coin_root.get("market", {}) if isinstance(coin_root.get("market"), dict) else {}
     stats24 = coin_root.get("stats_24h", {}) if isinstance(coin_root.get("stats_24h"), dict) else {}
     position_snapshot = _symbol_position_snapshot(portfolio_state, symbol)
-    macro_snapshot = _build_macro_snapshot(whale_analysis)
+    macro_snapshot = deepcopy(macro_snapshot) if macro_snapshot is not None else _build_macro_snapshot(whale_analysis)
     market_data = qlib_coin.get("market_data", {})
     chart_context = chart_context or {}
 
@@ -2244,6 +2245,7 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
     cycle_id = _aligned_cycle_id()
     qlib_map = _qlib_coin_map(qlib_payload)
     chart_context_map = _load_chart_feature_context_map()
+    macro_snapshot = _build_macro_snapshot(whale_analysis)
 
     snapshots: List[Dict[str, Any]] = []
     candidate_batches: List[Dict[str, Any]] = []
@@ -2261,6 +2263,7 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
             portfolio_state,
             cycle_id,
             chart_context=chart_context_map.get(symbol, {}),
+            macro_snapshot=macro_snapshot,
         )
         candidate_batch = _build_candidate_proposals(snapshot)
         rule_evaluation = _evaluate_rules(snapshot, candidate_batch)
