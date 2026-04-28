@@ -88,6 +88,82 @@ def _contains_unnegated(text: str, keywords: List[str]) -> bool:
     return False
 
 
+def _headline_text(headlines: List[str]) -> str:
+    return " ".join(headlines).lower()
+
+
+def _has_us_core_macro_event(text: str) -> bool:
+    fed_policy_context = any(token in text for token in [
+        "fomc",
+        "fed decision",
+        "federal reserve decision",
+        "fed meeting",
+        "fomc minutes",
+        "fed minutes",
+        "fed press conference",
+        "federal reserve press conference",
+    ])
+    powell_policy_context = (
+        "powell" in text
+        and any(token in text for token in [
+            "says",
+            "speech",
+            "testimony",
+            "press conference",
+            "rates",
+            "rate cut",
+            "rate hike",
+            "inflation",
+            "policy",
+        ])
+    )
+    us_inflation_context = any(token in text for token in [
+        "us cpi",
+        "u.s. cpi",
+        "core cpi",
+        "cpi report",
+        "cpi hotter",
+        "cpi cooler",
+        "us pce",
+        "u.s. pce",
+        "core pce",
+        "pce report",
+    ])
+    us_labor_context = any(token in text for token in [
+        "nonfarm",
+        "non-farm",
+        "nfp",
+        "us payroll",
+        "u.s. payroll",
+        "payrolls report",
+        "jobs report",
+    ])
+    return fed_policy_context or powell_policy_context or us_inflation_context or us_labor_context
+
+
+def _has_foreign_central_bank_event(text: str) -> bool:
+    return any(token in text for token in [
+        "boj",
+        "bank of japan",
+        "ecb",
+        "european central bank",
+        "boe",
+        "bank of england",
+        "jgb",
+    ])
+
+
+def _has_fed_leadership_event(text: str) -> bool:
+    return any(token in text for token in [
+        "fed chair nominee",
+        "fed chair successor",
+        "powell term",
+        "warsh",
+        "senate confirmation",
+        "fed leadership",
+    ])
+
+
 def _base_event_facts(fear_greed: Dict[str, Any], macro_data: Dict[str, Any]) -> Dict[str, Any]:
     fed = macro_data.get("fed_futures", {}) or {}
     japan = macro_data.get("japan_macro", {}) or {}
@@ -235,20 +311,32 @@ def _market_impact(tags: List[str]) -> str:
 
 
 def _impact_horizon(facts: Dict[str, Any], tags: List[str], headlines: List[str]) -> str:
-    joined = " ".join(headlines).lower()
-    major_macro_event = any(token in joined for token in ["fomc", "powell", "cpi", "payroll", "pce", "nonfarm", "inflation"])
+    joined = _headline_text(headlines)
+    us_core_macro_event = _has_us_core_macro_event(joined)
+    foreign_central_bank_event = _has_foreign_central_bank_event(joined)
+    fed_leadership_event = _has_fed_leadership_event(joined)
     directional_macro = any(tag in tags for tag in [
         "FED_HAWKISH", "FED_DOVISH", "CPI_HOT", "CPI_COOL", "LIQUIDITY_EXPANDING", "LIQUIDITY_CONTRACTING"
     ])
+    stable_flow_ratio_abs = abs(facts.get("global_stable_flow_ratio_pct", 0.0))
     strong_cross_asset_move = (
         abs(facts["dxy_change_5d_pct"]) >= 0.6
         or abs(facts["usdjpy_change_5d_pct"]) >= 0.8
         or abs(facts["global_stable_flow"]) >= 250_000_000
     )
-    if major_macro_event and directional_macro:
+    if us_core_macro_event and directional_macro:
         return "MULTI_DAY"
-    if major_macro_event:
+    if (
+        any(tag in tags for tag in ["LIQUIDITY_EXPANDING", "LIQUIDITY_CONTRACTING"])
+        and (abs(facts["global_stable_flow"]) >= 500_000_000 or stable_flow_ratio_abs >= 0.20)
+    ):
+        return "MULTI_DAY"
+    if us_core_macro_event:
         return "INTRADAY"
+    if foreign_central_bank_event and directional_macro:
+        return "SWING"
+    if fed_leadership_event and directional_macro:
+        return "SWING"
     if strong_cross_asset_move:
         return "SWING"
     if "MACRO_NOISE" in tags and not directional_macro:
@@ -306,9 +394,13 @@ def _deterministic_classification(fear_greed: Dict[str, Any], macro_data: Dict[s
     impact_horizon = _impact_horizon(facts, tags, headlines)
     crypto_relevance = _crypto_relevance(tags, facts)
     policy_stance = _policy_stance(macro_data)
-    joined = " ".join(headlines).lower()
-    if any(token in joined for token in ["powell", "fomc", "fed", "rate", "cut", "hike"]):
+    joined = _headline_text(headlines)
+    if _has_us_core_macro_event(joined):
         event_type = "FED_SPEECH"
+    elif _has_fed_leadership_event(joined):
+        event_type = "FED_LEADERSHIP"
+    elif _has_foreign_central_bank_event(joined):
+        event_type = "FOREIGN_CENTRAL_BANK"
     elif any(token in joined for token in ["cpi", "payroll", "pce", "inflation", "jobs", "nonfarm"]):
         event_type = "MACRO_DATA_RELEASE"
     elif "yen" in joined or "jpy" in joined:
@@ -420,7 +512,11 @@ def _llm_summary_override(classification: Dict[str, Any], headlines: List[str]) 
 
     merged = dict(classification)
     override_fields: List[str] = []
-    for key in ["news_summary", "brief_rationale", "market_impact", "impact_horizon", "crypto_relevance"]:
+    allow_classification_override = os.getenv("ALLOW_MACRO_LLM_CLASSIFICATION_OVERRIDE", "").strip() == "1"
+    overrideable_keys = ["news_summary", "brief_rationale"]
+    if allow_classification_override:
+        overrideable_keys.extend(["market_impact", "impact_horizon", "crypto_relevance"])
+    for key in overrideable_keys:
         value = result.get(key)
         if isinstance(value, str) and value:
             if merged.get(key) != value:
