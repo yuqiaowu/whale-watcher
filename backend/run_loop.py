@@ -25,7 +25,7 @@ load_dotenv(dotenv_path=env_path)
 INTERVAL_HOURS = int(os.getenv("RUN_INTERVAL_HOURS", "2"))
 INTERVAL_SECONDS = INTERVAL_HOURS * 3600
 DECISION_TIMEFRAME_HOURS = int(os.getenv("DECISION_TIMEFRAME_HOURS", "4"))
-SKIP_DUPLICATE_DECISION_CYCLE = os.getenv("SKIP_DUPLICATE_DECISION_CYCLE", "1").lower() in {"1", "true", "yes"}
+SKIP_DUPLICATE_DECISION_CYCLE = os.getenv("SKIP_DUPLICATE_DECISION_CYCLE", "0").lower() in {"1", "true", "yes"}
 PORT = int(os.getenv("PORT", 5001))
 LOCAL_TZ_NAME = os.getenv("LOCAL_TIMEZONE", "Asia/Shanghai")
 VERSION = (os.getenv("RAILWAY_GIT_COMMIT_SHA") or os.getenv("APP_VERSION") or "2026.04.20.local")[:12]
@@ -709,6 +709,8 @@ def main():
                 run_entry["v2_cycle_status"] = "skipped_duplicate_cycle"
                 run_entry["cycle_id"] = latest_cycle_id
             else:
+                if latest_cycle_id == run_entry["target_cycle_id"]:
+                    print(f"🔁 Refreshing existing {DECISION_TIMEFRAME_HOURS}H decision cycle {latest_cycle_id} with latest data.")
                 v2_result = run_v2_cycle()
                 run_entry["v2_cycle_status"] = "completed" if v2_result.get("success") else "failed"
                 if v2_result.get("success"):
