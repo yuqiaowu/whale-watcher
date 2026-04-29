@@ -514,7 +514,7 @@ class PositionRuntimeTests(unittest.TestCase):
                     "riskReview": {
                         "approved": True,
                         "final_intent": "SHORT",
-                        "max_holding_bars": 3,
+                        "max_holding_bars": 0,
                         "approved_candidate": {
                             "trigger_source": "Blueprint_F2",
                             "reference_values": {"structure_resistance_stop_short": 70200.0},
@@ -570,6 +570,77 @@ class PositionRuntimeTests(unittest.TestCase):
         record = fake_db.store["trade_decision_records"][0]
         self.assertNotEqual(record["execution"].get("runtime_reason"), "f_structure_resistance_broken")
         self.assertEqual(record["positionState"], "entered")
+
+    def test_f2_max_holding_bars_triggers_close_when_no_f_exit(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "f2_time",
+                    "symbol": "ETH-USDT",
+                    "created_at": "2026-04-13T00:00:00Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "ETH-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "SHORT",
+                        "max_holding_bars": 1,
+                        "approved_candidate": {
+                            "trigger_source": "Blueprint_F2",
+                            "reference_values": {"structure_resistance_stop_short": 2500.0},
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "executed_at": "2026-04-13T00:00:00Z",
+                        "history": [],
+                    },
+                    "researchOutput": {"thesis_change": "UNCHANGED", "thesis_strength": "MEDIUM"},
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "ETH",
+                        "type": "short",
+                        "entryPrice": 2400.0,
+                        "currentPrice": 2380.0,
+                        "amount": 1.0,
+                        "margin": 100.0,
+                        "leverage": 2.0,
+                    }
+                ]
+            },
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "ETH-USDT",
+                        "market_snapshot": {
+                            "rsi_4h": 42.0,
+                            "macd_cross_up_4h": False,
+                            "bullish_divergence_4h": False,
+                            "sma50_4h": 2450.0,
+                        },
+                        "decision_ready_features": {
+                            "macro_permission": "ALLOW_BOTH",
+                            "flow_support_long": False,
+                            "flow_support_short": True,
+                            "regime_1d": "BEAR",
+                        }
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db):
+            result = pr.run_in_position_runtime(executor=FakeExecutor())
+
+        self.assertEqual(result["updated_count"], 1)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["positionState"], "exit_pending")
+        self.assertEqual(record["execution"]["runtime_reason"], "max_holding_bars_exceeded")
+        self.assertTrue(any(event["type"] == "MAX_HOLDING_BARS_TRIGGERED" for event in record["execution"]["history"]))
 
     def test_f_blueprint_skips_generic_invalidation_and_uses_f_runtime_rules(self):
         store = {

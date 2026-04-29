@@ -559,8 +559,8 @@ def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str,
             })
             actions.append({"decisionId": record.get("decisionId"), "action": "CLOSE_POSITION"})
             changed = True
-        elif _is_f_blueprint(record):
-            f_exit = _f_runtime_exit(record, snapshot, live_position, side)
+        else:
+            f_exit = _f_runtime_exit(record, snapshot, live_position, side) if _is_f_blueprint(record) else None
             if f_exit is not None:
                 runtime_action, runtime_reason = f_exit
                 close_order_id = _apply_close(executor, symbol, side, live_position)
@@ -575,7 +575,11 @@ def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str,
                 })
                 actions.append({"decisionId": record.get("decisionId"), "action": runtime_action})
                 changed = True
-        elif _evaluate_invalidation(record, snapshot, live_position):
+        runtime_action_taken = (
+            execution.get("runtime_action") in {"REPAIR_PROTECTION", "CLOSE_POSITION", "REDUCE_50", "REDUCE_25"}
+            or record.get("positionState") in {"exit_pending", "defensive"}
+        )
+        if not runtime_action_taken and not _is_f_blueprint(record) and _evaluate_invalidation(record, snapshot, live_position):
             close_order_id = _apply_close(executor, symbol, side, live_position)
             execution["runtime_action"] = "CLOSE_POSITION"
             execution["last_runtime_order_id"] = close_order_id
@@ -587,7 +591,7 @@ def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str,
             })
             actions.append({"decisionId": record.get("decisionId"), "action": "CLOSE_POSITION"})
             changed = True
-        elif max_holding_bars > 0 and held_bars is not None and held_bars >= max_holding_bars:
+        elif not runtime_action_taken and max_holding_bars > 0 and held_bars is not None and held_bars >= max_holding_bars:
             close_order_id = _apply_close(executor, symbol, side, live_position)
             execution["runtime_action"] = "CLOSE_POSITION"
             execution["last_runtime_order_id"] = close_order_id
@@ -600,7 +604,7 @@ def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str,
             })
             actions.append({"decisionId": record.get("decisionId"), "action": "CLOSE_POSITION"})
             changed = True
-        else:
+        elif not runtime_action_taken:
             current_sl = _existing_stop_loss(live_position, record)
             proposed_tp = execution.get("proposed_tp_price")
 

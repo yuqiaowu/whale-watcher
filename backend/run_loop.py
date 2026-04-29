@@ -539,6 +539,32 @@ def run_v2_cycle():
         write_status("ERROR", f"V2 pipeline failed: {e}")
         return {"success": False, "error": str(e)}
 
+
+def refresh_portfolio_state(sync_executor, current_eq=None):
+    """Refresh live equity and positions before runtime rules consume portfolio_state."""
+    if current_eq is None:
+        current_eq = sync_executor.get_account_equity()
+    active_positions = sync_executor.get_all_positions()
+
+    state = db.get_data("portfolio_state", {})
+    state["total_equity"] = round(current_eq, 2)
+    state["positions"] = active_positions
+
+    try:
+        balances = sync_executor._request("GET", "/api/v5/account/balance")
+        if balances.get("code") == "0" and balances.get("data"):
+            avail = float(balances["data"][0].get("totalEq", current_eq))
+            for d in balances["data"][0].get("details", []):
+                if d.get("ccy") == "USDT":
+                    avail = float(d.get("availBal", avail))
+            state["cash"] = round(avail, 2)
+    except Exception:
+        state["cash"] = round(current_eq * 0.8, 2)
+
+    db.save_data("portfolio_state", state)
+    return state
+
+
 def background_sync_loop():
     """
     Independent background thread to sync trade history and positions every 10 minutes.
@@ -554,29 +580,18 @@ def background_sync_loop():
             
             # 2. Sync Active Positions & Equity
             current_eq = sync_executor.get_account_equity()
-            active_positions = sync_executor.get_all_positions()
-            
-            state = db.get_data("portfolio_state", {})
-            state["total_equity"] = round(current_eq, 2)
-            state["positions"] = active_positions
-            
-            # Sync cash if possible
-            try:
-                balances = sync_executor._request("GET", "/api/v5/account/balance")
-                if balances.get("code") == "0" and balances.get("data"):
-                     avail = float(balances["data"][0].get("totalEq", current_eq))
-                     for d in balances["data"][0].get("details", []):
-                         if d.get("ccy") == "USDT":
-                             avail = float(d.get("availBal", avail))
-                     state["cash"] = round(avail, 2)
-            except: pass
-            
-            db.save_data("portfolio_state", state)
+            refresh_portfolio_state(sync_executor, current_eq=current_eq)
             reconciliation_summary = run_execution_reconciliation()
             if reconciliation_summary.get("updated_count", 0) > 0:
                 print(
                     f"🧾 [Execution Reconcile] updated {reconciliation_summary['updated_count']} / "
                     f"{reconciliation_summary['record_count']} execution states"
+                )
+            runtime_summary = run_in_position_runtime(sync_executor)
+            if runtime_summary.get("updated_count", 0) > 0:
+                print(
+                    f"🧭 [Position Runtime] updated {runtime_summary['updated_count']} / "
+                    f"{runtime_summary['record_count']} records"
                 )
             review_summary = run_post_trade_review()
             if review_summary.get("evaluated_count", 0) > 0:
@@ -735,6 +750,13 @@ def main():
             except Exception as e:
                 print(f"⚠️ History sync failed: {e}")
 
+            print(">> Step 2.52: Syncing Live Positions...")
+            try:
+                refresh_portfolio_state(executor)
+                print("✅ Live positions refreshed")
+            except Exception as e:
+                print(f"⚠️ Live position sync failed: {e}")
+
             print(">> Step 2.55: Reconciling Execution Receipts...")
             try:
                 reconciliation_summary = run_execution_reconciliation()
@@ -796,25 +818,7 @@ def main():
                     nav_history = nav_history[-150:]
                 db.save_data("nav_history", nav_history)
 
-                state = db.get_data("portfolio_state", {})
-                state["total_equity"] = round(current_eq, 2)
-                try:
-                    state["positions"] = executor.get_all_positions()
-                except Exception as e:
-                    print(f"⚠️ Failed to sync active positions: {e}")
-
-                try:
-                    balances = executor._request("GET", "/api/v5/account/balance")
-                    if balances.get("code") == "0" and balances.get("data"):
-                        avail = float(balances["data"][0].get("totalEq", current_eq))
-                        for d in balances["data"][0].get("details", []):
-                            if d.get("ccy") == "USDT":
-                                avail = float(d.get("availBal", avail))
-                        state["cash"] = round(avail, 2)
-                except Exception:
-                    state["cash"] = round(current_eq * 0.8, 2)
-
-                db.save_data("portfolio_state", state)
+                refresh_portfolio_state(executor, current_eq=current_eq)
                 print(f"✅ NAV History & Portfolio State Updated (${current_eq:.2f})")
             except Exception as e:
                 print(f"⚠️ Failed to append NAV history: {e}")
