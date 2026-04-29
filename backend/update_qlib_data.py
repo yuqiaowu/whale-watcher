@@ -80,6 +80,7 @@ def get_last_date_from_csv():
 def fetch_and_process_missing_data(start_date):
     client = OKXDataClient()
     all_new_rows = []
+    refresh_start = start_date - datetime.timedelta(hours=12)
     
     now = datetime.datetime.now()
     print(f"🚀 Updating Qlib Data from {start_date} to {now}...")
@@ -91,7 +92,8 @@ def fetch_and_process_missing_data(start_date):
         # 1. Fetch OHLCV (4H)
         # We need to fetch enough history for indicators (SMA200 needs 200 bars)
         # To be safe, we fetch 500 bars including the missing ones.
-        # But for appending, we only keep the ones AFTER start_date.
+        # Refresh a small overlap so previously saved partial candles can be
+        # replaced once OKX marks the bar as confirmed.
         
         limit = 300
         data = client._request("GET", "/api/v5/market/candles", {"instId": inst_id, "bar": "4H", "limit": str(limit)})
@@ -102,6 +104,10 @@ def fetch_and_process_missing_data(start_date):
         print(f"  Fetched {len(data)} candles for {symbol}.")
             
         df = pd.DataFrame(data, columns=['ts', 'open', 'high', 'low', 'close', 'vol', 'volCcy', 'volCcyQuote', 'confirm'])
+        df = df[df['confirm'].astype(str) == '1'].copy()
+        if df.empty:
+            print(f"  ⚠️ No confirmed 4H candles returned for {symbol}; skipping.")
+            continue
         df = df.iloc[::-1].reset_index(drop=True)
         df['datetime'] = pd.to_datetime(df['ts'].astype(int), unit='ms')
         
@@ -288,8 +294,10 @@ def fetch_and_process_missing_data(start_date):
         # Prepare for merging
         df_feats['instrument'] = symbol
         
-        # Filter only NEW data
-        new_df = df_feats[df_feats['datetime'] > start_date].copy()
+        # Keep an overlap window, not only strictly new rows. This lets the
+        # CSV overwrite any earlier run that accidentally stored an unconfirmed
+        # candle with tiny partial volume.
+        new_df = df_feats[df_feats['datetime'] >= refresh_start].copy()
         if not new_df.empty:
             all_new_rows.append(new_df[SCHEMA_COLUMNS])
             
@@ -324,8 +332,22 @@ def main():
     new_data = fetch_and_process_missing_data(last_date)
     
     if new_data is not None and not new_data.empty:
-        print(f"📝 Appending {len(new_data)} new records to CSV...")
-        new_data.to_csv(CSV_PATH, mode='a', header=False, index=False)
+        print(f"📝 Merging {len(new_data)} confirmed records into CSV...")
+        existing = pd.read_csv(CSV_PATH)
+        existing['datetime'] = pd.to_datetime(existing['datetime'])
+        new_data['datetime'] = pd.to_datetime(new_data['datetime'])
+
+        for instrument, instrument_df in new_data.groupby('instrument'):
+            min_dt = instrument_df['datetime'].min()
+            replace_mask = (existing['instrument'] == instrument) & (existing['datetime'] >= min_dt)
+            existing = existing.loc[~replace_mask].copy()
+
+        merged = pd.concat([existing, new_data], ignore_index=True)
+        merged = merged.sort_values(['instrument', 'datetime'])
+        merged = merged.drop_duplicates(subset=['instrument', 'datetime'], keep='last')
+        merged = merged[SCHEMA_COLUMNS]
+        merged['datetime'] = merged['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+        merged.to_csv(CSV_PATH, index=False)
         print("✅ CSV updated.")
         
         # Now update BIN
