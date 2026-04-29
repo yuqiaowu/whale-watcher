@@ -190,6 +190,16 @@ def _aligned_cycle_id(dt: Optional[datetime] = None) -> str:
     return f"cycle_{aligned.strftime('%Y-%m-%d_%H00')}"
 
 
+def _current_4h_bar_start_utc(dt: Optional[datetime] = None) -> pd.Timestamp:
+    dt = dt or _now_utc()
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    dt = dt.astimezone(timezone.utc)
+    block_hour = (dt.hour // 4) * 4
+    aligned = dt.replace(hour=block_hour, minute=0, second=0, microsecond=0)
+    return pd.Timestamp(aligned.replace(tzinfo=None))
+
+
 def _aligned_cycle_local(dt: Optional[datetime] = None) -> str:
     dt = (dt or _now_utc()).astimezone(LOCAL_TZ)
     block_hour = (dt.hour // 4) * 4
@@ -378,6 +388,11 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
     if df.empty:
         return {}
 
+    completed_before = _current_4h_bar_start_utc()
+    df = df[df["datetime"] < completed_before].copy()
+    if df.empty:
+        return {}
+
     result: Dict[str, Dict[str, Any]] = {}
     for instrument, instrument_df in df.groupby("instrument"):
         frame = instrument_df.sort_values("datetime").copy()
@@ -480,6 +495,8 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
             "structure_resistance_12bar_volume_confirmed": resistance,
             "structure_support_stop_long": round(support - 0.5 * atr, 4) if support > 0 and atr > 0 else None,
             "structure_resistance_stop_short": round(resistance + 0.5 * atr, 4) if resistance > 0 and atr > 0 else None,
+            "chart_context_bar_time": latest.get("datetime").strftime("%Y-%m-%d %H:%M:%S"),
+            "chart_context_completed_before": completed_before.strftime("%Y-%m-%d %H:%M:%S"),
             "grid_preflight_data_ok": not missing_preflight_fields,
             "grid_preflight_missing_fields": missing_preflight_fields,
         }

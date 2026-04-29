@@ -73,6 +73,67 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertGreater(eth_context["adx_14_4h"], 0)
         self.assertIsInstance(eth_context["adx_delta"], float)
 
+    def test_chart_feature_context_ignores_current_unfinished_4h_bar(self):
+        rows = []
+        completed_before = pd.Timestamp("2026-04-30 00:00:00")
+        base_time = completed_before - pd.Timedelta(hours=4 * 90)
+        for idx in range(90):
+            close = 2400 + ((idx % 12) - 6) * 8
+            rows.append(
+                {
+                    "datetime": base_time + pd.Timedelta(hours=4 * idx),
+                    "instrument": "ETH",
+                    "open": close - 4,
+                    "high": close + 18,
+                    "low": close - 18,
+                    "close": close,
+                    "volume": 1000000 + idx * 1000,
+                    "macd": 0.1,
+                    "macd_signal": 0.05,
+                    "macd_hist": 0.05,
+                    "atr_14": 35,
+                    "bb_width_20": 0.06,
+                    "bb_pos_20": 0.5,
+                    "rsi_14": 50,
+                    "volume_usd_4h": 1000000 + idx * 1000,
+                }
+            )
+        rows.append(
+            {
+                "datetime": completed_before,
+                "instrument": "ETH",
+                "open": 9999,
+                "high": 9999,
+                "low": 9999,
+                "close": 9999,
+                "volume": 1,
+                "macd": -99,
+                "macd_signal": -99,
+                "macd_hist": -99,
+                "atr_14": 1,
+                "bb_width_20": 0.01,
+                "bb_pos_20": 0.01,
+                "rsi_14": 1,
+                "volume_usd_4h": 1,
+            }
+        )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            csv_path = Path(tmpdir) / "multi_coin_features.csv"
+            pd.DataFrame(rows).to_csv(csv_path, index=False)
+
+            with (
+                patch.object(dp, "QLOB_FEATURES_PATH", csv_path),
+                patch.object(dp, "_current_4h_bar_start_utc", return_value=completed_before),
+            ):
+                context = dp._load_chart_feature_context_map()
+
+        eth_context = context["ETH"]
+        self.assertEqual("2026-04-29 20:00:00", eth_context["chart_context_bar_time"])
+        self.assertEqual("2026-04-30 00:00:00", eth_context["chart_context_completed_before"])
+        self.assertNotEqual(1, eth_context["volume_usd_4h"])
+        self.assertNotEqual(-99, eth_context["macd_line_4h"])
+
     def test_build_decision_snapshot_maps_flow_into_fixed_semantics(self):
         whale_analysis = {
             "fear_greed": {"value": 50, "value_classification": "Neutral"},
