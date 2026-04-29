@@ -2299,8 +2299,6 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
         records.append(record)
         _append_trade_record(record)
 
-    review_summary = run_post_trade_review()
-
     bundle = {
         "cycleId": cycle_id,
         "generated_at": _iso_now(),
@@ -2315,8 +2313,12 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
         "risk_reviews": risk_reviews,
         "executions": executions,
         "record_count": len(records),
-        "post_trade_review": review_summary,
+        "post_trade_review": None,
     }
+    _save_cycle_bundle(cycle_id, bundle)
+
+    review_summary = run_post_trade_review()
+    bundle["post_trade_review"] = review_summary
     _save_cycle_bundle(cycle_id, bundle)
     return bundle
 
