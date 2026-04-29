@@ -1092,6 +1092,44 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertIsNone(result.get("failure_reason"))
         self.assertEqual(result["exchange_order_id"], "demo-order-1")
 
+    def test_open_execution_skips_when_symbol_position_already_exists(self):
+        execution = {
+            "symbol": "BNB-USDT",
+            "execution_action": "OPEN_SHORT",
+            "requested_size_usd": 1000.0,
+            "requested_leverage": 2.0,
+            "requested_protection": {"stop_loss": 628.0, "take_profit": 588.0},
+            "history": [],
+        }
+        risk_review = {
+            "approved_candidate": {
+                "trigger_source": "Blueprint_F2",
+                "proposed_sl_price": 628.0,
+                "proposed_tp_price": 588.0,
+            }
+        }
+
+        class MiniExecutor:
+            def __init__(self):
+                self.called = False
+
+            def get_all_positions(self):
+                return [{"symbol": "BNB", "type": "short", "amount": "0.92"}]
+
+            def execute_trade(self, **kwargs):
+                self.called = True
+                return "should-not-submit"
+
+        executor = MiniExecutor()
+        with patch.dict(os.environ, {"TRADING_MODE": "DEMO"}, clear=False):
+            os.environ.pop("ENABLE_V2_EXECUTION", None)
+            result = dp._execute_if_enabled(executor, execution, risk_review)
+
+        self.assertFalse(executor.called)
+        self.assertEqual(result["order_status"], "SKIPPED")
+        self.assertEqual(result["sync_status"], "POSITION_OPEN_SKIPPED")
+        self.assertEqual(result["failure_reason"], "existing_position_open")
+
 
 if __name__ == "__main__":
     unittest.main()

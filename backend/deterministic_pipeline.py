@@ -1789,6 +1789,11 @@ def _evaluate_rules(snapshot: Dict[str, Any], candidate_batch: Dict[str, Any]) -
             continue
 
         existing_side = position_snapshot.get("position_side")
+        if existing_side == intent and intent in {"LONG", "SHORT"}:
+            passed = False
+            reason_codes.append("POSITION_CONFLICT")
+            rule_trace.append({"rule": "POSITION_CONFLICT_CHECK", "passed": False, "detail": f"existing_{existing_side.lower()}_same_side"})
+            continue
         if existing_side == "LONG" and intent == "SHORT":
             passed = False
             reason_codes.append("POSITION_CONFLICT")
@@ -2155,6 +2160,67 @@ def _save_cycle_bundle(cycle_id: str, bundle: Dict[str, Any]) -> None:
     db.save_data("latest_decision_cycle_v2", bundle)
 
 
+def _find_existing_execution(cycle_id: str, symbol: str, execution_action: str) -> Optional[Dict[str, Any]]:
+    if execution_action == "DO_NOTHING":
+        return None
+
+    bundles: List[Dict[str, Any]] = []
+    latest = db.get_data("latest_decision_cycle_v2", {})
+    if isinstance(latest, dict):
+        bundles.append(latest)
+    cycles = db.get_data("decision_cycles_v2", [])
+    if isinstance(cycles, list):
+        bundles.extend(item for item in cycles if isinstance(item, dict))
+
+    terminal_statuses = {"FAILED", "SKIPPED", "CLOSED"}
+    for bundle in bundles:
+        if str(bundle.get("cycleId") or "") != str(cycle_id):
+            continue
+        for existing in bundle.get("executions") or []:
+            if not isinstance(existing, dict):
+                continue
+            if existing.get("symbol") != symbol:
+                continue
+            if existing.get("execution_action") != execution_action:
+                continue
+            status = str(existing.get("order_status") or "").upper()
+            if status in terminal_statuses:
+                continue
+            if existing.get("exchange_order_id") or existing.get("exchange_algo_id"):
+                return existing
+    return None
+
+
+def _normalize_trade_symbol(value: Any) -> str:
+    return str(value or "").replace("-USDT-SWAP", "").replace("-USDT", "").upper()
+
+
+def _execution_has_open_position(executor: OKXExecutor, symbol: str) -> Optional[Dict[str, Any]]:
+    target_symbol = _normalize_trade_symbol(symbol)
+    positions: List[Dict[str, Any]] = []
+    try:
+        live_positions = executor.get_all_positions() if hasattr(executor, "get_all_positions") else []
+        if isinstance(live_positions, list):
+            positions.extend(item for item in live_positions if isinstance(item, dict))
+    except Exception:
+        pass
+
+    if not positions:
+        portfolio_state = db.get_data("portfolio_state", {})
+        stored_positions = portfolio_state.get("positions", []) if isinstance(portfolio_state, dict) else []
+        if isinstance(stored_positions, list):
+            positions.extend(item for item in stored_positions if isinstance(item, dict))
+
+    for position in positions:
+        if _normalize_trade_symbol(position.get("symbol") or position.get("instId")) != target_symbol:
+            continue
+        amount = _safe_float(position.get("amount") or position.get("pos") or position.get("size"), 0.0)
+        if amount == 0.0 and not position.get("type") and not position.get("posSide"):
+            continue
+        return position
+    return None
+
+
 def _execute_if_enabled(executor: OKXExecutor, execution: Dict[str, Any], risk_review: Dict[str, Any]) -> Dict[str, Any]:
     history = execution.setdefault("history", [])
     execution_flag = os.getenv("ENABLE_V2_EXECUTION")
@@ -2170,6 +2236,42 @@ def _execute_if_enabled(executor: OKXExecutor, execution: Dict[str, Any], risk_r
         execution["failure_reason"] = "v2_execution_disabled" if not enabled else None
         history.append(_execution_event("EXECUTION_SKIPPED", {
             "reason": execution["failure_reason"] or "do_nothing",
+            "execution_action": execution.get("execution_action"),
+        }))
+        execution["history"] = history[-50:]
+        return execution
+
+    if execution.get("execution_action") in {"OPEN_LONG", "OPEN_SHORT"}:
+        existing_position = _execution_has_open_position(executor, str(execution.get("symbol") or ""))
+        if existing_position:
+            execution["order_status"] = "SKIPPED"
+            execution["sync_status"] = "POSITION_OPEN_SKIPPED"
+            execution["protection_status"] = "SKIPPED"
+            execution["failure_reason"] = "existing_position_open"
+            history.append(_execution_event("OPEN_EXECUTION_BLOCKED_BY_POSITION", {
+                "symbol": execution.get("symbol"),
+                "existing_position_side": existing_position.get("type") or existing_position.get("posSide"),
+                "execution_action": execution.get("execution_action"),
+            }))
+            execution["history"] = history[-50:]
+            return execution
+
+    existing_execution = _find_existing_execution(
+        str(execution.get("cycleId") or ""),
+        str(execution.get("symbol") or ""),
+        str(execution.get("execution_action") or ""),
+    )
+    if existing_execution:
+        execution["order_status"] = "SKIPPED"
+        execution["sync_status"] = "DUPLICATE_SKIPPED"
+        execution["protection_status"] = existing_execution.get("protection_status", "PENDING_SYNC")
+        execution["failure_reason"] = "duplicate_decision_cycle_execution"
+        execution["exchange_order_id"] = existing_execution.get("exchange_order_id")
+        execution["exchange_algo_id"] = existing_execution.get("exchange_algo_id")
+        execution["executed_at"] = existing_execution.get("executed_at")
+        history.append(_execution_event("DUPLICATE_EXECUTION_SKIPPED", {
+            "existing_exchange_order_id": existing_execution.get("exchange_order_id"),
+            "existing_exchange_algo_id": existing_execution.get("exchange_algo_id"),
             "execution_action": execution.get("execution_action"),
         }))
         execution["history"] = history[-50:]
