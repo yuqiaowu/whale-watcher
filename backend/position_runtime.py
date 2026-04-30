@@ -303,6 +303,7 @@ def _bars_since(timestamp: Any) -> Optional[int]:
 def _holding_bars(record: Dict[str, Any], live_position: Dict[str, Any]) -> Optional[int]:
     execution = record.get("execution") or {}
     candidates = [
+        execution.get("holding_window_started_at"),
         execution.get("executed_at"),
         live_position.get("timestamp"),
         record.get("created_at"),
@@ -339,6 +340,44 @@ def _thesis_weakened(record: Dict[str, Any], snapshot: Dict[str, Any], live_posi
         if regime == "BULL" and not flow_support:
             return True, "bull_regime_without_flow_support"
     return False, ""
+
+
+def _reassessed_max_holding_bars(record: Dict[str, Any], snapshot: Dict[str, Any]) -> int:
+    risk_review = record.get("riskReview") or {}
+    research = record.get("researchOutput") or {}
+    features = snapshot.get("decision_ready_features", {}) or {}
+
+    if risk_review.get("strategy_family") == "GRID":
+        return int(risk_review.get("max_holding_bars") or 0)
+
+    max_holding_bars = 3 if features.get("macro_mode") == "EVENT_DRIVEN" else 6
+    if research.get("thesis_strength") == "LOW":
+        max_holding_bars = min(max_holding_bars, 2)
+    elif research.get("thesis_strength") == "MEDIUM":
+        max_holding_bars = min(max_holding_bars, 4)
+    if research.get("holding_horizon") == "SHORT":
+        max_holding_bars = min(max_holding_bars, 3)
+    return max(1, int(max_holding_bars))
+
+
+def _review_expired_position(
+    record: Dict[str, Any],
+    snapshot: Dict[str, Any],
+    live_position: Dict[str, Any],
+    side: str,
+) -> Tuple[bool, int, str]:
+    weakened, weakened_reason = _thesis_weakened(record, snapshot, live_position, side)
+    if weakened:
+        return False, 0, weakened_reason
+    if not _is_f_blueprint(record) and _evaluate_invalidation(record, snapshot, live_position):
+        return False, 0, "candidate_invalidation"
+    if _is_f_blueprint(record) and _f_runtime_exit(record, snapshot, live_position, side) is not None:
+        return False, 0, "f_runtime_exit"
+
+    new_max_holding_bars = _reassessed_max_holding_bars(record, snapshot)
+    if new_max_holding_bars <= 0:
+        return False, 0, "no_extension_window"
+    return True, new_max_holding_bars, "expiry_review_passed"
 
 
 def _grid_runtime_signal(record: Dict[str, Any], snapshot: Dict[str, Any], held_bars: Optional[int]) -> Optional[Tuple[str, str, Dict[str, Any]]]:
@@ -592,18 +631,41 @@ def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str,
             actions.append({"decisionId": record.get("decisionId"), "action": "CLOSE_POSITION"})
             changed = True
         elif not runtime_action_taken and max_holding_bars > 0 and held_bars is not None and held_bars >= max_holding_bars:
-            close_order_id = _apply_close(executor, symbol, side, live_position)
-            execution["runtime_action"] = "CLOSE_POSITION"
-            execution["last_runtime_order_id"] = close_order_id
-            execution["runtime_reason"] = "max_holding_bars_exceeded"
-            record["positionState"] = "exit_pending"
-            _append_execution_event(record, "MAX_HOLDING_BARS_TRIGGERED", {
-                "held_bars": held_bars,
-                "max_holding_bars": max_holding_bars,
-                "order_id": close_order_id,
-            })
-            actions.append({"decisionId": record.get("decisionId"), "action": "CLOSE_POSITION"})
-            changed = True
+            review_passed, new_max_holding_bars, review_reason = _review_expired_position(
+                record,
+                snapshot,
+                live_position,
+                side,
+            )
+            if review_passed:
+                risk_review["max_holding_bars"] = new_max_holding_bars
+                execution["runtime_action"] = "EXTEND_HOLDING"
+                execution["runtime_reason"] = "max_holding_review_passed"
+                execution["holding_window_started_at"] = _iso_now()
+                execution["holding_review_count"] = int(execution.get("holding_review_count") or 0) + 1
+                record["positionState"] = "entered"
+                _append_execution_event(record, "MAX_HOLDING_REVIEW_EXTENDED", {
+                    "held_bars": held_bars,
+                    "previous_max_holding_bars": max_holding_bars,
+                    "new_max_holding_bars": new_max_holding_bars,
+                    "reason": review_reason,
+                })
+                actions.append({"decisionId": record.get("decisionId"), "action": "EXTEND_HOLDING"})
+                changed = True
+            else:
+                close_order_id = _apply_close(executor, symbol, side, live_position)
+                execution["runtime_action"] = "CLOSE_POSITION"
+                execution["last_runtime_order_id"] = close_order_id
+                execution["runtime_reason"] = "max_holding_review_rejected"
+                record["positionState"] = "exit_pending"
+                _append_execution_event(record, "MAX_HOLDING_REVIEW_REJECTED", {
+                    "held_bars": held_bars,
+                    "max_holding_bars": max_holding_bars,
+                    "reason": review_reason,
+                    "order_id": close_order_id,
+                })
+                actions.append({"decisionId": record.get("decisionId"), "action": "CLOSE_POSITION"})
+                changed = True
         elif not runtime_action_taken:
             current_sl = _existing_stop_loss(live_position, record)
             proposed_tp = execution.get("proposed_tp_price")

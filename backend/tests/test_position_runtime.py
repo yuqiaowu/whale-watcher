@@ -370,7 +370,7 @@ class PositionRuntimeTests(unittest.TestCase):
         self.assertEqual(record["execution"]["last_runtime_order_id"], "runtime_order_1")
         self.assertTrue(any(event["type"] == "PROTECTION_REPAIR_TRIGGERED" for event in record["execution"]["history"]))
 
-    def test_max_holding_bars_triggers_close(self):
+    def test_max_holding_bars_triggers_review_extension_when_thesis_still_valid(self):
         store = {
             "trade_decision_records": [
                 {
@@ -427,10 +427,12 @@ class PositionRuntimeTests(unittest.TestCase):
 
         self.assertEqual(result["updated_count"], 1)
         record = fake_db.store["trade_decision_records"][0]
-        self.assertEqual(record["positionState"], "exit_pending")
-        self.assertEqual(record["execution"]["runtime_reason"], "max_holding_bars_exceeded")
-        self.assertEqual(record["execution"]["last_runtime_order_id"], "runtime_order_1")
-        self.assertTrue(any(event["type"] == "MAX_HOLDING_BARS_TRIGGERED" for event in record["execution"]["history"]))
+        self.assertEqual(record["positionState"], "entered")
+        self.assertEqual(record["execution"]["runtime_action"], "EXTEND_HOLDING")
+        self.assertEqual(record["execution"]["runtime_reason"], "max_holding_review_passed")
+        self.assertEqual(record["riskReview"]["max_holding_bars"], 4)
+        self.assertIsNotNone(record["execution"].get("holding_window_started_at"))
+        self.assertTrue(any(event["type"] == "MAX_HOLDING_REVIEW_EXTENDED" for event in record["execution"]["history"]))
 
     def test_f1_overbought_momentum_reversal_triggers_close(self):
         store = {
@@ -571,7 +573,7 @@ class PositionRuntimeTests(unittest.TestCase):
         self.assertNotEqual(record["execution"].get("runtime_reason"), "f_structure_resistance_broken")
         self.assertEqual(record["positionState"], "entered")
 
-    def test_f2_max_holding_bars_triggers_close_when_no_f_exit(self):
+    def test_f2_max_holding_bars_triggers_review_extension_when_no_f_exit(self):
         store = {
             "trade_decision_records": [
                 {
@@ -638,9 +640,11 @@ class PositionRuntimeTests(unittest.TestCase):
 
         self.assertEqual(result["updated_count"], 1)
         record = fake_db.store["trade_decision_records"][0]
-        self.assertEqual(record["positionState"], "exit_pending")
-        self.assertEqual(record["execution"]["runtime_reason"], "max_holding_bars_exceeded")
-        self.assertTrue(any(event["type"] == "MAX_HOLDING_BARS_TRIGGERED" for event in record["execution"]["history"]))
+        self.assertEqual(record["positionState"], "entered")
+        self.assertEqual(record["execution"]["runtime_action"], "EXTEND_HOLDING")
+        self.assertEqual(record["execution"]["runtime_reason"], "max_holding_review_passed")
+        self.assertEqual(record["riskReview"]["max_holding_bars"], 4)
+        self.assertTrue(any(event["type"] == "MAX_HOLDING_REVIEW_EXTENDED" for event in record["execution"]["history"]))
 
     def test_f_blueprint_skips_generic_invalidation_and_uses_f_runtime_rules(self):
         store = {
