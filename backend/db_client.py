@@ -5,6 +5,7 @@ from pymongo.errors import ConnectionFailure
 from datetime import datetime
 from dotenv import load_dotenv
 import certifi
+from urllib.parse import urlparse
 
 load_dotenv()
 
@@ -19,6 +20,7 @@ SINGLETON_COLLECTIONS = {
 class DBClient:
     def __init__(self):
         self.uri = os.getenv("MONGODB_URI")
+        self.db_name = self._resolve_db_name(self.uri)
         self.client = None
         self.db = None
         self.is_connected = False
@@ -29,13 +31,27 @@ class DBClient:
                 self.client = MongoClient(self.uri, serverSelectionTimeoutMS=5000, tlsCAFile=certifi.where())
                 # Verify connection
                 self.client.admin.command('ping')
-                self.db = self.client.whale_watcher # Database name
+                self.db = self.client[self.db_name]
                 self.is_connected = True
-                print("✅ [MongoDB] Safely connected to Cloud Database!")
+                print(f"✅ [MongoDB] Safely connected to Cloud Database! db={self.db_name}")
             except Exception as e:
                 print(f"⚠️ [MongoDB] Connection Failed: {e}. Falling back to local JSON.")
         else:
             print("⚠️ [MongoDB] Missing or invalid MONGODB_URI. Falling back to local JSON files.")
+
+    def _resolve_db_name(self, uri):
+        explicit_name = os.getenv("MONGODB_DB_NAME", "").strip()
+        if explicit_name:
+            return explicit_name
+        if uri:
+            try:
+                parsed = urlparse(uri)
+                db_name = parsed.path.strip("/")
+                if db_name:
+                    return db_name
+            except Exception:
+                pass
+        return "whale_watcher"
 
     def _get_local_path(self, collection_name):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

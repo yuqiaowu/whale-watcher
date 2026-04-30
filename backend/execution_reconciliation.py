@@ -88,6 +88,13 @@ def _load_positions() -> List[Dict[str, Any]]:
     return positions if isinstance(positions, list) else []
 
 
+def _position_key(position: Dict[str, Any]) -> tuple:
+    return (
+        _normalize_symbol(position.get("symbol") or position.get("instId")),
+        _normalize_side(position.get("type") or position.get("posSide")),
+    )
+
+
 def _match_live_position(record: Dict[str, Any], positions: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     symbol = _normalize_symbol(record.get("symbol"))
     final_intent = _normalize_side((record.get("riskReview") or {}).get("final_intent"))
@@ -217,6 +224,166 @@ def _reconcile_grid_execution(record: Dict[str, Any], executor: OKXExecutor) -> 
     return changed
 
 
+def _latest_snapshot_for_symbol(symbol: str) -> Dict[str, Any]:
+    latest_cycle = db.get_data("latest_decision_cycle_v2", {})
+    snapshots = latest_cycle.get("snapshots", []) if isinstance(latest_cycle, dict) else []
+    normalized = _normalize_symbol(symbol)
+    for snapshot in snapshots:
+        if _normalize_symbol(snapshot.get("symbol")) == normalized:
+            return snapshot if isinstance(snapshot, dict) else {}
+    return {}
+
+
+def _adopt_live_position(position: Dict[str, Any]) -> Dict[str, Any]:
+    symbol_base, side = _position_key(position)
+    symbol = f"{symbol_base}-USDT"
+    now_iso = _iso_now()
+    entry_price = _safe_float(position.get("entryPrice"))
+    current_price = _safe_float(position.get("currentPrice"), entry_price)
+    amount = _safe_float(position.get("amount") or position.get("pos") or position.get("size"))
+    leverage = max(_safe_float(position.get("leverage"), 1.0), 1.0)
+    timestamp = position.get("timestamp") or now_iso
+    snapshot = _latest_snapshot_for_symbol(symbol)
+    if not snapshot:
+        snapshot = {
+            "symbol": symbol,
+            "cycleId": "adopted_live_position",
+            "timeframe": "4h",
+            "snapshot_timestamp": None,
+            "market_snapshot": {"price": current_price},
+            "onchain_snapshot": {},
+            "macro_snapshot": {},
+            "position_snapshot": {"position_side": side},
+            "decision_ready_features": {},
+        }
+
+    stop_loss = position.get("stopLoss")
+    take_profit = position.get("takeProfit")
+    execution_action = "OPEN_LONG" if side == "LONG" else "OPEN_SHORT"
+    timestamp_key = str(timestamp).replace(":", "").replace("-", "").replace("T", "_").replace("Z", "")
+    decision_id = f"adopted_{symbol_base}_{side.lower()}_{str(entry_price).replace('.', '_')}_{timestamp_key}"
+    approved_candidate = {
+        "strategy_family": "DIRECTIONAL",
+        "decision_intent": side,
+        "trigger_source": "ADOPTED_LIVE_POSITION",
+        "rationale": "live exchange position adopted into V2 ledger for runtime management",
+        "entry_type": "MARKET",
+        "proposed_entry_price": entry_price,
+        "proposed_sl_price": stop_loss,
+        "proposed_tp_price": take_profit,
+        "reference_values": {},
+        "invalidation_basis": "manual or external live position; no original candidate invalidation available",
+        "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+    }
+    return {
+        "decisionId": decision_id,
+        "cycleId": snapshot.get("cycleId") or "adopted_live_position",
+        "symbol": symbol,
+        "timeframe": snapshot.get("timeframe") or "4h",
+        "snapshot_timestamp": snapshot.get("snapshot_timestamp"),
+        "positionState": "entered",
+        "snapshot": snapshot,
+        "candidate": {
+            "symbol": symbol,
+            "cycleId": snapshot.get("cycleId") or "adopted_live_position",
+            "timeframe": snapshot.get("timeframe") or "4h",
+            "snapshot_timestamp": snapshot.get("snapshot_timestamp"),
+            "candidate_proposals": [approved_candidate],
+        },
+        "ruleEvaluation": {
+            "symbol": symbol,
+            "cycleId": snapshot.get("cycleId") or "adopted_live_position",
+            "stage": "live_position_adoption",
+            "passed": True,
+            "reason_codes": [],
+            "approved_candidates": [approved_candidate],
+            "rule_trace": [{"rule": "LIVE_POSITION_ADOPTION", "passed": True}],
+            "candidate_structure": {
+                "overall_state": "single_signal",
+                "has_directional_conflict": False,
+                "long_count": 1 if side == "LONG" else 0,
+                "short_count": 1 if side == "SHORT" else 0,
+                "grid_count": 0,
+                "resonance_groups": {"LONG": ["ADOPTED_LIVE_POSITION"] if side == "LONG" else [], "SHORT": ["ADOPTED_LIVE_POSITION"] if side == "SHORT" else [], "GRID_NEUTRAL": []},
+                "approved_groups": {"LONG": ["ADOPTED_LIVE_POSITION"] if side == "LONG" else [], "SHORT": ["ADOPTED_LIVE_POSITION"] if side == "SHORT" else [], "GRID_NEUTRAL": []},
+                "approved_resonance_strength": 1,
+            },
+        },
+        "researchOutput": {
+            "symbol": symbol,
+            "cycleId": snapshot.get("cycleId") or "adopted_live_position",
+            "strategy_family": "DIRECTIONAL",
+            "selected_intent": side,
+            "selected_trigger_sources": ["ADOPTED_LIVE_POSITION"],
+            "thesis_strength": "MEDIUM",
+            "holding_horizon": "SHORT",
+            "thesis_change": "UNCHANGED",
+            "summary": "Existing live exchange position adopted for monitoring; original pre-trade thesis is unavailable.",
+            "provenance": {
+                "generation_mode": "adopted_live_position",
+                "llm_enabled": False,
+                "llm_attempted": False,
+                "llm_applied": False,
+                "llm_override_fields": [],
+            },
+        },
+        "riskReview": {
+            "symbol": symbol,
+            "cycleId": snapshot.get("cycleId") or "adopted_live_position",
+            "strategy_family": "DIRECTIONAL",
+            "approved": True,
+            "final_intent": side,
+            "approved_risk_fraction": 0.0,
+            "approved_position_size_usd": round(entry_price * amount, 2) if entry_price and amount else 0.0,
+            "leverage": leverage,
+            "max_holding_bars": 3,
+            "execution_action": execution_action,
+            "next_position_state": "entered",
+            "review_note": "adopted existing live position for runtime management; not a new model approval",
+            "approved_candidate": approved_candidate,
+        },
+        "execution": {
+            "symbol": symbol,
+            "cycleId": snapshot.get("cycleId") or "adopted_live_position",
+            "strategy_family": "DIRECTIONAL",
+            "execution_action": execution_action,
+            "order_status": "FILLED",
+            "requested_size_usd": round(entry_price * amount, 2) if entry_price and amount else 0.0,
+            "requested_leverage": leverage,
+            "entry_type": "MARKET",
+            "proposed_entry_price": entry_price,
+            "proposed_sl_price": stop_loss,
+            "proposed_tp_price": take_profit,
+            "avg_fill_price": entry_price,
+            "filled_size": amount,
+            "exchange_order_id": position.get("ordId") or position.get("orderId"),
+            "executed_at": timestamp,
+            "sync_status": "OPEN",
+            "failure_reason": None,
+            "position_side": side,
+            "live_position_detected_at": now_iso,
+            "protection_status": "OPEN" if stop_loss or take_profit else "MISSING",
+            "filled_stop_loss": stop_loss,
+            "filled_take_profit": take_profit,
+            "history": [{
+                "type": "LIVE_POSITION_ADOPTED",
+                "at": now_iso,
+                "payload": {
+                    "symbol": symbol,
+                    "side": side,
+                    "entry_price": entry_price,
+                    "amount": amount,
+                    "source": "portfolio_state.positions",
+                },
+            }],
+        },
+        "evaluation": None,
+        "created_at": timestamp,
+        "updated_at": now_iso,
+        "provenance": {"source": "execution_reconciliation", "adopted_live_position": True},
+    }
+
+
 def run_execution_reconciliation() -> Dict[str, Any]:
     records = db.get_data("trade_decision_records", [])
     if not isinstance(records, list):
@@ -231,6 +398,7 @@ def run_execution_reconciliation() -> Dict[str, Any]:
     updated_count = 0
     actions: List[Dict[str, Any]] = []
     executor = OKXExecutor()
+    managed_position_keys = set()
 
     for record in records:
         execution = record.get("execution") or {}
@@ -280,6 +448,7 @@ def run_execution_reconciliation() -> Dict[str, Any]:
         closed_trade = _match_closed_trade(record, trade_history, used_trade_ids)
 
         if live_position:
+            managed_position_keys.add(_position_key(live_position))
             if execution.get("order_status") != "FILLED":
                 execution["order_status"] = "FILLED"
                 execution["sync_status"] = "FILLED"
@@ -352,6 +521,31 @@ def run_execution_reconciliation() -> Dict[str, Any]:
                 "before": before,
                 "after": after,
             })
+
+    existing_decision_ids = {str(record.get("decisionId") or "") for record in records if isinstance(record, dict)}
+    adopted_records: List[Dict[str, Any]] = []
+    for position in positions:
+        key = _position_key(position)
+        symbol, side = key
+        if not symbol or side not in {"LONG", "SHORT"}:
+            continue
+        if key in managed_position_keys:
+            continue
+        adopted = _adopt_live_position(position)
+        if str(adopted.get("decisionId") or "") in existing_decision_ids:
+            continue
+        adopted_records.append(adopted)
+        existing_decision_ids.add(str(adopted.get("decisionId") or ""))
+        actions.append({
+            "decisionId": adopted.get("decisionId"),
+            "symbol": adopted.get("symbol"),
+            "before": {"order_status": None, "sync_status": None},
+            "after": {"order_status": "FILLED", "sync_status": "OPEN", "adopted_live_position": True},
+        })
+
+    if adopted_records:
+        records = adopted_records + records
+        updated_count += len(adopted_records)
 
     if records:
         db.save_data("trade_decision_records", records)

@@ -399,7 +399,7 @@ def _match_closed_trade(record: Dict[str, Any], trade_history: List[Dict[str, An
     symbol = _normalize_symbol(record.get("symbol"))
     final_intent = _normalize_side((record.get("riskReview") or {}).get("final_intent"))
     execution = record.get("execution") or {}
-    if execution.get("order_status") not in {"SUBMITTED", "FILLED", "SKIPPED"}:
+    if execution.get("order_status") not in {"SUBMITTED", "FILLED", "SKIPPED", "CLOSED"}:
         return None
     if (record.get("riskReview") or {}).get("approved") is not True:
         return None

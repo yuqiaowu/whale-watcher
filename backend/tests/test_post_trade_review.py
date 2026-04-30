@@ -1,5 +1,6 @@
 import sys
 import unittest
+from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
 
@@ -9,6 +10,19 @@ if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
 import post_trade_review as ptr
+
+
+class FakeDB:
+    def __init__(self, store):
+        self.store = deepcopy(store)
+
+    def get_data(self, key, default=None):
+        if default is None:
+            default = []
+        return deepcopy(self.store.get(key, default))
+
+    def save_data(self, key, data):
+        self.store[key] = deepcopy(data)
 
 
 class PostTradeReviewTests(unittest.TestCase):
@@ -76,6 +90,55 @@ class PostTradeReviewTests(unittest.TestCase):
 
         self.assertEqual(result["result_label"], "OPEN_MONITORING")
         self.assertIn("grid", result["improvement_note"].lower())
+
+    def test_closed_execution_record_matches_trade_history_for_review(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "d_closed",
+                    "symbol": "BTC-USDT",
+                    "cycleId": "cycle_1",
+                    "created_at": "2026-04-13T08:00:00Z",
+                    "positionState": "closed",
+                    "ruleEvaluation": {
+                        "passed": True,
+                        "approved_candidates": [{"trigger_source": "Blueprint_E2", "decision_intent": "SHORT"}],
+                    },
+                    "researchOutput": {
+                        "selected_intent": "SHORT",
+                        "selected_trigger_sources": ["Blueprint_E2"],
+                        "thesis_strength": "MEDIUM",
+                    },
+                    "riskReview": {"approved": True, "final_intent": "SHORT", "strategy_family": "DIRECTIONAL"},
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "CLOSED",
+                        "sync_status": "CLOSED",
+                        "closed_trade_id": "t1",
+                        "history": [],
+                    },
+                }
+            ],
+            "trade_history": [
+                {
+                    "id": "t1",
+                    "symbol": "BTC",
+                    "type": "short",
+                    "pnl": 125.0,
+                    "pnlPercent": 4.2,
+                    "exitTime": "2026-04-13 12:00:00",
+                }
+            ],
+        }
+        fake_db = FakeDB(store)
+        with patch.object(ptr, "db", fake_db):
+            result = ptr.run_post_trade_review()
+
+        self.assertEqual(result["evaluated_count"], 1)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["evaluation"]["result_label"], "WIN")
+        self.assertEqual(record["evaluation"]["matched_trade_id"], "t1")
+        self.assertEqual(record["evaluation"]["pnl"], 125.0)
 
 
 if __name__ == "__main__":

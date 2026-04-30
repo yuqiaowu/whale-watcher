@@ -3,13 +3,15 @@ import json
 from pymongo import MongoClient
 from okx_executor import OKXExecutor
 from dotenv import load_dotenv
+from urllib.parse import urlparse
 
 load_dotenv()
 
 # We need to bypass SSL for this local environment to hit MongoDB
 uri = os.getenv("MONGODB_URI")
 client = MongoClient(uri, serverSelectionTimeoutMS=10000, tlsAllowInvalidCertificates=True)
-db = client.whale_watcher
+db_name = os.getenv("MONGODB_DB_NAME") or urlparse(uri).path.strip("/") or "whale_watcher"
+db = client[db_name]
 
 # Initialize Executor in REAL mode for sync
 # Since we know the keys are for REAL trading

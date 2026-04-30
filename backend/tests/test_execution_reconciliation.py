@@ -43,6 +43,94 @@ class FakeGridExecutor:
 
 
 class ExecutionReconciliationTests(unittest.TestCase):
+    def test_adopts_unmanaged_live_position_into_v2_ledger(self):
+        store = {
+            "trade_decision_records": [],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "BNB",
+                        "type": "short",
+                        "entryPrice": 615.16,
+                        "currentPrice": 616.0,
+                        "amount": 1.38,
+                        "leverage": 2,
+                        "stopLoss": 628.4,
+                        "takeProfit": 583.8,
+                        "timestamp": "2026-04-30T10:00:00Z",
+                    }
+                ]
+            },
+            "trade_history": [],
+            "latest_decision_cycle_v2": {
+                "cycleId": "cycle_2026-04-30_0800",
+                "snapshots": [
+                    {
+                        "symbol": "BNB-USDT",
+                        "cycleId": "cycle_2026-04-30_0800",
+                        "timeframe": "4h",
+                        "market_snapshot": {"price": 616.0},
+                        "decision_ready_features": {},
+                    }
+                ],
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db):
+            result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 1)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertTrue(record["provenance"]["adopted_live_position"])
+        self.assertEqual(record["symbol"], "BNB-USDT")
+        self.assertEqual(record["positionState"], "entered")
+        self.assertEqual(record["riskReview"]["approved"], True)
+        self.assertEqual(record["riskReview"]["final_intent"], "SHORT")
+        self.assertEqual(record["execution"]["execution_action"], "OPEN_SHORT")
+        self.assertEqual(record["execution"]["order_status"], "FILLED")
+        self.assertEqual(record["execution"]["sync_status"], "OPEN")
+        self.assertTrue(any(event["type"] == "LIVE_POSITION_ADOPTED" for event in record["execution"]["history"]))
+
+    def test_does_not_adopt_live_position_already_managed_by_open_record(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "d1",
+                    "cycleId": "cycle_1",
+                    "symbol": "ETH-USDT",
+                    "created_at": "2026-04-13T12:00:00Z",
+                    "positionState": "entered",
+                    "riskReview": {"approved": True, "final_intent": "LONG"},
+                    "execution": {
+                        "execution_action": "OPEN_LONG",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "history": [],
+                    },
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "ETH",
+                        "type": "long",
+                        "entryPrice": 2500.0,
+                        "amount": 1.2,
+                        "stopLoss": 2450.0,
+                        "takeProfit": 2600.0,
+                    }
+                ]
+            },
+            "trade_history": [],
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db):
+            result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["record_count"], 1)
+        self.assertEqual(len(fake_db.store["trade_decision_records"]), 1)
+        self.assertEqual(fake_db.store["trade_decision_records"][0]["decisionId"], "d1")
+
     def test_marks_grid_bot_as_running(self):
         store = {
             "trade_decision_records": [
@@ -150,7 +238,7 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(record["execution"]["filled_stop_loss"], 2450.0)
         self.assertEqual(record["execution"]["filled_take_profit"], 2600.0)
 
-    def test_closed_record_is_not_reopened_by_later_live_position_sync(self):
+    def test_closed_record_is_not_reopened_and_live_position_is_adopted(self):
         store = {
             "trade_decision_records": [
                 {
@@ -187,11 +275,16 @@ class ExecutionReconciliationTests(unittest.TestCase):
         with patch.object(er, "db", fake_db):
             result = er.run_execution_reconciliation()
 
-        self.assertEqual(result["updated_count"], 0)
-        record = fake_db.store["trade_decision_records"][0]
-        self.assertEqual(record["positionState"], "closed")
-        self.assertEqual(record["execution"]["order_status"], "CLOSED")
-        self.assertEqual(record["execution"]["history"], [])
+        self.assertEqual(result["updated_count"], 1)
+        self.assertEqual(len(fake_db.store["trade_decision_records"]), 2)
+        adopted = fake_db.store["trade_decision_records"][0]
+        old_record = fake_db.store["trade_decision_records"][1]
+        self.assertTrue(adopted["provenance"]["adopted_live_position"])
+        self.assertEqual(adopted["symbol"], "BTC-USDT")
+        self.assertEqual(adopted["riskReview"]["final_intent"], "SHORT")
+        self.assertEqual(old_record["positionState"], "closed")
+        self.assertEqual(old_record["execution"]["order_status"], "CLOSED")
+        self.assertEqual(old_record["execution"]["history"], [])
 
     def test_marks_closed_trade_as_closed(self):
         store = {
