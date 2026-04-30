@@ -1092,6 +1092,123 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertIsNone(result.get("failure_reason"))
         self.assertEqual(result["exchange_order_id"], "demo-order-1")
 
+    def test_run_cycle_persists_pending_record_before_submit(self):
+        fake_db = FakeDB({"portfolio_state": {"positions": [], "total_equity": 10000}})
+        snapshot = {
+            "decision_id": "cycle_test_BNB",
+            "cycleId": "cycle_test",
+            "symbol": "BNB-USDT",
+            "timeframe": "4h",
+            "snapshot_timestamp": 1712743200,
+            "decision_ready_features": {"macro_mode": "RISK_OFF"},
+        }
+        candidate = {
+            "strategy_family": "DIRECTIONAL",
+            "decision_intent": "SHORT",
+            "trigger_source": "Blueprint_F2",
+            "entry_type": "MARKET",
+            "proposed_entry_price": 615.0,
+            "proposed_sl_price": 628.0,
+            "proposed_tp_price": 589.0,
+            "reference_values": {"structure_resistance_stop_short": 628.0},
+            "invalidation_basis": "F2 resistance broken",
+            "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+        }
+        candidate_batch = {
+            "symbol": "BNB-USDT",
+            "cycleId": "cycle_test",
+            "candidate_proposals": [candidate],
+        }
+        rule_evaluation = {
+            "passed": True,
+            "approved_candidates": [candidate],
+            "candidate_structure": {"overall_state": "single_signal"},
+        }
+        risk_review = {
+            "symbol": "BNB-USDT",
+            "cycleId": "cycle_test",
+            "strategy_family": "DIRECTIONAL",
+            "approved": True,
+            "final_intent": "SHORT",
+            "approved_risk_fraction": 0.01,
+            "approved_position_size_usd": 424.0,
+            "leverage": 2.0,
+            "max_holding_bars": 3,
+            "execution_action": "OPEN_SHORT",
+            "next_position_state": "approved",
+            "review_note": "approved from Blueprint_F2",
+            "approved_candidate": candidate,
+        }
+        test_case = self
+
+        class InspectingExecutor:
+            def execute_trade(self, **kwargs):
+                records = fake_db.store.get("trade_decision_records", [])
+                test_case.assertEqual(len(records), 1)
+                pending = records[0]
+                test_case.assertEqual(pending["decisionId"], "cycle_test_BNB")
+                test_case.assertEqual(pending["riskReview"]["approved_candidate"]["trigger_source"], "Blueprint_F2")
+                test_case.assertEqual(pending["execution"]["order_status"], "PENDING_SUBMIT")
+                return "order-f2-1"
+
+        with patch.object(dp, "db", fake_db), \
+             patch.object(dp, "TRACKED_SYMBOLS", ["BNB-USDT"]), \
+             patch.object(dp, "_load_whale_analysis", return_value={}), \
+             patch.object(dp, "_load_qlib_payload", return_value={}), \
+             patch.object(dp, "_qlib_coin_map", return_value={}), \
+             patch.object(dp, "_load_chart_feature_context_map", return_value={}), \
+             patch.object(dp, "_build_macro_snapshot", return_value={}), \
+             patch.object(dp, "_aligned_cycle_id", return_value="cycle_test"), \
+             patch.object(dp, "_build_decision_snapshot", return_value=snapshot), \
+             patch.object(dp, "_build_candidate_proposals", return_value=candidate_batch), \
+             patch.object(dp, "_evaluate_rules", return_value=rule_evaluation), \
+             patch.object(dp, "build_research_output", return_value=None), \
+             patch.object(dp, "_build_risk_review_with_research", return_value=risk_review), \
+             patch.object(dp, "run_post_trade_review", return_value={"evaluated_count": 0, "record_count": 1}), \
+             patch.dict(os.environ, {"ENABLE_V2_EXECUTION": "1"}, clear=False):
+            dp.run_deterministic_cycle(executor=InspectingExecutor())
+
+        final_record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(final_record["execution"]["order_status"], "SUBMITTED")
+        self.assertEqual(final_record["execution"]["exchange_order_id"], "order-f2-1")
+        self.assertEqual(final_record["riskReview"]["approved_candidate"]["trigger_source"], "Blueprint_F2")
+
+    def test_append_trade_record_does_not_replace_active_execution_with_no_trade(self):
+        active_record = {
+            "decisionId": "cycle_test_BNB",
+            "symbol": "BNB-USDT",
+            "riskReview": {
+                "approved": True,
+                "final_intent": "SHORT",
+                "approved_candidate": {"trigger_source": "Blueprint_F2"},
+            },
+            "execution": {
+                "execution_action": "OPEN_SHORT",
+                "order_status": "SUBMITTED",
+                "sync_status": "SUBMITTED",
+                "exchange_order_id": "order-f2-1",
+            },
+        }
+        incoming_no_trade = {
+            "decisionId": "cycle_test_BNB",
+            "symbol": "BNB-USDT",
+            "riskReview": {"approved": False, "final_intent": "NO_TRADE"},
+            "execution": {
+                "execution_action": "DO_NOTHING",
+                "order_status": "SKIPPED",
+                "sync_status": "SKIPPED",
+            },
+        }
+        fake_db = FakeDB({"trade_decision_records": [active_record]})
+
+        with patch.object(dp, "db", fake_db):
+            dp._append_trade_record(incoming_no_trade)
+
+        saved = fake_db.store["trade_decision_records"]
+        self.assertEqual(len(saved), 1)
+        self.assertEqual(saved[0]["execution"]["order_status"], "SUBMITTED")
+        self.assertEqual(saved[0]["riskReview"]["approved_candidate"]["trigger_source"], "Blueprint_F2")
+
     def test_open_execution_skips_when_symbol_position_already_exists(self):
         execution = {
             "symbol": "BNB-USDT",

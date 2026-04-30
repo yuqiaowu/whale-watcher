@@ -2133,12 +2133,52 @@ def _append_trade_record(record: Dict[str, Any]) -> None:
         item_decision_id = str(item.get("decisionId") or "")
         if not item_decision_id or item_decision_id in seen:
             continue
+        if item_decision_id == decision_id and item is record:
+            preserved = next(
+                (
+                    existing
+                    for existing in collection[1:]
+                    if isinstance(existing, dict)
+                    and str(existing.get("decisionId") or "") == decision_id
+                    and _should_preserve_existing_execution(record, existing)
+                ),
+                None,
+            )
+            if preserved is not None:
+                seen.add(item_decision_id)
+                deduped.append(preserved)
+                continue
         seen.add(item_decision_id)
         deduped.append(item)
     collection = deduped
     collection = collection[:500]
     db.save_data("trade_decision_records", collection)
-    db.save_data("latest_trade_decision_record", record)
+    if collection:
+        db.save_data("latest_trade_decision_record", collection[0])
+
+
+def _execution_is_nonterminal(record: Dict[str, Any]) -> bool:
+    execution = record.get("execution") or {}
+    action = str(execution.get("execution_action") or "")
+    if action == "DO_NOTHING":
+        return False
+    status = str(execution.get("order_status") or "").upper()
+    sync_status = str(execution.get("sync_status") or "").upper()
+    terminal_statuses = {"SKIPPED", "FAILED", "CLOSED", "NOT_REQUESTED"}
+    if status in terminal_statuses or sync_status in terminal_statuses:
+        return False
+    return action in {"OPEN_LONG", "OPEN_SHORT", "START_GRID_BOT", "CLOSE_POSITION"}
+
+
+def _should_preserve_existing_execution(incoming: Dict[str, Any], existing: Dict[str, Any]) -> bool:
+    if not _execution_is_nonterminal(existing):
+        return False
+    if _execution_is_nonterminal(incoming):
+        return False
+    incoming_execution = incoming.get("execution") or {}
+    incoming_action = str(incoming_execution.get("execution_action") or "")
+    incoming_status = str(incoming_execution.get("order_status") or "").upper()
+    return incoming_action == "DO_NOTHING" or incoming_status in {"SKIPPED", "NOT_REQUESTED"}
 
 
 def _save_cycle_bundle(cycle_id: str, bundle: Dict[str, Any]) -> None:
@@ -2389,8 +2429,12 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
         research_output = build_research_output(snapshot, candidate_batch, rule_evaluation)
         risk_review = _build_risk_review_with_research(snapshot, rule_evaluation, research_output)
         execution = _build_execution_request(snapshot, risk_review)
-        execution = _execute_if_enabled(executor, execution, risk_review)
         record = _make_trade_record(snapshot, candidate_batch, rule_evaluation, research_output, risk_review, execution)
+        _append_trade_record(record)
+        execution = _execute_if_enabled(executor, execution, risk_review)
+        record["execution"] = execution
+        record["updated_at"] = _iso_now()
+        record["updated_at_local"] = _iso_now_local()
 
         snapshots.append(snapshot)
         candidate_batches.append(candidate_batch)
