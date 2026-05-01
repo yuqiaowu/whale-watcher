@@ -5,9 +5,6 @@ from db_client import db
 from okx_executor import OKXExecutor
 
 
-BREAK_EVEN_TRIGGER_PNL = 1.0
-TRAILING_TRIGGER_PNL = 2.0
-TRAILING_STOP_BUFFER = 0.01
 LIQ_REDUCE_THRESHOLD = 0.10
 LIQ_CLOSE_THRESHOLD = 0.05
 THESIS_WEAKENED_REDUCE_RATIO = 0.25
@@ -213,24 +210,6 @@ def _evaluate_invalidation(record: Dict[str, Any], snapshot: Dict[str, Any], liv
             results.append(False)
 
     return any(results) if operator == "OR" else all(results)
-
-
-def _existing_stop_loss(live_position: Dict[str, Any], record: Dict[str, Any]) -> Optional[float]:
-    execution = record.get("execution", {}) or {}
-    candidates = [
-        live_position.get("stopLoss"),
-        execution.get("active_stop_loss"),
-        execution.get("proposed_sl_price"),
-        execution.get("filled_stop_loss"),
-    ]
-    for item in candidates:
-        if item is None:
-            continue
-        try:
-            return float(item)
-        except Exception:
-            continue
-    return None
 
 
 def _apply_adjustment(
@@ -666,50 +645,9 @@ def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str,
                 })
                 actions.append({"decisionId": record.get("decisionId"), "action": "CLOSE_POSITION"})
                 changed = True
-        elif not runtime_action_taken:
-            current_sl = _existing_stop_loss(live_position, record)
-            proposed_tp = execution.get("proposed_tp_price")
-
-            if pnl_pct >= TRAILING_TRIGGER_PNL:
-                if side == "LONG":
-                    new_sl = round(current_price * (1 - TRAILING_STOP_BUFFER), 4)
-                    should_update = current_sl is None or new_sl > current_sl
-                else:
-                    new_sl = round(current_price * (1 + TRAILING_STOP_BUFFER), 4)
-                    should_update = current_sl is None or new_sl < current_sl
-                if should_update:
-                    order_id = _apply_adjustment(executor, symbol, side, new_sl, proposed_tp)
-                    execution["active_stop_loss"] = new_sl
-                    execution["last_runtime_order_id"] = order_id
-                    execution["runtime_reason"] = "trailing_stop_rule"
-                    record["positionState"] = "trailing"
-                    _append_execution_event(record, "TRAILING_STOP_UPDATED", {
-                        "new_stop_loss": new_sl,
-                        "order_id": order_id,
-                        "pnl_percent": pnl_pct,
-                    })
-                    actions.append({"decisionId": record.get("decisionId"), "action": "TRAILING_STOP_UPDATED"})
-                    changed = True
-            elif pnl_pct >= BREAK_EVEN_TRIGGER_PNL and entry_price > 0:
-                if side == "LONG":
-                    new_sl = entry_price
-                    should_update = current_sl is None or new_sl > current_sl
-                else:
-                    new_sl = entry_price
-                    should_update = current_sl is None or new_sl < current_sl
-                if should_update:
-                    order_id = _apply_adjustment(executor, symbol, side, new_sl, proposed_tp)
-                    execution["active_stop_loss"] = new_sl
-                    execution["last_runtime_order_id"] = order_id
-                    execution["runtime_reason"] = "break_even_switch"
-                    record["positionState"] = "entered"
-                    _append_execution_event(record, "BREAK_EVEN_SWITCHED", {
-                        "new_stop_loss": new_sl,
-                        "order_id": order_id,
-                        "pnl_percent": pnl_pct,
-                    })
-                    actions.append({"decisionId": record.get("decisionId"), "action": "BREAK_EVEN_SWITCHED"})
-                    changed = True
+        # Profit alone does not move protective orders. Open directional
+        # positions continue until thesis/rule invalidation, review rejection,
+        # liquidation-risk controls, or the original exchange SL/TP handles them.
 
         if changed:
             record["execution"] = execution

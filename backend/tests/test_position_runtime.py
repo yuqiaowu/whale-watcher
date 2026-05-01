@@ -725,6 +725,88 @@ class PositionRuntimeTests(unittest.TestCase):
         self.assertFalse(any(event["type"] == "INVALIDATION_TRIGGERED" for event in record["execution"]["history"]))
         self.assertTrue(any(event["type"] == "F_RUNTIME_EXIT_TRIGGERED" for event in record["execution"]["history"]))
 
+    def test_profitable_position_without_invalidation_keeps_original_protection(self):
+        class StrictExecutor:
+            def execute_trade(self, **kwargs):
+                raise AssertionError(f"runtime should not adjust profitable position: {kwargs}")
+
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "profit_hold",
+                    "symbol": "ETH-USDT",
+                    "created_at": "2026-04-13T00:00:00Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "ETH-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "LONG",
+                        "max_holding_bars": 0,
+                        "approved_candidate": {
+                            "trigger_source": "Blueprint_A1",
+                            "invalidation_conditions": {
+                                "operator": "OR",
+                                "rules": [{"field": "price", "op": "<=", "value": 2350.0}],
+                                "persistence": 1,
+                            },
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_LONG",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "protection_status": "OPEN",
+                        "proposed_sl_price": 2350.0,
+                        "proposed_tp_price": 2600.0,
+                        "add_allowed": True,
+                        "history": [],
+                    },
+                    "researchOutput": {"thesis_change": "UNCHANGED", "thesis_strength": "MEDIUM"},
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "ETH",
+                        "type": "long",
+                        "entryPrice": 2400.0,
+                        "currentPrice": 2520.0,
+                        "pnlPercent": 4.2,
+                        "amount": 1.0,
+                        "margin": 100.0,
+                        "leverage": 2.0,
+                        "stopLoss": 2350.0,
+                        "takeProfit": 2600.0,
+                    }
+                ]
+            },
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "ETH-USDT",
+                        "market_snapshot": {"price": 2520.0},
+                        "decision_ready_features": {
+                            "macro_permission": "ALLOW_BOTH",
+                            "flow_support_long": True,
+                            "flow_support_short": False,
+                            "regime_1d": "BULL",
+                        },
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db):
+            result = pr.run_in_position_runtime(executor=StrictExecutor())
+
+        self.assertEqual(result["updated_count"], 0)
+        self.assertEqual(result["actions"], [])
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["positionState"], "entered")
+        self.assertNotIn("active_stop_loss", record["execution"])
+        self.assertEqual(record["execution"]["proposed_sl_price"], 2350.0)
+        self.assertEqual(record["execution"]["proposed_tp_price"], 2600.0)
+
 
 if __name__ == "__main__":
     unittest.main()
