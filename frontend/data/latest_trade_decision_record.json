@@ -3,9 +3,9 @@
   "cycleId": "cycle_2026-05-01_0000",
   "symbol": "DOGE-USDT",
   "timeframe": "4h",
-  "snapshot_timestamp": 1777594139,
-  "snapshot_time": "2026-05-01T00:08:59Z",
-  "snapshot_time_local": "2026-05-01T08:08:59+0800",
+  "snapshot_timestamp": 1777601339,
+  "snapshot_time": "2026-05-01T02:08:59Z",
+  "snapshot_time_local": "2026-05-01T10:08:59+0800",
   "local_timezone": "Asia/Shanghai",
   "positionState": "candidate",
   "snapshot": {
@@ -13,31 +13,31 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-01_0000",
     "timeframe": "4h",
-    "snapshot_timestamp": 1777594139,
-    "snapshot_time": "2026-05-01T00:08:59Z",
-    "snapshot_time_local": "2026-05-01T08:08:59+0800",
+    "snapshot_timestamp": 1777601339,
+    "snapshot_time": "2026-05-01T02:08:59Z",
+    "snapshot_time_local": "2026-05-01T10:08:59+0800",
     "local_timezone": "Asia/Shanghai",
     "market_snapshot": {
-      "price": 0.10679,
-      "change_24h": 0.3193987787693688,
+      "price": 0.10896,
+      "change_24h": 2.3579145138562687,
       "rsi_4h": 60.59142274118727,
       "adx_14": 43.068424801045005,
-      "volume_ratio": 1.6275514967422111,
+      "volume_ratio": 1.5189263468628649,
       "bb_width": 0.1433329744841381,
       "bb_pct_b": 0.7453271304963907,
       "bb_mid_slope_pct": 0.01275356399634369,
       "adx_delta": 2.733683633115085,
       "recent_close_drift_pct": 0.02297026507255535,
       "range_edge_close_count": 0,
-      "wick_ratio_lower": 20.0,
-      "wick_ratio_upper": 12.0,
-      "funding_rate": -1.9721426635e-05,
-      "funding_zscore": -0.46,
-      "oi_now": 116656348.39009994,
+      "wick_ratio_lower": 3.45,
+      "wick_ratio_upper": 10.0,
+      "funding_rate": 4.26356859251e-05,
+      "funding_zscore": 0.56,
+      "oi_now": 119026835.10239995,
       "delta_oi_24h_percent": -0.48274863796382034,
-      "natr_percent": 2.1407618434510507,
-      "whale_ls_ratio": 1.1741573033707866,
-      "whale_pos_ratio": 0.8864913539399247,
+      "natr_percent": 2.2554590161985577,
+      "whale_ls_ratio": 1.205992509363296,
+      "whale_pos_ratio": 0.8762682320751662,
       "atr_14": 0.0031364285714285,
       "macd_line_4h": 0.0021594243288963,
       "macd_signal_4h": 0.0018853004057344,
@@ -71,10 +71,10 @@
       "flow_composite_semantic": "UNAVAILABLE",
       "flow_signal_mixed": false,
       "sentiment_score": 0.0,
-      "liquidation_long_usd": 819353.1843999999,
-      "liquidation_short_usd": 1720225.212699999,
-      "liquidation_long_to_volume_4h": 0.0183724233203468,
-      "liquidation_short_to_volume_4h": 0.0385727503301298,
+      "liquidation_long_usd": 708517.0846000001,
+      "liquidation_short_usd": 1882357.745,
+      "liquidation_long_to_volume_4h": 0.0158871364093146,
+      "liquidation_short_to_volume_4h": 0.042208261333357,
       "qlib_relative_score_8h": -0.0042,
       "qlib_rank_8h": 5,
       "qlib_percentile_8h": 0.0,
@@ -84,56 +84,58 @@
       "confidence_8h": 0.2175
     },
     "macro_snapshot": {
-      "event_type": "FED_LEADERSHIP",
+      "event_type": "FED_SPEECH",
       "policy_stance": "HAWKISH",
       "market_impact": "RISK_OFF",
       "impact_horizon": "MULTI_DAY",
       "crypto_relevance": "HIGH",
       "key_tags": [
+        "FED_HAWKISH",
+        "LIQUIDITY_CONTRACTING",
         "RISK_OFF_NEWS",
-        "USD_WEAKNESS",
         "YEN_STRESS"
       ],
-      "brief_rationale": "Despite geopolitical tensions, markets are expected to rise, indicating resilience and a risk-on tilt in Asia, but the overall macro context remains risk-off due to Fed hawkishness and yen stress.",
-      "news_summary": "Australia and Japan markets set to climb, looking past Iran war escalation fears",
+      "brief_rationale": "Fed pricing restrictive, yen weakening, VIX elevated, and large stablecoin outflow all point to risk-off sentiment.",
+      "news_summary": "Fed remains hawkish with Powell's stance, yen stress persists, and stablecoin outflows signal risk-off.",
       "classification_basis": {
         "fear_greed_index": 26.0,
         "fear_greed_state": "FEAR",
-        "fed_implied_rate": 3.61,
-        "fed_change_5d_bps": -3.3,
-        "usdjpy_level": 157.077,
-        "usdjpy_change_5d_pct": -1.67,
-        "dxy_level": 98.13,
-        "dxy_change_5d_pct": -0.35,
+        "fed_implied_rate": 3.615,
+        "fed_change_5d_bps": -2.8,
+        "usdjpy_level": 157.177,
+        "usdjpy_change_5d_pct": -1.61,
+        "dxy_level": 98.14,
+        "dxy_change_5d_pct": -0.34,
         "vix_level": 16.89,
         "vix_change_5d_pct": -9.73,
         "us10y_level": 4.39,
         "us10y_change_5d_pct": 1.86,
-        "global_stable_flow": -1884333283.7406158,
-        "global_stable_market_cap": 265267963572.63232,
-        "global_stable_flow_ratio_pct": -0.710350868745095
+        "global_stable_flow": -1986092993.0167236,
+        "global_stable_market_cap": 265160870864.0307,
+        "global_stable_flow_ratio_pct": -0.749014357414429
       },
       "key_events": [
+        "FED_HAWKISH",
+        "LIQUIDITY_CONTRACTING",
         "RISK_OFF_NEWS",
-        "USD_WEAKNESS",
         "YEN_STRESS"
       ],
       "event_facts": {
         "fear_greed_index": 26.0,
         "fear_greed_state": "FEAR",
-        "fed_implied_rate": 3.61,
-        "fed_change_5d_bps": -3.3,
-        "usdjpy_level": 157.077,
-        "usdjpy_change_5d_pct": -1.67,
-        "dxy_level": 98.13,
-        "dxy_change_5d_pct": -0.35,
+        "fed_implied_rate": 3.615,
+        "fed_change_5d_bps": -2.8,
+        "usdjpy_level": 157.177,
+        "usdjpy_change_5d_pct": -1.61,
+        "dxy_level": 98.14,
+        "dxy_change_5d_pct": -0.34,
         "vix_level": 16.89,
         "vix_change_5d_pct": -9.73,
         "us10y_level": 4.39,
         "us10y_change_5d_pct": 1.86,
-        "global_stable_flow": -1884333283.7406158,
-        "global_stable_market_cap": 265267963572.63232,
-        "global_stable_flow_ratio_pct": -0.710350868745095
+        "global_stable_flow": -1986092993.0167236,
+        "global_stable_market_cap": 265160870864.0307,
+        "global_stable_flow_ratio_pct": -0.749014357414429
       },
       "provenance": {
         "generation_mode": "llm_refined",
@@ -142,7 +144,6 @@
         "llm_applied": true,
         "llm_override_fields": [
           "brief_rationale",
-          "key_tags",
           "news_summary"
         ],
         "llm_audit": {
@@ -152,16 +153,17 @@
           "status": "parsed",
           "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
           "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-          "raw_response_preview": "{ \"news_summary\": \"Australia and Japan markets set to climb, looking past Iran war escalation fears\", \"brief_rationale\": \"Despite geopolitical tensions, markets are expected to rise, indicating resilience and a risk-on tilt in Asia, but the overall macro context remains risk-off due to Fed hawkishness and yen stress.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"MEDIUM\", \"key_tags\": [\"RISK_OFF_NEWS\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
+          "raw_response_preview": "{ \"news_summary\": \"Fed remains hawkish with Powell's stance, yen stress persists, and stablecoin outflows signal risk-off.\", \"brief_rationale\": \"Fed pricing restrictive, yen weakening, VIX elevated, and large stablecoin outflow all point to risk-off sentiment.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"RISK_OFF_NEWS\", \"YEN_STRESS\"] }",
           "parsed_response": {
-            "news_summary": "Australia and Japan markets set to climb, looking past Iran war escalation fears",
-            "brief_rationale": "Despite geopolitical tensions, markets are expected to rise, indicating resilience and a risk-on tilt in Asia, but the overall macro context remains risk-off due to Fed hawkishness and yen stress.",
-            "market_impact": "MIXED",
-            "impact_horizon": "INTRADAY",
-            "crypto_relevance": "MEDIUM",
+            "news_summary": "Fed remains hawkish with Powell's stance, yen stress persists, and stablecoin outflows signal risk-off.",
+            "brief_rationale": "Fed pricing restrictive, yen weakening, VIX elevated, and large stablecoin outflow all point to risk-off sentiment.",
+            "market_impact": "RISK_OFF",
+            "impact_horizon": "MULTI_DAY",
+            "crypto_relevance": "HIGH",
             "key_tags": [
+              "FED_HAWKISH",
+              "LIQUIDITY_CONTRACTING",
               "RISK_OFF_NEWS",
-              "USD_WEAKNESS",
               "YEN_STRESS"
             ]
           },
@@ -173,19 +175,19 @@
       "macro_permission": "ALLOW_SHORT",
       "fear_greed_index": 26.0,
       "fear_greed_state": "FEAR",
-      "dxy_level": 98.13,
+      "dxy_level": 98.14,
       "dxy_trend": "DOWN",
-      "usdjpy_level": 157.077,
+      "usdjpy_level": 157.177,
       "usdjpy_trend": "DOWN",
-      "fed_event_risk": "LOW",
-      "macro_event_window": false,
+      "fed_event_risk": "HIGH",
+      "macro_event_window": true,
       "risk_off_score": 0.8,
       "news_headlines": [
-        "Australia and Japan markets set to climb, looking past Iran war escalation fears",
         "Trump administration finalizes federal student loan caps\u2014what it means for borrowers",
         "Inside the Fed: Powell vows he won't be a 'shadow chair,' but a Warsh clash will be tough to avoid",
         "Apple execs to talk China and tariffs, but will avoid discussing foldable iPhone, per traders on Kalshi",
-        "Pricey NFL, NBA ownership stakes are pushing investors to smaller leagues and driving valuations higher"
+        "Core inflation rate hit 3.2% in March as first-quarter growth disappointed at 2%",
+        "Stocks Pressured as Soaring Crude Prices Raise Inflation Concerns"
       ]
     },
     "position_snapshot": {
@@ -202,7 +204,7 @@
       "macro_mode": "RISK_OFF",
       "macro_horizon": "MULTI_DAY",
       "macro_permission": "ALLOW_SHORT",
-      "event_risk_active": false,
+      "event_risk_active": true,
       "usd_strength_flag": false,
       "yen_stress_flag": true,
       "flow_data_available": false,
@@ -228,7 +230,7 @@
       "range_lower_bound": 0.0992,
       "range_upper_bound": 0.1124,
       "range_width_pct": 0.1249,
-      "price_position_in_range": 0.5753,
+      "price_position_in_range": 0.7396,
       "grid_mode": "ARITHMETIC",
       "grid_count": 16,
       "grid_spacing_pct": 0.0078,
@@ -247,6 +249,7 @@
       "grid_preflight_missing_fields": [],
       "grid_macro_trend_ok": false,
       "grid_macro_block_reasons": [
+        "bearish_liquidity_macro_cluster",
         "directional_swing_macro"
       ],
       "ma5_cross_up_ma10_1d": false,
@@ -264,7 +267,7 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-01_0000",
     "timeframe": "4h",
-    "snapshot_timestamp": 1777594139,
+    "snapshot_timestamp": 1777601339,
     "candidate_proposals": [],
     "e_strategy_diagnostic": {
       "qlib_inputs": {
@@ -274,7 +277,7 @@
         "p_up_8h": 0.0657,
         "p_down_8h": 0.2175,
         "p_flat_8h": 0.7168,
-        "funding_zscore": -0.46,
+        "funding_zscore": 0.56,
         "token_net_flow": 0.0,
         "stablecoin_net_flow": 0.0,
         "regime_1d": "BEAR",
@@ -394,14 +397,14 @@
     "history": [
       {
         "type": "EXECUTION_NOT_REQUESTED",
-        "at": "2026-05-01T00:09:04Z",
+        "at": "2026-05-01T02:09:03Z",
         "payload": {
           "review_note": "rule evaluation rejected or produced no approved candidates"
         }
       },
       {
         "type": "EXECUTION_SKIPPED",
-        "at": "2026-05-01T00:09:13Z",
+        "at": "2026-05-01T02:09:13Z",
         "payload": {
           "reason": "do_nothing",
           "execution_action": "DO_NOTHING"
@@ -453,10 +456,10 @@
       "execution_action": "DO_NOTHING"
     },
     "feedback_packets": [],
-    "generated_at": "2026-05-01T00:11:59Z"
+    "generated_at": "2026-05-01T02:11:58Z"
   },
-  "created_at": "2026-05-01T00:09:04Z",
-  "created_at_local": "2026-05-01T08:09:04+0800",
-  "updated_at": "2026-05-01T00:11:59Z",
-  "updated_at_local": "2026-05-01T08:09:13+0800"
+  "created_at": "2026-05-01T02:09:03Z",
+  "created_at_local": "2026-05-01T10:09:03+0800",
+  "updated_at": "2026-05-01T02:11:58Z",
+  "updated_at_local": "2026-05-01T10:09:13+0800"
 }
