@@ -103,9 +103,9 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
                 "datetime": completed_before,
                 "instrument": "ETH",
                 "open": 9999,
-                "high": 9999,
-                "low": 9999,
-                "close": 9999,
+                "high": 10999,
+                "low": 9990,
+                "close": 10000,
                 "volume": 1,
                 "macd": -99,
                 "macd_signal": -99,
@@ -133,6 +133,8 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual("2026-04-30 00:00:00", eth_context["chart_context_completed_before"])
         self.assertNotEqual(1, eth_context["volume_usd_4h"])
         self.assertNotEqual(-99, eth_context["macd_line_4h"])
+        self.assertEqual(38.89, eth_context["wick_ratio_lower"])
+        self.assertEqual(50.0, eth_context["wick_ratio_upper"])
 
     def test_build_decision_snapshot_maps_flow_into_fixed_semantics(self):
         whale_analysis = {
@@ -168,6 +170,53 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertFalse(snapshot["decision_ready_features"]["flow_support_long"])
         self.assertFalse(snapshot["decision_ready_features"]["flow_support_short"])
         self.assertTrue(snapshot["decision_ready_features"]["flow_signal_mixed"])
+
+    def test_build_decision_snapshot_prefers_confirmed_chart_wick_over_live_market_wick(self):
+        whale_analysis = {
+            "fear_greed": {"value": 45, "value_classification": "Fear"},
+            "macro": {},
+            "news": {},
+            "btc": {
+                "market": {
+                    "price": 78000,
+                    "rsi_4h": 65,
+                    "adx_14": 20,
+                    "volume_ratio": 1.0,
+                    "wick_ratio_lower": 0,
+                    "wick_ratio_upper": 72,
+                }
+            },
+        }
+        chart_context = {
+            "BTC": {
+                "rsi_4h": 65,
+                "atr_14": 800,
+                "wick_ratio_lower": 42.0,
+                "wick_ratio_upper": 12.0,
+                "chart_context_bar_time": "2026-05-01 16:00:00",
+                "chart_context_completed_before": "2026-05-01 20:00:00",
+            }
+        }
+
+        snapshot = dp._build_decision_snapshot(
+            "BTC",
+            whale_analysis,
+            {
+                "rank": 3,
+                "p_up_8h": 0.2,
+                "p_down_8h": 0.2,
+                "p_flat_8h": 0.6,
+                "market_data": {"atr_14": 800, "close": 78000},
+            },
+            {"positions": [], "total_equity": 10000},
+            "cycle_2026-05-01_2000",
+            chart_context=chart_context["BTC"],
+        )
+
+        self.assertEqual(12.0, snapshot["market_snapshot"]["wick_ratio_upper"])
+        self.assertEqual(42.0, snapshot["market_snapshot"]["wick_ratio_lower"])
+        proposals = dp._build_candidate_proposals(snapshot)
+        self.assertNotIn("Blueprint_A2", [item["trigger_source"] for item in proposals["candidate_proposals"]])
 
     def test_a2_only_emits_for_bnb_btc_sol_with_bear_regime_and_rsi_above_60(self):
         def build_snapshot(symbol: str, regime: str, rsi: float, wick_upper: float) -> dict:

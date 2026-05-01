@@ -444,6 +444,13 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
         edge_close = (range_position <= 0.18) | (range_position >= 0.82)
         frame["range_edge_close_count"] = edge_close.astype(int).rolling(3, min_periods=3).sum()
         latest = frame.iloc[-1]
+        latest_open = _safe_float(latest.get("open"))
+        latest_high = _safe_float(latest.get("high"))
+        latest_low = _safe_float(latest.get("low"))
+        latest_close = _safe_float(latest.get("close"))
+        full_range = max(latest_high - latest_low, 1e-9)
+        upper_shadow = max(0.0, latest_high - max(latest_open, latest_close))
+        lower_shadow = max(0.0, min(latest_open, latest_close) - latest_low)
         atr = _safe_float(latest.get("atr_14"))
         support = _safe_float(latest.get("structure_support_12bar_volume_confirmed"))
         resistance = _safe_float(latest.get("structure_resistance_12bar_volume_confirmed"))
@@ -469,6 +476,8 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
             "rsi_4h": _safe_float(latest.get("rsi_14")),
             "adx_14_4h": _safe_float(latest.get("adx_14")),
             "atr_14": atr,
+            "wick_ratio_lower": round(lower_shadow / full_range * 100, 2),
+            "wick_ratio_upper": round(upper_shadow / full_range * 100, 2),
             "rel_volume_60": _safe_float(latest.get("rel_volume_60")),
             "sma50_4h": _safe_float(latest.get("sma50_4h")),
             "bb_width": _safe_float(latest.get("bb_width")),
@@ -662,8 +671,8 @@ def _build_decision_snapshot(
         "adx_delta": _safe_float(chart_context.get("adx_delta"), _safe_float(market.get("adx_delta"))),
         "recent_close_drift_pct": _safe_float(chart_context.get("recent_close_drift_pct"), _safe_float(market.get("recent_close_drift_pct"))),
         "range_edge_close_count": int(_safe_float(chart_context.get("range_edge_close_count"), _safe_float(market.get("range_edge_close_count")))),
-        "wick_ratio_lower": _safe_float(market.get("wick_ratio_lower")),
-        "wick_ratio_upper": _safe_float(market.get("wick_ratio_upper")),
+        "wick_ratio_lower": _safe_float(chart_context.get("wick_ratio_lower"), _safe_float(market.get("wick_ratio_lower"))),
+        "wick_ratio_upper": _safe_float(chart_context.get("wick_ratio_upper"), _safe_float(market.get("wick_ratio_upper"))),
         "funding_rate": funding_rate,
         "funding_zscore": funding_zscore,
         "oi_now": _safe_float(market.get("oi_now")),
