@@ -1,1753 +1,5 @@
 [
   {
-    "cycleId": "cycle_2026-04-24_0800",
-    "generated_at": "2026-04-24T08:07:19Z",
-    "generated_at_local": "2026-04-24T16:07:19+0800",
-    "cycle_local_time": "2026-04-24 16:00:00 CST",
-    "local_timezone": "Asia/Shanghai",
-    "timeframe": "4h",
-    "snapshots": [
-      {
-        "decision_id": "cycle_2026-04-24_0800_BTC",
-        "symbol": "BTC-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777017996,
-        "snapshot_time": "2026-04-24T08:06:36Z",
-        "snapshot_time_local": "2026-04-24T16:06:36+0800",
-        "local_timezone": "Asia/Shanghai",
-        "market_snapshot": {
-          "price": 77555.6,
-          "change_24h": -0.8364680641044947,
-          "rsi_4h": 53.294993656368696,
-          "adx_14": 0.0,
-          "volume_ratio": 1.10211101899268,
-          "wick_ratio_lower": 18.18,
-          "wick_ratio_upper": 22.81,
-          "funding_rate": -2.4655432661e-06,
-          "funding_zscore": 0.65,
-          "oi_now": 2822688140.585427,
-          "delta_oi_24h_percent": -3.1441217140336195,
-          "natr_percent": 1.2125023495403942,
-          "whale_ls_ratio": 0.5597925564368517,
-          "whale_pos_ratio": 1.0615250661192492,
-          "atr_14": 896.942857142857,
-          "macd_line_4h": 516.6715522391023,
-          "macd_signal_4h": 627.4405265881301,
-          "macd_hist_4h": -110.76897434902776,
-          "rel_volume_60": 0.020409108862268963,
-          "volume_usd_4h": 21927668.13007,
-          "sma50_4h": 76379.54,
-          "bearish_divergence_4h": false,
-          "bullish_divergence_4h": false,
-          "macd_cross_up_4h": false,
-          "macd_cross_down_4h": false,
-          "structure_support_12bar_volume_confirmed": 76911.1,
-          "structure_resistance_12bar_volume_confirmed": 79375.3,
-          "structure_support_stop_long": 76462.6286,
-          "structure_resistance_stop_short": 79823.7714
-        },
-        "onchain_snapshot": {
-          "token_net_flow": 0.0,
-          "stablecoin_net_flow": 0.0,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "token_flow_semantic": "UNAVAILABLE",
-          "stablecoin_flow_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "sentiment_score": 0.0,
-          "liquidation_long_usd": 8178857.275690001,
-          "liquidation_short_usd": 5285997.846019999,
-          "liquidation_long_to_volume_4h": 0.3729925693500493,
-          "liquidation_short_to_volume_4h": 0.2410652065082638,
-          "qlib_relative_score_8h": 0.0021,
-          "qlib_rank_8h": 4,
-          "qlib_percentile_8h": 0.25,
-          "p_up_8h": 0.0621,
-          "p_down_8h": 0.2132,
-          "p_flat_8h": 0.7247,
-          "confidence_8h": 0.2132
-        },
-        "macro_snapshot": {
-          "event_type": "FED_SPEECH",
-          "policy_stance": "HAWKISH",
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "SWING",
-          "crypto_relevance": "HIGH",
-          "key_tags": [
-            "FED_HAWKISH",
-            "USD_STRENGTH"
-          ],
-          "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.",
-          "news_summary": "Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI",
-          "classification_basis": {
-            "fear_greed_index": 39.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.645,
-            "fed_change_5d_bps": 0.2,
-            "usdjpy_level": 159.691,
-            "usdjpy_change_5d_pct": 0.31,
-            "dxy_level": 98.79,
-            "dxy_change_5d_pct": 0.76,
-            "vix_level": 18.94,
-            "vix_change_5d_pct": 0.37,
-            "us10y_level": 4.32,
-            "us10y_change_5d_pct": 1.81,
-            "global_stable_flow": 522395416.84091187,
-            "global_stable_market_cap": 267740600494.39386,
-            "global_stable_flow_ratio_pct": 0.19511251408127403
-          },
-          "key_events": [
-            "FED_HAWKISH",
-            "USD_STRENGTH"
-          ],
-          "event_facts": {
-            "fear_greed_index": 39.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.645,
-            "fed_change_5d_bps": 0.2,
-            "usdjpy_level": 159.691,
-            "usdjpy_change_5d_pct": 0.31,
-            "dxy_level": 98.79,
-            "dxy_change_5d_pct": 0.76,
-            "vix_level": 18.94,
-            "vix_change_5d_pct": 0.37,
-            "us10y_level": 4.32,
-            "us10y_change_5d_pct": 1.81,
-            "global_stable_flow": 522395416.84091187,
-            "global_stable_market_cap": 267740600494.39386,
-            "global_stable_flow_ratio_pct": 0.19511251408127403
-          },
-          "provenance": {
-            "generation_mode": "llm_noop",
-            "llm_enabled": true,
-            "llm_attempted": true,
-            "llm_applied": false,
-            "llm_override_fields": [],
-            "llm_audit": {
-              "enabled": true,
-              "provider": "deepseek",
-              "model": "deepseek-chat",
-              "status": "parsed",
-              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
-              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI\", \"brief_rationale\": \"Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_STRENGTH\"] }",
-              "parsed_response": {
-                "news_summary": "Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI",
-                "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.",
-                "market_impact": "RISK_OFF",
-                "impact_horizon": "SWING",
-                "crypto_relevance": "HIGH",
-                "key_tags": [
-                  "FED_HAWKISH",
-                  "USD_STRENGTH"
-                ]
-              },
-              "error": null
-            }
-          },
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "fear_greed_index": 39.0,
-          "fear_greed_state": "FEAR",
-          "dxy_level": 98.79,
-          "dxy_trend": "UP",
-          "usdjpy_level": 159.691,
-          "usdjpy_trend": "UP",
-          "fed_event_risk": "HIGH",
-          "macro_event_window": true,
-          "risk_off_score": 0.8,
-          "news_headlines": [
-            "Nike cuts 1,400 roles in second round of layoffs this year",
-            "NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful'",
-            "Meta will cut 10% of workforce as company pushes deeper into AI",
-            "New grads are finding jobs faster despite a competitive job market, says report",
-            "These charts show how Iran's economy is in freefall"
-          ]
-        },
-        "position_snapshot": {
-          "position_side": "NONE",
-          "position_size_usd": 0.0,
-          "entry_price": null,
-          "current_price": null,
-          "unrealized_pnl_pct": 0.0,
-          "distance_to_liq": null,
-          "open_positions": []
-        },
-        "decision_ready_features": {
-          "regime_1d": "BEAR",
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "event_risk_active": true,
-          "usd_strength_flag": true,
-          "yen_stress_flag": false,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "flow_token_semantic": "UNAVAILABLE",
-          "flow_stablecoin_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "flow_support_long": false,
-          "flow_support_short": false,
-          "qlib_relative_score_8h": 0.0021,
-          "qlib_percentile_8h": 0.25,
-          "p_up_8h": 0.0621,
-          "p_down_8h": 0.2132,
-          "p_flat_8h": 0.7247,
-          "confidence_8h": 0.2132,
-          "qlib_direction": "FLAT",
-          "qlib_direction_confident": false,
-          "qlib_top_bucket": false,
-          "qlib_bottom_bucket": true
-        },
-        "quality_score": 0.83,
-        "is_decision_eligible": true
-      },
-      {
-        "decision_id": "cycle_2026-04-24_0800_ETH",
-        "symbol": "ETH-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777018004,
-        "snapshot_time": "2026-04-24T08:06:44Z",
-        "snapshot_time_local": "2026-04-24T16:06:44+0800",
-        "local_timezone": "Asia/Shanghai",
-        "market_snapshot": {
-          "price": 2308.02,
-          "change_24h": -0.8999647914537711,
-          "rsi_4h": 43.0816593524933,
-          "adx_14": 0.0,
-          "volume_ratio": 0.895704211540954,
-          "wick_ratio_lower": 25.61,
-          "wick_ratio_upper": 18.93,
-          "funding_rate": -2.99852652615e-05,
-          "funding_zscore": -0.36,
-          "oi_now": 1516186439.444825,
-          "delta_oi_24h_percent": -4.176297689827988,
-          "natr_percent": 1.4804381975378862,
-          "whale_ls_ratio": 1.2733812949640289,
-          "whale_pos_ratio": 0.91509579326085,
-          "atr_14": 32.32499999999992,
-          "macd_line_4h": -5.382899667377842,
-          "macd_signal_4h": 0.7757541738599287,
-          "macd_hist_4h": -6.15865384123777,
-          "rel_volume_60": 0.013122325154260001,
-          "volume_usd_4h": 17830178.58383,
-          "sma50_4h": 2342.7708000000002,
-          "bearish_divergence_4h": false,
-          "bullish_divergence_4h": false,
-          "macd_cross_up_4h": false,
-          "macd_cross_down_4h": false,
-          "structure_support_12bar_volume_confirmed": 2330.13,
-          "structure_resistance_12bar_volume_confirmed": 2422.79,
-          "structure_support_stop_long": 2313.9675,
-          "structure_resistance_stop_short": 2438.9525
-        },
-        "onchain_snapshot": {
-          "token_net_flow": 7725740.214055023,
-          "stablecoin_net_flow": 7775895.691610668,
-          "flow_data_available": true,
-          "flow_schema_version": "flow_semantics_v1",
-          "token_flow_semantic": "ACCUMULATION_HINT",
-          "stablecoin_flow_semantic": "BUYING_POWER",
-          "flow_composite_semantic": "LONG_SUPPORT",
-          "flow_signal_mixed": false,
-          "sentiment_score": 0.03033987716532295,
-          "liquidation_long_usd": 10128567.958829995,
-          "liquidation_short_usd": 3743215.0264700023,
-          "liquidation_long_to_volume_4h": 0.5680575722340485,
-          "liquidation_short_to_volume_4h": 0.2099370462764004,
-          "qlib_relative_score_8h": 0.0004,
-          "qlib_rank_8h": 5,
-          "qlib_percentile_8h": 0.0,
-          "p_up_8h": 0.0535,
-          "p_down_8h": 0.1818,
-          "p_flat_8h": 0.7647,
-          "confidence_8h": 0.1818
-        },
-        "macro_snapshot": {
-          "event_type": "FED_SPEECH",
-          "policy_stance": "HAWKISH",
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "SWING",
-          "crypto_relevance": "HIGH",
-          "key_tags": [
-            "FED_HAWKISH",
-            "USD_STRENGTH"
-          ],
-          "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.",
-          "news_summary": "Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI",
-          "classification_basis": {
-            "fear_greed_index": 39.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.645,
-            "fed_change_5d_bps": 0.2,
-            "usdjpy_level": 159.691,
-            "usdjpy_change_5d_pct": 0.31,
-            "dxy_level": 98.79,
-            "dxy_change_5d_pct": 0.76,
-            "vix_level": 18.94,
-            "vix_change_5d_pct": 0.37,
-            "us10y_level": 4.32,
-            "us10y_change_5d_pct": 1.81,
-            "global_stable_flow": 522395416.84091187,
-            "global_stable_market_cap": 267740600494.39386,
-            "global_stable_flow_ratio_pct": 0.19511251408127403
-          },
-          "key_events": [
-            "FED_HAWKISH",
-            "USD_STRENGTH"
-          ],
-          "event_facts": {
-            "fear_greed_index": 39.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.645,
-            "fed_change_5d_bps": 0.2,
-            "usdjpy_level": 159.691,
-            "usdjpy_change_5d_pct": 0.31,
-            "dxy_level": 98.79,
-            "dxy_change_5d_pct": 0.76,
-            "vix_level": 18.94,
-            "vix_change_5d_pct": 0.37,
-            "us10y_level": 4.32,
-            "us10y_change_5d_pct": 1.81,
-            "global_stable_flow": 522395416.84091187,
-            "global_stable_market_cap": 267740600494.39386,
-            "global_stable_flow_ratio_pct": 0.19511251408127403
-          },
-          "provenance": {
-            "generation_mode": "llm_noop",
-            "llm_enabled": true,
-            "llm_attempted": true,
-            "llm_applied": false,
-            "llm_override_fields": [],
-            "llm_audit": {
-              "enabled": true,
-              "provider": "deepseek",
-              "model": "deepseek-chat",
-              "status": "parsed",
-              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
-              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI\", \"brief_rationale\": \"Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_STRENGTH\"] }",
-              "parsed_response": {
-                "news_summary": "Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI",
-                "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.",
-                "market_impact": "RISK_OFF",
-                "impact_horizon": "SWING",
-                "crypto_relevance": "HIGH",
-                "key_tags": [
-                  "FED_HAWKISH",
-                  "USD_STRENGTH"
-                ]
-              },
-              "error": null
-            }
-          },
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "fear_greed_index": 39.0,
-          "fear_greed_state": "FEAR",
-          "dxy_level": 98.79,
-          "dxy_trend": "UP",
-          "usdjpy_level": 159.691,
-          "usdjpy_trend": "UP",
-          "fed_event_risk": "HIGH",
-          "macro_event_window": true,
-          "risk_off_score": 0.8,
-          "news_headlines": [
-            "Nike cuts 1,400 roles in second round of layoffs this year",
-            "NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful'",
-            "Meta will cut 10% of workforce as company pushes deeper into AI",
-            "New grads are finding jobs faster despite a competitive job market, says report",
-            "These charts show how Iran's economy is in freefall"
-          ]
-        },
-        "position_snapshot": {
-          "position_side": "NONE",
-          "position_size_usd": 0.0,
-          "entry_price": null,
-          "current_price": null,
-          "unrealized_pnl_pct": 0.0,
-          "distance_to_liq": null,
-          "open_positions": []
-        },
-        "decision_ready_features": {
-          "regime_1d": "BEAR",
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "event_risk_active": true,
-          "usd_strength_flag": true,
-          "yen_stress_flag": false,
-          "flow_data_available": true,
-          "flow_schema_version": "flow_semantics_v1",
-          "flow_token_semantic": "ACCUMULATION_HINT",
-          "flow_stablecoin_semantic": "BUYING_POWER",
-          "flow_composite_semantic": "LONG_SUPPORT",
-          "flow_signal_mixed": false,
-          "flow_support_long": true,
-          "flow_support_short": false,
-          "qlib_relative_score_8h": 0.0004,
-          "qlib_percentile_8h": 0.0,
-          "p_up_8h": 0.0535,
-          "p_down_8h": 0.1818,
-          "p_flat_8h": 0.7647,
-          "confidence_8h": 0.1818,
-          "qlib_direction": "FLAT",
-          "qlib_direction_confident": false,
-          "qlib_top_bucket": false,
-          "qlib_bottom_bucket": true
-        },
-        "quality_score": 0.83,
-        "is_decision_eligible": true
-      },
-      {
-        "decision_id": "cycle_2026-04-24_0800_SOL",
-        "symbol": "SOL-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777018013,
-        "snapshot_time": "2026-04-24T08:06:53Z",
-        "snapshot_time_local": "2026-04-24T16:06:53+0800",
-        "local_timezone": "Asia/Shanghai",
-        "market_snapshot": {
-          "price": 85.32,
-          "change_24h": -0.871383757406762,
-          "rsi_4h": 45.2669749117644,
-          "adx_14": 0.0,
-          "volume_ratio": 0.783828782104639,
-          "wick_ratio_lower": 6.67,
-          "wick_ratio_upper": 6.67,
-          "funding_rate": 1.18656182559e-05,
-          "funding_zscore": -0.19,
-          "oi_now": 223952614.09560016,
-          "delta_oi_24h_percent": -5.98007865937471,
-          "natr_percent": 1.3829524810430016,
-          "whale_ls_ratio": 1.2362459546925566,
-          "whale_pos_ratio": 0.8671347344960012,
-          "atr_14": 1.1007142857142844,
-          "macd_line_4h": -0.1296531459842356,
-          "macd_signal_4h": 0.0255895708122703,
-          "macd_hist_4h": -0.1552427167965059,
-          "rel_volume_60": 0.013889696340635412,
-          "volume_usd_4h": 1565050.7496,
-          "sma50_4h": 86.4814,
-          "bearish_divergence_4h": false,
-          "bullish_divergence_4h": false,
-          "macd_cross_up_4h": false,
-          "macd_cross_down_4h": false,
-          "structure_support_12bar_volume_confirmed": 84.4,
-          "structure_resistance_12bar_volume_confirmed": 89.28,
-          "structure_support_stop_long": 83.8496,
-          "structure_resistance_stop_short": 89.8304
-        },
-        "onchain_snapshot": {
-          "token_net_flow": -622480.0068473688,
-          "stablecoin_net_flow": 125837.02035390055,
-          "flow_data_available": true,
-          "flow_schema_version": "flow_semantics_v1",
-          "token_flow_semantic": "DISTRIBUTION_PRESSURE",
-          "stablecoin_flow_semantic": "BUYING_POWER",
-          "flow_composite_semantic": "MIXED",
-          "flow_signal_mixed": true,
-          "sentiment_score": 0.34895132101594634,
-          "liquidation_long_usd": 616141.9824,
-          "liquidation_short_usd": 313404.81590000005,
-          "liquidation_long_to_volume_4h": 0.3936881807554644,
-          "liquidation_short_to_volume_4h": 0.2002521745573432,
-          "qlib_relative_score_8h": 0.0044,
-          "qlib_rank_8h": 1,
-          "qlib_percentile_8h": 1.0,
-          "p_up_8h": 0.0618,
-          "p_down_8h": 0.1604,
-          "p_flat_8h": 0.7778,
-          "confidence_8h": 0.1604
-        },
-        "macro_snapshot": {
-          "event_type": "FED_SPEECH",
-          "policy_stance": "HAWKISH",
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "SWING",
-          "crypto_relevance": "HIGH",
-          "key_tags": [
-            "FED_HAWKISH",
-            "USD_STRENGTH"
-          ],
-          "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.",
-          "news_summary": "Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI",
-          "classification_basis": {
-            "fear_greed_index": 39.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.645,
-            "fed_change_5d_bps": 0.2,
-            "usdjpy_level": 159.691,
-            "usdjpy_change_5d_pct": 0.31,
-            "dxy_level": 98.79,
-            "dxy_change_5d_pct": 0.76,
-            "vix_level": 18.94,
-            "vix_change_5d_pct": 0.37,
-            "us10y_level": 4.32,
-            "us10y_change_5d_pct": 1.81,
-            "global_stable_flow": 522395416.84091187,
-            "global_stable_market_cap": 267740600494.39386,
-            "global_stable_flow_ratio_pct": 0.19511251408127403
-          },
-          "key_events": [
-            "FED_HAWKISH",
-            "USD_STRENGTH"
-          ],
-          "event_facts": {
-            "fear_greed_index": 39.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.645,
-            "fed_change_5d_bps": 0.2,
-            "usdjpy_level": 159.691,
-            "usdjpy_change_5d_pct": 0.31,
-            "dxy_level": 98.79,
-            "dxy_change_5d_pct": 0.76,
-            "vix_level": 18.94,
-            "vix_change_5d_pct": 0.37,
-            "us10y_level": 4.32,
-            "us10y_change_5d_pct": 1.81,
-            "global_stable_flow": 522395416.84091187,
-            "global_stable_market_cap": 267740600494.39386,
-            "global_stable_flow_ratio_pct": 0.19511251408127403
-          },
-          "provenance": {
-            "generation_mode": "llm_noop",
-            "llm_enabled": true,
-            "llm_attempted": true,
-            "llm_applied": false,
-            "llm_override_fields": [],
-            "llm_audit": {
-              "enabled": true,
-              "provider": "deepseek",
-              "model": "deepseek-chat",
-              "status": "parsed",
-              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
-              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI\", \"brief_rationale\": \"Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_STRENGTH\"] }",
-              "parsed_response": {
-                "news_summary": "Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI",
-                "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.",
-                "market_impact": "RISK_OFF",
-                "impact_horizon": "SWING",
-                "crypto_relevance": "HIGH",
-                "key_tags": [
-                  "FED_HAWKISH",
-                  "USD_STRENGTH"
-                ]
-              },
-              "error": null
-            }
-          },
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "fear_greed_index": 39.0,
-          "fear_greed_state": "FEAR",
-          "dxy_level": 98.79,
-          "dxy_trend": "UP",
-          "usdjpy_level": 159.691,
-          "usdjpy_trend": "UP",
-          "fed_event_risk": "HIGH",
-          "macro_event_window": true,
-          "risk_off_score": 0.8,
-          "news_headlines": [
-            "Nike cuts 1,400 roles in second round of layoffs this year",
-            "NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful'",
-            "Meta will cut 10% of workforce as company pushes deeper into AI",
-            "New grads are finding jobs faster despite a competitive job market, says report",
-            "These charts show how Iran's economy is in freefall"
-          ]
-        },
-        "position_snapshot": {
-          "position_side": "NONE",
-          "position_size_usd": 0.0,
-          "entry_price": null,
-          "current_price": null,
-          "unrealized_pnl_pct": 0.0,
-          "distance_to_liq": null,
-          "open_positions": []
-        },
-        "decision_ready_features": {
-          "regime_1d": "BEAR",
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "event_risk_active": true,
-          "usd_strength_flag": true,
-          "yen_stress_flag": false,
-          "flow_data_available": true,
-          "flow_schema_version": "flow_semantics_v1",
-          "flow_token_semantic": "DISTRIBUTION_PRESSURE",
-          "flow_stablecoin_semantic": "BUYING_POWER",
-          "flow_composite_semantic": "MIXED",
-          "flow_signal_mixed": true,
-          "flow_support_long": false,
-          "flow_support_short": false,
-          "qlib_relative_score_8h": 0.0044,
-          "qlib_percentile_8h": 1.0,
-          "p_up_8h": 0.0618,
-          "p_down_8h": 0.1604,
-          "p_flat_8h": 0.7778,
-          "confidence_8h": 0.1604,
-          "qlib_direction": "FLAT",
-          "qlib_direction_confident": false,
-          "qlib_top_bucket": true,
-          "qlib_bottom_bucket": false
-        },
-        "quality_score": 0.83,
-        "is_decision_eligible": true
-      },
-      {
-        "decision_id": "cycle_2026-04-24_0800_BNB",
-        "symbol": "BNB-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777018021,
-        "snapshot_time": "2026-04-24T08:07:01Z",
-        "snapshot_time_local": "2026-04-24T16:07:01+0800",
-        "local_timezone": "Asia/Shanghai",
-        "market_snapshot": {
-          "price": 634.7,
-          "change_24h": -0.5484174240050141,
-          "rsi_4h": 50.702278803356265,
-          "adx_14": 0.0,
-          "volume_ratio": 0.8979212494193758,
-          "wick_ratio_lower": 33.33,
-          "wick_ratio_upper": 66.67,
-          "funding_rate": 8.23741335607e-05,
-          "funding_zscore": 0.38,
-          "oi_now": 49968058.635000005,
-          "delta_oi_24h_percent": -4.696162693486873,
-          "natr_percent": 1.0017112123474903,
-          "whale_ls_ratio": 0.7989690721649485,
-          "whale_pos_ratio": 0.8488377196149564,
-          "atr_14": 6.15714285714286,
-          "macd_line_4h": 1.564652395817916,
-          "macd_signal_4h": 2.360361280082333,
-          "macd_hist_4h": -0.7957088842644171,
-          "rel_volume_60": 0.034021554065482115,
-          "volume_usd_4h": 286154.098,
-          "sma50_4h": 632.318,
-          "bearish_divergence_4h": false,
-          "bullish_divergence_4h": false,
-          "macd_cross_up_4h": false,
-          "macd_cross_down_4h": false,
-          "structure_support_12bar_volume_confirmed": 641.9,
-          "structure_resistance_12bar_volume_confirmed": 653.7,
-          "structure_support_stop_long": 638.8214,
-          "structure_resistance_stop_short": 656.7786
-        },
-        "onchain_snapshot": {
-          "token_net_flow": 0.0,
-          "stablecoin_net_flow": 0.0,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "token_flow_semantic": "UNAVAILABLE",
-          "stablecoin_flow_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "sentiment_score": 0.0,
-          "liquidation_long_usd": 6565.571,
-          "liquidation_short_usd": 0.0,
-          "liquidation_long_to_volume_4h": 0.0229441795378376,
-          "liquidation_short_to_volume_4h": 0.0,
-          "qlib_relative_score_8h": 0.0031,
-          "qlib_rank_8h": 2,
-          "qlib_percentile_8h": 0.75,
-          "p_up_8h": 0.0645,
-          "p_down_8h": 0.1555,
-          "p_flat_8h": 0.78,
-          "confidence_8h": 0.1555
-        },
-        "macro_snapshot": {
-          "event_type": "FED_SPEECH",
-          "policy_stance": "HAWKISH",
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "SWING",
-          "crypto_relevance": "HIGH",
-          "key_tags": [
-            "FED_HAWKISH",
-            "USD_STRENGTH"
-          ],
-          "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.",
-          "news_summary": "Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI",
-          "classification_basis": {
-            "fear_greed_index": 39.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.645,
-            "fed_change_5d_bps": 0.2,
-            "usdjpy_level": 159.691,
-            "usdjpy_change_5d_pct": 0.31,
-            "dxy_level": 98.79,
-            "dxy_change_5d_pct": 0.76,
-            "vix_level": 18.94,
-            "vix_change_5d_pct": 0.37,
-            "us10y_level": 4.32,
-            "us10y_change_5d_pct": 1.81,
-            "global_stable_flow": 522395416.84091187,
-            "global_stable_market_cap": 267740600494.39386,
-            "global_stable_flow_ratio_pct": 0.19511251408127403
-          },
-          "key_events": [
-            "FED_HAWKISH",
-            "USD_STRENGTH"
-          ],
-          "event_facts": {
-            "fear_greed_index": 39.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.645,
-            "fed_change_5d_bps": 0.2,
-            "usdjpy_level": 159.691,
-            "usdjpy_change_5d_pct": 0.31,
-            "dxy_level": 98.79,
-            "dxy_change_5d_pct": 0.76,
-            "vix_level": 18.94,
-            "vix_change_5d_pct": 0.37,
-            "us10y_level": 4.32,
-            "us10y_change_5d_pct": 1.81,
-            "global_stable_flow": 522395416.84091187,
-            "global_stable_market_cap": 267740600494.39386,
-            "global_stable_flow_ratio_pct": 0.19511251408127403
-          },
-          "provenance": {
-            "generation_mode": "llm_noop",
-            "llm_enabled": true,
-            "llm_attempted": true,
-            "llm_applied": false,
-            "llm_override_fields": [],
-            "llm_audit": {
-              "enabled": true,
-              "provider": "deepseek",
-              "model": "deepseek-chat",
-              "status": "parsed",
-              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
-              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI\", \"brief_rationale\": \"Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_STRENGTH\"] }",
-              "parsed_response": {
-                "news_summary": "Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI",
-                "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.",
-                "market_impact": "RISK_OFF",
-                "impact_horizon": "SWING",
-                "crypto_relevance": "HIGH",
-                "key_tags": [
-                  "FED_HAWKISH",
-                  "USD_STRENGTH"
-                ]
-              },
-              "error": null
-            }
-          },
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "fear_greed_index": 39.0,
-          "fear_greed_state": "FEAR",
-          "dxy_level": 98.79,
-          "dxy_trend": "UP",
-          "usdjpy_level": 159.691,
-          "usdjpy_trend": "UP",
-          "fed_event_risk": "HIGH",
-          "macro_event_window": true,
-          "risk_off_score": 0.8,
-          "news_headlines": [
-            "Nike cuts 1,400 roles in second round of layoffs this year",
-            "NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful'",
-            "Meta will cut 10% of workforce as company pushes deeper into AI",
-            "New grads are finding jobs faster despite a competitive job market, says report",
-            "These charts show how Iran's economy is in freefall"
-          ]
-        },
-        "position_snapshot": {
-          "position_side": "NONE",
-          "position_size_usd": 0.0,
-          "entry_price": null,
-          "current_price": null,
-          "unrealized_pnl_pct": 0.0,
-          "distance_to_liq": null,
-          "open_positions": []
-        },
-        "decision_ready_features": {
-          "regime_1d": "BEAR",
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "event_risk_active": true,
-          "usd_strength_flag": true,
-          "yen_stress_flag": false,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "flow_token_semantic": "UNAVAILABLE",
-          "flow_stablecoin_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "flow_support_long": false,
-          "flow_support_short": false,
-          "qlib_relative_score_8h": 0.0031,
-          "qlib_percentile_8h": 0.75,
-          "p_up_8h": 0.0645,
-          "p_down_8h": 0.1555,
-          "p_flat_8h": 0.78,
-          "confidence_8h": 0.1555,
-          "qlib_direction": "FLAT",
-          "qlib_direction_confident": false,
-          "qlib_top_bucket": true,
-          "qlib_bottom_bucket": false
-        },
-        "quality_score": 0.83,
-        "is_decision_eligible": true
-      },
-      {
-        "decision_id": "cycle_2026-04-24_0800_DOGE",
-        "symbol": "DOGE-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777018029,
-        "snapshot_time": "2026-04-24T08:07:09Z",
-        "snapshot_time_local": "2026-04-24T16:07:09+0800",
-        "local_timezone": "Asia/Shanghai",
-        "market_snapshot": {
-          "price": 0.09762,
-          "change_24h": 0.5769627034823871,
-          "rsi_4h": 57.46619165335084,
-          "adx_14": 0.0,
-          "volume_ratio": 0.9870030883362764,
-          "wick_ratio_lower": 14.29,
-          "wick_ratio_upper": 19.05,
-          "funding_rate": -2.91609490617e-05,
-          "funding_zscore": -1.01,
-          "oi_now": 112413525.15899995,
-          "delta_oi_24h_percent": 2.2810462627898502,
-          "natr_percent": 1.4589544817724582,
-          "whale_ls_ratio": 1.3665893271461718,
-          "whale_pos_ratio": 0.8384467494967248,
-          "atr_14": 0.0014135714285714,
-          "macd_line_4h": 0.0004756215935172,
-          "macd_signal_4h": 0.0003321501546113,
-          "macd_hist_4h": 0.0001434714389059,
-          "rel_volume_60": 0.01416337966539764,
-          "volume_usd_4h": 1042466.8034,
-          "sma50_4h": 0.09639660000000001,
-          "bearish_divergence_4h": false,
-          "bullish_divergence_4h": false,
-          "macd_cross_up_4h": false,
-          "macd_cross_down_4h": false,
-          "structure_support_12bar_volume_confirmed": 0.09507,
-          "structure_resistance_12bar_volume_confirmed": 0.09856,
-          "structure_support_stop_long": 0.0944,
-          "structure_resistance_stop_short": 0.0993
-        },
-        "onchain_snapshot": {
-          "token_net_flow": 0.0,
-          "stablecoin_net_flow": 0.0,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "token_flow_semantic": "UNAVAILABLE",
-          "stablecoin_flow_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "sentiment_score": 0.0,
-          "liquidation_long_usd": 454617.1991000001,
-          "liquidation_short_usd": 247142.93260000003,
-          "liquidation_long_to_volume_4h": 0.4360975309882948,
-          "liquidation_short_to_volume_4h": 0.2370751104917151,
-          "qlib_relative_score_8h": 0.0023,
-          "qlib_rank_8h": 3,
-          "qlib_percentile_8h": 0.5,
-          "p_up_8h": 0.0864,
-          "p_down_8h": 0.2767,
-          "p_flat_8h": 0.6369,
-          "confidence_8h": 0.2767
-        },
-        "macro_snapshot": {
-          "event_type": "FED_SPEECH",
-          "policy_stance": "HAWKISH",
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "SWING",
-          "crypto_relevance": "HIGH",
-          "key_tags": [
-            "FED_HAWKISH",
-            "USD_STRENGTH"
-          ],
-          "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.",
-          "news_summary": "Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI",
-          "classification_basis": {
-            "fear_greed_index": 39.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.645,
-            "fed_change_5d_bps": 0.2,
-            "usdjpy_level": 159.691,
-            "usdjpy_change_5d_pct": 0.31,
-            "dxy_level": 98.79,
-            "dxy_change_5d_pct": 0.76,
-            "vix_level": 18.94,
-            "vix_change_5d_pct": 0.37,
-            "us10y_level": 4.32,
-            "us10y_change_5d_pct": 1.81,
-            "global_stable_flow": 522395416.84091187,
-            "global_stable_market_cap": 267740600494.39386,
-            "global_stable_flow_ratio_pct": 0.19511251408127403
-          },
-          "key_events": [
-            "FED_HAWKISH",
-            "USD_STRENGTH"
-          ],
-          "event_facts": {
-            "fear_greed_index": 39.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.645,
-            "fed_change_5d_bps": 0.2,
-            "usdjpy_level": 159.691,
-            "usdjpy_change_5d_pct": 0.31,
-            "dxy_level": 98.79,
-            "dxy_change_5d_pct": 0.76,
-            "vix_level": 18.94,
-            "vix_change_5d_pct": 0.37,
-            "us10y_level": 4.32,
-            "us10y_change_5d_pct": 1.81,
-            "global_stable_flow": 522395416.84091187,
-            "global_stable_market_cap": 267740600494.39386,
-            "global_stable_flow_ratio_pct": 0.19511251408127403
-          },
-          "provenance": {
-            "generation_mode": "llm_noop",
-            "llm_enabled": true,
-            "llm_attempted": true,
-            "llm_applied": false,
-            "llm_override_fields": [],
-            "llm_audit": {
-              "enabled": true,
-              "provider": "deepseek",
-              "model": "deepseek-chat",
-              "status": "parsed",
-              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
-              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI\", \"brief_rationale\": \"Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_STRENGTH\"] }",
-              "parsed_response": {
-                "news_summary": "Nike cuts 1,400 roles in second round of layoffs this year | NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful' | Meta will cut 10% of workforce as company pushes deeper into AI",
-                "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.76%/5d). Classified as RISK_OFF with SWING horizon.",
-                "market_impact": "RISK_OFF",
-                "impact_horizon": "SWING",
-                "crypto_relevance": "HIGH",
-                "key_tags": [
-                  "FED_HAWKISH",
-                  "USD_STRENGTH"
-                ]
-              },
-              "error": null
-            }
-          },
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "fear_greed_index": 39.0,
-          "fear_greed_state": "FEAR",
-          "dxy_level": 98.79,
-          "dxy_trend": "UP",
-          "usdjpy_level": 159.691,
-          "usdjpy_trend": "UP",
-          "fed_event_risk": "HIGH",
-          "macro_event_window": true,
-          "risk_off_score": 0.8,
-          "news_headlines": [
-            "Nike cuts 1,400 roles in second round of layoffs this year",
-            "NYC Mayor Mamdani knocked Ken Griffin in pied-a-terre tax promo. His firm calls the move 'shameful'",
-            "Meta will cut 10% of workforce as company pushes deeper into AI",
-            "New grads are finding jobs faster despite a competitive job market, says report",
-            "These charts show how Iran's economy is in freefall"
-          ]
-        },
-        "position_snapshot": {
-          "position_side": "NONE",
-          "position_size_usd": 0.0,
-          "entry_price": null,
-          "current_price": null,
-          "unrealized_pnl_pct": 0.0,
-          "distance_to_liq": null,
-          "open_positions": []
-        },
-        "decision_ready_features": {
-          "regime_1d": "BEAR",
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "event_risk_active": true,
-          "usd_strength_flag": true,
-          "yen_stress_flag": false,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "flow_token_semantic": "UNAVAILABLE",
-          "flow_stablecoin_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "flow_support_long": false,
-          "flow_support_short": false,
-          "qlib_relative_score_8h": 0.0023,
-          "qlib_percentile_8h": 0.5,
-          "p_up_8h": 0.0864,
-          "p_down_8h": 0.2767,
-          "p_flat_8h": 0.6369,
-          "confidence_8h": 0.2767,
-          "qlib_direction": "FLAT",
-          "qlib_direction_confident": false,
-          "qlib_top_bucket": true,
-          "qlib_bottom_bucket": true
-        },
-        "quality_score": 0.83,
-        "is_decision_eligible": true
-      }
-    ],
-    "candidate_batches": [
-      {
-        "symbol": "BTC-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777017996,
-        "candidate_proposals": [],
-        "e_strategy_diagnostic": {
-          "qlib_inputs": {
-            "qlib_relative_score_8h": 0.0021,
-            "qlib_percentile_8h": 0.25,
-            "qlib_rank_8h": 4,
-            "p_up_8h": 0.0621,
-            "p_down_8h": 0.2132,
-            "p_flat_8h": 0.7247,
-            "funding_zscore": 0.65,
-            "token_net_flow": 0.0,
-            "stablecoin_net_flow": 0.0,
-            "regime_1d": "BEAR",
-            "whale_bias": "neutral",
-            "is_overheated": false,
-            "is_squeeze_zone": false
-          },
-          "config": {
-            "qlib_rank_bucket_size": 3,
-            "qlib_prob_threshold": 0.55,
-            "qlib_prob_gap_threshold": 0.15,
-            "qlib_flat_max_threshold": 0.4
-          },
-          "long_path": {
-            "candidate": "Blueprint_E1",
-            "checks": {
-              "rank_bucket_pass": false,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": false,
-              "overheated_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "rank_bucket",
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate",
-              "regime"
-            ]
-          },
-          "short_path": {
-            "candidate": "Blueprint_E2",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": true,
-              "flat_gate_pass": false,
-              "regime_pass": true,
-              "squeeze_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "p_flat_gate"
-            ]
-          },
-          "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, p_flat_gate"
-        }
-      },
-      {
-        "symbol": "ETH-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777018004,
-        "candidate_proposals": [],
-        "e_strategy_diagnostic": {
-          "qlib_inputs": {
-            "qlib_relative_score_8h": 0.0004,
-            "qlib_percentile_8h": 0.0,
-            "qlib_rank_8h": 5,
-            "p_up_8h": 0.0535,
-            "p_down_8h": 0.1818,
-            "p_flat_8h": 0.7647,
-            "funding_zscore": -0.36,
-            "token_net_flow": 7725740.214055023,
-            "stablecoin_net_flow": 7775895.691610668,
-            "regime_1d": "BEAR",
-            "whale_bias": "strong_inflow",
-            "is_overheated": false,
-            "is_squeeze_zone": false
-          },
-          "config": {
-            "qlib_rank_bucket_size": 3,
-            "qlib_prob_threshold": 0.55,
-            "qlib_prob_gap_threshold": 0.15,
-            "qlib_flat_max_threshold": 0.4
-          },
-          "long_path": {
-            "candidate": "Blueprint_E1",
-            "checks": {
-              "rank_bucket_pass": false,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": false,
-              "overheated_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "rank_bucket",
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate",
-              "regime"
-            ]
-          },
-          "short_path": {
-            "candidate": "Blueprint_E2",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": true,
-              "squeeze_pass": true,
-              "funding_pass": true,
-              "whale_pass": false
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate",
-              "whale_inflow"
-            ]
-          },
-          "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, prob_gap, p_flat_gate, whale_inflow"
-        }
-      },
-      {
-        "symbol": "SOL-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777018013,
-        "candidate_proposals": [],
-        "e_strategy_diagnostic": {
-          "qlib_inputs": {
-            "qlib_relative_score_8h": 0.0044,
-            "qlib_percentile_8h": 1.0,
-            "qlib_rank_8h": 1,
-            "p_up_8h": 0.0618,
-            "p_down_8h": 0.1604,
-            "p_flat_8h": 0.7778,
-            "funding_zscore": -0.19,
-            "token_net_flow": -622480.0068473688,
-            "stablecoin_net_flow": 125837.02035390055,
-            "regime_1d": "BEAR",
-            "whale_bias": "neutral",
-            "is_overheated": false,
-            "is_squeeze_zone": false
-          },
-          "config": {
-            "qlib_rank_bucket_size": 3,
-            "qlib_prob_threshold": 0.55,
-            "qlib_prob_gap_threshold": 0.15,
-            "qlib_flat_max_threshold": 0.4
-          },
-          "long_path": {
-            "candidate": "Blueprint_E1",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": false,
-              "overheated_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate",
-              "regime"
-            ]
-          },
-          "short_path": {
-            "candidate": "Blueprint_E2",
-            "checks": {
-              "rank_bucket_pass": false,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": true,
-              "squeeze_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "rank_bucket",
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate"
-            ]
-          },
-          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime; short blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate"
-        }
-      },
-      {
-        "symbol": "BNB-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777018021,
-        "candidate_proposals": [],
-        "e_strategy_diagnostic": {
-          "qlib_inputs": {
-            "qlib_relative_score_8h": 0.0031,
-            "qlib_percentile_8h": 0.75,
-            "qlib_rank_8h": 2,
-            "p_up_8h": 0.0645,
-            "p_down_8h": 0.1555,
-            "p_flat_8h": 0.78,
-            "funding_zscore": 0.38,
-            "token_net_flow": 0.0,
-            "stablecoin_net_flow": 0.0,
-            "regime_1d": "BEAR",
-            "whale_bias": "neutral",
-            "is_overheated": false,
-            "is_squeeze_zone": false
-          },
-          "config": {
-            "qlib_rank_bucket_size": 3,
-            "qlib_prob_threshold": 0.55,
-            "qlib_prob_gap_threshold": 0.15,
-            "qlib_flat_max_threshold": 0.4
-          },
-          "long_path": {
-            "candidate": "Blueprint_E1",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": false,
-              "overheated_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate",
-              "regime"
-            ]
-          },
-          "short_path": {
-            "candidate": "Blueprint_E2",
-            "checks": {
-              "rank_bucket_pass": false,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": true,
-              "squeeze_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "rank_bucket",
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate"
-            ]
-          },
-          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime; short blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate"
-        }
-      },
-      {
-        "symbol": "DOGE-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777018029,
-        "candidate_proposals": [],
-        "e_strategy_diagnostic": {
-          "qlib_inputs": {
-            "qlib_relative_score_8h": 0.0023,
-            "qlib_percentile_8h": 0.5,
-            "qlib_rank_8h": 3,
-            "p_up_8h": 0.0864,
-            "p_down_8h": 0.2767,
-            "p_flat_8h": 0.6369,
-            "funding_zscore": -1.01,
-            "token_net_flow": 0.0,
-            "stablecoin_net_flow": 0.0,
-            "regime_1d": "BEAR",
-            "whale_bias": "neutral",
-            "is_overheated": false,
-            "is_squeeze_zone": false
-          },
-          "config": {
-            "qlib_rank_bucket_size": 3,
-            "qlib_prob_threshold": 0.55,
-            "qlib_prob_gap_threshold": 0.15,
-            "qlib_flat_max_threshold": 0.4
-          },
-          "long_path": {
-            "candidate": "Blueprint_E1",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": false,
-              "overheated_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate",
-              "regime"
-            ]
-          },
-          "short_path": {
-            "candidate": "Blueprint_E2",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": true,
-              "flat_gate_pass": false,
-              "regime_pass": true,
-              "squeeze_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "p_flat_gate"
-            ]
-          },
-          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, p_flat_gate"
-        }
-      }
-    ],
-    "rule_evaluations": [
-      {
-        "symbol": "BTC-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "stage": "pre_trade_filter",
-        "passed": false,
-        "reason_codes": [],
-        "approved_candidates": [],
-        "rule_trace": [
-          {
-            "rule": "DATA_ELIGIBILITY_CHECK",
-            "passed": true
-          }
-        ],
-        "candidate_structure": {
-          "overall_state": "no_candidate",
-          "has_directional_conflict": false,
-          "long_count": 0,
-          "short_count": 0,
-          "resonance_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_resonance_strength": 0
-        }
-      },
-      {
-        "symbol": "ETH-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "stage": "pre_trade_filter",
-        "passed": false,
-        "reason_codes": [],
-        "approved_candidates": [],
-        "rule_trace": [
-          {
-            "rule": "DATA_ELIGIBILITY_CHECK",
-            "passed": true
-          }
-        ],
-        "candidate_structure": {
-          "overall_state": "no_candidate",
-          "has_directional_conflict": false,
-          "long_count": 0,
-          "short_count": 0,
-          "resonance_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_resonance_strength": 0
-        }
-      },
-      {
-        "symbol": "SOL-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "stage": "pre_trade_filter",
-        "passed": false,
-        "reason_codes": [],
-        "approved_candidates": [],
-        "rule_trace": [
-          {
-            "rule": "DATA_ELIGIBILITY_CHECK",
-            "passed": true
-          }
-        ],
-        "candidate_structure": {
-          "overall_state": "no_candidate",
-          "has_directional_conflict": false,
-          "long_count": 0,
-          "short_count": 0,
-          "resonance_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_resonance_strength": 0
-        }
-      },
-      {
-        "symbol": "BNB-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "stage": "pre_trade_filter",
-        "passed": false,
-        "reason_codes": [],
-        "approved_candidates": [],
-        "rule_trace": [
-          {
-            "rule": "DATA_ELIGIBILITY_CHECK",
-            "passed": true
-          }
-        ],
-        "candidate_structure": {
-          "overall_state": "no_candidate",
-          "has_directional_conflict": false,
-          "long_count": 0,
-          "short_count": 0,
-          "resonance_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_resonance_strength": 0
-        }
-      },
-      {
-        "symbol": "DOGE-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "stage": "pre_trade_filter",
-        "passed": false,
-        "reason_codes": [],
-        "approved_candidates": [],
-        "rule_trace": [
-          {
-            "rule": "DATA_ELIGIBILITY_CHECK",
-            "passed": true
-          }
-        ],
-        "candidate_structure": {
-          "overall_state": "no_candidate",
-          "has_directional_conflict": false,
-          "long_count": 0,
-          "short_count": 0,
-          "resonance_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_resonance_strength": 0
-        }
-      }
-    ],
-    "research_outputs": [
-      null,
-      null,
-      null,
-      null,
-      null
-    ],
-    "risk_reviews": [
-      {
-        "symbol": "BTC-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "approved": false,
-        "final_intent": "NO_TRADE",
-        "approved_risk_fraction": 0.0,
-        "approved_position_size_usd": 0.0,
-        "leverage": 1.0,
-        "max_holding_bars": 0,
-        "execution_action": "DO_NOTHING",
-        "next_position_state": "candidate",
-        "review_note": "rule evaluation rejected or produced no approved candidates"
-      },
-      {
-        "symbol": "ETH-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "approved": false,
-        "final_intent": "NO_TRADE",
-        "approved_risk_fraction": 0.0,
-        "approved_position_size_usd": 0.0,
-        "leverage": 1.0,
-        "max_holding_bars": 0,
-        "execution_action": "DO_NOTHING",
-        "next_position_state": "candidate",
-        "review_note": "rule evaluation rejected or produced no approved candidates"
-      },
-      {
-        "symbol": "SOL-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "approved": false,
-        "final_intent": "NO_TRADE",
-        "approved_risk_fraction": 0.0,
-        "approved_position_size_usd": 0.0,
-        "leverage": 1.0,
-        "max_holding_bars": 0,
-        "execution_action": "DO_NOTHING",
-        "next_position_state": "candidate",
-        "review_note": "rule evaluation rejected or produced no approved candidates"
-      },
-      {
-        "symbol": "BNB-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "approved": false,
-        "final_intent": "NO_TRADE",
-        "approved_risk_fraction": 0.0,
-        "approved_position_size_usd": 0.0,
-        "leverage": 1.0,
-        "max_holding_bars": 0,
-        "execution_action": "DO_NOTHING",
-        "next_position_state": "candidate",
-        "review_note": "rule evaluation rejected or produced no approved candidates"
-      },
-      {
-        "symbol": "DOGE-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "approved": false,
-        "final_intent": "NO_TRADE",
-        "approved_risk_fraction": 0.0,
-        "approved_position_size_usd": 0.0,
-        "leverage": 1.0,
-        "max_holding_bars": 0,
-        "execution_action": "DO_NOTHING",
-        "next_position_state": "candidate",
-        "review_note": "rule evaluation rejected or produced no approved candidates"
-      }
-    ],
-    "executions": [
-      {
-        "symbol": "BTC-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "execution_action": "DO_NOTHING",
-        "order_status": "SKIPPED",
-        "requested_size_usd": 0.0,
-        "requested_leverage": 1.0,
-        "avg_fill_price": null,
-        "filled_size": 0.0,
-        "exchange_order_id": null,
-        "executed_at": null,
-        "sync_status": "SKIPPED",
-        "failure_reason": null,
-        "history": [
-          {
-            "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-04-24T08:06:38Z",
-            "payload": {
-              "review_note": "rule evaluation rejected or produced no approved candidates"
-            }
-          },
-          {
-            "type": "EXECUTION_SKIPPED",
-            "at": "2026-04-24T08:06:38Z",
-            "payload": {
-              "reason": "do_nothing",
-              "execution_action": "DO_NOTHING"
-            }
-          }
-        ],
-        "protection_status": "SKIPPED"
-      },
-      {
-        "symbol": "ETH-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "execution_action": "DO_NOTHING",
-        "order_status": "SKIPPED",
-        "requested_size_usd": 0.0,
-        "requested_leverage": 1.0,
-        "avg_fill_price": null,
-        "filled_size": 0.0,
-        "exchange_order_id": null,
-        "executed_at": null,
-        "sync_status": "SKIPPED",
-        "failure_reason": null,
-        "history": [
-          {
-            "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-04-24T08:06:46Z",
-            "payload": {
-              "review_note": "rule evaluation rejected or produced no approved candidates"
-            }
-          },
-          {
-            "type": "EXECUTION_SKIPPED",
-            "at": "2026-04-24T08:06:46Z",
-            "payload": {
-              "reason": "do_nothing",
-              "execution_action": "DO_NOTHING"
-            }
-          }
-        ],
-        "protection_status": "SKIPPED"
-      },
-      {
-        "symbol": "SOL-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "execution_action": "DO_NOTHING",
-        "order_status": "SKIPPED",
-        "requested_size_usd": 0.0,
-        "requested_leverage": 1.0,
-        "avg_fill_price": null,
-        "filled_size": 0.0,
-        "exchange_order_id": null,
-        "executed_at": null,
-        "sync_status": "SKIPPED",
-        "failure_reason": null,
-        "history": [
-          {
-            "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-04-24T08:06:54Z",
-            "payload": {
-              "review_note": "rule evaluation rejected or produced no approved candidates"
-            }
-          },
-          {
-            "type": "EXECUTION_SKIPPED",
-            "at": "2026-04-24T08:06:54Z",
-            "payload": {
-              "reason": "do_nothing",
-              "execution_action": "DO_NOTHING"
-            }
-          }
-        ],
-        "protection_status": "SKIPPED"
-      },
-      {
-        "symbol": "BNB-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "execution_action": "DO_NOTHING",
-        "order_status": "SKIPPED",
-        "requested_size_usd": 0.0,
-        "requested_leverage": 1.0,
-        "avg_fill_price": null,
-        "filled_size": 0.0,
-        "exchange_order_id": null,
-        "executed_at": null,
-        "sync_status": "SKIPPED",
-        "failure_reason": null,
-        "history": [
-          {
-            "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-04-24T08:07:02Z",
-            "payload": {
-              "review_note": "rule evaluation rejected or produced no approved candidates"
-            }
-          },
-          {
-            "type": "EXECUTION_SKIPPED",
-            "at": "2026-04-24T08:07:02Z",
-            "payload": {
-              "reason": "do_nothing",
-              "execution_action": "DO_NOTHING"
-            }
-          }
-        ],
-        "protection_status": "SKIPPED"
-      },
-      {
-        "symbol": "DOGE-USDT",
-        "cycleId": "cycle_2026-04-24_0800",
-        "execution_action": "DO_NOTHING",
-        "order_status": "SKIPPED",
-        "requested_size_usd": 0.0,
-        "requested_leverage": 1.0,
-        "avg_fill_price": null,
-        "filled_size": 0.0,
-        "exchange_order_id": null,
-        "executed_at": null,
-        "sync_status": "SKIPPED",
-        "failure_reason": null,
-        "history": [
-          {
-            "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-04-24T08:07:11Z",
-            "payload": {
-              "review_note": "rule evaluation rejected or produced no approved candidates"
-            }
-          },
-          {
-            "type": "EXECUTION_SKIPPED",
-            "at": "2026-04-24T08:07:11Z",
-            "payload": {
-              "reason": "do_nothing",
-              "execution_action": "DO_NOTHING"
-            }
-          }
-        ],
-        "protection_status": "SKIPPED"
-      }
-    ],
-    "record_count": 5,
-    "post_trade_review": {
-      "evaluated_count": 190,
-      "record_count": 190
-    }
-  },
-  {
     "cycleId": "cycle_2026-04-24_1200",
     "generated_at": "2026-04-24T12:07:30Z",
     "generated_at_local": "2026-04-24T20:07:30+0800",
@@ -97021,6 +95273,2056 @@
     "post_trade_review": {
       "evaluated_count": 71,
       "record_count": 71
+    }
+  },
+  {
+    "cycleId": "cycle_2026-05-02_1600",
+    "generated_at": "2026-05-02T16:07:08Z",
+    "generated_at_local": "2026-05-03T00:07:08+0800",
+    "cycle_local_time": "2026-05-03 00:00:00 CST",
+    "local_timezone": "Asia/Shanghai",
+    "timeframe": "4h",
+    "snapshots": [
+      {
+        "decision_id": "cycle_2026-05-02_1600_BTC",
+        "symbol": "BTC-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777738009,
+        "snapshot_time": "2026-05-02T16:06:49Z",
+        "snapshot_time_local": "2026-05-03T00:06:49+0800",
+        "local_timezone": "Asia/Shanghai",
+        "market_snapshot": {
+          "price": 78423.8,
+          "change_24h": 0.29208879294691087,
+          "rsi_4h": 63.27602525901092,
+          "adx_14": 20.987560141408903,
+          "volume_ratio": 0.4228658432163372,
+          "bb_width": 0.0549931278566335,
+          "bb_pct_b": 0.8242162293760051,
+          "bb_mid_slope_pct": 0.0029087056820864894,
+          "adx_delta": 1.9224097498249613,
+          "recent_close_drift_pct": 0.0006130922566995382,
+          "range_edge_close_count": 0,
+          "wick_ratio_lower": 10.68,
+          "wick_ratio_upper": 3.29,
+          "funding_rate": -6.4022972055e-06,
+          "funding_zscore": 0.51,
+          "oi_now": 2545368424.870194,
+          "delta_oi_24h_percent": -1.5365415391315462,
+          "natr_percent": 0.8010155618304328,
+          "whale_ls_ratio": 0.5478798090424039,
+          "whale_pos_ratio": 1.0963896477674786,
+          "atr_14": 582.392857142854,
+          "macd_line_4h": 403.6343444563681,
+          "macd_signal_4h": 207.10684628275533,
+          "macd_hist_4h": 196.5274981736128,
+          "rel_volume_60": 0.35405169652896845,
+          "volume_usd_4h": 333212060.88112,
+          "sma50_4h": 77271.51,
+          "sma5_1d": 76934.18666666668,
+          "sma10_1d": 77390.48166666667,
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.005816528146033019,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "bearish_divergence_4h": false,
+          "bullish_divergence_4h": false,
+          "macd_cross_up_4h": false,
+          "macd_cross_down_4h": false,
+          "structure_support_12bar_volume_confirmed": 77353.5,
+          "structure_resistance_12bar_volume_confirmed": 78888.0,
+          "structure_support_stop_long": 77062.3036,
+          "structure_resistance_stop_short": 79179.1964
+        },
+        "onchain_snapshot": {
+          "token_net_flow": 0.0,
+          "stablecoin_net_flow": 0.0,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "token_flow_semantic": "UNAVAILABLE",
+          "stablecoin_flow_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "sentiment_score": 0.0,
+          "liquidation_long_usd": 2040593.6172800013,
+          "liquidation_short_usd": 980363.2174200004,
+          "liquidation_long_to_volume_4h": 0.00612400887256,
+          "liquidation_short_to_volume_4h": 0.0029421600611562,
+          "qlib_relative_score_8h": -0.0,
+          "qlib_rank_8h": 4,
+          "qlib_percentile_8h": 0.25,
+          "p_up_8h": 0.1378,
+          "p_down_8h": 0.201,
+          "p_flat_8h": 0.6612,
+          "confidence_8h": 0.201
+        },
+        "macro_snapshot": {
+          "event_type": "FED_SPEECH",
+          "policy_stance": "HAWKISH",
+          "market_impact": "RISK_OFF",
+          "impact_horizon": "MULTI_DAY",
+          "crypto_relevance": "HIGH",
+          "key_tags": [
+            "FED_HAWKISH",
+            "YEN_STRESS"
+          ],
+          "brief_rationale": "U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.",
+          "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.",
+          "classification_basis": {
+            "fear_greed_index": 39.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.643,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.033,
+            "usdjpy_change_5d_pct": -1.7,
+            "dxy_level": 98.21,
+            "dxy_change_5d_pct": -0.27,
+            "vix_level": 16.99,
+            "vix_change_5d_pct": -5.72,
+            "us10y_level": 4.38,
+            "us10y_change_5d_pct": 0.97,
+            "global_stable_flow": 98624119.59812927,
+            "global_stable_market_cap": 266858977463.13196,
+            "global_stable_flow_ratio_pct": 0.03695739245338101
+          },
+          "key_events": [
+            "FED_HAWKISH",
+            "YEN_STRESS"
+          ],
+          "event_facts": {
+            "fear_greed_index": 39.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.643,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.033,
+            "usdjpy_change_5d_pct": -1.7,
+            "dxy_level": 98.21,
+            "dxy_change_5d_pct": -0.27,
+            "vix_level": 16.99,
+            "vix_change_5d_pct": -5.72,
+            "us10y_level": 4.38,
+            "us10y_change_5d_pct": 0.97,
+            "global_stable_flow": 98624119.59812927,
+            "global_stable_market_cap": 266858977463.13196,
+            "global_stable_flow_ratio_pct": 0.03695739245338101
+          },
+          "provenance": {
+            "generation_mode": "llm_refined",
+            "llm_enabled": true,
+            "llm_attempted": true,
+            "llm_applied": true,
+            "llm_override_fields": [
+              "brief_rationale",
+              "news_summary"
+            ],
+            "llm_audit": {
+              "enabled": true,
+              "provider": "deepseek",
+              "model": "deepseek-chat",
+              "status": "parsed",
+              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
+              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
+              "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.\", \"brief_rationale\": \"U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"YEN_STRESS\"] }",
+              "parsed_response": {
+                "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.",
+                "brief_rationale": "U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.",
+                "market_impact": "RISK_OFF",
+                "impact_horizon": "MULTI_DAY",
+                "crypto_relevance": "HIGH",
+                "key_tags": [
+                  "FED_HAWKISH",
+                  "YEN_STRESS"
+                ]
+              },
+              "error": null
+            }
+          },
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "fear_greed_index": 39.0,
+          "fear_greed_state": "FEAR",
+          "dxy_level": 98.21,
+          "dxy_trend": "DOWN",
+          "usdjpy_level": 157.033,
+          "usdjpy_trend": "DOWN",
+          "fed_event_risk": "HIGH",
+          "macro_event_window": true,
+          "risk_off_score": 0.8,
+          "news_headlines": [
+            "The U.S.-Iran war is coming for your credit score and mortgage application",
+            "Trump says he's raising EU auto tariffs to 25%",
+            "Fed dissenters explain 'no' votes, saying they disagreed with hinting next move would be a cut",
+            "Pirro keeps pressure on Fed's Powell despite dropping probe",
+            "Bitcoin surged in April, but weak buyer demand makes the rally vulnerable"
+          ]
+        },
+        "position_snapshot": {
+          "position_side": "SHORT",
+          "position_size_usd": 140.94,
+          "entry_price": 78300.7,
+          "current_price": 78448.0,
+          "unrealized_pnl_pct": -0.0038,
+          "distance_to_liq": 0.4981,
+          "open_positions": [
+            {
+              "symbol": "BTC",
+              "instId": "BTC-USDT-SWAP",
+              "leverage": 2,
+              "type": "short",
+              "entryPrice": 78300.7,
+              "currentPrice": 78448.0,
+              "pnl": -0.5302800000000105,
+              "pnlPercent": -0.38,
+              "amount": "0.0036",
+              "margin": 70.47073770631233,
+              "stopLoss": 78901.2,
+              "takeProfit": 76785.0,
+              "name": "BTC"
+            }
+          ]
+        },
+        "decision_ready_features": {
+          "regime_1d": "BEAR",
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "event_risk_active": true,
+          "usd_strength_flag": false,
+          "yen_stress_flag": true,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "flow_token_semantic": "UNAVAILABLE",
+          "flow_stablecoin_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "flow_support_long": false,
+          "flow_support_short": false,
+          "qlib_relative_score_8h": -0.0,
+          "qlib_percentile_8h": 0.25,
+          "p_up_8h": 0.1378,
+          "p_down_8h": 0.201,
+          "p_flat_8h": 0.6612,
+          "confidence_8h": 0.201,
+          "qlib_direction": "FLAT",
+          "qlib_direction_confident": false,
+          "qlib_top_bucket": false,
+          "qlib_bottom_bucket": true,
+          "range_regime": false,
+          "grid_candidate_eligible": false,
+          "range_lower_bound": 77353.5,
+          "range_upper_bound": 78888.0,
+          "range_width_pct": 0.0196,
+          "price_position_in_range": 0.6975,
+          "grid_mode": "ARITHMETIC",
+          "grid_count": 2,
+          "grid_spacing_pct": 0.0098,
+          "min_profitable_spacing_pct": 0.0034,
+          "grid_spacing_profitable": true,
+          "grid_bb_width": 0.055,
+          "grid_bb_pct_b": 0.8242,
+          "grid_bb_mid_slope_pct": 0.0029,
+          "grid_bb_width_ok": true,
+          "grid_bb_slope_ok": true,
+          "grid_adx_delta": 1.9224,
+          "grid_recent_close_drift_pct": 0.0006,
+          "grid_range_edge_close_count": 0,
+          "grid_trend_risk_ok": true,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "grid_macro_trend_ok": false,
+          "grid_macro_block_reasons": [
+            "directional_swing_macro"
+          ],
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.005816528146033019,
+          "max_profitable_grid_count": 5,
+          "grid_review_after_hours": 36,
+          "grid_extension_step_hours": 12,
+          "grid_max_lifetime_hours": 60
+        },
+        "quality_score": 1.0,
+        "is_decision_eligible": true
+      },
+      {
+        "decision_id": "cycle_2026-05-02_1600_ETH",
+        "symbol": "ETH-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777738015,
+        "snapshot_time": "2026-05-02T16:06:55Z",
+        "snapshot_time_local": "2026-05-03T00:06:55+0800",
+        "local_timezone": "Asia/Shanghai",
+        "market_snapshot": {
+          "price": 2307.3,
+          "change_24h": 0.5635533937420857,
+          "rsi_4h": 55.49265882287602,
+          "adx_14": 13.3280890858018,
+          "volume_ratio": 0.4110078924746254,
+          "bb_width": 0.0445587921812506,
+          "bb_pct_b": 0.7724716538419362,
+          "bb_mid_slope_pct": -0.0002879437744277444,
+          "adx_delta": -0.8903465082872266,
+          "recent_close_drift_pct": 0.00033008214826386374,
+          "range_edge_close_count": 0,
+          "wick_ratio_lower": 9.35,
+          "wick_ratio_upper": 36.31,
+          "funding_rate": -1.70028676255e-05,
+          "funding_zscore": -0.06,
+          "oi_now": 1532091400.946103,
+          "delta_oi_24h_percent": -3.486878227791175,
+          "natr_percent": 1.0194785649645477,
+          "whale_ls_ratio": 0.9093428345209817,
+          "whale_pos_ratio": 0.9844437977702095,
+          "atr_14": 20.547857142857147,
+          "macd_line_4h": 1.86465622876176,
+          "macd_signal_4h": -3.463654963954601,
+          "macd_hist_4h": 5.328311192716361,
+          "rel_volume_60": 0.32695845784736194,
+          "volume_usd_4h": 349384159.08621,
+          "sma50_4h": 2301.2618,
+          "sma5_1d": 2284.7173333333335,
+          "sma10_1d": 2307.2363333333333,
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.009758454524969137,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "bearish_divergence_4h": false,
+          "bullish_divergence_4h": false,
+          "macd_cross_up_4h": false,
+          "macd_cross_down_4h": false,
+          "structure_support_12bar_volume_confirmed": 2282.52,
+          "structure_resistance_12bar_volume_confirmed": 2325.0,
+          "structure_support_stop_long": 2272.2461,
+          "structure_resistance_stop_short": 2335.2739
+        },
+        "onchain_snapshot": {
+          "token_net_flow": 2033078.5621134797,
+          "stablecoin_net_flow": 674258.5681109605,
+          "flow_data_available": true,
+          "flow_schema_version": "flow_semantics_v1",
+          "token_flow_semantic": "ACCUMULATION_HINT",
+          "stablecoin_flow_semantic": "BUYING_POWER",
+          "flow_composite_semantic": "LONG_SUPPORT",
+          "flow_signal_mixed": false,
+          "sentiment_score": 0.03491829957642529,
+          "liquidation_long_usd": 14130657.332420005,
+          "liquidation_short_usd": 1357300.1005900009,
+          "liquidation_long_to_volume_4h": 0.040444470548916,
+          "liquidation_short_to_volume_4h": 0.0038848358326832,
+          "qlib_relative_score_8h": 0.0013,
+          "qlib_rank_8h": 3,
+          "qlib_percentile_8h": 0.5,
+          "p_up_8h": 0.0722,
+          "p_down_8h": 0.1758,
+          "p_flat_8h": 0.752,
+          "confidence_8h": 0.1758
+        },
+        "macro_snapshot": {
+          "event_type": "FED_SPEECH",
+          "policy_stance": "HAWKISH",
+          "market_impact": "RISK_OFF",
+          "impact_horizon": "MULTI_DAY",
+          "crypto_relevance": "HIGH",
+          "key_tags": [
+            "FED_HAWKISH",
+            "YEN_STRESS"
+          ],
+          "brief_rationale": "U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.",
+          "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.",
+          "classification_basis": {
+            "fear_greed_index": 39.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.643,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.033,
+            "usdjpy_change_5d_pct": -1.7,
+            "dxy_level": 98.21,
+            "dxy_change_5d_pct": -0.27,
+            "vix_level": 16.99,
+            "vix_change_5d_pct": -5.72,
+            "us10y_level": 4.38,
+            "us10y_change_5d_pct": 0.97,
+            "global_stable_flow": 98624119.59812927,
+            "global_stable_market_cap": 266858977463.13196,
+            "global_stable_flow_ratio_pct": 0.03695739245338101
+          },
+          "key_events": [
+            "FED_HAWKISH",
+            "YEN_STRESS"
+          ],
+          "event_facts": {
+            "fear_greed_index": 39.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.643,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.033,
+            "usdjpy_change_5d_pct": -1.7,
+            "dxy_level": 98.21,
+            "dxy_change_5d_pct": -0.27,
+            "vix_level": 16.99,
+            "vix_change_5d_pct": -5.72,
+            "us10y_level": 4.38,
+            "us10y_change_5d_pct": 0.97,
+            "global_stable_flow": 98624119.59812927,
+            "global_stable_market_cap": 266858977463.13196,
+            "global_stable_flow_ratio_pct": 0.03695739245338101
+          },
+          "provenance": {
+            "generation_mode": "llm_refined",
+            "llm_enabled": true,
+            "llm_attempted": true,
+            "llm_applied": true,
+            "llm_override_fields": [
+              "brief_rationale",
+              "news_summary"
+            ],
+            "llm_audit": {
+              "enabled": true,
+              "provider": "deepseek",
+              "model": "deepseek-chat",
+              "status": "parsed",
+              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
+              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
+              "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.\", \"brief_rationale\": \"U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"YEN_STRESS\"] }",
+              "parsed_response": {
+                "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.",
+                "brief_rationale": "U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.",
+                "market_impact": "RISK_OFF",
+                "impact_horizon": "MULTI_DAY",
+                "crypto_relevance": "HIGH",
+                "key_tags": [
+                  "FED_HAWKISH",
+                  "YEN_STRESS"
+                ]
+              },
+              "error": null
+            }
+          },
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "fear_greed_index": 39.0,
+          "fear_greed_state": "FEAR",
+          "dxy_level": 98.21,
+          "dxy_trend": "DOWN",
+          "usdjpy_level": 157.033,
+          "usdjpy_trend": "DOWN",
+          "fed_event_risk": "HIGH",
+          "macro_event_window": true,
+          "risk_off_score": 0.8,
+          "news_headlines": [
+            "The U.S.-Iran war is coming for your credit score and mortgage application",
+            "Trump says he's raising EU auto tariffs to 25%",
+            "Fed dissenters explain 'no' votes, saying they disagreed with hinting next move would be a cut",
+            "Pirro keeps pressure on Fed's Powell despite dropping probe",
+            "Bitcoin surged in April, but weak buyer demand makes the rally vulnerable"
+          ]
+        },
+        "position_snapshot": {
+          "position_side": "NONE",
+          "position_size_usd": 0.0,
+          "entry_price": null,
+          "current_price": null,
+          "unrealized_pnl_pct": 0.0,
+          "distance_to_liq": null,
+          "open_positions": []
+        },
+        "decision_ready_features": {
+          "regime_1d": "BEAR",
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "event_risk_active": true,
+          "usd_strength_flag": false,
+          "yen_stress_flag": true,
+          "flow_data_available": true,
+          "flow_schema_version": "flow_semantics_v1",
+          "flow_token_semantic": "ACCUMULATION_HINT",
+          "flow_stablecoin_semantic": "BUYING_POWER",
+          "flow_composite_semantic": "LONG_SUPPORT",
+          "flow_signal_mixed": false,
+          "flow_support_long": true,
+          "flow_support_short": false,
+          "qlib_relative_score_8h": 0.0013,
+          "qlib_percentile_8h": 0.5,
+          "p_up_8h": 0.0722,
+          "p_down_8h": 0.1758,
+          "p_flat_8h": 0.752,
+          "confidence_8h": 0.1758,
+          "qlib_direction": "FLAT",
+          "qlib_direction_confident": false,
+          "qlib_top_bucket": true,
+          "qlib_bottom_bucket": true,
+          "range_regime": false,
+          "grid_candidate_eligible": false,
+          "range_lower_bound": 2282.52,
+          "range_upper_bound": 2325.0,
+          "range_width_pct": 0.0184,
+          "price_position_in_range": 0.5833,
+          "grid_mode": "ARITHMETIC",
+          "grid_count": 2,
+          "grid_spacing_pct": 0.0092,
+          "min_profitable_spacing_pct": 0.0034,
+          "grid_spacing_profitable": true,
+          "grid_bb_width": 0.0446,
+          "grid_bb_pct_b": 0.7725,
+          "grid_bb_mid_slope_pct": -0.0003,
+          "grid_bb_width_ok": true,
+          "grid_bb_slope_ok": true,
+          "grid_adx_delta": -0.8903,
+          "grid_recent_close_drift_pct": 0.0003,
+          "grid_range_edge_close_count": 0,
+          "grid_trend_risk_ok": true,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "grid_macro_trend_ok": false,
+          "grid_macro_block_reasons": [
+            "directional_swing_macro"
+          ],
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.009758454524969137,
+          "max_profitable_grid_count": 5,
+          "grid_review_after_hours": 24,
+          "grid_extension_step_hours": 12,
+          "grid_max_lifetime_hours": 48
+        },
+        "quality_score": 1.0,
+        "is_decision_eligible": true
+      },
+      {
+        "decision_id": "cycle_2026-05-02_1600_SOL",
+        "symbol": "SOL-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777738018,
+        "snapshot_time": "2026-05-02T16:06:58Z",
+        "snapshot_time_local": "2026-05-03T00:06:58+0800",
+        "local_timezone": "Asia/Shanghai",
+        "market_snapshot": {
+          "price": 83.98,
+          "change_24h": 0.32254210966432956,
+          "rsi_4h": 50.43544199492872,
+          "adx_14": 13.296417872641404,
+          "volume_ratio": 0.4795662608351394,
+          "bb_width": 0.0290008660492076,
+          "bb_pct_b": 0.6886458057528351,
+          "bb_mid_slope_pct": -0.0011492464056121969,
+          "adx_delta": -0.9318800070713458,
+          "recent_close_drift_pct": -0.005127593608395025,
+          "range_edge_close_count": 0,
+          "wick_ratio_lower": 2.38,
+          "wick_ratio_upper": 11.9,
+          "funding_rate": -5.45082831415e-05,
+          "funding_zscore": -0.88,
+          "oi_now": 225405114.85440004,
+          "delta_oi_24h_percent": 1.5025323565658601,
+          "natr_percent": 0.9562327462202942,
+          "whale_ls_ratio": 1.5283687943262412,
+          "whale_pos_ratio": 0.8428409688801014,
+          "atr_14": 0.7278571428571438,
+          "macd_line_4h": -0.1752725974799034,
+          "macd_signal_4h": -0.2937290907335722,
+          "macd_hist_4h": 0.1184564932536687,
+          "rel_volume_60": 0.5997588472427866,
+          "volume_usd_4h": 49644504.2545,
+          "sma50_4h": 84.69599999999998,
+          "sma5_1d": 83.716,
+          "sma10_1d": 84.91633333333333,
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.014291383894908121,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "bearish_divergence_4h": false,
+          "bullish_divergence_4h": false,
+          "macd_cross_up_4h": false,
+          "macd_cross_down_4h": false,
+          "structure_support_12bar_volume_confirmed": 82.62,
+          "structure_resistance_12bar_volume_confirmed": 84.82,
+          "structure_support_stop_long": 82.2561,
+          "structure_resistance_stop_short": 85.1839
+        },
+        "onchain_snapshot": {
+          "token_net_flow": -112155.97012566151,
+          "stablecoin_net_flow": -533050.1831469998,
+          "flow_data_available": true,
+          "flow_schema_version": "flow_semantics_v1",
+          "token_flow_semantic": "DISTRIBUTION_PRESSURE",
+          "stablecoin_flow_semantic": "CAPITAL_WITHDRAWAL",
+          "flow_composite_semantic": "SHORT_SUPPORT",
+          "flow_signal_mixed": false,
+          "sentiment_score": 0.21581947522510975,
+          "liquidation_long_usd": 41927.848900000005,
+          "liquidation_short_usd": 20.901199999999996,
+          "liquidation_long_to_volume_4h": 0.0008445617401084,
+          "liquidation_short_to_volume_4h": 4.2101739787451734e-07,
+          "qlib_relative_score_8h": 0.0013,
+          "qlib_rank_8h": 2,
+          "qlib_percentile_8h": 0.75,
+          "p_up_8h": 0.1065,
+          "p_down_8h": 0.397,
+          "p_flat_8h": 0.4965,
+          "confidence_8h": 0.397
+        },
+        "macro_snapshot": {
+          "event_type": "FED_SPEECH",
+          "policy_stance": "HAWKISH",
+          "market_impact": "RISK_OFF",
+          "impact_horizon": "MULTI_DAY",
+          "crypto_relevance": "HIGH",
+          "key_tags": [
+            "FED_HAWKISH",
+            "YEN_STRESS"
+          ],
+          "brief_rationale": "U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.",
+          "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.",
+          "classification_basis": {
+            "fear_greed_index": 39.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.643,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.033,
+            "usdjpy_change_5d_pct": -1.7,
+            "dxy_level": 98.21,
+            "dxy_change_5d_pct": -0.27,
+            "vix_level": 16.99,
+            "vix_change_5d_pct": -5.72,
+            "us10y_level": 4.38,
+            "us10y_change_5d_pct": 0.97,
+            "global_stable_flow": 98624119.59812927,
+            "global_stable_market_cap": 266858977463.13196,
+            "global_stable_flow_ratio_pct": 0.03695739245338101
+          },
+          "key_events": [
+            "FED_HAWKISH",
+            "YEN_STRESS"
+          ],
+          "event_facts": {
+            "fear_greed_index": 39.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.643,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.033,
+            "usdjpy_change_5d_pct": -1.7,
+            "dxy_level": 98.21,
+            "dxy_change_5d_pct": -0.27,
+            "vix_level": 16.99,
+            "vix_change_5d_pct": -5.72,
+            "us10y_level": 4.38,
+            "us10y_change_5d_pct": 0.97,
+            "global_stable_flow": 98624119.59812927,
+            "global_stable_market_cap": 266858977463.13196,
+            "global_stable_flow_ratio_pct": 0.03695739245338101
+          },
+          "provenance": {
+            "generation_mode": "llm_refined",
+            "llm_enabled": true,
+            "llm_attempted": true,
+            "llm_applied": true,
+            "llm_override_fields": [
+              "brief_rationale",
+              "news_summary"
+            ],
+            "llm_audit": {
+              "enabled": true,
+              "provider": "deepseek",
+              "model": "deepseek-chat",
+              "status": "parsed",
+              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
+              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
+              "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.\", \"brief_rationale\": \"U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"YEN_STRESS\"] }",
+              "parsed_response": {
+                "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.",
+                "brief_rationale": "U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.",
+                "market_impact": "RISK_OFF",
+                "impact_horizon": "MULTI_DAY",
+                "crypto_relevance": "HIGH",
+                "key_tags": [
+                  "FED_HAWKISH",
+                  "YEN_STRESS"
+                ]
+              },
+              "error": null
+            }
+          },
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "fear_greed_index": 39.0,
+          "fear_greed_state": "FEAR",
+          "dxy_level": 98.21,
+          "dxy_trend": "DOWN",
+          "usdjpy_level": 157.033,
+          "usdjpy_trend": "DOWN",
+          "fed_event_risk": "HIGH",
+          "macro_event_window": true,
+          "risk_off_score": 0.8,
+          "news_headlines": [
+            "The U.S.-Iran war is coming for your credit score and mortgage application",
+            "Trump says he's raising EU auto tariffs to 25%",
+            "Fed dissenters explain 'no' votes, saying they disagreed with hinting next move would be a cut",
+            "Pirro keeps pressure on Fed's Powell despite dropping probe",
+            "Bitcoin surged in April, but weak buyer demand makes the rally vulnerable"
+          ]
+        },
+        "position_snapshot": {
+          "position_side": "NONE",
+          "position_size_usd": 0.0,
+          "entry_price": null,
+          "current_price": null,
+          "unrealized_pnl_pct": 0.0,
+          "distance_to_liq": null,
+          "open_positions": []
+        },
+        "decision_ready_features": {
+          "regime_1d": "BEAR",
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "event_risk_active": true,
+          "usd_strength_flag": false,
+          "yen_stress_flag": true,
+          "flow_data_available": true,
+          "flow_schema_version": "flow_semantics_v1",
+          "flow_token_semantic": "DISTRIBUTION_PRESSURE",
+          "flow_stablecoin_semantic": "CAPITAL_WITHDRAWAL",
+          "flow_composite_semantic": "SHORT_SUPPORT",
+          "flow_signal_mixed": false,
+          "flow_support_long": false,
+          "flow_support_short": true,
+          "qlib_relative_score_8h": 0.0013,
+          "qlib_percentile_8h": 0.75,
+          "p_up_8h": 0.1065,
+          "p_down_8h": 0.397,
+          "p_flat_8h": 0.4965,
+          "confidence_8h": 0.397,
+          "qlib_direction": "FLAT",
+          "qlib_direction_confident": false,
+          "qlib_top_bucket": true,
+          "qlib_bottom_bucket": false,
+          "range_regime": false,
+          "grid_candidate_eligible": false,
+          "range_lower_bound": 82.62,
+          "range_upper_bound": 84.82,
+          "range_width_pct": 0.0263,
+          "price_position_in_range": 0.6182,
+          "grid_mode": "ARITHMETIC",
+          "grid_count": 3,
+          "grid_spacing_pct": 0.0088,
+          "min_profitable_spacing_pct": 0.0034,
+          "grid_spacing_profitable": true,
+          "grid_bb_width": 0.029,
+          "grid_bb_pct_b": 0.6886,
+          "grid_bb_mid_slope_pct": -0.0011,
+          "grid_bb_width_ok": true,
+          "grid_bb_slope_ok": true,
+          "grid_adx_delta": -0.9319,
+          "grid_recent_close_drift_pct": -0.0051,
+          "grid_range_edge_close_count": 0,
+          "grid_trend_risk_ok": true,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "grid_macro_trend_ok": false,
+          "grid_macro_block_reasons": [
+            "directional_swing_macro",
+            "risk_off_with_short_flow_support"
+          ],
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.014291383894908121,
+          "max_profitable_grid_count": 7,
+          "grid_review_after_hours": 36,
+          "grid_extension_step_hours": 12,
+          "grid_max_lifetime_hours": 60
+        },
+        "quality_score": 1.0,
+        "is_decision_eligible": true
+      },
+      {
+        "decision_id": "cycle_2026-05-02_1600_BNB",
+        "symbol": "BNB-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777738022,
+        "snapshot_time": "2026-05-02T16:07:02Z",
+        "snapshot_time_local": "2026-05-03T00:07:02+0800",
+        "local_timezone": "Asia/Shanghai",
+        "market_snapshot": {
+          "price": 618.2,
+          "change_24h": 0.503983092180137,
+          "rsi_4h": 46.9942312936896,
+          "adx_14": 21.51286191926583,
+          "volume_ratio": 0.4050073487076855,
+          "bb_width": 0.017158399635442,
+          "bb_pct_b": 0.5660990692065732,
+          "bb_mid_slope_pct": -0.0020819831497083086,
+          "adx_delta": -0.3435014374673564,
+          "recent_close_drift_pct": -0.004375810335247342,
+          "range_edge_close_count": 0,
+          "wick_ratio_lower": 10.0,
+          "wick_ratio_upper": 0.0,
+          "funding_rate": -1.20381395246e-05,
+          "funding_zscore": -0.42,
+          "oi_now": 47350849.72200001,
+          "delta_oi_24h_percent": 0.6739310246567028,
+          "natr_percent": 0.6308465891772067,
+          "whale_ls_ratio": 0.7719298245614035,
+          "whale_pos_ratio": 0.8917612780645731,
+          "atr_14": 3.664285714285711,
+          "macd_line_4h": -2.124817122016452,
+          "macd_signal_4h": -2.5093557359459924,
+          "macd_hist_4h": 0.3845386139295401,
+          "rel_volume_60": 0.4945810313663533,
+          "volume_usd_4h": 2923375.768,
+          "sma50_4h": 624.658,
+          "sma5_1d": 619.44,
+          "sma10_1d": 626.6450000000001,
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.011660462858067716,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "bearish_divergence_4h": false,
+          "bullish_divergence_4h": false,
+          "macd_cross_up_4h": false,
+          "macd_cross_down_4h": false,
+          "structure_support_12bar_volume_confirmed": 613.0,
+          "structure_resistance_12bar_volume_confirmed": 622.7,
+          "structure_support_stop_long": 611.1679,
+          "structure_resistance_stop_short": 624.5321
+        },
+        "onchain_snapshot": {
+          "token_net_flow": 0.0,
+          "stablecoin_net_flow": 0.0,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "token_flow_semantic": "UNAVAILABLE",
+          "stablecoin_flow_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "sentiment_score": 0.0,
+          "liquidation_long_usd": 393.84900000000005,
+          "liquidation_short_usd": 73.788,
+          "liquidation_long_to_volume_4h": 0.0001347240420855,
+          "liquidation_short_to_volume_4h": 2.524068264083661e-05,
+          "qlib_relative_score_8h": 0.0042,
+          "qlib_rank_8h": 1,
+          "qlib_percentile_8h": 1.0,
+          "p_up_8h": 0.0887,
+          "p_down_8h": 0.3215,
+          "p_flat_8h": 0.5897,
+          "confidence_8h": 0.3215
+        },
+        "macro_snapshot": {
+          "event_type": "FED_SPEECH",
+          "policy_stance": "HAWKISH",
+          "market_impact": "RISK_OFF",
+          "impact_horizon": "MULTI_DAY",
+          "crypto_relevance": "HIGH",
+          "key_tags": [
+            "FED_HAWKISH",
+            "YEN_STRESS"
+          ],
+          "brief_rationale": "U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.",
+          "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.",
+          "classification_basis": {
+            "fear_greed_index": 39.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.643,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.033,
+            "usdjpy_change_5d_pct": -1.7,
+            "dxy_level": 98.21,
+            "dxy_change_5d_pct": -0.27,
+            "vix_level": 16.99,
+            "vix_change_5d_pct": -5.72,
+            "us10y_level": 4.38,
+            "us10y_change_5d_pct": 0.97,
+            "global_stable_flow": 98624119.59812927,
+            "global_stable_market_cap": 266858977463.13196,
+            "global_stable_flow_ratio_pct": 0.03695739245338101
+          },
+          "key_events": [
+            "FED_HAWKISH",
+            "YEN_STRESS"
+          ],
+          "event_facts": {
+            "fear_greed_index": 39.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.643,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.033,
+            "usdjpy_change_5d_pct": -1.7,
+            "dxy_level": 98.21,
+            "dxy_change_5d_pct": -0.27,
+            "vix_level": 16.99,
+            "vix_change_5d_pct": -5.72,
+            "us10y_level": 4.38,
+            "us10y_change_5d_pct": 0.97,
+            "global_stable_flow": 98624119.59812927,
+            "global_stable_market_cap": 266858977463.13196,
+            "global_stable_flow_ratio_pct": 0.03695739245338101
+          },
+          "provenance": {
+            "generation_mode": "llm_refined",
+            "llm_enabled": true,
+            "llm_attempted": true,
+            "llm_applied": true,
+            "llm_override_fields": [
+              "brief_rationale",
+              "news_summary"
+            ],
+            "llm_audit": {
+              "enabled": true,
+              "provider": "deepseek",
+              "model": "deepseek-chat",
+              "status": "parsed",
+              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
+              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
+              "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.\", \"brief_rationale\": \"U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"YEN_STRESS\"] }",
+              "parsed_response": {
+                "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.",
+                "brief_rationale": "U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.",
+                "market_impact": "RISK_OFF",
+                "impact_horizon": "MULTI_DAY",
+                "crypto_relevance": "HIGH",
+                "key_tags": [
+                  "FED_HAWKISH",
+                  "YEN_STRESS"
+                ]
+              },
+              "error": null
+            }
+          },
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "fear_greed_index": 39.0,
+          "fear_greed_state": "FEAR",
+          "dxy_level": 98.21,
+          "dxy_trend": "DOWN",
+          "usdjpy_level": 157.033,
+          "usdjpy_trend": "DOWN",
+          "fed_event_risk": "HIGH",
+          "macro_event_window": true,
+          "risk_off_score": 0.8,
+          "news_headlines": [
+            "The U.S.-Iran war is coming for your credit score and mortgage application",
+            "Trump says he's raising EU auto tariffs to 25%",
+            "Fed dissenters explain 'no' votes, saying they disagreed with hinting next move would be a cut",
+            "Pirro keeps pressure on Fed's Powell despite dropping probe",
+            "Bitcoin surged in April, but weak buyer demand makes the rally vulnerable"
+          ]
+        },
+        "position_snapshot": {
+          "position_side": "SHORT",
+          "position_size_usd": 424.62,
+          "entry_price": 615.1666666666666,
+          "current_price": 617.8,
+          "unrealized_pnl_pct": -0.0086,
+          "distance_to_liq": 0.4957,
+          "open_positions": [
+            {
+              "symbol": "BNB",
+              "instId": "BNB-USDT-SWAP",
+              "leverage": 2,
+              "type": "short",
+              "entryPrice": 615.1666666666666,
+              "currentPrice": 617.8,
+              "pnl": -3.6339999999999897,
+              "pnlPercent": -0.86,
+              "amount": "1.3800000000000001",
+              "margin": 212.30780813091292,
+              "stopLoss": 628.4,
+              "takeProfit": 583.8,
+              "name": "BNB"
+            }
+          ]
+        },
+        "decision_ready_features": {
+          "regime_1d": "BEAR",
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "event_risk_active": true,
+          "usd_strength_flag": false,
+          "yen_stress_flag": true,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "flow_token_semantic": "UNAVAILABLE",
+          "flow_stablecoin_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "flow_support_long": false,
+          "flow_support_short": false,
+          "qlib_relative_score_8h": 0.0042,
+          "qlib_percentile_8h": 1.0,
+          "p_up_8h": 0.0887,
+          "p_down_8h": 0.3215,
+          "p_flat_8h": 0.5897,
+          "confidence_8h": 0.3215,
+          "qlib_direction": "FLAT",
+          "qlib_direction_confident": false,
+          "qlib_top_bucket": true,
+          "qlib_bottom_bucket": false,
+          "range_regime": false,
+          "grid_candidate_eligible": false,
+          "range_lower_bound": 613.0,
+          "range_upper_bound": 622.7,
+          "range_width_pct": 0.0157,
+          "price_position_in_range": 0.5361,
+          "grid_mode": "ARITHMETIC",
+          "grid_count": 2,
+          "grid_spacing_pct": 0.0078,
+          "min_profitable_spacing_pct": 0.0034,
+          "grid_spacing_profitable": true,
+          "grid_bb_width": 0.0172,
+          "grid_bb_pct_b": 0.5661,
+          "grid_bb_mid_slope_pct": -0.0021,
+          "grid_bb_width_ok": false,
+          "grid_bb_slope_ok": true,
+          "grid_adx_delta": -0.3435,
+          "grid_recent_close_drift_pct": -0.0044,
+          "grid_range_edge_close_count": 0,
+          "grid_trend_risk_ok": true,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "grid_macro_trend_ok": false,
+          "grid_macro_block_reasons": [
+            "directional_swing_macro"
+          ],
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.011660462858067716,
+          "max_profitable_grid_count": 4,
+          "grid_review_after_hours": 36,
+          "grid_extension_step_hours": 12,
+          "grid_max_lifetime_hours": 60
+        },
+        "quality_score": 1.0,
+        "is_decision_eligible": true
+      },
+      {
+        "decision_id": "cycle_2026-05-02_1600_DOGE",
+        "symbol": "DOGE-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777738025,
+        "snapshot_time": "2026-05-02T16:07:05Z",
+        "snapshot_time_local": "2026-05-03T00:07:05+0800",
+        "local_timezone": "Asia/Shanghai",
+        "market_snapshot": {
+          "price": 0.1088,
+          "change_24h": 0.3042315847699797,
+          "rsi_4h": 62.23126529970392,
+          "adx_14": 46.46563296319039,
+          "volume_ratio": 0.825691497712755,
+          "bb_width": 0.0804843184599674,
+          "bb_pct_b": 0.7063647429209486,
+          "bb_mid_slope_pct": 0.008878417467574824,
+          "adx_delta": -0.9717361322425475,
+          "recent_close_drift_pct": -0.003686927209522784,
+          "range_edge_close_count": 0,
+          "wick_ratio_lower": 31.63,
+          "wick_ratio_upper": 9.3,
+          "funding_rate": -1.13584102097e-05,
+          "funding_zscore": -0.15,
+          "oi_now": 118166186.17599991,
+          "delta_oi_24h_percent": -3.9427901461904904,
+          "natr_percent": 1.7592939974421513,
+          "whale_ls_ratio": 1.1231884057971013,
+          "whale_pos_ratio": 0.8895995636994116,
+          "atr_14": 0.0017742857142857,
+          "macd_line_4h": 0.0019373082061181,
+          "macd_signal_4h": 0.002136814078405,
+          "macd_hist_4h": -0.0001995058722869,
+          "rel_volume_60": 1.0436820089805015,
+          "volume_usd_4h": 97751722.9546,
+          "sma50_4h": 0.10219239999999999,
+          "sma5_1d": 0.10473733333333332,
+          "sma10_1d": 0.10124533333333334,
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": 0.03205139972464416,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "bearish_divergence_4h": false,
+          "bullish_divergence_4h": true,
+          "macd_cross_up_4h": false,
+          "macd_cross_down_4h": false,
+          "structure_support_12bar_volume_confirmed": 0.10635,
+          "structure_resistance_12bar_volume_confirmed": 0.1105,
+          "structure_support_stop_long": 0.1055,
+          "structure_resistance_stop_short": 0.1114
+        },
+        "onchain_snapshot": {
+          "token_net_flow": 0.0,
+          "stablecoin_net_flow": 0.0,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "token_flow_semantic": "UNAVAILABLE",
+          "stablecoin_flow_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "sentiment_score": 0.0,
+          "liquidation_long_usd": 430771.8304,
+          "liquidation_short_usd": 47455.492699999995,
+          "liquidation_long_to_volume_4h": 0.0044067952705045,
+          "liquidation_short_to_volume_4h": 0.0004854696292365,
+          "qlib_relative_score_8h": -0.0008,
+          "qlib_rank_8h": 5,
+          "qlib_percentile_8h": 0.0,
+          "p_up_8h": 0.1162,
+          "p_down_8h": 0.2474,
+          "p_flat_8h": 0.6363,
+          "confidence_8h": 0.2474
+        },
+        "macro_snapshot": {
+          "event_type": "FED_SPEECH",
+          "policy_stance": "HAWKISH",
+          "market_impact": "RISK_OFF",
+          "impact_horizon": "MULTI_DAY",
+          "crypto_relevance": "HIGH",
+          "key_tags": [
+            "FED_HAWKISH",
+            "YEN_STRESS"
+          ],
+          "brief_rationale": "U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.",
+          "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.",
+          "classification_basis": {
+            "fear_greed_index": 39.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.643,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.033,
+            "usdjpy_change_5d_pct": -1.7,
+            "dxy_level": 98.21,
+            "dxy_change_5d_pct": -0.27,
+            "vix_level": 16.99,
+            "vix_change_5d_pct": -5.72,
+            "us10y_level": 4.38,
+            "us10y_change_5d_pct": 0.97,
+            "global_stable_flow": 98624119.59812927,
+            "global_stable_market_cap": 266858977463.13196,
+            "global_stable_flow_ratio_pct": 0.03695739245338101
+          },
+          "key_events": [
+            "FED_HAWKISH",
+            "YEN_STRESS"
+          ],
+          "event_facts": {
+            "fear_greed_index": 39.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.643,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.033,
+            "usdjpy_change_5d_pct": -1.7,
+            "dxy_level": 98.21,
+            "dxy_change_5d_pct": -0.27,
+            "vix_level": 16.99,
+            "vix_change_5d_pct": -5.72,
+            "us10y_level": 4.38,
+            "us10y_change_5d_pct": 0.97,
+            "global_stable_flow": 98624119.59812927,
+            "global_stable_market_cap": 266858977463.13196,
+            "global_stable_flow_ratio_pct": 0.03695739245338101
+          },
+          "provenance": {
+            "generation_mode": "llm_refined",
+            "llm_enabled": true,
+            "llm_attempted": true,
+            "llm_applied": true,
+            "llm_override_fields": [
+              "brief_rationale",
+              "news_summary"
+            ],
+            "llm_audit": {
+              "enabled": true,
+              "provider": "deepseek",
+              "model": "deepseek-chat",
+              "status": "parsed",
+              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
+              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
+              "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.\", \"brief_rationale\": \"U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"YEN_STRESS\"] }",
+              "parsed_response": {
+                "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin's rally lacks demand support.",
+                "brief_rationale": "U.S.-Iran conflict and EU auto tariffs are risk-off geopolitical/trade shocks; Fed dissent reinforces hawkish stance; Bitcoin rally vulnerable due to weak demand.",
+                "market_impact": "RISK_OFF",
+                "impact_horizon": "MULTI_DAY",
+                "crypto_relevance": "HIGH",
+                "key_tags": [
+                  "FED_HAWKISH",
+                  "YEN_STRESS"
+                ]
+              },
+              "error": null
+            }
+          },
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "fear_greed_index": 39.0,
+          "fear_greed_state": "FEAR",
+          "dxy_level": 98.21,
+          "dxy_trend": "DOWN",
+          "usdjpy_level": 157.033,
+          "usdjpy_trend": "DOWN",
+          "fed_event_risk": "HIGH",
+          "macro_event_window": true,
+          "risk_off_score": 0.8,
+          "news_headlines": [
+            "The U.S.-Iran war is coming for your credit score and mortgage application",
+            "Trump says he's raising EU auto tariffs to 25%",
+            "Fed dissenters explain 'no' votes, saying they disagreed with hinting next move would be a cut",
+            "Pirro keeps pressure on Fed's Powell despite dropping probe",
+            "Bitcoin surged in April, but weak buyer demand makes the rally vulnerable"
+          ]
+        },
+        "position_snapshot": {
+          "position_side": "NONE",
+          "position_size_usd": 0.0,
+          "entry_price": null,
+          "current_price": null,
+          "unrealized_pnl_pct": 0.0,
+          "distance_to_liq": null,
+          "open_positions": []
+        },
+        "decision_ready_features": {
+          "regime_1d": "BEAR",
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "event_risk_active": true,
+          "usd_strength_flag": false,
+          "yen_stress_flag": true,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "flow_token_semantic": "UNAVAILABLE",
+          "flow_stablecoin_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "flow_support_long": false,
+          "flow_support_short": false,
+          "qlib_relative_score_8h": -0.0008,
+          "qlib_percentile_8h": 0.0,
+          "p_up_8h": 0.1162,
+          "p_down_8h": 0.2474,
+          "p_flat_8h": 0.6363,
+          "confidence_8h": 0.2474,
+          "qlib_direction": "FLAT",
+          "qlib_direction_confident": false,
+          "qlib_top_bucket": false,
+          "qlib_bottom_bucket": true,
+          "range_regime": false,
+          "grid_candidate_eligible": false,
+          "range_lower_bound": 0.1064,
+          "range_upper_bound": 0.1105,
+          "range_width_pct": 0.0383,
+          "price_position_in_range": 0.5904,
+          "grid_mode": "ARITHMETIC",
+          "grid_count": 5,
+          "grid_spacing_pct": 0.0077,
+          "min_profitable_spacing_pct": 0.0034,
+          "grid_spacing_profitable": true,
+          "grid_bb_width": 0.0805,
+          "grid_bb_pct_b": 0.7064,
+          "grid_bb_mid_slope_pct": 0.0089,
+          "grid_bb_width_ok": true,
+          "grid_bb_slope_ok": true,
+          "grid_adx_delta": -0.9717,
+          "grid_recent_close_drift_pct": -0.0037,
+          "grid_range_edge_close_count": 0,
+          "grid_trend_risk_ok": true,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "grid_macro_trend_ok": false,
+          "grid_macro_block_reasons": [
+            "directional_swing_macro"
+          ],
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": 0.03205139972464416,
+          "max_profitable_grid_count": 11,
+          "grid_review_after_hours": 36,
+          "grid_extension_step_hours": 12,
+          "grid_max_lifetime_hours": 60
+        },
+        "quality_score": 1.0,
+        "is_decision_eligible": true
+      }
+    ],
+    "candidate_batches": [
+      {
+        "symbol": "BTC-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777738009,
+        "candidate_proposals": [],
+        "e_strategy_diagnostic": {
+          "qlib_inputs": {
+            "qlib_relative_score_8h": -0.0,
+            "qlib_percentile_8h": 0.25,
+            "qlib_rank_8h": 4,
+            "p_up_8h": 0.1378,
+            "p_down_8h": 0.201,
+            "p_flat_8h": 0.6612,
+            "funding_zscore": 0.51,
+            "token_net_flow": 0.0,
+            "stablecoin_net_flow": 0.0,
+            "regime_1d": "BEAR",
+            "whale_bias": "neutral",
+            "is_overheated": false,
+            "is_squeeze_zone": false
+          },
+          "config": {
+            "qlib_rank_bucket_size": 3,
+            "qlib_prob_threshold": 0.55,
+            "qlib_prob_gap_threshold": 0.15,
+            "qlib_flat_max_threshold": 0.4
+          },
+          "long_path": {
+            "candidate": "Blueprint_E1",
+            "checks": {
+              "rank_bucket_pass": false,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": false,
+              "overheated_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "rank_bucket",
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate",
+              "regime"
+            ]
+          },
+          "short_path": {
+            "candidate": "Blueprint_E2",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": true,
+              "squeeze_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate"
+            ]
+          },
+          "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, prob_gap, p_flat_gate"
+        }
+      },
+      {
+        "symbol": "ETH-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777738015,
+        "candidate_proposals": [],
+        "e_strategy_diagnostic": {
+          "qlib_inputs": {
+            "qlib_relative_score_8h": 0.0013,
+            "qlib_percentile_8h": 0.5,
+            "qlib_rank_8h": 3,
+            "p_up_8h": 0.0722,
+            "p_down_8h": 0.1758,
+            "p_flat_8h": 0.752,
+            "funding_zscore": -0.06,
+            "token_net_flow": 2033078.5621134797,
+            "stablecoin_net_flow": 674258.5681109605,
+            "regime_1d": "BEAR",
+            "whale_bias": "neutral",
+            "is_overheated": false,
+            "is_squeeze_zone": false
+          },
+          "config": {
+            "qlib_rank_bucket_size": 3,
+            "qlib_prob_threshold": 0.55,
+            "qlib_prob_gap_threshold": 0.15,
+            "qlib_flat_max_threshold": 0.4
+          },
+          "long_path": {
+            "candidate": "Blueprint_E1",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": false,
+              "overheated_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate",
+              "regime"
+            ]
+          },
+          "short_path": {
+            "candidate": "Blueprint_E2",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": true,
+              "squeeze_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate"
+            ]
+          },
+          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, prob_gap, p_flat_gate"
+        }
+      },
+      {
+        "symbol": "SOL-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777738018,
+        "candidate_proposals": [],
+        "e_strategy_diagnostic": {
+          "qlib_inputs": {
+            "qlib_relative_score_8h": 0.0013,
+            "qlib_percentile_8h": 0.75,
+            "qlib_rank_8h": 2,
+            "p_up_8h": 0.1065,
+            "p_down_8h": 0.397,
+            "p_flat_8h": 0.4965,
+            "funding_zscore": -0.88,
+            "token_net_flow": -112155.97012566151,
+            "stablecoin_net_flow": -533050.1831469998,
+            "regime_1d": "BEAR",
+            "whale_bias": "neutral",
+            "is_overheated": false,
+            "is_squeeze_zone": false
+          },
+          "config": {
+            "qlib_rank_bucket_size": 3,
+            "qlib_prob_threshold": 0.55,
+            "qlib_prob_gap_threshold": 0.15,
+            "qlib_flat_max_threshold": 0.4
+          },
+          "long_path": {
+            "candidate": "Blueprint_E1",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": false,
+              "overheated_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate",
+              "regime"
+            ]
+          },
+          "short_path": {
+            "candidate": "Blueprint_E2",
+            "checks": {
+              "rank_bucket_pass": false,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": true,
+              "flat_gate_pass": false,
+              "regime_pass": true,
+              "squeeze_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "rank_bucket",
+              "prob_threshold",
+              "p_flat_gate"
+            ]
+          },
+          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime; short blocked by rank_bucket, prob_threshold, p_flat_gate"
+        }
+      },
+      {
+        "symbol": "BNB-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777738022,
+        "candidate_proposals": [],
+        "e_strategy_diagnostic": {
+          "qlib_inputs": {
+            "qlib_relative_score_8h": 0.0042,
+            "qlib_percentile_8h": 1.0,
+            "qlib_rank_8h": 1,
+            "p_up_8h": 0.0887,
+            "p_down_8h": 0.3215,
+            "p_flat_8h": 0.5897,
+            "funding_zscore": -0.42,
+            "token_net_flow": 0.0,
+            "stablecoin_net_flow": 0.0,
+            "regime_1d": "BEAR",
+            "whale_bias": "neutral",
+            "is_overheated": false,
+            "is_squeeze_zone": false
+          },
+          "config": {
+            "qlib_rank_bucket_size": 3,
+            "qlib_prob_threshold": 0.55,
+            "qlib_prob_gap_threshold": 0.15,
+            "qlib_flat_max_threshold": 0.4
+          },
+          "long_path": {
+            "candidate": "Blueprint_E1",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": false,
+              "overheated_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate",
+              "regime"
+            ]
+          },
+          "short_path": {
+            "candidate": "Blueprint_E2",
+            "checks": {
+              "rank_bucket_pass": false,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": true,
+              "flat_gate_pass": false,
+              "regime_pass": true,
+              "squeeze_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "rank_bucket",
+              "prob_threshold",
+              "p_flat_gate"
+            ]
+          },
+          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime; short blocked by rank_bucket, prob_threshold, p_flat_gate"
+        }
+      },
+      {
+        "symbol": "DOGE-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777738025,
+        "candidate_proposals": [],
+        "e_strategy_diagnostic": {
+          "qlib_inputs": {
+            "qlib_relative_score_8h": -0.0008,
+            "qlib_percentile_8h": 0.0,
+            "qlib_rank_8h": 5,
+            "p_up_8h": 0.1162,
+            "p_down_8h": 0.2474,
+            "p_flat_8h": 0.6363,
+            "funding_zscore": -0.15,
+            "token_net_flow": 0.0,
+            "stablecoin_net_flow": 0.0,
+            "regime_1d": "BEAR",
+            "whale_bias": "neutral",
+            "is_overheated": false,
+            "is_squeeze_zone": false
+          },
+          "config": {
+            "qlib_rank_bucket_size": 3,
+            "qlib_prob_threshold": 0.55,
+            "qlib_prob_gap_threshold": 0.15,
+            "qlib_flat_max_threshold": 0.4
+          },
+          "long_path": {
+            "candidate": "Blueprint_E1",
+            "checks": {
+              "rank_bucket_pass": false,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": false,
+              "overheated_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "rank_bucket",
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate",
+              "regime"
+            ]
+          },
+          "short_path": {
+            "candidate": "Blueprint_E2",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": true,
+              "squeeze_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate"
+            ]
+          },
+          "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, prob_gap, p_flat_gate"
+        }
+      }
+    ],
+    "rule_evaluations": [
+      {
+        "symbol": "BTC-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "stage": "pre_trade_filter",
+        "passed": false,
+        "reason_codes": [],
+        "approved_candidates": [],
+        "rule_trace": [
+          {
+            "rule": "DATA_ELIGIBILITY_CHECK",
+            "passed": true
+          }
+        ],
+        "candidate_structure": {
+          "overall_state": "no_candidate",
+          "has_directional_conflict": false,
+          "long_count": 0,
+          "short_count": 0,
+          "grid_count": 0,
+          "resonance_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_resonance_strength": 0
+        }
+      },
+      {
+        "symbol": "ETH-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "stage": "pre_trade_filter",
+        "passed": false,
+        "reason_codes": [],
+        "approved_candidates": [],
+        "rule_trace": [
+          {
+            "rule": "DATA_ELIGIBILITY_CHECK",
+            "passed": true
+          }
+        ],
+        "candidate_structure": {
+          "overall_state": "no_candidate",
+          "has_directional_conflict": false,
+          "long_count": 0,
+          "short_count": 0,
+          "grid_count": 0,
+          "resonance_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_resonance_strength": 0
+        }
+      },
+      {
+        "symbol": "SOL-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "stage": "pre_trade_filter",
+        "passed": false,
+        "reason_codes": [],
+        "approved_candidates": [],
+        "rule_trace": [
+          {
+            "rule": "DATA_ELIGIBILITY_CHECK",
+            "passed": true
+          }
+        ],
+        "candidate_structure": {
+          "overall_state": "no_candidate",
+          "has_directional_conflict": false,
+          "long_count": 0,
+          "short_count": 0,
+          "grid_count": 0,
+          "resonance_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_resonance_strength": 0
+        }
+      },
+      {
+        "symbol": "BNB-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "stage": "pre_trade_filter",
+        "passed": false,
+        "reason_codes": [],
+        "approved_candidates": [],
+        "rule_trace": [
+          {
+            "rule": "DATA_ELIGIBILITY_CHECK",
+            "passed": true
+          }
+        ],
+        "candidate_structure": {
+          "overall_state": "no_candidate",
+          "has_directional_conflict": false,
+          "long_count": 0,
+          "short_count": 0,
+          "grid_count": 0,
+          "resonance_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_resonance_strength": 0
+        }
+      },
+      {
+        "symbol": "DOGE-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "stage": "pre_trade_filter",
+        "passed": false,
+        "reason_codes": [],
+        "approved_candidates": [],
+        "rule_trace": [
+          {
+            "rule": "DATA_ELIGIBILITY_CHECK",
+            "passed": true
+          }
+        ],
+        "candidate_structure": {
+          "overall_state": "no_candidate",
+          "has_directional_conflict": false,
+          "long_count": 0,
+          "short_count": 0,
+          "grid_count": 0,
+          "resonance_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_resonance_strength": 0
+        }
+      }
+    ],
+    "research_outputs": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "risk_reviews": [
+      {
+        "symbol": "BTC-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "strategy_family": null,
+        "approved": false,
+        "final_intent": "NO_TRADE",
+        "approved_risk_fraction": 0.0,
+        "approved_position_size_usd": 0.0,
+        "leverage": 1.0,
+        "max_holding_bars": 0,
+        "execution_action": "DO_NOTHING",
+        "next_position_state": "candidate",
+        "review_note": "rule evaluation rejected or produced no approved candidates"
+      },
+      {
+        "symbol": "ETH-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "strategy_family": null,
+        "approved": false,
+        "final_intent": "NO_TRADE",
+        "approved_risk_fraction": 0.0,
+        "approved_position_size_usd": 0.0,
+        "leverage": 1.0,
+        "max_holding_bars": 0,
+        "execution_action": "DO_NOTHING",
+        "next_position_state": "candidate",
+        "review_note": "rule evaluation rejected or produced no approved candidates"
+      },
+      {
+        "symbol": "SOL-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "strategy_family": null,
+        "approved": false,
+        "final_intent": "NO_TRADE",
+        "approved_risk_fraction": 0.0,
+        "approved_position_size_usd": 0.0,
+        "leverage": 1.0,
+        "max_holding_bars": 0,
+        "execution_action": "DO_NOTHING",
+        "next_position_state": "candidate",
+        "review_note": "rule evaluation rejected or produced no approved candidates"
+      },
+      {
+        "symbol": "BNB-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "strategy_family": null,
+        "approved": false,
+        "final_intent": "NO_TRADE",
+        "approved_risk_fraction": 0.0,
+        "approved_position_size_usd": 0.0,
+        "leverage": 1.0,
+        "max_holding_bars": 0,
+        "execution_action": "DO_NOTHING",
+        "next_position_state": "candidate",
+        "review_note": "rule evaluation rejected or produced no approved candidates"
+      },
+      {
+        "symbol": "DOGE-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "strategy_family": null,
+        "approved": false,
+        "final_intent": "NO_TRADE",
+        "approved_risk_fraction": 0.0,
+        "approved_position_size_usd": 0.0,
+        "leverage": 1.0,
+        "max_holding_bars": 0,
+        "execution_action": "DO_NOTHING",
+        "next_position_state": "candidate",
+        "review_note": "rule evaluation rejected or produced no approved candidates"
+      }
+    ],
+    "executions": [
+      {
+        "symbol": "BTC-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "strategy_family": null,
+        "execution_action": "DO_NOTHING",
+        "order_status": "SKIPPED",
+        "requested_size_usd": 0.0,
+        "requested_leverage": 1.0,
+        "avg_fill_price": null,
+        "filled_size": 0.0,
+        "exchange_order_id": null,
+        "executed_at": null,
+        "sync_status": "SKIPPED",
+        "failure_reason": null,
+        "history": [
+          {
+            "type": "EXECUTION_NOT_REQUESTED",
+            "at": "2026-05-02T16:06:51Z",
+            "payload": {
+              "review_note": "rule evaluation rejected or produced no approved candidates"
+            }
+          },
+          {
+            "type": "EXECUTION_SKIPPED",
+            "at": "2026-05-02T16:06:53Z",
+            "payload": {
+              "reason": "do_nothing",
+              "execution_action": "DO_NOTHING"
+            }
+          }
+        ],
+        "protection_status": "SKIPPED"
+      },
+      {
+        "symbol": "ETH-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "strategy_family": null,
+        "execution_action": "DO_NOTHING",
+        "order_status": "SKIPPED",
+        "requested_size_usd": 0.0,
+        "requested_leverage": 1.0,
+        "avg_fill_price": null,
+        "filled_size": 0.0,
+        "exchange_order_id": null,
+        "executed_at": null,
+        "sync_status": "SKIPPED",
+        "failure_reason": null,
+        "history": [
+          {
+            "type": "EXECUTION_NOT_REQUESTED",
+            "at": "2026-05-02T16:06:56Z",
+            "payload": {
+              "review_note": "rule evaluation rejected or produced no approved candidates"
+            }
+          },
+          {
+            "type": "EXECUTION_SKIPPED",
+            "at": "2026-05-02T16:06:57Z",
+            "payload": {
+              "reason": "do_nothing",
+              "execution_action": "DO_NOTHING"
+            }
+          }
+        ],
+        "protection_status": "SKIPPED"
+      },
+      {
+        "symbol": "SOL-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "strategy_family": null,
+        "execution_action": "DO_NOTHING",
+        "order_status": "SKIPPED",
+        "requested_size_usd": 0.0,
+        "requested_leverage": 1.0,
+        "avg_fill_price": null,
+        "filled_size": 0.0,
+        "exchange_order_id": null,
+        "executed_at": null,
+        "sync_status": "SKIPPED",
+        "failure_reason": null,
+        "history": [
+          {
+            "type": "EXECUTION_NOT_REQUESTED",
+            "at": "2026-05-02T16:06:59Z",
+            "payload": {
+              "review_note": "rule evaluation rejected or produced no approved candidates"
+            }
+          },
+          {
+            "type": "EXECUTION_SKIPPED",
+            "at": "2026-05-02T16:07:00Z",
+            "payload": {
+              "reason": "do_nothing",
+              "execution_action": "DO_NOTHING"
+            }
+          }
+        ],
+        "protection_status": "SKIPPED"
+      },
+      {
+        "symbol": "BNB-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "strategy_family": null,
+        "execution_action": "DO_NOTHING",
+        "order_status": "SKIPPED",
+        "requested_size_usd": 0.0,
+        "requested_leverage": 1.0,
+        "avg_fill_price": null,
+        "filled_size": 0.0,
+        "exchange_order_id": null,
+        "executed_at": null,
+        "sync_status": "SKIPPED",
+        "failure_reason": null,
+        "history": [
+          {
+            "type": "EXECUTION_NOT_REQUESTED",
+            "at": "2026-05-02T16:07:02Z",
+            "payload": {
+              "review_note": "rule evaluation rejected or produced no approved candidates"
+            }
+          },
+          {
+            "type": "EXECUTION_SKIPPED",
+            "at": "2026-05-02T16:07:03Z",
+            "payload": {
+              "reason": "do_nothing",
+              "execution_action": "DO_NOTHING"
+            }
+          }
+        ],
+        "protection_status": "SKIPPED"
+      },
+      {
+        "symbol": "DOGE-USDT",
+        "cycleId": "cycle_2026-05-02_1600",
+        "strategy_family": null,
+        "execution_action": "DO_NOTHING",
+        "order_status": "SKIPPED",
+        "requested_size_usd": 0.0,
+        "requested_leverage": 1.0,
+        "avg_fill_price": null,
+        "filled_size": 0.0,
+        "exchange_order_id": null,
+        "executed_at": null,
+        "sync_status": "SKIPPED",
+        "failure_reason": null,
+        "history": [
+          {
+            "type": "EXECUTION_NOT_REQUESTED",
+            "at": "2026-05-02T16:07:05Z",
+            "payload": {
+              "review_note": "rule evaluation rejected or produced no approved candidates"
+            }
+          },
+          {
+            "type": "EXECUTION_SKIPPED",
+            "at": "2026-05-02T16:07:07Z",
+            "payload": {
+              "reason": "do_nothing",
+              "execution_action": "DO_NOTHING"
+            }
+          }
+        ],
+        "protection_status": "SKIPPED"
+      }
+    ],
+    "record_count": 5,
+    "post_trade_review": {
+      "evaluated_count": 76,
+      "record_count": 76
     }
   }
 ]
