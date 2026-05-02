@@ -3,9 +3,9 @@
   "cycleId": "cycle_2026-05-02_1200",
   "symbol": "DOGE-USDT",
   "timeframe": "4h",
-  "snapshot_timestamp": 1777723629,
-  "snapshot_time": "2026-05-02T12:07:09Z",
-  "snapshot_time_local": "2026-05-02T20:07:09+0800",
+  "snapshot_timestamp": 1777730824,
+  "snapshot_time": "2026-05-02T14:07:04Z",
+  "snapshot_time_local": "2026-05-02T22:07:04+0800",
   "local_timezone": "Asia/Shanghai",
   "positionState": "candidate",
   "snapshot": {
@@ -13,16 +13,16 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-02_1200",
     "timeframe": "4h",
-    "snapshot_timestamp": 1777723629,
-    "snapshot_time": "2026-05-02T12:07:09Z",
-    "snapshot_time_local": "2026-05-02T20:07:09+0800",
+    "snapshot_timestamp": 1777730824,
+    "snapshot_time": "2026-05-02T14:07:04Z",
+    "snapshot_time_local": "2026-05-02T22:07:04+0800",
     "local_timezone": "Asia/Shanghai",
     "market_snapshot": {
-      "price": 0.10779,
-      "change_24h": -0.6269014474048125,
+      "price": 0.10881,
+      "change_24h": 0.3134507237024126,
       "rsi_4h": 58.53335540672929,
       "adx_14": 46.5020129012129,
-      "volume_ratio": 1.0165787888885334,
+      "volume_ratio": 0.8810369693222275,
       "bb_width": 0.0812434698694329,
       "bb_pct_b": 0.5822185936534356,
       "bb_mid_slope_pct": 0.010947455020543928,
@@ -31,13 +31,13 @@
       "range_edge_close_count": 0,
       "wick_ratio_lower": 50.72,
       "wick_ratio_upper": 26.09,
-      "funding_rate": 7.39946612978e-05,
-      "funding_zscore": 1.3,
-      "oi_now": 121874494.60739994,
+      "funding_rate": 5.32152998649e-05,
+      "funding_zscore": 0.93,
+      "oi_now": 123027773.98859996,
       "delta_oi_24h_percent": 3.5038643106086496,
-      "natr_percent": 1.7639174473574166,
-      "whale_ls_ratio": 1.0896309314586996,
-      "whale_pos_ratio": 0.8831671042760971,
+      "natr_percent": 1.8570097700507986,
+      "whale_ls_ratio": 1.1021505376344085,
+      "whale_pos_ratio": 0.9034438897621584,
       "atr_14": 0.0018164285714285,
       "macd_line_4h": 0.0019735946701881,
       "macd_signal_4h": 0.0021866905464654,
@@ -71,10 +71,10 @@
       "flow_composite_semantic": "UNAVAILABLE",
       "flow_signal_mixed": false,
       "sentiment_score": 0.0,
-      "liquidation_long_usd": 292476.7855000001,
-      "liquidation_short_usd": 718411.3892,
-      "liquidation_long_to_volume_4h": 0.0069146839295821,
-      "liquidation_short_to_volume_4h": 0.0169845537629175,
+      "liquidation_long_usd": 432859.35339999996,
+      "liquidation_short_usd": 10480.016299999997,
+      "liquidation_long_to_volume_4h": 0.0102335835290569,
+      "liquidation_short_to_volume_4h": 0.0002477666737463,
       "qlib_relative_score_8h": -0.0008,
       "qlib_rank_8h": 4,
       "qlib_percentile_8h": 0.25,
@@ -93,8 +93,8 @@
         "FED_HAWKISH",
         "YEN_STRESS"
       ],
-      "brief_rationale": "Tariff escalation and hawkish Fed dissent reinforce risk-off sentiment; yen stress persists; stablecoin flow positive but not enough to offset macro headwinds.",
-      "news_summary": "Trump raises EU auto tariffs to 25%; Fed dissenters oppose hinting at rate cuts; Pirro pressures Powell; Bitcoin rally vulnerable; UK exports plunge.",
+      "brief_rationale": "Headlines include Iran conflict impact on credit, Trump auto tariffs, and Fed dissenters opposing rate cut hints, all risk-off. Bitcoin rally is vulnerable due to weak demand.",
+      "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin rally lacks buyer demand.",
       "classification_basis": {
         "fear_greed_index": 39.0,
         "fear_greed_state": "FEAR",
@@ -108,9 +108,9 @@
         "vix_change_5d_pct": -5.72,
         "us10y_level": 4.38,
         "us10y_change_5d_pct": 0.97,
-        "global_stable_flow": 1067808072.7736359,
-        "global_stable_market_cap": 267837923120.23206,
-        "global_stable_flow_ratio_pct": 0.3986769537091647
+        "global_stable_flow": 1062016310.2506409,
+        "global_stable_market_cap": 267826778425.85068,
+        "global_stable_flow_ratio_pct": 0.3965310401344599
       },
       "key_events": [
         "FED_HAWKISH",
@@ -129,9 +129,9 @@
         "vix_change_5d_pct": -5.72,
         "us10y_level": 4.38,
         "us10y_change_5d_pct": 0.97,
-        "global_stable_flow": 1067808072.7736359,
-        "global_stable_market_cap": 267837923120.23206,
-        "global_stable_flow_ratio_pct": 0.3986769537091647
+        "global_stable_flow": 1062016310.2506409,
+        "global_stable_market_cap": 267826778425.85068,
+        "global_stable_flow_ratio_pct": 0.3965310401344599
       },
       "provenance": {
         "generation_mode": "llm_refined",
@@ -150,10 +150,10 @@
           "status": "parsed",
           "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
           "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-          "raw_response_preview": "{ \"news_summary\": \"Trump raises EU auto tariffs to 25%; Fed dissenters oppose hinting at rate cuts; Pirro pressures Powell; Bitcoin rally vulnerable; UK exports plunge.\", \"brief_rationale\": \"Tariff escalation and hawkish Fed dissent reinforce risk-off sentiment; yen stress persists; stablecoin flow positive but not enough to offset macro headwinds.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"YEN_STRESS\"] }",
+          "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin rally lacks buyer demand.\", \"brief_rationale\": \"Headlines include Iran conflict impact on credit, Trump auto tariffs, and Fed dissenters opposing rate cut hints, all risk-off. Bitcoin rally is vulnerable due to weak demand.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"YEN_STRESS\"] }",
           "parsed_response": {
-            "news_summary": "Trump raises EU auto tariffs to 25%; Fed dissenters oppose hinting at rate cuts; Pirro pressures Powell; Bitcoin rally vulnerable; UK exports plunge.",
-            "brief_rationale": "Tariff escalation and hawkish Fed dissent reinforce risk-off sentiment; yen stress persists; stablecoin flow positive but not enough to offset macro headwinds.",
+            "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, while Bitcoin rally lacks buyer demand.",
+            "brief_rationale": "Headlines include Iran conflict impact on credit, Trump auto tariffs, and Fed dissenters opposing rate cut hints, all risk-off. Bitcoin rally is vulnerable due to weak demand.",
             "market_impact": "RISK_OFF",
             "impact_horizon": "MULTI_DAY",
             "crypto_relevance": "HIGH",
@@ -178,11 +178,11 @@
       "macro_event_window": true,
       "risk_off_score": 0.8,
       "news_headlines": [
+        "The U.S.-Iran war is coming for your credit score and mortgage application",
         "Trump says he's raising EU auto tariffs to 25%",
         "Fed dissenters explain 'no' votes, saying they disagreed with hinting next move would be a cut",
         "Pirro keeps pressure on Fed's Powell despite dropping probe",
-        "Bitcoin surged in April, but weak buyer demand makes the rally vulnerable",
-        "UK exports to U.S. plunge by 25% after Trump's 'liberation day' tariffs blitz"
+        "Bitcoin surged in April, but weak buyer demand makes the rally vulnerable"
       ]
     },
     "position_snapshot": {
@@ -225,7 +225,7 @@
       "range_lower_bound": 0.1055,
       "range_upper_bound": 0.1105,
       "range_width_pct": 0.0459,
-      "price_position_in_range": 0.4536,
+      "price_position_in_range": 0.6593,
       "grid_mode": "ARITHMETIC",
       "grid_count": 6,
       "grid_spacing_pct": 0.0077,
@@ -261,7 +261,7 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-02_1200",
     "timeframe": "4h",
-    "snapshot_timestamp": 1777723629,
+    "snapshot_timestamp": 1777730824,
     "candidate_proposals": [],
     "e_strategy_diagnostic": {
       "qlib_inputs": {
@@ -271,7 +271,7 @@
         "p_up_8h": 0.0506,
         "p_down_8h": 0.2836,
         "p_flat_8h": 0.6658,
-        "funding_zscore": 1.3,
+        "funding_zscore": 0.93,
         "token_net_flow": 0.0,
         "stablecoin_net_flow": 0.0,
         "regime_1d": "BEAR",
@@ -391,14 +391,14 @@
     "history": [
       {
         "type": "EXECUTION_NOT_REQUESTED",
-        "at": "2026-05-02T12:07:09Z",
+        "at": "2026-05-02T14:07:04Z",
         "payload": {
           "review_note": "rule evaluation rejected or produced no approved candidates"
         }
       },
       {
         "type": "EXECUTION_SKIPPED",
-        "at": "2026-05-02T12:07:10Z",
+        "at": "2026-05-02T14:07:05Z",
         "payload": {
           "reason": "do_nothing",
           "execution_action": "DO_NOTHING"
@@ -450,10 +450,10 @@
       "execution_action": "DO_NOTHING"
     },
     "feedback_packets": [],
-    "generated_at": "2026-05-02T12:07:26Z"
+    "generated_at": "2026-05-02T14:07:21Z"
   },
-  "created_at": "2026-05-02T12:07:09Z",
-  "created_at_local": "2026-05-02T20:07:09+0800",
-  "updated_at": "2026-05-02T12:07:26Z",
-  "updated_at_local": "2026-05-02T20:07:10+0800"
+  "created_at": "2026-05-02T14:07:04Z",
+  "created_at_local": "2026-05-02T22:07:04+0800",
+  "updated_at": "2026-05-02T14:07:21Z",
+  "updated_at_local": "2026-05-02T22:07:05+0800"
 }
