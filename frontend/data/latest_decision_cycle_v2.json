@@ -1,7 +1,7 @@
 {
   "cycleId": "cycle_2026-05-03_0400",
-  "generated_at": "2026-05-03T04:07:27Z",
-  "generated_at_local": "2026-05-03T12:07:27+0800",
+  "generated_at": "2026-05-03T06:07:36Z",
+  "generated_at_local": "2026-05-03T14:07:36+0800",
   "cycle_local_time": "2026-05-03 12:00:00 CST",
   "local_timezone": "Asia/Shanghai",
   "timeframe": "4h",
@@ -11,16 +11,16 @@
       "symbol": "BTC-USDT",
       "cycleId": "cycle_2026-05-03_0400",
       "timeframe": "4h",
-      "snapshot_timestamp": 1777781206,
-      "snapshot_time": "2026-05-03T04:06:46Z",
-      "snapshot_time_local": "2026-05-03T12:06:46+0800",
+      "snapshot_timestamp": 1777788416,
+      "snapshot_time": "2026-05-03T06:06:56Z",
+      "snapshot_time_local": "2026-05-03T14:06:56+0800",
       "local_timezone": "Asia/Shanghai",
       "market_snapshot": {
-        "price": 78130.1,
-        "change_24h": -0.6684813218080123,
+        "price": 78133.3,
+        "change_24h": -0.6644129683850687,
         "rsi_4h": 57.52963315456692,
         "adx_14": 23.679159184755783,
-        "volume_ratio": 0.3811329344740146,
+        "volume_ratio": 0.359002277794197,
         "bb_width": 0.0541539202800643,
         "bb_pct_b": 0.6846578717824482,
         "bb_mid_slope_pct": 0.004084576664101034,
@@ -29,13 +29,13 @@
         "range_edge_close_count": 1,
         "wick_ratio_lower": 16.76,
         "wick_ratio_upper": 10.64,
-        "funding_rate": -9.1196405082e-06,
-        "funding_zscore": 0.35,
-        "oi_now": 2535835927.001124,
+        "funding_rate": -3.99804740284e-05,
+        "funding_zscore": -0.48,
+        "oi_now": 2535939788.060644,
         "delta_oi_24h_percent": -1.5365415391315462,
-        "natr_percent": 0.7875542491578155,
-        "whale_ls_ratio": 0.5561667631731326,
-        "whale_pos_ratio": 1.0933489434416253,
+        "natr_percent": 0.7973129541709499,
+        "whale_ls_ratio": 0.5673160802558883,
+        "whale_pos_ratio": 1.0897153364521073,
         "atr_14": 603.4857142857103,
         "macd_line_4h": 434.83051016058016,
         "macd_signal_4h": 320.5767337874315,
@@ -69,10 +69,10 @@
         "flow_composite_semantic": "UNAVAILABLE",
         "flow_signal_mixed": false,
         "sentiment_score": 0.0,
-        "liquidation_long_usd": 1573730.4918599993,
-        "liquidation_short_usd": 3697913.138570003,
-        "liquidation_long_to_volume_4h": 0.002764342385346,
-        "liquidation_short_to_volume_4h": 0.0064955836333802,
+        "liquidation_long_usd": 1566391.9671699994,
+        "liquidation_short_usd": 3653982.2974800034,
+        "liquidation_long_to_volume_4h": 0.0027514518714039,
+        "liquidation_short_to_volume_4h": 0.0064184167444643,
         "qlib_relative_score_8h": -0.0,
         "qlib_rank_8h": 3,
         "qlib_percentile_8h": 0.5,
@@ -92,7 +92,7 @@
           "USD_WEAKNESS",
           "YEN_STRESS"
         ],
-        "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.",
+        "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.",
         "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.",
         "classification_basis": {
           "fear_greed_index": 47.0,
@@ -107,9 +107,9 @@
           "vix_change_5d_pct": -5.72,
           "us10y_level": 4.38,
           "us10y_change_5d_pct": 0.97,
-          "global_stable_flow": -8761784.708572388,
-          "global_stable_market_cap": 266870642279.69397,
-          "global_stable_flow_ratio_pct": -0.0032831579501313574
+          "global_stable_flow": -14796253.796386719,
+          "global_stable_market_cap": 266876566256.12473,
+          "global_stable_flow_ratio_pct": -0.005544231179213603
         },
         "key_events": [
           "FED_HAWKISH",
@@ -129,9 +129,9 @@
           "vix_change_5d_pct": -5.72,
           "us10y_level": 4.38,
           "us10y_change_5d_pct": 0.97,
-          "global_stable_flow": -8761784.708572388,
-          "global_stable_market_cap": 266870642279.69397,
-          "global_stable_flow_ratio_pct": -0.0032831579501313574
+          "global_stable_flow": -14796253.796386719,
+          "global_stable_market_cap": 266876566256.12473,
+          "global_stable_flow_ratio_pct": -0.005544231179213603
         },
         "provenance": {
           "generation_mode": "llm_refined",
@@ -149,10 +149,10 @@
             "status": "parsed",
             "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
             "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-            "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.\", \"brief_rationale\": \"Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
+            "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.\", \"brief_rationale\": \"Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
             "parsed_response": {
               "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.",
-              "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.",
+              "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.",
               "market_impact": "RISK_OFF",
               "impact_horizon": "SWING",
               "crypto_relevance": "HIGH",
@@ -189,9 +189,9 @@
         "position_side": "SHORT",
         "position_size_usd": 141.73,
         "entry_price": 78731.3,
-        "current_price": 78127.8,
-        "unrealized_pnl_pct": 0.015300000000000001,
-        "distance_to_liq": 0.4923,
+        "current_price": 78197.9,
+        "unrealized_pnl_pct": 0.013500000000000002,
+        "distance_to_liq": 0.4932,
         "open_positions": [
           {
             "symbol": "BTC",
@@ -199,9 +199,9 @@
             "leverage": 2,
             "type": "short",
             "entryPrice": 78731.3,
-            "currentPrice": 78127.8,
-            "pnl": 2.1726,
-            "pnlPercent": 1.53,
+            "currentPrice": 78197.9,
+            "pnl": 1.9202400000000315,
+            "pnlPercent": 1.35,
             "amount": "0.0036",
             "margin": 70.86259196973946,
             "stopLoss": 79266.7,
@@ -241,7 +241,7 @@
         "range_lower_bound": 77353.5,
         "range_upper_bound": 78888.0,
         "range_width_pct": 0.0196,
-        "price_position_in_range": 0.5061,
+        "price_position_in_range": 0.5082,
         "grid_mode": "ARITHMETIC",
         "grid_count": 2,
         "grid_spacing_pct": 0.0098,
@@ -278,16 +278,16 @@
       "symbol": "ETH-USDT",
       "cycleId": "cycle_2026-05-03_0400",
       "timeframe": "4h",
-      "snapshot_timestamp": 1777781215,
-      "snapshot_time": "2026-05-03T04:06:55Z",
-      "snapshot_time_local": "2026-05-03T12:06:55+0800",
+      "snapshot_timestamp": 1777788425,
+      "snapshot_time": "2026-05-03T06:07:05Z",
+      "snapshot_time_local": "2026-05-03T14:07:05+0800",
       "local_timezone": "Asia/Shanghai",
       "market_snapshot": {
-        "price": 2299.57,
-        "change_24h": -0.7197008945532251,
+        "price": 2301.25,
+        "change_24h": -0.6471695506510458,
         "rsi_4h": 52.060455271295055,
         "adx_14": 14.905253744960682,
-        "volume_ratio": 0.3525970040801962,
+        "volume_ratio": 0.34922443031530026,
         "bb_width": 0.0393868955685567,
         "bb_pct_b": 0.6820321805512791,
         "bb_mid_slope_pct": 0.0020401642286244797,
@@ -296,13 +296,13 @@
         "range_edge_close_count": 0,
         "wick_ratio_lower": 19.1,
         "wick_ratio_upper": 3.5,
-        "funding_rate": 7.0936729112e-05,
-        "funding_zscore": 1.8,
-        "oi_now": 1526958532.862493,
+        "funding_rate": 5.07996209188e-05,
+        "funding_zscore": 1.36,
+        "oi_now": 1528074085.046253,
         "delta_oi_24h_percent": -3.486878227791175,
-        "natr_percent": 1.0003180293922136,
-        "whale_ls_ratio": 0.9249793899422918,
-        "whale_pos_ratio": 0.9821413971138896,
+        "natr_percent": 1.0171286208293022,
+        "whale_ls_ratio": 0.9390444810543657,
+        "whale_pos_ratio": 0.9772320476269837,
         "atr_14": 20.35642857142862,
         "macd_line_4h": 4.224446322341009,
         "macd_signal_4h": 0.1694349293569035,
@@ -327,7 +327,7 @@
         "structure_resistance_stop_short": 2335.1782
       },
       "onchain_snapshot": {
-        "token_net_flow": 1335813.8827710557,
+        "token_net_flow": 58157025.17224214,
         "stablecoin_net_flow": -4391851.287323846,
         "flow_data_available": true,
         "flow_schema_version": "flow_semantics_v1",
@@ -335,11 +335,11 @@
         "stablecoin_flow_semantic": "CAPITAL_WITHDRAWAL",
         "flow_composite_semantic": "MIXED",
         "flow_signal_mixed": true,
-        "sentiment_score": -0.0019039902286117282,
-        "liquidation_long_usd": 2674048.413729999,
-        "liquidation_short_usd": 3856910.8077600007,
-        "liquidation_long_to_volume_4h": 0.0040641616347363,
-        "liquidation_short_to_volume_4h": 0.0058619390931794,
+        "sentiment_score": 0.09104200493720786,
+        "liquidation_long_usd": 2674854.8197400006,
+        "liquidation_short_usd": 3834336.80984,
+        "liquidation_long_to_volume_4h": 0.0040653872536709,
+        "liquidation_short_to_volume_4h": 0.005827629925171,
         "qlib_relative_score_8h": -0.0,
         "qlib_rank_8h": 4,
         "qlib_percentile_8h": 0.25,
@@ -359,7 +359,7 @@
           "USD_WEAKNESS",
           "YEN_STRESS"
         ],
-        "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.",
+        "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.",
         "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.",
         "classification_basis": {
           "fear_greed_index": 47.0,
@@ -374,9 +374,9 @@
           "vix_change_5d_pct": -5.72,
           "us10y_level": 4.38,
           "us10y_change_5d_pct": 0.97,
-          "global_stable_flow": -8761784.708572388,
-          "global_stable_market_cap": 266870642279.69397,
-          "global_stable_flow_ratio_pct": -0.0032831579501313574
+          "global_stable_flow": -14796253.796386719,
+          "global_stable_market_cap": 266876566256.12473,
+          "global_stable_flow_ratio_pct": -0.005544231179213603
         },
         "key_events": [
           "FED_HAWKISH",
@@ -396,9 +396,9 @@
           "vix_change_5d_pct": -5.72,
           "us10y_level": 4.38,
           "us10y_change_5d_pct": 0.97,
-          "global_stable_flow": -8761784.708572388,
-          "global_stable_market_cap": 266870642279.69397,
-          "global_stable_flow_ratio_pct": -0.0032831579501313574
+          "global_stable_flow": -14796253.796386719,
+          "global_stable_market_cap": 266876566256.12473,
+          "global_stable_flow_ratio_pct": -0.005544231179213603
         },
         "provenance": {
           "generation_mode": "llm_refined",
@@ -416,10 +416,10 @@
             "status": "parsed",
             "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
             "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-            "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.\", \"brief_rationale\": \"Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
+            "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.\", \"brief_rationale\": \"Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
             "parsed_response": {
               "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.",
-              "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.",
+              "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.",
               "market_impact": "RISK_OFF",
               "impact_horizon": "SWING",
               "crypto_relevance": "HIGH",
@@ -492,7 +492,7 @@
         "range_lower_bound": 2282.52,
         "range_upper_bound": 2325.0,
         "range_width_pct": 0.0184,
-        "price_position_in_range": 0.4014,
+        "price_position_in_range": 0.4409,
         "grid_mode": "ARITHMETIC",
         "grid_count": 2,
         "grid_spacing_pct": 0.0092,
@@ -529,16 +529,16 @@
       "symbol": "SOL-USDT",
       "cycleId": "cycle_2026-05-03_0400",
       "timeframe": "4h",
-      "snapshot_timestamp": 1777781224,
-      "snapshot_time": "2026-05-03T04:07:04Z",
-      "snapshot_time_local": "2026-05-03T12:07:04+0800",
+      "snapshot_timestamp": 1777788433,
+      "snapshot_time": "2026-05-03T06:07:13Z",
+      "snapshot_time_local": "2026-05-03T14:07:13+0800",
       "local_timezone": "Asia/Shanghai",
       "market_snapshot": {
-        "price": 83.56,
-        "change_24h": -0.8072174738841318,
+        "price": 83.62,
+        "change_24h": -0.7359924026590579,
         "rsi_4h": 45.94475030460408,
         "adx_14": 14.479180693042814,
-        "volume_ratio": 0.4385261877143914,
+        "volume_ratio": 0.43483006000709057,
         "bb_width": 0.0217091662985802,
         "bb_pct_b": 0.4920128595259099,
         "bb_mid_slope_pct": 0.0010941769457515006,
@@ -547,13 +547,13 @@
         "range_edge_close_count": 0,
         "wick_ratio_lower": 10.67,
         "wick_ratio_upper": 5.33,
-        "funding_rate": 6.17551016854e-05,
-        "funding_zscore": 1.09,
-        "oi_now": 224277820.87680003,
+        "funding_rate": -2.35374428718e-05,
+        "funding_zscore": -0.36,
+        "oi_now": 224438862.87360004,
         "delta_oi_24h_percent": 1.5025323565658601,
-        "natr_percent": 0.9274864910524736,
-        "whale_ls_ratio": 1.5044247787610618,
-        "whale_pos_ratio": 0.8457708775920081,
+        "natr_percent": 0.942529419669823,
+        "whale_ls_ratio": 1.4739583333333333,
+        "whale_pos_ratio": 0.8410767794613169,
         "atr_14": 0.6950000000000023,
         "macd_line_4h": -0.1011132265780929,
         "macd_signal_4h": -0.2007279881345987,
@@ -579,18 +579,18 @@
       },
       "onchain_snapshot": {
         "token_net_flow": -305887.8558697123,
-        "stablecoin_net_flow": -398219.9483129999,
+        "stablecoin_net_flow": -418265.8939999999,
         "flow_data_available": true,
         "flow_schema_version": "flow_semantics_v1",
         "token_flow_semantic": "DISTRIBUTION_PRESSURE",
         "stablecoin_flow_semantic": "CAPITAL_WITHDRAWAL",
         "flow_composite_semantic": "SHORT_SUPPORT",
         "flow_signal_mixed": false,
-        "sentiment_score": -0.012905882322165536,
-        "liquidation_long_usd": 35549.7785,
-        "liquidation_short_usd": 84270.13260000003,
-        "liquidation_long_to_volume_4h": 0.0006730331434033,
-        "liquidation_short_to_volume_4h": 0.0015954133789833,
+        "sentiment_score": -0.011891580155488343,
+        "liquidation_long_usd": 35017.156599999995,
+        "liquidation_short_usd": 87111.92460000003,
+        "liquidation_long_to_volume_4h": 0.0006629494746231,
+        "liquidation_short_to_volume_4h": 0.0016492145637827,
         "qlib_relative_score_8h": 0.0033,
         "qlib_rank_8h": 2,
         "qlib_percentile_8h": 0.75,
@@ -610,7 +610,7 @@
           "USD_WEAKNESS",
           "YEN_STRESS"
         ],
-        "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.",
+        "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.",
         "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.",
         "classification_basis": {
           "fear_greed_index": 47.0,
@@ -625,9 +625,9 @@
           "vix_change_5d_pct": -5.72,
           "us10y_level": 4.38,
           "us10y_change_5d_pct": 0.97,
-          "global_stable_flow": -8761784.708572388,
-          "global_stable_market_cap": 266870642279.69397,
-          "global_stable_flow_ratio_pct": -0.0032831579501313574
+          "global_stable_flow": -14796253.796386719,
+          "global_stable_market_cap": 266876566256.12473,
+          "global_stable_flow_ratio_pct": -0.005544231179213603
         },
         "key_events": [
           "FED_HAWKISH",
@@ -647,9 +647,9 @@
           "vix_change_5d_pct": -5.72,
           "us10y_level": 4.38,
           "us10y_change_5d_pct": 0.97,
-          "global_stable_flow": -8761784.708572388,
-          "global_stable_market_cap": 266870642279.69397,
-          "global_stable_flow_ratio_pct": -0.0032831579501313574
+          "global_stable_flow": -14796253.796386719,
+          "global_stable_market_cap": 266876566256.12473,
+          "global_stable_flow_ratio_pct": -0.005544231179213603
         },
         "provenance": {
           "generation_mode": "llm_refined",
@@ -667,10 +667,10 @@
             "status": "parsed",
             "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
             "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-            "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.\", \"brief_rationale\": \"Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
+            "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.\", \"brief_rationale\": \"Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
             "parsed_response": {
               "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.",
-              "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.",
+              "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.",
               "market_impact": "RISK_OFF",
               "impact_horizon": "SWING",
               "crypto_relevance": "HIGH",
@@ -743,7 +743,7 @@
         "range_lower_bound": 83.02,
         "range_upper_bound": 84.95,
         "range_width_pct": 0.023,
-        "price_position_in_range": 0.2798,
+        "price_position_in_range": 0.3109,
         "grid_mode": "ARITHMETIC",
         "grid_count": 3,
         "grid_spacing_pct": 0.0077,
@@ -781,16 +781,16 @@
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-05-03_0400",
       "timeframe": "4h",
-      "snapshot_timestamp": 1777781232,
-      "snapshot_time": "2026-05-03T04:07:12Z",
-      "snapshot_time_local": "2026-05-03T12:07:12+0800",
+      "snapshot_timestamp": 1777788441,
+      "snapshot_time": "2026-05-03T06:07:21Z",
+      "snapshot_time_local": "2026-05-03T14:07:21+0800",
       "local_timezone": "Asia/Shanghai",
       "market_snapshot": {
         "price": 615.6,
         "change_24h": -0.3399708596406059,
         "rsi_4h": 43.59978596401053,
         "adx_14": 18.42737209439492,
-        "volume_ratio": 0.3514539600631862,
+        "volume_ratio": 0.3487357297684398,
         "bb_width": 0.0097996511276056,
         "bb_pct_b": 0.3205786444375483,
         "bb_mid_slope_pct": -0.00018636006384859313,
@@ -799,13 +799,13 @@
         "range_edge_close_count": 0,
         "wick_ratio_lower": 40.0,
         "wick_ratio_upper": 11.43,
-        "funding_rate": -9.5865588515e-06,
-        "funding_zscore": -0.38,
+        "funding_rate": 8.059294684e-07,
+        "funding_zscore": -0.2,
         "oi_now": 47151703.476,
         "delta_oi_24h_percent": 0.6739310246567028,
-        "natr_percent": 0.6066192967827084,
-        "whale_ls_ratio": 0.7719298245614035,
-        "whale_pos_ratio": 0.90094853120807,
+        "natr_percent": 0.6251842276283414,
+        "whale_ls_ratio": 0.7674418604651163,
+        "whale_pos_ratio": 0.9016734084514388,
         "atr_14": 3.485714285714298,
         "macd_line_4h": -1.6878961607990275,
         "macd_signal_4h": -2.1316623702114628,
@@ -839,10 +839,10 @@
         "flow_composite_semantic": "UNAVAILABLE",
         "flow_signal_mixed": false,
         "sentiment_score": 0.0,
-        "liquidation_long_usd": 746.5330000000001,
-        "liquidation_short_usd": 12812.078000000001,
-        "liquidation_long_to_volume_4h": 0.000172082589161,
-        "liquidation_short_to_volume_4h": 0.0029532995256389,
+        "liquidation_long_usd": 512.8710000000001,
+        "liquidation_short_usd": 12738.29,
+        "liquidation_long_to_volume_4h": 0.0001182213908636,
+        "liquidation_short_to_volume_4h": 0.0029362907261766,
         "qlib_relative_score_8h": -0.0026,
         "qlib_rank_8h": 5,
         "qlib_percentile_8h": 0.0,
@@ -862,7 +862,7 @@
           "USD_WEAKNESS",
           "YEN_STRESS"
         ],
-        "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.",
+        "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.",
         "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.",
         "classification_basis": {
           "fear_greed_index": 47.0,
@@ -877,9 +877,9 @@
           "vix_change_5d_pct": -5.72,
           "us10y_level": 4.38,
           "us10y_change_5d_pct": 0.97,
-          "global_stable_flow": -8761784.708572388,
-          "global_stable_market_cap": 266870642279.69397,
-          "global_stable_flow_ratio_pct": -0.0032831579501313574
+          "global_stable_flow": -14796253.796386719,
+          "global_stable_market_cap": 266876566256.12473,
+          "global_stable_flow_ratio_pct": -0.005544231179213603
         },
         "key_events": [
           "FED_HAWKISH",
@@ -899,9 +899,9 @@
           "vix_change_5d_pct": -5.72,
           "us10y_level": 4.38,
           "us10y_change_5d_pct": 0.97,
-          "global_stable_flow": -8761784.708572388,
-          "global_stable_market_cap": 266870642279.69397,
-          "global_stable_flow_ratio_pct": -0.0032831579501313574
+          "global_stable_flow": -14796253.796386719,
+          "global_stable_market_cap": 266876566256.12473,
+          "global_stable_flow_ratio_pct": -0.005544231179213603
         },
         "provenance": {
           "generation_mode": "llm_refined",
@@ -919,10 +919,10 @@
             "status": "parsed",
             "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
             "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-            "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.\", \"brief_rationale\": \"Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
+            "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.\", \"brief_rationale\": \"Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
             "parsed_response": {
               "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.",
-              "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.",
+              "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.",
               "market_impact": "RISK_OFF",
               "impact_horizon": "SWING",
               "crypto_relevance": "HIGH",
@@ -959,9 +959,9 @@
         "position_side": "SHORT",
         "position_size_usd": 424.68,
         "entry_price": 615.1666666666666,
-        "current_price": 615.7,
-        "unrealized_pnl_pct": -0.0017000000000000001,
-        "distance_to_liq": 0.4991,
+        "current_price": 616.9,
+        "unrealized_pnl_pct": -0.005600000000000001,
+        "distance_to_liq": 0.4972,
         "open_positions": [
           {
             "symbol": "BNB",
@@ -969,9 +969,9 @@
             "leverage": 2,
             "type": "short",
             "entryPrice": 615.1666666666666,
-            "currentPrice": 615.7,
-            "pnl": -0.7360000000001151,
-            "pnlPercent": -0.17,
+            "currentPrice": 616.9,
+            "pnl": -2.3920000000000208,
+            "pnlPercent": -0.56,
             "amount": "1.3800000000000001",
             "margin": 212.3393094711327,
             "stopLoss": 628.4,
@@ -1048,16 +1048,16 @@
       "symbol": "DOGE-USDT",
       "cycleId": "cycle_2026-05-03_0400",
       "timeframe": "4h",
-      "snapshot_timestamp": 1777781239,
-      "snapshot_time": "2026-05-03T04:07:19Z",
-      "snapshot_time_local": "2026-05-03T12:07:19+0800",
+      "snapshot_timestamp": 1777788449,
+      "snapshot_time": "2026-05-03T06:07:29Z",
+      "snapshot_time_local": "2026-05-03T14:07:29+0800",
       "local_timezone": "Asia/Shanghai",
       "market_snapshot": {
-        "price": 0.10788,
-        "change_24h": -0.5255878284923938,
+        "price": 0.10764,
+        "change_24h": -0.7468879668049839,
         "rsi_4h": 56.73327474558683,
         "adx_14": 45.20285809583478,
-        "volume_ratio": 0.7207086006210485,
+        "volume_ratio": 0.694410379073692,
         "bb_width": 0.0486793363158151,
         "bb_pct_b": 0.5208897098186366,
         "bb_mid_slope_pct": 0.004740876946150725,
@@ -1066,13 +1066,13 @@
         "range_edge_close_count": 0,
         "wick_ratio_lower": 51.66,
         "wick_ratio_upper": 4.64,
-        "funding_rate": 5.50911015628e-05,
-        "funding_zscore": 1.08,
-        "oi_now": 117166986.80759993,
+        "funding_rate": 7.77950843125e-05,
+        "funding_zscore": 1.51,
+        "oi_now": 116906326.10279992,
         "delta_oi_24h_percent": -3.9427901461904904,
-        "natr_percent": 1.6448680192018104,
-        "whale_ls_ratio": 1.133086876155268,
-        "whale_pos_ratio": 0.8774291347938799,
+        "natr_percent": 1.6772225860564094,
+        "whale_ls_ratio": 1.087971274685817,
+        "whale_pos_ratio": 0.8820121650652057,
         "atr_14": 0.00162,
         "macd_line_4h": 0.0016062220207064,
         "macd_signal_4h": 0.0019306999254807,
@@ -1106,10 +1106,10 @@
         "flow_composite_semantic": "UNAVAILABLE",
         "flow_signal_mixed": false,
         "sentiment_score": 0.0,
-        "liquidation_long_usd": 302795.9198,
-        "liquidation_short_usd": 304658.23450000014,
-        "liquidation_long_to_volume_4h": 0.0042547367503566,
-        "liquidation_short_to_volume_4h": 0.0042809050646458,
+        "liquidation_long_usd": 232882.1294,
+        "liquidation_short_usd": 304554.7912000002,
+        "liquidation_long_to_volume_4h": 0.0032723431514993,
+        "liquidation_short_to_volume_4h": 0.0042794515311557,
         "qlib_relative_score_8h": 0.0034,
         "qlib_rank_8h": 1,
         "qlib_percentile_8h": 1.0,
@@ -1129,7 +1129,7 @@
           "USD_WEAKNESS",
           "YEN_STRESS"
         ],
-        "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.",
+        "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.",
         "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.",
         "classification_basis": {
           "fear_greed_index": 47.0,
@@ -1144,9 +1144,9 @@
           "vix_change_5d_pct": -5.72,
           "us10y_level": 4.38,
           "us10y_change_5d_pct": 0.97,
-          "global_stable_flow": -8761784.708572388,
-          "global_stable_market_cap": 266870642279.69397,
-          "global_stable_flow_ratio_pct": -0.0032831579501313574
+          "global_stable_flow": -14796253.796386719,
+          "global_stable_market_cap": 266876566256.12473,
+          "global_stable_flow_ratio_pct": -0.005544231179213603
         },
         "key_events": [
           "FED_HAWKISH",
@@ -1166,9 +1166,9 @@
           "vix_change_5d_pct": -5.72,
           "us10y_level": 4.38,
           "us10y_change_5d_pct": 0.97,
-          "global_stable_flow": -8761784.708572388,
-          "global_stable_market_cap": 266870642279.69397,
-          "global_stable_flow_ratio_pct": -0.0032831579501313574
+          "global_stable_flow": -14796253.796386719,
+          "global_stable_market_cap": 266876566256.12473,
+          "global_stable_flow_ratio_pct": -0.005544231179213603
         },
         "provenance": {
           "generation_mode": "llm_refined",
@@ -1186,10 +1186,10 @@
             "status": "parsed",
             "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
             "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-            "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.\", \"brief_rationale\": \"Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
+            "raw_response_preview": "{ \"news_summary\": \"Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.\", \"brief_rationale\": \"Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
             "parsed_response": {
               "news_summary": "Geopolitical tensions and trade war escalation combine with hawkish Fed dissent, creating a risk-off macro backdrop.",
-              "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which typically weigh on risk assets including crypto.",
+              "brief_rationale": "Headlines about U.S.-Iran conflict, EU auto tariffs, and Fed dissenters opposing rate cuts all point to heightened uncertainty and tighter financial conditions, which is negative for risk assets including crypto.",
               "market_impact": "RISK_OFF",
               "impact_horizon": "SWING",
               "crypto_relevance": "HIGH",
@@ -1262,7 +1262,7 @@
         "range_lower_bound": 0.1064,
         "range_upper_bound": 0.1105,
         "range_width_pct": 0.0383,
-        "price_position_in_range": 0.3687,
+        "price_position_in_range": 0.3108,
         "grid_mode": "ARITHMETIC",
         "grid_count": 5,
         "grid_spacing_pct": 0.0077,
@@ -1300,7 +1300,7 @@
       "symbol": "BTC-USDT",
       "cycleId": "cycle_2026-05-03_0400",
       "timeframe": "4h",
-      "snapshot_timestamp": 1777781206,
+      "snapshot_timestamp": 1777788416,
       "candidate_proposals": [],
       "e_strategy_diagnostic": {
         "qlib_inputs": {
@@ -1310,7 +1310,7 @@
           "p_up_8h": 0.1842,
           "p_down_8h": 0.3528,
           "p_flat_8h": 0.4629,
-          "funding_zscore": 0.35,
+          "funding_zscore": -0.48,
           "token_net_flow": 0.0,
           "stablecoin_net_flow": 0.0,
           "regime_1d": "BEAR",
@@ -1369,7 +1369,7 @@
       "symbol": "ETH-USDT",
       "cycleId": "cycle_2026-05-03_0400",
       "timeframe": "4h",
-      "snapshot_timestamp": 1777781215,
+      "snapshot_timestamp": 1777788425,
       "candidate_proposals": [],
       "e_strategy_diagnostic": {
         "qlib_inputs": {
@@ -1379,11 +1379,11 @@
           "p_up_8h": 0.0894,
           "p_down_8h": 0.4464,
           "p_flat_8h": 0.4642,
-          "funding_zscore": 1.8,
-          "token_net_flow": 1335813.8827710557,
+          "funding_zscore": 1.36,
+          "token_net_flow": 58157025.17224214,
           "stablecoin_net_flow": -4391851.287323846,
           "regime_1d": "BEAR",
-          "whale_bias": "neutral",
+          "whale_bias": "strong_inflow",
           "is_overheated": false,
           "is_squeeze_zone": false
         },
@@ -1424,22 +1424,23 @@
             "regime_pass": true,
             "squeeze_pass": true,
             "funding_pass": true,
-            "whale_pass": true
+            "whale_pass": false
           },
           "eligible": false,
           "blocked_by": [
             "prob_threshold",
-            "p_flat_gate"
+            "p_flat_gate",
+            "whale_inflow"
           ]
         },
-        "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, p_flat_gate"
+        "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, p_flat_gate, whale_inflow"
       }
     },
     {
       "symbol": "SOL-USDT",
       "cycleId": "cycle_2026-05-03_0400",
       "timeframe": "4h",
-      "snapshot_timestamp": 1777781224,
+      "snapshot_timestamp": 1777788433,
       "candidate_proposals": [],
       "e_strategy_diagnostic": {
         "qlib_inputs": {
@@ -1449,9 +1450,9 @@
           "p_up_8h": 0.0886,
           "p_down_8h": 0.458,
           "p_flat_8h": 0.4533,
-          "funding_zscore": 1.09,
+          "funding_zscore": -0.36,
           "token_net_flow": -305887.8558697123,
-          "stablecoin_net_flow": -398219.9483129999,
+          "stablecoin_net_flow": -418265.8939999999,
           "regime_1d": "BEAR",
           "whale_bias": "neutral",
           "is_overheated": false,
@@ -1509,7 +1510,7 @@
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-05-03_0400",
       "timeframe": "4h",
-      "snapshot_timestamp": 1777781232,
+      "snapshot_timestamp": 1777788441,
       "candidate_proposals": [],
       "e_strategy_diagnostic": {
         "qlib_inputs": {
@@ -1519,7 +1520,7 @@
           "p_up_8h": 0.0888,
           "p_down_8h": 0.4009,
           "p_flat_8h": 0.5103,
-          "funding_zscore": -0.38,
+          "funding_zscore": -0.2,
           "token_net_flow": 0.0,
           "stablecoin_net_flow": 0.0,
           "regime_1d": "BEAR",
@@ -1579,7 +1580,7 @@
       "symbol": "DOGE-USDT",
       "cycleId": "cycle_2026-05-03_0400",
       "timeframe": "4h",
-      "snapshot_timestamp": 1777781239,
+      "snapshot_timestamp": 1777788449,
       "candidate_proposals": [],
       "e_strategy_diagnostic": {
         "qlib_inputs": {
@@ -1589,7 +1590,7 @@
           "p_up_8h": 0.1325,
           "p_down_8h": 0.435,
           "p_flat_8h": 0.4325,
-          "funding_zscore": 1.08,
+          "funding_zscore": 1.51,
           "token_net_flow": 0.0,
           "stablecoin_net_flow": 0.0,
           "regime_1d": "BEAR",
@@ -1905,14 +1906,14 @@
       "history": [
         {
           "type": "EXECUTION_NOT_REQUESTED",
-          "at": "2026-05-03T04:06:48Z",
+          "at": "2026-05-03T06:06:58Z",
           "payload": {
             "review_note": "rule evaluation rejected or produced no approved candidates"
           }
         },
         {
           "type": "EXECUTION_SKIPPED",
-          "at": "2026-05-03T04:06:51Z",
+          "at": "2026-05-03T06:07:01Z",
           "payload": {
             "reason": "do_nothing",
             "execution_action": "DO_NOTHING"
@@ -1938,14 +1939,14 @@
       "history": [
         {
           "type": "EXECUTION_NOT_REQUESTED",
-          "at": "2026-05-03T04:06:57Z",
+          "at": "2026-05-03T06:07:06Z",
           "payload": {
             "review_note": "rule evaluation rejected or produced no approved candidates"
           }
         },
         {
           "type": "EXECUTION_SKIPPED",
-          "at": "2026-05-03T04:07:00Z",
+          "at": "2026-05-03T06:07:09Z",
           "payload": {
             "reason": "do_nothing",
             "execution_action": "DO_NOTHING"
@@ -1971,14 +1972,14 @@
       "history": [
         {
           "type": "EXECUTION_NOT_REQUESTED",
-          "at": "2026-05-03T04:07:05Z",
+          "at": "2026-05-03T06:07:14Z",
           "payload": {
             "review_note": "rule evaluation rejected or produced no approved candidates"
           }
         },
         {
           "type": "EXECUTION_SKIPPED",
-          "at": "2026-05-03T04:07:08Z",
+          "at": "2026-05-03T06:07:17Z",
           "payload": {
             "reason": "do_nothing",
             "execution_action": "DO_NOTHING"
@@ -2004,14 +2005,14 @@
       "history": [
         {
           "type": "EXECUTION_NOT_REQUESTED",
-          "at": "2026-05-03T04:07:13Z",
+          "at": "2026-05-03T06:07:22Z",
           "payload": {
             "review_note": "rule evaluation rejected or produced no approved candidates"
           }
         },
         {
           "type": "EXECUTION_SKIPPED",
-          "at": "2026-05-03T04:07:16Z",
+          "at": "2026-05-03T06:07:25Z",
           "payload": {
             "reason": "do_nothing",
             "execution_action": "DO_NOTHING"
@@ -2037,14 +2038,14 @@
       "history": [
         {
           "type": "EXECUTION_NOT_REQUESTED",
-          "at": "2026-05-03T04:07:21Z",
+          "at": "2026-05-03T06:07:30Z",
           "payload": {
             "review_note": "rule evaluation rejected or produced no approved candidates"
           }
         },
         {
           "type": "EXECUTION_SKIPPED",
-          "at": "2026-05-03T04:07:23Z",
+          "at": "2026-05-03T06:07:33Z",
           "payload": {
             "reason": "do_nothing",
             "execution_action": "DO_NOTHING"
