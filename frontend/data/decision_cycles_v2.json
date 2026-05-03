@@ -97659,8 +97659,8 @@
   },
   {
     "cycleId": "cycle_2026-05-03_2000",
-    "generated_at": "2026-05-03T20:07:49Z",
-    "generated_at_local": "2026-05-04T04:07:49+0800",
+    "generated_at": "2026-05-03T22:07:29Z",
+    "generated_at_local": "2026-05-04T06:07:29+0800",
     "cycle_local_time": "2026-05-04 04:00:00 CST",
     "local_timezone": "Asia/Shanghai",
     "timeframe": "4h",
@@ -97670,16 +97670,16 @@
         "symbol": "BTC-USDT",
         "cycleId": "cycle_2026-05-03_2000",
         "timeframe": "4h",
-        "snapshot_timestamp": 1777838821,
-        "snapshot_time": "2026-05-03T20:07:01Z",
-        "snapshot_time_local": "2026-05-04T04:07:01+0800",
+        "snapshot_timestamp": 1777846005,
+        "snapshot_time": "2026-05-03T22:06:45Z",
+        "snapshot_time_local": "2026-05-04T06:06:45+0800",
         "local_timezone": "Asia/Shanghai",
         "market_snapshot": {
-          "price": 78706.9,
-          "change_24h": 0.06483938267822248,
+          "price": 79000.0,
+          "change_24h": 0.4374751290113086,
           "rsi_4h": 63.37696334562556,
           "adx_14": 26.62269764071355,
-          "volume_ratio": 0.4350488010609184,
+          "volume_ratio": 0.4451364785121028,
           "bb_width": 0.0419003411311115,
           "bb_pct_b": 0.7506547482372639,
           "bb_mid_slope_pct": 0.0051023806660514676,
@@ -97688,13 +97688,13 @@
           "range_edge_close_count": 2,
           "wick_ratio_lower": 36.43,
           "wick_ratio_upper": 29.33,
-          "funding_rate": -2.27547119e-06,
-          "funding_zscore": 0.46,
-          "oi_now": 2561101338.102535,
+          "funding_rate": 7.634948096e-07,
+          "funding_zscore": 0.55,
+          "oi_now": 2570638733.200015,
           "delta_oi_24h_percent": 0.2561874885830542,
-          "natr_percent": 0.7015174644969134,
-          "whale_ls_ratio": 0.538784654158499,
-          "whale_pos_ratio": 1.0961325673965399,
+          "natr_percent": 0.7504046732377875,
+          "whale_ls_ratio": 0.5385052571753339,
+          "whale_pos_ratio": 1.0974556932763984,
           "atr_14": 541.6785714285694,
           "macd_line_4h": 450.0394366357068,
           "macd_signal_4h": 391.7255392791783,
@@ -97728,10 +97728,10 @@
           "flow_composite_semantic": "UNAVAILABLE",
           "flow_signal_mixed": false,
           "sentiment_score": 0.0,
-          "liquidation_long_usd": 1409701.0402899995,
-          "liquidation_short_usd": 4586675.436069999,
-          "liquidation_long_to_volume_4h": 0.0054731494651937,
-          "liquidation_short_to_volume_4h": 0.0178077191492881,
+          "liquidation_long_usd": 1646715.8180000002,
+          "liquidation_short_usd": 2569569.5381399994,
+          "liquidation_long_to_volume_4h": 0.0063933568473203,
+          "liquidation_short_to_volume_4h": 0.0099763267114819,
           "qlib_relative_score_8h": -0.0,
           "qlib_rank_8h": 4,
           "qlib_percentile_8h": 0.25,
@@ -97751,7 +97751,7 @@
             "USD_WEAKNESS",
             "YEN_STRESS"
           ],
-          "brief_rationale": "Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.",
+          "brief_rationale": "Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.",
           "news_summary": "Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.",
           "classification_basis": {
             "fear_greed_index": 47.0,
@@ -97766,9 +97766,9 @@
             "vix_change_5d_pct": -5.72,
             "us10y_level": 4.38,
             "us10y_change_5d_pct": 0.97,
-            "global_stable_flow": -46025672.37345886,
-            "global_stable_market_cap": 266824514375.77466,
-            "global_stable_flow_ratio_pct": -0.017249416711629398
+            "global_stable_flow": 5814388.158859253,
+            "global_stable_market_cap": 266882278327.9157,
+            "global_stable_flow_ratio_pct": 0.0021786340386809686
           },
           "key_events": [
             "FED_HAWKISH",
@@ -97788,9 +97788,9 @@
             "vix_change_5d_pct": -5.72,
             "us10y_level": 4.38,
             "us10y_change_5d_pct": 0.97,
-            "global_stable_flow": -46025672.37345886,
-            "global_stable_market_cap": 266824514375.77466,
-            "global_stable_flow_ratio_pct": -0.017249416711629398
+            "global_stable_flow": 5814388.158859253,
+            "global_stable_market_cap": 266882278327.9157,
+            "global_stable_flow_ratio_pct": 0.0021786340386809686
           },
           "provenance": {
             "generation_mode": "llm_refined",
@@ -97808,10 +97808,10 @@
               "status": "parsed",
               "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
               "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.\", \"brief_rationale\": \"Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
+              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.\", \"brief_rationale\": \"Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
               "parsed_response": {
                 "news_summary": "Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.",
-                "brief_rationale": "Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.",
+                "brief_rationale": "Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.",
                 "market_impact": "RISK_OFF",
                 "impact_horizon": "MULTI_DAY",
                 "crypto_relevance": "HIGH",
@@ -97845,29 +97845,13 @@
           ]
         },
         "position_snapshot": {
-          "position_side": "SHORT",
-          "position_size_usd": 141.72,
-          "entry_price": 78731.3,
-          "current_price": 78747.0,
-          "unrealized_pnl_pct": -0.0004,
-          "distance_to_liq": 0.4998,
-          "open_positions": [
-            {
-              "symbol": "BTC",
-              "instId": "BTC-USDT-SWAP",
-              "leverage": 2,
-              "type": "short",
-              "entryPrice": 78731.3,
-              "currentPrice": 78747.0,
-              "pnl": -0.0565199999999895,
-              "pnlPercent": -0.04,
-              "amount": "0.0036",
-              "margin": 70.85990002150382,
-              "stopLoss": 79266.7,
-              "takeProfit": 77140.6,
-              "name": "BTC"
-            }
-          ]
+          "position_side": "NONE",
+          "position_size_usd": 0.0,
+          "entry_price": null,
+          "current_price": null,
+          "unrealized_pnl_pct": 0.0,
+          "distance_to_liq": null,
+          "open_positions": []
         },
         "decision_ready_features": {
           "regime_1d": "BEAR",
@@ -97900,7 +97884,7 @@
           "range_lower_bound": 77715.0,
           "range_upper_bound": 79172.9,
           "range_width_pct": 0.0186,
-          "price_position_in_range": 0.6804,
+          "price_position_in_range": 0.8814,
           "grid_mode": "ARITHMETIC",
           "grid_count": 2,
           "grid_spacing_pct": 0.0093,
@@ -97937,16 +97921,16 @@
         "symbol": "ETH-USDT",
         "cycleId": "cycle_2026-05-03_2000",
         "timeframe": "4h",
-        "snapshot_timestamp": 1777838831,
-        "snapshot_time": "2026-05-03T20:07:11Z",
-        "snapshot_time_local": "2026-05-04T04:07:11+0800",
+        "snapshot_timestamp": 1777846014,
+        "snapshot_time": "2026-05-03T22:06:54Z",
+        "snapshot_time_local": "2026-05-04T06:06:54+0800",
         "local_timezone": "Asia/Shanghai",
         "market_snapshot": {
-          "price": 2333.35,
-          "change_24h": 0.7386971989085815,
+          "price": 2336.04,
+          "change_24h": 0.8548336959900606,
           "rsi_4h": 62.42692707657218,
           "adx_14": 18.224483176491503,
-          "volume_ratio": 0.4757190594241451,
+          "volume_ratio": 0.4845119764290291,
           "bb_width": 0.0368427963520472,
           "bb_pct_b": 0.9282621149638336,
           "bb_mid_slope_pct": 0.004613910790907562,
@@ -97955,13 +97939,13 @@
           "range_edge_close_count": 3,
           "wick_ratio_lower": 39.95,
           "wick_ratio_upper": 20.09,
-          "funding_rate": 4.70708683746e-05,
-          "funding_zscore": 1.14,
-          "oi_now": 1555714606.5011547,
+          "funding_rate": 4.10594798828e-05,
+          "funding_zscore": 1.01,
+          "oi_now": 1557508110.3867645,
           "delta_oi_24h_percent": 0.4082581009030594,
-          "natr_percent": 0.9138019882896152,
-          "whale_ls_ratio": 0.849078341013825,
-          "whale_pos_ratio": 1.007878696838248,
+          "natr_percent": 0.9973599339556547,
+          "whale_ls_ratio": 0.8244453094589334,
+          "whale_pos_ratio": 1.0129798308047495,
           "atr_14": 19.25428571428571,
           "macd_line_4h": 8.78571246919364,
           "macd_signal_4h": 4.174070003889272,
@@ -97986,7 +97970,7 @@
           "structure_resistance_stop_short": 2353.1871
         },
         "onchain_snapshot": {
-          "token_net_flow": 58176351.98853798,
+          "token_net_flow": 58090173.07214901,
           "stablecoin_net_flow": -3930582.603438355,
           "flow_data_available": true,
           "flow_schema_version": "flow_semantics_v1",
@@ -97994,11 +97978,11 @@
           "stablecoin_flow_semantic": "CAPITAL_WITHDRAWAL",
           "flow_composite_semantic": "MIXED",
           "flow_signal_mixed": true,
-          "sentiment_score": 0.08131185182629608,
-          "liquidation_long_usd": 2986868.3359200004,
-          "liquidation_short_usd": 6075517.202549994,
-          "liquidation_long_to_volume_4h": 0.00644520365667,
-          "liquidation_short_to_volume_4h": 0.013110034084571,
+          "sentiment_score": 0.0758421264701311,
+          "liquidation_long_usd": 3342907.226650001,
+          "liquidation_short_usd": 5182136.431570003,
+          "liquidation_long_to_volume_4h": 0.0072134809633237,
+          "liquidation_short_to_volume_4h": 0.0111822554333753,
           "qlib_relative_score_8h": -0.0,
           "qlib_rank_8h": 5,
           "qlib_percentile_8h": 0.0,
@@ -98018,7 +98002,7 @@
             "USD_WEAKNESS",
             "YEN_STRESS"
           ],
-          "brief_rationale": "Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.",
+          "brief_rationale": "Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.",
           "news_summary": "Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.",
           "classification_basis": {
             "fear_greed_index": 47.0,
@@ -98033,9 +98017,9 @@
             "vix_change_5d_pct": -5.72,
             "us10y_level": 4.38,
             "us10y_change_5d_pct": 0.97,
-            "global_stable_flow": -46025672.37345886,
-            "global_stable_market_cap": 266824514375.77466,
-            "global_stable_flow_ratio_pct": -0.017249416711629398
+            "global_stable_flow": 5814388.158859253,
+            "global_stable_market_cap": 266882278327.9157,
+            "global_stable_flow_ratio_pct": 0.0021786340386809686
           },
           "key_events": [
             "FED_HAWKISH",
@@ -98055,9 +98039,9 @@
             "vix_change_5d_pct": -5.72,
             "us10y_level": 4.38,
             "us10y_change_5d_pct": 0.97,
-            "global_stable_flow": -46025672.37345886,
-            "global_stable_market_cap": 266824514375.77466,
-            "global_stable_flow_ratio_pct": -0.017249416711629398
+            "global_stable_flow": 5814388.158859253,
+            "global_stable_market_cap": 266882278327.9157,
+            "global_stable_flow_ratio_pct": 0.0021786340386809686
           },
           "provenance": {
             "generation_mode": "llm_refined",
@@ -98075,10 +98059,10 @@
               "status": "parsed",
               "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
               "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.\", \"brief_rationale\": \"Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
+              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.\", \"brief_rationale\": \"Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
               "parsed_response": {
                 "news_summary": "Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.",
-                "brief_rationale": "Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.",
+                "brief_rationale": "Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.",
                 "market_impact": "RISK_OFF",
                 "impact_horizon": "MULTI_DAY",
                 "crypto_relevance": "HIGH",
@@ -98151,7 +98135,7 @@
           "range_lower_bound": 2277.41,
           "range_upper_bound": 2343.56,
           "range_width_pct": 0.0286,
-          "price_position_in_range": 0.8457,
+          "price_position_in_range": 0.8863,
           "grid_mode": "ARITHMETIC",
           "grid_count": 4,
           "grid_spacing_pct": 0.0072,
@@ -98188,16 +98172,16 @@
         "symbol": "SOL-USDT",
         "cycleId": "cycle_2026-05-03_2000",
         "timeframe": "4h",
-        "snapshot_timestamp": 1777838841,
-        "snapshot_time": "2026-05-03T20:07:21Z",
-        "snapshot_time_local": "2026-05-04T04:07:21+0800",
+        "snapshot_timestamp": 1777846023,
+        "snapshot_time": "2026-05-03T22:07:03Z",
+        "snapshot_time_local": "2026-05-04T06:07:03+0800",
         "local_timezone": "Asia/Shanghai",
         "market_snapshot": {
-          "price": 84.33,
-          "change_24h": 0.1068376068376109,
+          "price": 84.42,
+          "change_24h": 0.2136752136752218,
           "rsi_4h": 54.42253564144904,
           "adx_14": 15.959039191705712,
-          "volume_ratio": 0.43598060873394334,
+          "volume_ratio": 0.4360501287571007,
           "bb_width": 0.0181467424693727,
           "bb_pct_b": 0.8320251280144831,
           "bb_mid_slope_pct": 0.0018015868281333442,
@@ -98206,13 +98190,13 @@
           "range_edge_close_count": 0,
           "wick_ratio_lower": 32.08,
           "wick_ratio_upper": 28.3,
-          "funding_rate": 4.31126143861e-05,
-          "funding_zscore": 0.77,
-          "oi_now": 223463620.58670005,
+          "funding_rate": 6.16687871549e-05,
+          "funding_zscore": 1.09,
+          "oi_now": 223702108.97580007,
           "delta_oi_24h_percent": -1.2727968112228312,
-          "natr_percent": 0.8241422356241235,
-          "whale_ls_ratio": 1.5183887915936953,
-          "whale_pos_ratio": 0.8439373796049221,
+          "natr_percent": 0.8917984958054561,
+          "whale_ls_ratio": 1.5292035398230088,
+          "whale_pos_ratio": 0.8450806250514797,
           "atr_14": 0.6200000000000015,
           "macd_line_4h": -0.0187633783754535,
           "macd_signal_4h": -0.1159205211572708,
@@ -98238,18 +98222,18 @@
         },
         "onchain_snapshot": {
           "token_net_flow": -383514.41843822424,
-          "stablecoin_net_flow": -131767.683699,
+          "stablecoin_net_flow": -239711.60857399995,
           "flow_data_available": true,
           "flow_schema_version": "flow_semantics_v1",
           "token_flow_semantic": "DISTRIBUTION_PRESSURE",
           "stablecoin_flow_semantic": "CAPITAL_WITHDRAWAL",
           "flow_composite_semantic": "SHORT_SUPPORT",
           "flow_signal_mixed": false,
-          "sentiment_score": 0.11395160886559792,
-          "liquidation_long_usd": 34813.1028,
-          "liquidation_short_usd": 83688.59500000002,
-          "liquidation_long_to_volume_4h": 0.0013191396310826,
-          "liquidation_short_to_volume_4h": 0.0031711319432902,
+          "sentiment_score": 0.06304971530376778,
+          "liquidation_long_usd": 35380.432400000005,
+          "liquidation_short_usd": 9484.441600000002,
+          "liquidation_long_to_volume_4h": 0.0013406369093788,
+          "liquidation_short_to_volume_4h": 0.0003593848806044,
           "qlib_relative_score_8h": 0.0013,
           "qlib_rank_8h": 3,
           "qlib_percentile_8h": 0.5,
@@ -98269,7 +98253,7 @@
             "USD_WEAKNESS",
             "YEN_STRESS"
           ],
-          "brief_rationale": "Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.",
+          "brief_rationale": "Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.",
           "news_summary": "Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.",
           "classification_basis": {
             "fear_greed_index": 47.0,
@@ -98284,9 +98268,9 @@
             "vix_change_5d_pct": -5.72,
             "us10y_level": 4.38,
             "us10y_change_5d_pct": 0.97,
-            "global_stable_flow": -46025672.37345886,
-            "global_stable_market_cap": 266824514375.77466,
-            "global_stable_flow_ratio_pct": -0.017249416711629398
+            "global_stable_flow": 5814388.158859253,
+            "global_stable_market_cap": 266882278327.9157,
+            "global_stable_flow_ratio_pct": 0.0021786340386809686
           },
           "key_events": [
             "FED_HAWKISH",
@@ -98306,9 +98290,9 @@
             "vix_change_5d_pct": -5.72,
             "us10y_level": 4.38,
             "us10y_change_5d_pct": 0.97,
-            "global_stable_flow": -46025672.37345886,
-            "global_stable_market_cap": 266824514375.77466,
-            "global_stable_flow_ratio_pct": -0.017249416711629398
+            "global_stable_flow": 5814388.158859253,
+            "global_stable_market_cap": 266882278327.9157,
+            "global_stable_flow_ratio_pct": 0.0021786340386809686
           },
           "provenance": {
             "generation_mode": "llm_refined",
@@ -98326,10 +98310,10 @@
               "status": "parsed",
               "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
               "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.\", \"brief_rationale\": \"Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
+              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.\", \"brief_rationale\": \"Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
               "parsed_response": {
                 "news_summary": "Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.",
-                "brief_rationale": "Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.",
+                "brief_rationale": "Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.",
                 "market_impact": "RISK_OFF",
                 "impact_horizon": "MULTI_DAY",
                 "crypto_relevance": "HIGH",
@@ -98402,7 +98386,7 @@
           "range_lower_bound": 83.26,
           "range_upper_bound": 84.95,
           "range_width_pct": 0.0201,
-          "price_position_in_range": 0.6331,
+          "price_position_in_range": 0.6864,
           "grid_mode": "ARITHMETIC",
           "grid_count": 3,
           "grid_spacing_pct": 0.0067,
@@ -98440,16 +98424,16 @@
         "symbol": "BNB-USDT",
         "cycleId": "cycle_2026-05-03_2000",
         "timeframe": "4h",
-        "snapshot_timestamp": 1777838851,
-        "snapshot_time": "2026-05-03T20:07:31Z",
-        "snapshot_time_local": "2026-05-04T04:07:31+0800",
+        "snapshot_timestamp": 1777846031,
+        "snapshot_time": "2026-05-03T22:07:11Z",
+        "snapshot_time_local": "2026-05-04T06:07:11+0800",
         "local_timezone": "Asia/Shanghai",
         "market_snapshot": {
-          "price": 618.5,
-          "change_24h": 0.12951270843450777,
+          "price": 619.6,
+          "change_24h": 0.30759268253196975,
           "rsi_4h": 50.21636686660498,
           "adx_14": 14.677677888437367,
-          "volume_ratio": 0.3942176701334249,
+          "volume_ratio": 0.4001258987225463,
           "bb_width": 0.0105746283592003,
           "bb_pct_b": 0.7404621975856336,
           "bb_mid_slope_pct": 0.0005992582155060345,
@@ -98458,13 +98442,13 @@
           "range_edge_close_count": 0,
           "wick_ratio_lower": 26.32,
           "wick_ratio_upper": 36.84,
-          "funding_rate": 4.21924508432e-05,
-          "funding_zscore": 0.35,
-          "oi_now": 46965253.22,
+          "funding_rate": 9.079460466e-07,
+          "funding_zscore": -0.38,
+          "oi_now": 47048780.752,
           "delta_oi_24h_percent": -0.8624485946875587,
-          "natr_percent": 0.5463559705811786,
-          "whale_ls_ratio": 0.7823529411764706,
-          "whale_pos_ratio": 0.8882840954926926,
+          "natr_percent": 0.5765120756781368,
+          "whale_ls_ratio": 0.7882352941176471,
+          "whale_pos_ratio": 0.8918378471994626,
           "atr_14": 2.999999999999992,
           "macd_line_4h": -0.904855283705956,
           "macd_signal_4h": -1.56985948051526,
@@ -98498,10 +98482,10 @@
           "flow_composite_semantic": "UNAVAILABLE",
           "flow_signal_mixed": false,
           "sentiment_score": 0.0,
-          "liquidation_long_usd": 6.189,
-          "liquidation_short_usd": 366.29,
-          "liquidation_long_to_volume_4h": 2.843102779154052e-06,
-          "liquidation_short_to_volume_4h": 0.0001682662977825,
+          "liquidation_long_usd": 0.0,
+          "liquidation_short_usd": 12.32,
+          "liquidation_long_to_volume_4h": 0.0,
+          "liquidation_short_to_volume_4h": 5.65956151869089e-06,
           "qlib_relative_score_8h": 0.0019,
           "qlib_rank_8h": 2,
           "qlib_percentile_8h": 0.75,
@@ -98521,7 +98505,7 @@
             "USD_WEAKNESS",
             "YEN_STRESS"
           ],
-          "brief_rationale": "Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.",
+          "brief_rationale": "Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.",
           "news_summary": "Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.",
           "classification_basis": {
             "fear_greed_index": 47.0,
@@ -98536,9 +98520,9 @@
             "vix_change_5d_pct": -5.72,
             "us10y_level": 4.38,
             "us10y_change_5d_pct": 0.97,
-            "global_stable_flow": -46025672.37345886,
-            "global_stable_market_cap": 266824514375.77466,
-            "global_stable_flow_ratio_pct": -0.017249416711629398
+            "global_stable_flow": 5814388.158859253,
+            "global_stable_market_cap": 266882278327.9157,
+            "global_stable_flow_ratio_pct": 0.0021786340386809686
           },
           "key_events": [
             "FED_HAWKISH",
@@ -98558,9 +98542,9 @@
             "vix_change_5d_pct": -5.72,
             "us10y_level": 4.38,
             "us10y_change_5d_pct": 0.97,
-            "global_stable_flow": -46025672.37345886,
-            "global_stable_market_cap": 266824514375.77466,
-            "global_stable_flow_ratio_pct": -0.017249416711629398
+            "global_stable_flow": 5814388.158859253,
+            "global_stable_market_cap": 266882278327.9157,
+            "global_stable_flow_ratio_pct": 0.0021786340386809686
           },
           "provenance": {
             "generation_mode": "llm_refined",
@@ -98578,10 +98562,10 @@
               "status": "parsed",
               "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
               "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.\", \"brief_rationale\": \"Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
+              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.\", \"brief_rationale\": \"Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
               "parsed_response": {
                 "news_summary": "Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.",
-                "brief_rationale": "Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.",
+                "brief_rationale": "Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.",
                 "market_impact": "RISK_OFF",
                 "impact_horizon": "MULTI_DAY",
                 "crypto_relevance": "HIGH",
@@ -98618,9 +98602,9 @@
           "position_side": "SHORT",
           "position_size_usd": 424.8,
           "entry_price": 615.1666666666666,
-          "current_price": 618.9,
-          "unrealized_pnl_pct": -0.0121,
-          "distance_to_liq": 0.494,
+          "current_price": 618.5,
+          "unrealized_pnl_pct": -0.0108,
+          "distance_to_liq": 0.4946,
           "open_positions": [
             {
               "symbol": "BNB",
@@ -98628,9 +98612,9 @@
               "leverage": 2,
               "type": "short",
               "entryPrice": 615.1666666666666,
-              "currentPrice": 618.9,
-              "pnl": -5.1520000000000215,
-              "pnlPercent": -1.21,
+              "currentPrice": 618.5,
+              "pnl": -4.600000000000053,
+              "pnlPercent": -1.08,
               "amount": "1.3800000000000001",
               "margin": 212.40063465661135,
               "stopLoss": 628.4,
@@ -98670,7 +98654,7 @@
           "range_lower_bound": 613.3,
           "range_upper_bound": 621.5,
           "range_width_pct": 0.0133,
-          "price_position_in_range": 0.6341,
+          "price_position_in_range": 0.7683,
           "grid_mode": "ARITHMETIC",
           "grid_count": 2,
           "grid_spacing_pct": 0.0066,
@@ -98707,16 +98691,16 @@
         "symbol": "DOGE-USDT",
         "cycleId": "cycle_2026-05-03_2000",
         "timeframe": "4h",
-        "snapshot_timestamp": 1777838861,
-        "snapshot_time": "2026-05-03T20:07:41Z",
-        "snapshot_time_local": "2026-05-04T04:07:41+0800",
+        "snapshot_timestamp": 1777846040,
+        "snapshot_time": "2026-05-03T22:07:20Z",
+        "snapshot_time_local": "2026-05-04T06:07:20+0800",
         "local_timezone": "Asia/Shanghai",
         "market_snapshot": {
-          "price": 0.10857,
-          "change_24h": 0.11065006915628871,
+          "price": 0.10875,
+          "change_24h": 0.2766251728907282,
           "rsi_4h": 59.18077772043398,
           "adx_14": 42.7007552077097,
-          "volume_ratio": 0.611719299967067,
+          "volume_ratio": 0.6080413161877822,
           "bb_width": 0.0313092398673333,
           "bb_pct_b": 0.6196012993110026,
           "bb_mid_slope_pct": 0.0026073690536730105,
@@ -98725,13 +98709,13 @@
           "range_edge_close_count": 2,
           "wick_ratio_lower": 61.04,
           "wick_ratio_upper": 20.78,
-          "funding_rate": 9.78731071317e-05,
-          "funding_zscore": 1.76,
-          "oi_now": 118439840.30339995,
+          "funding_rate": 0.0001,
+          "funding_zscore": 1.8,
+          "oi_now": 118636203.67499995,
           "delta_oi_24h_percent": 0.44391961607250974,
-          "natr_percent": 1.4375719596278234,
-          "whale_ls_ratio": 1.1018181818181818,
-          "whale_pos_ratio": 0.8816311311680746,
+          "natr_percent": 1.5343715121150074,
+          "whale_ls_ratio": 1.13780260707635,
+          "whale_pos_ratio": 0.8774965798272014,
           "atr_14": 0.00134,
           "macd_line_4h": 0.0012904602569259,
           "macd_signal_4h": 0.0016001120957773,
@@ -98765,10 +98749,10 @@
           "flow_composite_semantic": "UNAVAILABLE",
           "flow_signal_mixed": false,
           "sentiment_score": 0.0,
-          "liquidation_long_usd": 92844.65740000001,
-          "liquidation_short_usd": 330858.88829999993,
-          "liquidation_long_to_volume_4h": 0.0030426046397471,
-          "liquidation_short_to_volume_4h": 0.010842549445857,
+          "liquidation_long_usd": 92216.6544,
+          "liquidation_short_usd": 236706.6577,
+          "liquidation_long_to_volume_4h": 0.0030220244050294,
+          "liquidation_short_to_volume_4h": 0.0077570944321999,
           "qlib_relative_score_8h": 0.0037,
           "qlib_rank_8h": 1,
           "qlib_percentile_8h": 1.0,
@@ -98788,7 +98772,7 @@
             "USD_WEAKNESS",
             "YEN_STRESS"
           ],
-          "brief_rationale": "Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.",
+          "brief_rationale": "Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.",
           "news_summary": "Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.",
           "classification_basis": {
             "fear_greed_index": 47.0,
@@ -98803,9 +98787,9 @@
             "vix_change_5d_pct": -5.72,
             "us10y_level": 4.38,
             "us10y_change_5d_pct": 0.97,
-            "global_stable_flow": -46025672.37345886,
-            "global_stable_market_cap": 266824514375.77466,
-            "global_stable_flow_ratio_pct": -0.017249416711629398
+            "global_stable_flow": 5814388.158859253,
+            "global_stable_market_cap": 266882278327.9157,
+            "global_stable_flow_ratio_pct": 0.0021786340386809686
           },
           "key_events": [
             "FED_HAWKISH",
@@ -98825,9 +98809,9 @@
             "vix_change_5d_pct": -5.72,
             "us10y_level": 4.38,
             "us10y_change_5d_pct": 0.97,
-            "global_stable_flow": -46025672.37345886,
-            "global_stable_market_cap": 266824514375.77466,
-            "global_stable_flow_ratio_pct": -0.017249416711629398
+            "global_stable_flow": 5814388.158859253,
+            "global_stable_market_cap": 266882278327.9157,
+            "global_stable_flow_ratio_pct": 0.0021786340386809686
           },
           "provenance": {
             "generation_mode": "llm_refined",
@@ -98845,10 +98829,10 @@
               "status": "parsed",
               "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
               "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.\", \"brief_rationale\": \"Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
+              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.\", \"brief_rationale\": \"Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\", \"YEN_STRESS\"] }",
               "parsed_response": {
                 "news_summary": "Pirro drops appeal plans for Powell investigation; healthcare cost surge threatens parental leave; Dimon issues vague credit warning; US-Iran war impacts credit scores; Trump raises EU auto tariffs to 25%.",
-                "brief_rationale": "Multiple headlines: Fed-related legal development is neutral; healthcare cost and credit warnings are negative for consumer; tariff escalation is risk-off. Combined with current hawkish Fed stance and yen stress, overall risk-off.",
+                "brief_rationale": "Multiple headlines show geopolitical tensions (Iran, tariffs) and mixed economic signals (healthcare costs, credit warnings), but no clear macro shock. Fed-related news is neutral. Overall risk-off bias from tariffs and geopolitical risk.",
                 "market_impact": "RISK_OFF",
                 "impact_horizon": "MULTI_DAY",
                 "crypto_relevance": "HIGH",
@@ -98921,7 +98905,7 @@
           "range_lower_bound": 0.107,
           "range_upper_bound": 0.1096,
           "range_width_pct": 0.0244,
-          "price_position_in_range": 0.5947,
+          "price_position_in_range": 0.6629,
           "grid_mode": "ARITHMETIC",
           "grid_count": 3,
           "grid_spacing_pct": 0.0081,
@@ -98959,7 +98943,7 @@
         "symbol": "BTC-USDT",
         "cycleId": "cycle_2026-05-03_2000",
         "timeframe": "4h",
-        "snapshot_timestamp": 1777838821,
+        "snapshot_timestamp": 1777846005,
         "candidate_proposals": [],
         "e_strategy_diagnostic": {
           "qlib_inputs": {
@@ -98969,7 +98953,7 @@
             "p_up_8h": 0.116,
             "p_down_8h": 0.2444,
             "p_flat_8h": 0.6396,
-            "funding_zscore": 0.46,
+            "funding_zscore": 0.55,
             "token_net_flow": 0.0,
             "stablecoin_net_flow": 0.0,
             "regime_1d": "BEAR",
@@ -99030,7 +99014,7 @@
         "symbol": "ETH-USDT",
         "cycleId": "cycle_2026-05-03_2000",
         "timeframe": "4h",
-        "snapshot_timestamp": 1777838831,
+        "snapshot_timestamp": 1777846014,
         "candidate_proposals": [],
         "e_strategy_diagnostic": {
           "qlib_inputs": {
@@ -99040,8 +99024,8 @@
             "p_up_8h": 0.1679,
             "p_down_8h": 0.2675,
             "p_flat_8h": 0.5645,
-            "funding_zscore": 1.14,
-            "token_net_flow": 58176351.98853798,
+            "funding_zscore": 1.01,
+            "token_net_flow": 58090173.07214901,
             "stablecoin_net_flow": -3930582.603438355,
             "regime_1d": "BEAR",
             "whale_bias": "strong_inflow",
@@ -99102,7 +99086,7 @@
         "symbol": "SOL-USDT",
         "cycleId": "cycle_2026-05-03_2000",
         "timeframe": "4h",
-        "snapshot_timestamp": 1777838841,
+        "snapshot_timestamp": 1777846023,
         "candidate_proposals": [],
         "e_strategy_diagnostic": {
           "qlib_inputs": {
@@ -99112,9 +99096,9 @@
             "p_up_8h": 0.0886,
             "p_down_8h": 0.3502,
             "p_flat_8h": 0.5612,
-            "funding_zscore": 0.77,
+            "funding_zscore": 1.09,
             "token_net_flow": -383514.41843822424,
-            "stablecoin_net_flow": -131767.683699,
+            "stablecoin_net_flow": -239711.60857399995,
             "regime_1d": "BEAR",
             "whale_bias": "neutral",
             "is_overheated": false,
@@ -99171,7 +99155,7 @@
         "symbol": "BNB-USDT",
         "cycleId": "cycle_2026-05-03_2000",
         "timeframe": "4h",
-        "snapshot_timestamp": 1777838851,
+        "snapshot_timestamp": 1777846031,
         "candidate_proposals": [],
         "e_strategy_diagnostic": {
           "qlib_inputs": {
@@ -99181,7 +99165,7 @@
             "p_up_8h": 0.1115,
             "p_down_8h": 0.3323,
             "p_flat_8h": 0.5562,
-            "funding_zscore": 0.35,
+            "funding_zscore": -0.38,
             "token_net_flow": 0.0,
             "stablecoin_net_flow": 0.0,
             "regime_1d": "BEAR",
@@ -99241,7 +99225,7 @@
         "symbol": "DOGE-USDT",
         "cycleId": "cycle_2026-05-03_2000",
         "timeframe": "4h",
-        "snapshot_timestamp": 1777838861,
+        "snapshot_timestamp": 1777846040,
         "candidate_proposals": [],
         "e_strategy_diagnostic": {
           "qlib_inputs": {
@@ -99251,7 +99235,7 @@
             "p_up_8h": 0.1081,
             "p_down_8h": 0.3705,
             "p_flat_8h": 0.5214,
-            "funding_zscore": 1.76,
+            "funding_zscore": 1.8,
             "token_net_flow": 0.0,
             "stablecoin_net_flow": 0.0,
             "regime_1d": "BEAR",
@@ -99567,14 +99551,14 @@
         "history": [
           {
             "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-05-03T20:07:03Z",
+            "at": "2026-05-03T22:06:47Z",
             "payload": {
               "review_note": "rule evaluation rejected or produced no approved candidates"
             }
           },
           {
             "type": "EXECUTION_SKIPPED",
-            "at": "2026-05-03T20:07:07Z",
+            "at": "2026-05-03T22:06:51Z",
             "payload": {
               "reason": "do_nothing",
               "execution_action": "DO_NOTHING"
@@ -99600,14 +99584,14 @@
         "history": [
           {
             "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-05-03T20:07:13Z",
+            "at": "2026-05-03T22:06:56Z",
             "payload": {
               "review_note": "rule evaluation rejected or produced no approved candidates"
             }
           },
           {
             "type": "EXECUTION_SKIPPED",
-            "at": "2026-05-03T20:07:16Z",
+            "at": "2026-05-03T22:06:59Z",
             "payload": {
               "reason": "do_nothing",
               "execution_action": "DO_NOTHING"
@@ -99633,14 +99617,14 @@
         "history": [
           {
             "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-05-03T20:07:22Z",
+            "at": "2026-05-03T22:07:04Z",
             "payload": {
               "review_note": "rule evaluation rejected or produced no approved candidates"
             }
           },
           {
             "type": "EXECUTION_SKIPPED",
-            "at": "2026-05-03T20:07:26Z",
+            "at": "2026-05-03T22:07:07Z",
             "payload": {
               "reason": "do_nothing",
               "execution_action": "DO_NOTHING"
@@ -99666,14 +99650,14 @@
         "history": [
           {
             "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-05-03T20:07:33Z",
+            "at": "2026-05-03T22:07:12Z",
             "payload": {
               "review_note": "rule evaluation rejected or produced no approved candidates"
             }
           },
           {
             "type": "EXECUTION_SKIPPED",
-            "at": "2026-05-03T20:07:36Z",
+            "at": "2026-05-03T22:07:16Z",
             "payload": {
               "reason": "do_nothing",
               "execution_action": "DO_NOTHING"
@@ -99699,14 +99683,14 @@
         "history": [
           {
             "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-05-03T20:07:42Z",
+            "at": "2026-05-03T22:07:21Z",
             "payload": {
               "review_note": "rule evaluation rejected or produced no approved candidates"
             }
           },
           {
             "type": "EXECUTION_SKIPPED",
-            "at": "2026-05-03T20:07:45Z",
+            "at": "2026-05-03T22:07:25Z",
             "payload": {
               "reason": "do_nothing",
               "execution_action": "DO_NOTHING"
