@@ -1,1773 +1,5 @@
 [
   {
-    "cycleId": "cycle_2026-04-26_0800",
-    "generated_at": "2026-04-26T08:07:23Z",
-    "generated_at_local": "2026-04-26T16:07:23+0800",
-    "cycle_local_time": "2026-04-26 16:00:00 CST",
-    "local_timezone": "Asia/Shanghai",
-    "timeframe": "4h",
-    "snapshots": [
-      {
-        "decision_id": "cycle_2026-04-26_0800_BTC",
-        "symbol": "BTC-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777190792,
-        "snapshot_time": "2026-04-26T08:06:32Z",
-        "snapshot_time_local": "2026-04-26T16:06:32+0800",
-        "local_timezone": "Asia/Shanghai",
-        "market_snapshot": {
-          "price": 78080.1,
-          "change_24h": 0.6342475640563049,
-          "rsi_4h": 56.645453462236965,
-          "adx_14": 0.0,
-          "volume_ratio": 0.43860443562681195,
-          "wick_ratio_lower": 44.94,
-          "wick_ratio_upper": 40.49,
-          "funding_rate": 4.60639236953e-05,
-          "funding_zscore": 1.87,
-          "oi_now": 2586406006.2634673,
-          "delta_oi_24h_percent": -4.494400876557482,
-          "natr_percent": 0.8608316516947989,
-          "whale_ls_ratio": 0.617665418227216,
-          "whale_pos_ratio": 1.0540708064577793,
-          "atr_14": 516.4214285714291,
-          "macd_line_4h": 213.1557435728755,
-          "macd_signal_4h": 262.2053936761801,
-          "macd_hist_4h": -49.0496501033046,
-          "rel_volume_60": 0.019319609709750645,
-          "volume_usd_4h": 16649901.03251,
-          "sma50_4h": 76836.42,
-          "bearish_divergence_4h": false,
-          "bullish_divergence_4h": false,
-          "macd_cross_up_4h": false,
-          "macd_cross_down_4h": false,
-          "structure_support_12bar_volume_confirmed": 77244.1,
-          "structure_resistance_12bar_volume_confirmed": 78282.3,
-          "structure_support_stop_long": 76985.8893,
-          "structure_resistance_stop_short": 78540.5107
-        },
-        "onchain_snapshot": {
-          "token_net_flow": 0.0,
-          "stablecoin_net_flow": 0.0,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "token_flow_semantic": "UNAVAILABLE",
-          "stablecoin_flow_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "sentiment_score": 0.0,
-          "liquidation_long_usd": 470757.48888000014,
-          "liquidation_short_usd": 1255882.50589,
-          "liquidation_long_to_volume_4h": 0.0282738911156778,
-          "liquidation_short_to_volume_4h": 0.0754288270805819,
-          "qlib_relative_score_8h": 0.0021,
-          "qlib_rank_8h": 3,
-          "qlib_percentile_8h": 0.5,
-          "p_up_8h": 0.0452,
-          "p_down_8h": 0.155,
-          "p_flat_8h": 0.7998,
-          "confidence_8h": 0.155
-        },
-        "macro_snapshot": {
-          "event_type": "FED_SPEECH",
-          "policy_stance": "HAWKISH",
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "SWING",
-          "crypto_relevance": "HIGH",
-          "key_tags": [
-            "FED_HAWKISH",
-            "RISK_OFF_NEWS"
-          ],
-          "brief_rationale": "Headlines are mixed but include a hawkish Fed probe threat and risk-off sentiment from fear/greed index (33) and VIX (18.71).",
-          "news_summary": "Populist wave against captive repair economy; dating costs rise; Berkshire lags S&P 500; Pirro could reopen Fed probe; X-energy IPO surges on AI interest.",
-          "classification_basis": {
-            "fear_greed_index": 33.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.605,
-            "fed_change_5d_bps": -3.7,
-            "usdjpy_level": 159.333,
-            "usdjpy_change_5d_pct": 0.09,
-            "dxy_level": 98.51,
-            "dxy_change_5d_pct": 0.1,
-            "vix_level": 18.71,
-            "vix_change_5d_pct": -0.85,
-            "us10y_level": 4.31,
-            "us10y_change_5d_pct": 1.41,
-            "global_stable_flow": 27520473.27232361,
-            "global_stable_market_cap": 267568470866.69824,
-            "global_stable_flow_ratio_pct": 0.010285394681660464
-          },
-          "key_events": [
-            "FED_HAWKISH",
-            "RISK_OFF_NEWS"
-          ],
-          "event_facts": {
-            "fear_greed_index": 33.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.605,
-            "fed_change_5d_bps": -3.7,
-            "usdjpy_level": 159.333,
-            "usdjpy_change_5d_pct": 0.09,
-            "dxy_level": 98.51,
-            "dxy_change_5d_pct": 0.1,
-            "vix_level": 18.71,
-            "vix_change_5d_pct": -0.85,
-            "us10y_level": 4.31,
-            "us10y_change_5d_pct": 1.41,
-            "global_stable_flow": 27520473.27232361,
-            "global_stable_market_cap": 267568470866.69824,
-            "global_stable_flow_ratio_pct": 0.010285394681660464
-          },
-          "provenance": {
-            "generation_mode": "llm_refined",
-            "llm_enabled": true,
-            "llm_attempted": true,
-            "llm_applied": true,
-            "llm_override_fields": [
-              "brief_rationale",
-              "news_summary"
-            ],
-            "llm_audit": {
-              "enabled": true,
-              "provider": "deepseek",
-              "model": "deepseek-chat",
-              "status": "parsed",
-              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
-              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Populist wave against captive repair economy; dating costs rise; Berkshire lags S&P 500; Pirro could reopen Fed probe; X-energy IPO surges on AI interest.\", \"brief_rationale\": \"Headlines are mixed but include a hawkish Fed probe threat and risk-off sentiment from fear/greed index (33) and VIX (18.71).\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"] }",
-              "parsed_response": {
-                "news_summary": "Populist wave against captive repair economy; dating costs rise; Berkshire lags S&P 500; Pirro could reopen Fed probe; X-energy IPO surges on AI interest.",
-                "brief_rationale": "Headlines are mixed but include a hawkish Fed probe threat and risk-off sentiment from fear/greed index (33) and VIX (18.71).",
-                "market_impact": "RISK_OFF",
-                "impact_horizon": "SWING",
-                "crypto_relevance": "HIGH",
-                "key_tags": [
-                  "FED_HAWKISH",
-                  "RISK_OFF_NEWS"
-                ]
-              },
-              "error": null
-            }
-          },
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "fear_greed_index": 33.0,
-          "fear_greed_state": "FEAR",
-          "dxy_level": 98.51,
-          "dxy_trend": "FLAT",
-          "usdjpy_level": 159.333,
-          "usdjpy_trend": "FLAT",
-          "fed_event_risk": "HIGH",
-          "macro_event_window": true,
-          "risk_off_score": 0.8,
-          "news_headlines": [
-            "From car and phone to tractor owners,\u00a0a populist wave is rising to end the 'captive' repair economy",
-            "Some young Americans scale back dating as costs and apps add pressure, survey shows",
-            "Berkshire attracts interest as it slips further behind the S&P 500",
-            "Pirro could reopen Fed probe at any time, Democratic senators warn",
-            "Nuclear reactor company X-energy shares surge 27% as AI drives interest in its IPO"
-          ]
-        },
-        "position_snapshot": {
-          "position_side": "NONE",
-          "position_size_usd": 0.0,
-          "entry_price": null,
-          "current_price": null,
-          "unrealized_pnl_pct": 0.0,
-          "distance_to_liq": null,
-          "open_positions": []
-        },
-        "decision_ready_features": {
-          "regime_1d": "BEAR",
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "event_risk_active": true,
-          "usd_strength_flag": false,
-          "yen_stress_flag": false,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "flow_token_semantic": "UNAVAILABLE",
-          "flow_stablecoin_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "flow_support_long": false,
-          "flow_support_short": false,
-          "qlib_relative_score_8h": 0.0021,
-          "qlib_percentile_8h": 0.5,
-          "p_up_8h": 0.0452,
-          "p_down_8h": 0.155,
-          "p_flat_8h": 0.7998,
-          "confidence_8h": 0.155,
-          "qlib_direction": "FLAT",
-          "qlib_direction_confident": false,
-          "qlib_top_bucket": true,
-          "qlib_bottom_bucket": true
-        },
-        "quality_score": 0.83,
-        "is_decision_eligible": true
-      },
-      {
-        "decision_id": "cycle_2026-04-26_0800_ETH",
-        "symbol": "ETH-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777190801,
-        "snapshot_time": "2026-04-26T08:06:41Z",
-        "snapshot_time_local": "2026-04-26T16:06:41+0800",
-        "local_timezone": "Asia/Shanghai",
-        "market_snapshot": {
-          "price": 2331.81,
-          "change_24h": 0.5771146853689829,
-          "rsi_4h": 52.64434253671556,
-          "adx_14": 0.0,
-          "volume_ratio": 0.3536170082901284,
-          "wick_ratio_lower": 0.0,
-          "wick_ratio_upper": 39.52,
-          "funding_rate": -1.23345180201e-05,
-          "funding_zscore": -0.09,
-          "oi_now": 1532891630.6367338,
-          "delta_oi_24h_percent": -1.4539756496662266,
-          "natr_percent": 1.0117854258204375,
-          "whale_ls_ratio": 1.1379007465963988,
-          "whale_pos_ratio": 0.9428842799231469,
-          "atr_14": 16.730714285714253,
-          "macd_line_4h": -3.947967566603893,
-          "macd_signal_4h": -5.327696171579549,
-          "macd_hist_4h": 1.3797286049756563,
-          "rel_volume_60": 0.021234919972622193,
-          "volume_usd_4h": 22795781.17503,
-          "sma50_4h": 2330.213,
-          "bearish_divergence_4h": false,
-          "bullish_divergence_4h": false,
-          "macd_cross_up_4h": true,
-          "macd_cross_down_4h": false,
-          "structure_support_12bar_volume_confirmed": 2304.03,
-          "structure_resistance_12bar_volume_confirmed": 2329.96,
-          "structure_support_stop_long": 2295.6646,
-          "structure_resistance_stop_short": 2338.3254
-        },
-        "onchain_snapshot": {
-          "token_net_flow": 2164362.7879466685,
-          "stablecoin_net_flow": -450061.73347240285,
-          "flow_data_available": true,
-          "flow_schema_version": "flow_semantics_v1",
-          "token_flow_semantic": "ACCUMULATION_HINT",
-          "stablecoin_flow_semantic": "CAPITAL_WITHDRAWAL",
-          "flow_composite_semantic": "MIXED",
-          "flow_signal_mixed": true,
-          "sentiment_score": 0.014778410092009918,
-          "liquidation_long_usd": 786698.8326299997,
-          "liquidation_short_usd": 2684364.007030002,
-          "liquidation_long_to_volume_4h": 0.0345107204964632,
-          "liquidation_short_to_volume_4h": 0.1177570527817838,
-          "qlib_relative_score_8h": 0.0032,
-          "qlib_rank_8h": 2,
-          "qlib_percentile_8h": 0.75,
-          "p_up_8h": 0.093,
-          "p_down_8h": 0.1653,
-          "p_flat_8h": 0.7417,
-          "confidence_8h": 0.1653
-        },
-        "macro_snapshot": {
-          "event_type": "FED_SPEECH",
-          "policy_stance": "HAWKISH",
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "SWING",
-          "crypto_relevance": "HIGH",
-          "key_tags": [
-            "FED_HAWKISH",
-            "RISK_OFF_NEWS"
-          ],
-          "brief_rationale": "Headlines are mixed but include a hawkish Fed probe threat and risk-off sentiment from fear/greed index at 33 and VIX at 18.71. The Fed probe reopening is a hawkish signal, while X-energy IPO surge is risk-on but isolated. Overall, the macro backdrop remains risk-off.",
-          "news_summary": "Populist wave against captive repair economy; dating costs rise; Berkshire lags S&P 500; Pirro could reopen Fed probe; X-energy IPO surges on AI interest.",
-          "classification_basis": {
-            "fear_greed_index": 33.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.605,
-            "fed_change_5d_bps": -3.7,
-            "usdjpy_level": 159.333,
-            "usdjpy_change_5d_pct": 0.09,
-            "dxy_level": 98.51,
-            "dxy_change_5d_pct": 0.1,
-            "vix_level": 18.71,
-            "vix_change_5d_pct": -0.85,
-            "us10y_level": 4.31,
-            "us10y_change_5d_pct": 1.41,
-            "global_stable_flow": 27520473.27232361,
-            "global_stable_market_cap": 267568470866.69824,
-            "global_stable_flow_ratio_pct": 0.010285394681660464
-          },
-          "key_events": [
-            "FED_HAWKISH",
-            "RISK_OFF_NEWS"
-          ],
-          "event_facts": {
-            "fear_greed_index": 33.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.605,
-            "fed_change_5d_bps": -3.7,
-            "usdjpy_level": 159.333,
-            "usdjpy_change_5d_pct": 0.09,
-            "dxy_level": 98.51,
-            "dxy_change_5d_pct": 0.1,
-            "vix_level": 18.71,
-            "vix_change_5d_pct": -0.85,
-            "us10y_level": 4.31,
-            "us10y_change_5d_pct": 1.41,
-            "global_stable_flow": 27520473.27232361,
-            "global_stable_market_cap": 267568470866.69824,
-            "global_stable_flow_ratio_pct": 0.010285394681660464
-          },
-          "provenance": {
-            "generation_mode": "llm_refined",
-            "llm_enabled": true,
-            "llm_attempted": true,
-            "llm_applied": true,
-            "llm_override_fields": [
-              "brief_rationale",
-              "news_summary"
-            ],
-            "llm_audit": {
-              "enabled": true,
-              "provider": "deepseek",
-              "model": "deepseek-chat",
-              "status": "parsed",
-              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
-              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Populist wave against captive repair economy; dating costs rise; Berkshire lags S&P 500; Pirro could reopen Fed probe; X-energy IPO surges on AI interest.\", \"brief_rationale\": \"Headlines are mixed but include a hawkish Fed probe threat and risk-off sentiment from fear/greed index at 33 and VIX at 18.71. The Fed probe reopening is a hawkish signal, while X-energy IPO surge is risk-on but isolated. Overall, the macro backdrop remains risk-off.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"] }",
-              "parsed_response": {
-                "news_summary": "Populist wave against captive repair economy; dating costs rise; Berkshire lags S&P 500; Pirro could reopen Fed probe; X-energy IPO surges on AI interest.",
-                "brief_rationale": "Headlines are mixed but include a hawkish Fed probe threat and risk-off sentiment from fear/greed index at 33 and VIX at 18.71. The Fed probe reopening is a hawkish signal, while X-energy IPO surge is risk-on but isolated. Overall, the macro backdrop remains risk-off.",
-                "market_impact": "RISK_OFF",
-                "impact_horizon": "SWING",
-                "crypto_relevance": "HIGH",
-                "key_tags": [
-                  "FED_HAWKISH",
-                  "RISK_OFF_NEWS"
-                ]
-              },
-              "error": null
-            }
-          },
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "fear_greed_index": 33.0,
-          "fear_greed_state": "FEAR",
-          "dxy_level": 98.51,
-          "dxy_trend": "FLAT",
-          "usdjpy_level": 159.333,
-          "usdjpy_trend": "FLAT",
-          "fed_event_risk": "HIGH",
-          "macro_event_window": true,
-          "risk_off_score": 0.8,
-          "news_headlines": [
-            "From car and phone to tractor owners,\u00a0a populist wave is rising to end the 'captive' repair economy",
-            "Some young Americans scale back dating as costs and apps add pressure, survey shows",
-            "Berkshire attracts interest as it slips further behind the S&P 500",
-            "Pirro could reopen Fed probe at any time, Democratic senators warn",
-            "Nuclear reactor company X-energy shares surge 27% as AI drives interest in its IPO"
-          ]
-        },
-        "position_snapshot": {
-          "position_side": "NONE",
-          "position_size_usd": 0.0,
-          "entry_price": null,
-          "current_price": null,
-          "unrealized_pnl_pct": 0.0,
-          "distance_to_liq": null,
-          "open_positions": []
-        },
-        "decision_ready_features": {
-          "regime_1d": "BEAR",
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "event_risk_active": true,
-          "usd_strength_flag": false,
-          "yen_stress_flag": false,
-          "flow_data_available": true,
-          "flow_schema_version": "flow_semantics_v1",
-          "flow_token_semantic": "ACCUMULATION_HINT",
-          "flow_stablecoin_semantic": "CAPITAL_WITHDRAWAL",
-          "flow_composite_semantic": "MIXED",
-          "flow_signal_mixed": true,
-          "flow_support_long": false,
-          "flow_support_short": false,
-          "qlib_relative_score_8h": 0.0032,
-          "qlib_percentile_8h": 0.75,
-          "p_up_8h": 0.093,
-          "p_down_8h": 0.1653,
-          "p_flat_8h": 0.7417,
-          "confidence_8h": 0.1653,
-          "qlib_direction": "FLAT",
-          "qlib_direction_confident": false,
-          "qlib_top_bucket": true,
-          "qlib_bottom_bucket": false
-        },
-        "quality_score": 0.83,
-        "is_decision_eligible": true
-      },
-      {
-        "decision_id": "cycle_2026-04-26_0800_SOL",
-        "symbol": "SOL-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777190810,
-        "snapshot_time": "2026-04-26T08:06:50Z",
-        "snapshot_time_local": "2026-04-26T16:06:50+0800",
-        "local_timezone": "Asia/Shanghai",
-        "market_snapshot": {
-          "price": 86.62,
-          "change_24h": 0.5689074654592002,
-          "rsi_4h": 54.01940961771477,
-          "adx_14": 0.0,
-          "volume_ratio": 0.4627210671603366,
-          "wick_ratio_lower": 12.5,
-          "wick_ratio_upper": 62.5,
-          "funding_rate": 0.0001,
-          "funding_zscore": 1.25,
-          "oi_now": 224878413.38700017,
-          "delta_oi_24h_percent": 2.403278588271405,
-          "natr_percent": 1.0263300917123255,
-          "whale_ls_ratio": 1.2665562913907285,
-          "whale_pos_ratio": 0.8835514177851843,
-          "atr_14": 0.7135714285714272,
-          "macd_line_4h": 0.0480440285472951,
-          "macd_signal_4h": 0.0120078756888433,
-          "macd_hist_4h": 0.0360361528584518,
-          "rel_volume_60": 0.018633744126232293,
-          "volume_usd_4h": 1667954.4024,
-          "sma50_4h": 86.0532,
-          "bearish_divergence_4h": false,
-          "bullish_divergence_4h": false,
-          "macd_cross_up_4h": true,
-          "macd_cross_down_4h": false,
-          "structure_support_12bar_volume_confirmed": 85.31,
-          "structure_resistance_12bar_volume_confirmed": 86.52,
-          "structure_support_stop_long": 84.9532,
-          "structure_resistance_stop_short": 86.8768
-        },
-        "onchain_snapshot": {
-          "token_net_flow": -24949.561386168112,
-          "stablecoin_net_flow": -142333.27040399995,
-          "flow_data_available": true,
-          "flow_schema_version": "flow_semantics_v1",
-          "token_flow_semantic": "DISTRIBUTION_PRESSURE",
-          "stablecoin_flow_semantic": "CAPITAL_WITHDRAWAL",
-          "flow_composite_semantic": "SHORT_SUPPORT",
-          "flow_signal_mixed": false,
-          "sentiment_score": 0.29953733731330906,
-          "liquidation_long_usd": 45387.732299999996,
-          "liquidation_short_usd": 18161.6074,
-          "liquidation_long_to_volume_4h": 0.0272116145589424,
-          "liquidation_short_to_volume_4h": 0.0108885514938942,
-          "qlib_relative_score_8h": 0.0004,
-          "qlib_rank_8h": 4,
-          "qlib_percentile_8h": 0.25,
-          "p_up_8h": 0.0921,
-          "p_down_8h": 0.2242,
-          "p_flat_8h": 0.6837,
-          "confidence_8h": 0.2242
-        },
-        "macro_snapshot": {
-          "event_type": "FED_SPEECH",
-          "policy_stance": "HAWKISH",
-          "market_impact": "NO_CLEAR_IMPACT",
-          "impact_horizon": "NOISE",
-          "crypto_relevance": "LOW",
-          "key_tags": [
-            "FED_HAWKISH",
-            "RISK_OFF_NEWS"
-          ],
-          "brief_rationale": "Headlines are diverse and not macro-focused; no clear market signal. Current classification is based on prior Fed hawkish stance and fear/greed index, but headlines themselves are noise.",
-          "news_summary": "Multiple headlines: populist repair economy movement, dating costs, Berkshire lagging S&P, Fed probe warning, X-energy IPO surge.",
-          "classification_basis": {
-            "fear_greed_index": 33.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.605,
-            "fed_change_5d_bps": -3.7,
-            "usdjpy_level": 159.333,
-            "usdjpy_change_5d_pct": 0.09,
-            "dxy_level": 98.51,
-            "dxy_change_5d_pct": 0.1,
-            "vix_level": 18.71,
-            "vix_change_5d_pct": -0.85,
-            "us10y_level": 4.31,
-            "us10y_change_5d_pct": 1.41,
-            "global_stable_flow": 27520473.27232361,
-            "global_stable_market_cap": 267568470866.69824,
-            "global_stable_flow_ratio_pct": 0.010285394681660464
-          },
-          "key_events": [
-            "FED_HAWKISH",
-            "RISK_OFF_NEWS"
-          ],
-          "event_facts": {
-            "fear_greed_index": 33.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.605,
-            "fed_change_5d_bps": -3.7,
-            "usdjpy_level": 159.333,
-            "usdjpy_change_5d_pct": 0.09,
-            "dxy_level": 98.51,
-            "dxy_change_5d_pct": 0.1,
-            "vix_level": 18.71,
-            "vix_change_5d_pct": -0.85,
-            "us10y_level": 4.31,
-            "us10y_change_5d_pct": 1.41,
-            "global_stable_flow": 27520473.27232361,
-            "global_stable_market_cap": 267568470866.69824,
-            "global_stable_flow_ratio_pct": 0.010285394681660464
-          },
-          "provenance": {
-            "generation_mode": "llm_refined",
-            "llm_enabled": true,
-            "llm_attempted": true,
-            "llm_applied": true,
-            "llm_override_fields": [
-              "brief_rationale",
-              "crypto_relevance",
-              "impact_horizon",
-              "market_impact",
-              "news_summary"
-            ],
-            "llm_audit": {
-              "enabled": true,
-              "provider": "deepseek",
-              "model": "deepseek-chat",
-              "status": "parsed",
-              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
-              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Multiple headlines: populist repair economy movement, dating costs, Berkshire lagging S&P, Fed probe warning, X-energy IPO surge.\", \"brief_rationale\": \"Headlines are diverse and not macro-focused; no clear market signal. Current classification is based on prior Fed hawkish stance and fear/greed index, but headlines themselves are noise.\", \"market_impact\": \"NO_CLEAR_IMPACT\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"LOW\", \"key_tags\": [\"MACRO_NOISE\"] }",
-              "parsed_response": {
-                "news_summary": "Multiple headlines: populist repair economy movement, dating costs, Berkshire lagging S&P, Fed probe warning, X-energy IPO surge.",
-                "brief_rationale": "Headlines are diverse and not macro-focused; no clear market signal. Current classification is based on prior Fed hawkish stance and fear/greed index, but headlines themselves are noise.",
-                "market_impact": "NO_CLEAR_IMPACT",
-                "impact_horizon": "NOISE",
-                "crypto_relevance": "LOW",
-                "key_tags": [
-                  "MACRO_NOISE"
-                ]
-              },
-              "error": null
-            }
-          },
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "NOISE",
-          "macro_permission": "ALLOW_SHORT",
-          "fear_greed_index": 33.0,
-          "fear_greed_state": "FEAR",
-          "dxy_level": 98.51,
-          "dxy_trend": "FLAT",
-          "usdjpy_level": 159.333,
-          "usdjpy_trend": "FLAT",
-          "fed_event_risk": "HIGH",
-          "macro_event_window": true,
-          "risk_off_score": 0.5,
-          "news_headlines": [
-            "From car and phone to tractor owners,\u00a0a populist wave is rising to end the 'captive' repair economy",
-            "Some young Americans scale back dating as costs and apps add pressure, survey shows",
-            "Berkshire attracts interest as it slips further behind the S&P 500",
-            "Pirro could reopen Fed probe at any time, Democratic senators warn",
-            "Nuclear reactor company X-energy shares surge 27% as AI drives interest in its IPO"
-          ]
-        },
-        "position_snapshot": {
-          "position_side": "NONE",
-          "position_size_usd": 0.0,
-          "entry_price": null,
-          "current_price": null,
-          "unrealized_pnl_pct": 0.0,
-          "distance_to_liq": null,
-          "open_positions": []
-        },
-        "decision_ready_features": {
-          "regime_1d": "BEAR",
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "NOISE",
-          "macro_permission": "ALLOW_SHORT",
-          "event_risk_active": true,
-          "usd_strength_flag": false,
-          "yen_stress_flag": false,
-          "flow_data_available": true,
-          "flow_schema_version": "flow_semantics_v1",
-          "flow_token_semantic": "DISTRIBUTION_PRESSURE",
-          "flow_stablecoin_semantic": "CAPITAL_WITHDRAWAL",
-          "flow_composite_semantic": "SHORT_SUPPORT",
-          "flow_signal_mixed": false,
-          "flow_support_long": false,
-          "flow_support_short": true,
-          "qlib_relative_score_8h": 0.0004,
-          "qlib_percentile_8h": 0.25,
-          "p_up_8h": 0.0921,
-          "p_down_8h": 0.2242,
-          "p_flat_8h": 0.6837,
-          "confidence_8h": 0.2242,
-          "qlib_direction": "FLAT",
-          "qlib_direction_confident": false,
-          "qlib_top_bucket": false,
-          "qlib_bottom_bucket": true
-        },
-        "quality_score": 0.83,
-        "is_decision_eligible": true
-      },
-      {
-        "decision_id": "cycle_2026-04-26_0800_BNB",
-        "symbol": "BNB-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777190820,
-        "snapshot_time": "2026-04-26T08:07:00Z",
-        "snapshot_time_local": "2026-04-26T16:07:00+0800",
-        "local_timezone": "Asia/Shanghai",
-        "market_snapshot": {
-          "price": 631.8,
-          "change_24h": 0.6050955414012666,
-          "rsi_4h": 47.59381554494201,
-          "adx_14": 0.0,
-          "volume_ratio": 0.5939135856946592,
-          "wick_ratio_lower": 28.57,
-          "wick_ratio_upper": 42.86,
-          "funding_rate": 3.23373381822e-05,
-          "funding_zscore": -0.29,
-          "oi_now": 50133121.506,
-          "delta_oi_24h_percent": 0.7377435870352341,
-          "natr_percent": 0.7514174170822703,
-          "whale_ls_ratio": 0.8418367346938777,
-          "whale_pos_ratio": 0.8420957126971245,
-          "atr_14": 3.7857142857142856,
-          "macd_line_4h": -0.9274912649894986,
-          "macd_signal_4h": -0.0552911135166156,
-          "macd_hist_4h": -0.872200151472883,
-          "rel_volume_60": 0.01669935386572179,
-          "volume_usd_4h": 108254.606,
-          "sma50_4h": 632.498,
-          "bearish_divergence_4h": false,
-          "bullish_divergence_4h": false,
-          "macd_cross_up_4h": false,
-          "macd_cross_down_4h": false,
-          "structure_support_12bar_volume_confirmed": 627.9,
-          "structure_resistance_12bar_volume_confirmed": 639.3,
-          "structure_support_stop_long": 626.0071,
-          "structure_resistance_stop_short": 641.1929
-        },
-        "onchain_snapshot": {
-          "token_net_flow": 0.0,
-          "stablecoin_net_flow": 0.0,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "token_flow_semantic": "UNAVAILABLE",
-          "stablecoin_flow_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "sentiment_score": 0.0,
-          "liquidation_long_usd": 232.69299999999998,
-          "liquidation_short_usd": 1464.54,
-          "liquidation_long_to_volume_4h": 0.0021494974541776,
-          "liquidation_short_to_volume_4h": 0.0135286622353971,
-          "qlib_relative_score_8h": 0.0044,
-          "qlib_rank_8h": 1,
-          "qlib_percentile_8h": 1.0,
-          "p_up_8h": 0.065,
-          "p_down_8h": 0.1343,
-          "p_flat_8h": 0.8007,
-          "confidence_8h": 0.1343
-        },
-        "macro_snapshot": {
-          "event_type": "FED_SPEECH",
-          "policy_stance": "HAWKISH",
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "SWING",
-          "crypto_relevance": "HIGH",
-          "key_tags": [
-            "FED_HAWKISH",
-            "RISK_OFF_NEWS"
-          ],
-          "brief_rationale": "Headlines are mixed but include a hawkish Fed probe threat and risk-off sentiment from fear/greed index at 33 and VIX at 18.71. The Fed probe reopening is a hawkish signal, while X-energy IPO surge is risk-on but isolated. Overall, the macro backdrop remains risk-off.",
-          "news_summary": "Populist wave against captive repair economy; dating costs rise; Berkshire lags S&P 500; Pirro could reopen Fed probe; X-energy IPO surges on AI interest.",
-          "classification_basis": {
-            "fear_greed_index": 33.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.605,
-            "fed_change_5d_bps": -3.7,
-            "usdjpy_level": 159.333,
-            "usdjpy_change_5d_pct": 0.09,
-            "dxy_level": 98.51,
-            "dxy_change_5d_pct": 0.1,
-            "vix_level": 18.71,
-            "vix_change_5d_pct": -0.85,
-            "us10y_level": 4.31,
-            "us10y_change_5d_pct": 1.41,
-            "global_stable_flow": 27520473.27232361,
-            "global_stable_market_cap": 267568470866.69824,
-            "global_stable_flow_ratio_pct": 0.010285394681660464
-          },
-          "key_events": [
-            "FED_HAWKISH",
-            "RISK_OFF_NEWS"
-          ],
-          "event_facts": {
-            "fear_greed_index": 33.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.605,
-            "fed_change_5d_bps": -3.7,
-            "usdjpy_level": 159.333,
-            "usdjpy_change_5d_pct": 0.09,
-            "dxy_level": 98.51,
-            "dxy_change_5d_pct": 0.1,
-            "vix_level": 18.71,
-            "vix_change_5d_pct": -0.85,
-            "us10y_level": 4.31,
-            "us10y_change_5d_pct": 1.41,
-            "global_stable_flow": 27520473.27232361,
-            "global_stable_market_cap": 267568470866.69824,
-            "global_stable_flow_ratio_pct": 0.010285394681660464
-          },
-          "provenance": {
-            "generation_mode": "llm_refined",
-            "llm_enabled": true,
-            "llm_attempted": true,
-            "llm_applied": true,
-            "llm_override_fields": [
-              "brief_rationale",
-              "news_summary"
-            ],
-            "llm_audit": {
-              "enabled": true,
-              "provider": "deepseek",
-              "model": "deepseek-chat",
-              "status": "parsed",
-              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
-              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Populist wave against captive repair economy; dating costs rise; Berkshire lags S&P 500; Pirro could reopen Fed probe; X-energy IPO surges on AI interest.\", \"brief_rationale\": \"Headlines are mixed but include a hawkish Fed probe threat and risk-off sentiment from fear/greed index at 33 and VIX at 18.71. The Fed probe reopening is a hawkish signal, while X-energy IPO surge is risk-on but isolated. Overall, the macro backdrop remains risk-off.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"] }",
-              "parsed_response": {
-                "news_summary": "Populist wave against captive repair economy; dating costs rise; Berkshire lags S&P 500; Pirro could reopen Fed probe; X-energy IPO surges on AI interest.",
-                "brief_rationale": "Headlines are mixed but include a hawkish Fed probe threat and risk-off sentiment from fear/greed index at 33 and VIX at 18.71. The Fed probe reopening is a hawkish signal, while X-energy IPO surge is risk-on but isolated. Overall, the macro backdrop remains risk-off.",
-                "market_impact": "RISK_OFF",
-                "impact_horizon": "SWING",
-                "crypto_relevance": "HIGH",
-                "key_tags": [
-                  "FED_HAWKISH",
-                  "RISK_OFF_NEWS"
-                ]
-              },
-              "error": null
-            }
-          },
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "fear_greed_index": 33.0,
-          "fear_greed_state": "FEAR",
-          "dxy_level": 98.51,
-          "dxy_trend": "FLAT",
-          "usdjpy_level": 159.333,
-          "usdjpy_trend": "FLAT",
-          "fed_event_risk": "HIGH",
-          "macro_event_window": true,
-          "risk_off_score": 0.8,
-          "news_headlines": [
-            "From car and phone to tractor owners,\u00a0a populist wave is rising to end the 'captive' repair economy",
-            "Some young Americans scale back dating as costs and apps add pressure, survey shows",
-            "Berkshire attracts interest as it slips further behind the S&P 500",
-            "Pirro could reopen Fed probe at any time, Democratic senators warn",
-            "Nuclear reactor company X-energy shares surge 27% as AI drives interest in its IPO"
-          ]
-        },
-        "position_snapshot": {
-          "position_side": "NONE",
-          "position_size_usd": 0.0,
-          "entry_price": null,
-          "current_price": null,
-          "unrealized_pnl_pct": 0.0,
-          "distance_to_liq": null,
-          "open_positions": []
-        },
-        "decision_ready_features": {
-          "regime_1d": "BEAR",
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "SWING",
-          "macro_permission": "ALLOW_SHORT",
-          "event_risk_active": true,
-          "usd_strength_flag": false,
-          "yen_stress_flag": false,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "flow_token_semantic": "UNAVAILABLE",
-          "flow_stablecoin_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "flow_support_long": false,
-          "flow_support_short": false,
-          "qlib_relative_score_8h": 0.0044,
-          "qlib_percentile_8h": 1.0,
-          "p_up_8h": 0.065,
-          "p_down_8h": 0.1343,
-          "p_flat_8h": 0.8007,
-          "confidence_8h": 0.1343,
-          "qlib_direction": "FLAT",
-          "qlib_direction_confident": false,
-          "qlib_top_bucket": true,
-          "qlib_bottom_bucket": false
-        },
-        "quality_score": 0.83,
-        "is_decision_eligible": true
-      },
-      {
-        "decision_id": "cycle_2026-04-26_0800_DOGE",
-        "symbol": "DOGE-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777190829,
-        "snapshot_time": "2026-04-26T08:07:09Z",
-        "snapshot_time_local": "2026-04-26T16:07:09+0800",
-        "local_timezone": "Asia/Shanghai",
-        "market_snapshot": {
-          "price": 0.09846,
-          "change_24h": 0.5206738131699954,
-          "rsi_4h": 59.07777402247192,
-          "adx_14": 0.0,
-          "volume_ratio": 0.6086870871994834,
-          "wick_ratio_lower": 45.45,
-          "wick_ratio_upper": 18.18,
-          "funding_rate": -9.29005810329e-05,
-          "funding_zscore": -1.89,
-          "oi_now": 104577382.81439996,
-          "delta_oi_24h_percent": -7.550886650725327,
-          "natr_percent": 1.1857631616654547,
-          "whale_ls_ratio": 1.3028953229398663,
-          "whale_pos_ratio": 0.8359565195845661,
-          "atr_14": 0.0010349999999999,
-          "macd_line_4h": 0.0005460613738851,
-          "macd_signal_4h": 0.0005704057138188,
-          "macd_hist_4h": -2.4344339933703835e-05,
-          "rel_volume_60": 0.009003362580144515,
-          "volume_usd_4h": 508449.2744,
-          "sma50_4h": 0.0963054,
-          "bearish_divergence_4h": false,
-          "bullish_divergence_4h": false,
-          "macd_cross_up_4h": false,
-          "macd_cross_down_4h": false,
-          "structure_support_12bar_volume_confirmed": 0.09753,
-          "structure_resistance_12bar_volume_confirmed": 0.09879,
-          "structure_support_stop_long": 0.097,
-          "structure_resistance_stop_short": 0.0993
-        },
-        "onchain_snapshot": {
-          "token_net_flow": 0.0,
-          "stablecoin_net_flow": 0.0,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "token_flow_semantic": "UNAVAILABLE",
-          "stablecoin_flow_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "sentiment_score": 0.0,
-          "liquidation_long_usd": 16458.9381,
-          "liquidation_short_usd": 5292.4424,
-          "liquidation_long_to_volume_4h": 0.0323708557150022,
-          "liquidation_short_to_volume_4h": 0.010408988008185,
-          "qlib_relative_score_8h": 0.0003,
-          "qlib_rank_8h": 5,
-          "qlib_percentile_8h": 0.0,
-          "p_up_8h": 0.093,
-          "p_down_8h": 0.2292,
-          "p_flat_8h": 0.6778,
-          "confidence_8h": 0.2292
-        },
-        "macro_snapshot": {
-          "event_type": "FED_SPEECH",
-          "policy_stance": "HAWKISH",
-          "market_impact": "NO_CLEAR_IMPACT",
-          "impact_horizon": "NOISE",
-          "crypto_relevance": "LOW",
-          "key_tags": [
-            "FED_HAWKISH",
-            "RISK_OFF_NEWS"
-          ],
-          "brief_rationale": "Headlines are mostly non-market or idiosyncratic; no clear macro catalyst. Fed probe warning is noise; X-energy IPO is company-specific. Overall no strong directional signal.",
-          "news_summary": "Populist wave against captive repair economy; young Americans scale back dating due to costs; Berkshire lags S&P 500; Democratic senators warn Pirro could reopen Fed probe; X-energy shares surge 27% on AI-driven IPO interest.",
-          "classification_basis": {
-            "fear_greed_index": 33.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.605,
-            "fed_change_5d_bps": -3.7,
-            "usdjpy_level": 159.333,
-            "usdjpy_change_5d_pct": 0.09,
-            "dxy_level": 98.51,
-            "dxy_change_5d_pct": 0.1,
-            "vix_level": 18.71,
-            "vix_change_5d_pct": -0.85,
-            "us10y_level": 4.31,
-            "us10y_change_5d_pct": 1.41,
-            "global_stable_flow": 27520473.27232361,
-            "global_stable_market_cap": 267568470866.69824,
-            "global_stable_flow_ratio_pct": 0.010285394681660464
-          },
-          "key_events": [
-            "FED_HAWKISH",
-            "RISK_OFF_NEWS"
-          ],
-          "event_facts": {
-            "fear_greed_index": 33.0,
-            "fear_greed_state": "FEAR",
-            "fed_implied_rate": 3.605,
-            "fed_change_5d_bps": -3.7,
-            "usdjpy_level": 159.333,
-            "usdjpy_change_5d_pct": 0.09,
-            "dxy_level": 98.51,
-            "dxy_change_5d_pct": 0.1,
-            "vix_level": 18.71,
-            "vix_change_5d_pct": -0.85,
-            "us10y_level": 4.31,
-            "us10y_change_5d_pct": 1.41,
-            "global_stable_flow": 27520473.27232361,
-            "global_stable_market_cap": 267568470866.69824,
-            "global_stable_flow_ratio_pct": 0.010285394681660464
-          },
-          "provenance": {
-            "generation_mode": "llm_refined",
-            "llm_enabled": true,
-            "llm_attempted": true,
-            "llm_applied": true,
-            "llm_override_fields": [
-              "brief_rationale",
-              "crypto_relevance",
-              "impact_horizon",
-              "market_impact",
-              "news_summary"
-            ],
-            "llm_audit": {
-              "enabled": true,
-              "provider": "deepseek",
-              "model": "deepseek-chat",
-              "status": "parsed",
-              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
-              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Populist wave against captive repair economy; young Americans scale back dating due to costs; Berkshire lags S&P 500; Democratic senators warn Pirro could reopen Fed probe; X-energy shares surge 27% on AI-driven IPO interest.\", \"brief_rationale\": \"Headlines are mostly non-market or idiosyncratic; no clear macro catalyst. Fed probe warning is noise; X-energy IPO is company-specific. Overall no strong directional signal.\", \"market_impact\": \"NO_CLEAR_IMPACT\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"LOW\", \"key_tags\": [\"MACRO_NOISE\"] }",
-              "parsed_response": {
-                "news_summary": "Populist wave against captive repair economy; young Americans scale back dating due to costs; Berkshire lags S&P 500; Democratic senators warn Pirro could reopen Fed probe; X-energy shares surge 27% on AI-driven IPO interest.",
-                "brief_rationale": "Headlines are mostly non-market or idiosyncratic; no clear macro catalyst. Fed probe warning is noise; X-energy IPO is company-specific. Overall no strong directional signal.",
-                "market_impact": "NO_CLEAR_IMPACT",
-                "impact_horizon": "NOISE",
-                "crypto_relevance": "LOW",
-                "key_tags": [
-                  "MACRO_NOISE"
-                ]
-              },
-              "error": null
-            }
-          },
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "NOISE",
-          "macro_permission": "ALLOW_SHORT",
-          "fear_greed_index": 33.0,
-          "fear_greed_state": "FEAR",
-          "dxy_level": 98.51,
-          "dxy_trend": "FLAT",
-          "usdjpy_level": 159.333,
-          "usdjpy_trend": "FLAT",
-          "fed_event_risk": "HIGH",
-          "macro_event_window": true,
-          "risk_off_score": 0.5,
-          "news_headlines": [
-            "From car and phone to tractor owners,\u00a0a populist wave is rising to end the 'captive' repair economy",
-            "Some young Americans scale back dating as costs and apps add pressure, survey shows",
-            "Berkshire attracts interest as it slips further behind the S&P 500",
-            "Pirro could reopen Fed probe at any time, Democratic senators warn",
-            "Nuclear reactor company X-energy shares surge 27% as AI drives interest in its IPO"
-          ]
-        },
-        "position_snapshot": {
-          "position_side": "NONE",
-          "position_size_usd": 0.0,
-          "entry_price": null,
-          "current_price": null,
-          "unrealized_pnl_pct": 0.0,
-          "distance_to_liq": null,
-          "open_positions": []
-        },
-        "decision_ready_features": {
-          "regime_1d": "BEAR",
-          "macro_mode": "RISK_OFF",
-          "macro_horizon": "NOISE",
-          "macro_permission": "ALLOW_SHORT",
-          "event_risk_active": true,
-          "usd_strength_flag": false,
-          "yen_stress_flag": false,
-          "flow_data_available": false,
-          "flow_schema_version": "flow_semantics_v1",
-          "flow_token_semantic": "UNAVAILABLE",
-          "flow_stablecoin_semantic": "UNAVAILABLE",
-          "flow_composite_semantic": "UNAVAILABLE",
-          "flow_signal_mixed": false,
-          "flow_support_long": false,
-          "flow_support_short": false,
-          "qlib_relative_score_8h": 0.0003,
-          "qlib_percentile_8h": 0.0,
-          "p_up_8h": 0.093,
-          "p_down_8h": 0.2292,
-          "p_flat_8h": 0.6778,
-          "confidence_8h": 0.2292,
-          "qlib_direction": "FLAT",
-          "qlib_direction_confident": false,
-          "qlib_top_bucket": false,
-          "qlib_bottom_bucket": true
-        },
-        "quality_score": 0.83,
-        "is_decision_eligible": true
-      }
-    ],
-    "candidate_batches": [
-      {
-        "symbol": "BTC-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777190792,
-        "candidate_proposals": [],
-        "e_strategy_diagnostic": {
-          "qlib_inputs": {
-            "qlib_relative_score_8h": 0.0021,
-            "qlib_percentile_8h": 0.5,
-            "qlib_rank_8h": 3,
-            "p_up_8h": 0.0452,
-            "p_down_8h": 0.155,
-            "p_flat_8h": 0.7998,
-            "funding_zscore": 1.87,
-            "token_net_flow": 0.0,
-            "stablecoin_net_flow": 0.0,
-            "regime_1d": "BEAR",
-            "whale_bias": "neutral",
-            "is_overheated": false,
-            "is_squeeze_zone": false
-          },
-          "config": {
-            "qlib_rank_bucket_size": 3,
-            "qlib_prob_threshold": 0.55,
-            "qlib_prob_gap_threshold": 0.15,
-            "qlib_flat_max_threshold": 0.4
-          },
-          "long_path": {
-            "candidate": "Blueprint_E1",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": false,
-              "overheated_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate",
-              "regime"
-            ]
-          },
-          "short_path": {
-            "candidate": "Blueprint_E2",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": true,
-              "squeeze_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate"
-            ]
-          },
-          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, prob_gap, p_flat_gate"
-        }
-      },
-      {
-        "symbol": "ETH-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777190801,
-        "candidate_proposals": [],
-        "e_strategy_diagnostic": {
-          "qlib_inputs": {
-            "qlib_relative_score_8h": 0.0032,
-            "qlib_percentile_8h": 0.75,
-            "qlib_rank_8h": 2,
-            "p_up_8h": 0.093,
-            "p_down_8h": 0.1653,
-            "p_flat_8h": 0.7417,
-            "funding_zscore": -0.09,
-            "token_net_flow": 2164362.7879466685,
-            "stablecoin_net_flow": -450061.73347240285,
-            "regime_1d": "BEAR",
-            "whale_bias": "neutral",
-            "is_overheated": false,
-            "is_squeeze_zone": false
-          },
-          "config": {
-            "qlib_rank_bucket_size": 3,
-            "qlib_prob_threshold": 0.55,
-            "qlib_prob_gap_threshold": 0.15,
-            "qlib_flat_max_threshold": 0.4
-          },
-          "long_path": {
-            "candidate": "Blueprint_E1",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": false,
-              "overheated_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate",
-              "regime"
-            ]
-          },
-          "short_path": {
-            "candidate": "Blueprint_E2",
-            "checks": {
-              "rank_bucket_pass": false,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": true,
-              "squeeze_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "rank_bucket",
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate"
-            ]
-          },
-          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime; short blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate"
-        }
-      },
-      {
-        "symbol": "SOL-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777190810,
-        "candidate_proposals": [],
-        "e_strategy_diagnostic": {
-          "qlib_inputs": {
-            "qlib_relative_score_8h": 0.0004,
-            "qlib_percentile_8h": 0.25,
-            "qlib_rank_8h": 4,
-            "p_up_8h": 0.0921,
-            "p_down_8h": 0.2242,
-            "p_flat_8h": 0.6837,
-            "funding_zscore": 1.25,
-            "token_net_flow": -24949.561386168112,
-            "stablecoin_net_flow": -142333.27040399995,
-            "regime_1d": "BEAR",
-            "whale_bias": "neutral",
-            "is_overheated": false,
-            "is_squeeze_zone": false
-          },
-          "config": {
-            "qlib_rank_bucket_size": 3,
-            "qlib_prob_threshold": 0.55,
-            "qlib_prob_gap_threshold": 0.15,
-            "qlib_flat_max_threshold": 0.4
-          },
-          "long_path": {
-            "candidate": "Blueprint_E1",
-            "checks": {
-              "rank_bucket_pass": false,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": false,
-              "overheated_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "rank_bucket",
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate",
-              "regime"
-            ]
-          },
-          "short_path": {
-            "candidate": "Blueprint_E2",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": true,
-              "squeeze_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate"
-            ]
-          },
-          "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, prob_gap, p_flat_gate"
-        }
-      },
-      {
-        "symbol": "BNB-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777190820,
-        "candidate_proposals": [],
-        "e_strategy_diagnostic": {
-          "qlib_inputs": {
-            "qlib_relative_score_8h": 0.0044,
-            "qlib_percentile_8h": 1.0,
-            "qlib_rank_8h": 1,
-            "p_up_8h": 0.065,
-            "p_down_8h": 0.1343,
-            "p_flat_8h": 0.8007,
-            "funding_zscore": -0.29,
-            "token_net_flow": 0.0,
-            "stablecoin_net_flow": 0.0,
-            "regime_1d": "BEAR",
-            "whale_bias": "neutral",
-            "is_overheated": false,
-            "is_squeeze_zone": false
-          },
-          "config": {
-            "qlib_rank_bucket_size": 3,
-            "qlib_prob_threshold": 0.55,
-            "qlib_prob_gap_threshold": 0.15,
-            "qlib_flat_max_threshold": 0.4
-          },
-          "long_path": {
-            "candidate": "Blueprint_E1",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": false,
-              "overheated_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate",
-              "regime"
-            ]
-          },
-          "short_path": {
-            "candidate": "Blueprint_E2",
-            "checks": {
-              "rank_bucket_pass": false,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": true,
-              "squeeze_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "rank_bucket",
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate"
-            ]
-          },
-          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime; short blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate"
-        }
-      },
-      {
-        "symbol": "DOGE-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "timeframe": "4h",
-        "snapshot_timestamp": 1777190829,
-        "candidate_proposals": [],
-        "e_strategy_diagnostic": {
-          "qlib_inputs": {
-            "qlib_relative_score_8h": 0.0003,
-            "qlib_percentile_8h": 0.0,
-            "qlib_rank_8h": 5,
-            "p_up_8h": 0.093,
-            "p_down_8h": 0.2292,
-            "p_flat_8h": 0.6778,
-            "funding_zscore": -1.89,
-            "token_net_flow": 0.0,
-            "stablecoin_net_flow": 0.0,
-            "regime_1d": "BEAR",
-            "whale_bias": "neutral",
-            "is_overheated": false,
-            "is_squeeze_zone": false
-          },
-          "config": {
-            "qlib_rank_bucket_size": 3,
-            "qlib_prob_threshold": 0.55,
-            "qlib_prob_gap_threshold": 0.15,
-            "qlib_flat_max_threshold": 0.4
-          },
-          "long_path": {
-            "candidate": "Blueprint_E1",
-            "checks": {
-              "rank_bucket_pass": false,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": false,
-              "overheated_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "rank_bucket",
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate",
-              "regime"
-            ]
-          },
-          "short_path": {
-            "candidate": "Blueprint_E2",
-            "checks": {
-              "rank_bucket_pass": true,
-              "prob_threshold_pass": false,
-              "prob_gap_pass": false,
-              "flat_gate_pass": false,
-              "regime_pass": true,
-              "squeeze_pass": true,
-              "funding_pass": true,
-              "whale_pass": true
-            },
-            "eligible": false,
-            "blocked_by": [
-              "prob_threshold",
-              "prob_gap",
-              "p_flat_gate"
-            ]
-          },
-          "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, prob_gap, p_flat_gate"
-        }
-      }
-    ],
-    "rule_evaluations": [
-      {
-        "symbol": "BTC-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "stage": "pre_trade_filter",
-        "passed": false,
-        "reason_codes": [],
-        "approved_candidates": [],
-        "rule_trace": [
-          {
-            "rule": "DATA_ELIGIBILITY_CHECK",
-            "passed": true
-          }
-        ],
-        "candidate_structure": {
-          "overall_state": "no_candidate",
-          "has_directional_conflict": false,
-          "long_count": 0,
-          "short_count": 0,
-          "resonance_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_resonance_strength": 0
-        }
-      },
-      {
-        "symbol": "ETH-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "stage": "pre_trade_filter",
-        "passed": false,
-        "reason_codes": [],
-        "approved_candidates": [],
-        "rule_trace": [
-          {
-            "rule": "DATA_ELIGIBILITY_CHECK",
-            "passed": true
-          }
-        ],
-        "candidate_structure": {
-          "overall_state": "no_candidate",
-          "has_directional_conflict": false,
-          "long_count": 0,
-          "short_count": 0,
-          "resonance_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_resonance_strength": 0
-        }
-      },
-      {
-        "symbol": "SOL-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "stage": "pre_trade_filter",
-        "passed": false,
-        "reason_codes": [],
-        "approved_candidates": [],
-        "rule_trace": [
-          {
-            "rule": "DATA_ELIGIBILITY_CHECK",
-            "passed": true
-          }
-        ],
-        "candidate_structure": {
-          "overall_state": "no_candidate",
-          "has_directional_conflict": false,
-          "long_count": 0,
-          "short_count": 0,
-          "resonance_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_resonance_strength": 0
-        }
-      },
-      {
-        "symbol": "BNB-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "stage": "pre_trade_filter",
-        "passed": false,
-        "reason_codes": [],
-        "approved_candidates": [],
-        "rule_trace": [
-          {
-            "rule": "DATA_ELIGIBILITY_CHECK",
-            "passed": true
-          }
-        ],
-        "candidate_structure": {
-          "overall_state": "no_candidate",
-          "has_directional_conflict": false,
-          "long_count": 0,
-          "short_count": 0,
-          "resonance_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_resonance_strength": 0
-        }
-      },
-      {
-        "symbol": "DOGE-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "stage": "pre_trade_filter",
-        "passed": false,
-        "reason_codes": [],
-        "approved_candidates": [],
-        "rule_trace": [
-          {
-            "rule": "DATA_ELIGIBILITY_CHECK",
-            "passed": true
-          }
-        ],
-        "candidate_structure": {
-          "overall_state": "no_candidate",
-          "has_directional_conflict": false,
-          "long_count": 0,
-          "short_count": 0,
-          "resonance_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_groups": {
-            "LONG": [],
-            "SHORT": []
-          },
-          "approved_resonance_strength": 0
-        }
-      }
-    ],
-    "research_outputs": [
-      null,
-      null,
-      null,
-      null,
-      null
-    ],
-    "risk_reviews": [
-      {
-        "symbol": "BTC-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "approved": false,
-        "final_intent": "NO_TRADE",
-        "approved_risk_fraction": 0.0,
-        "approved_position_size_usd": 0.0,
-        "leverage": 1.0,
-        "max_holding_bars": 0,
-        "execution_action": "DO_NOTHING",
-        "next_position_state": "candidate",
-        "review_note": "rule evaluation rejected or produced no approved candidates"
-      },
-      {
-        "symbol": "ETH-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "approved": false,
-        "final_intent": "NO_TRADE",
-        "approved_risk_fraction": 0.0,
-        "approved_position_size_usd": 0.0,
-        "leverage": 1.0,
-        "max_holding_bars": 0,
-        "execution_action": "DO_NOTHING",
-        "next_position_state": "candidate",
-        "review_note": "rule evaluation rejected or produced no approved candidates"
-      },
-      {
-        "symbol": "SOL-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "approved": false,
-        "final_intent": "NO_TRADE",
-        "approved_risk_fraction": 0.0,
-        "approved_position_size_usd": 0.0,
-        "leverage": 1.0,
-        "max_holding_bars": 0,
-        "execution_action": "DO_NOTHING",
-        "next_position_state": "candidate",
-        "review_note": "rule evaluation rejected or produced no approved candidates"
-      },
-      {
-        "symbol": "BNB-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "approved": false,
-        "final_intent": "NO_TRADE",
-        "approved_risk_fraction": 0.0,
-        "approved_position_size_usd": 0.0,
-        "leverage": 1.0,
-        "max_holding_bars": 0,
-        "execution_action": "DO_NOTHING",
-        "next_position_state": "candidate",
-        "review_note": "rule evaluation rejected or produced no approved candidates"
-      },
-      {
-        "symbol": "DOGE-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "approved": false,
-        "final_intent": "NO_TRADE",
-        "approved_risk_fraction": 0.0,
-        "approved_position_size_usd": 0.0,
-        "leverage": 1.0,
-        "max_holding_bars": 0,
-        "execution_action": "DO_NOTHING",
-        "next_position_state": "candidate",
-        "review_note": "rule evaluation rejected or produced no approved candidates"
-      }
-    ],
-    "executions": [
-      {
-        "symbol": "BTC-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "execution_action": "DO_NOTHING",
-        "order_status": "SKIPPED",
-        "requested_size_usd": 0.0,
-        "requested_leverage": 1.0,
-        "avg_fill_price": null,
-        "filled_size": 0.0,
-        "exchange_order_id": null,
-        "executed_at": null,
-        "sync_status": "SKIPPED",
-        "failure_reason": null,
-        "history": [
-          {
-            "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-04-26T08:06:34Z",
-            "payload": {
-              "review_note": "rule evaluation rejected or produced no approved candidates"
-            }
-          },
-          {
-            "type": "EXECUTION_SKIPPED",
-            "at": "2026-04-26T08:06:34Z",
-            "payload": {
-              "reason": "do_nothing",
-              "execution_action": "DO_NOTHING"
-            }
-          }
-        ],
-        "protection_status": "SKIPPED"
-      },
-      {
-        "symbol": "ETH-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "execution_action": "DO_NOTHING",
-        "order_status": "SKIPPED",
-        "requested_size_usd": 0.0,
-        "requested_leverage": 1.0,
-        "avg_fill_price": null,
-        "filled_size": 0.0,
-        "exchange_order_id": null,
-        "executed_at": null,
-        "sync_status": "SKIPPED",
-        "failure_reason": null,
-        "history": [
-          {
-            "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-04-26T08:06:43Z",
-            "payload": {
-              "review_note": "rule evaluation rejected or produced no approved candidates"
-            }
-          },
-          {
-            "type": "EXECUTION_SKIPPED",
-            "at": "2026-04-26T08:06:43Z",
-            "payload": {
-              "reason": "do_nothing",
-              "execution_action": "DO_NOTHING"
-            }
-          }
-        ],
-        "protection_status": "SKIPPED"
-      },
-      {
-        "symbol": "SOL-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "execution_action": "DO_NOTHING",
-        "order_status": "SKIPPED",
-        "requested_size_usd": 0.0,
-        "requested_leverage": 1.0,
-        "avg_fill_price": null,
-        "filled_size": 0.0,
-        "exchange_order_id": null,
-        "executed_at": null,
-        "sync_status": "SKIPPED",
-        "failure_reason": null,
-        "history": [
-          {
-            "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-04-26T08:06:52Z",
-            "payload": {
-              "review_note": "rule evaluation rejected or produced no approved candidates"
-            }
-          },
-          {
-            "type": "EXECUTION_SKIPPED",
-            "at": "2026-04-26T08:06:52Z",
-            "payload": {
-              "reason": "do_nothing",
-              "execution_action": "DO_NOTHING"
-            }
-          }
-        ],
-        "protection_status": "SKIPPED"
-      },
-      {
-        "symbol": "BNB-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "execution_action": "DO_NOTHING",
-        "order_status": "SKIPPED",
-        "requested_size_usd": 0.0,
-        "requested_leverage": 1.0,
-        "avg_fill_price": null,
-        "filled_size": 0.0,
-        "exchange_order_id": null,
-        "executed_at": null,
-        "sync_status": "SKIPPED",
-        "failure_reason": null,
-        "history": [
-          {
-            "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-04-26T08:07:02Z",
-            "payload": {
-              "review_note": "rule evaluation rejected or produced no approved candidates"
-            }
-          },
-          {
-            "type": "EXECUTION_SKIPPED",
-            "at": "2026-04-26T08:07:02Z",
-            "payload": {
-              "reason": "do_nothing",
-              "execution_action": "DO_NOTHING"
-            }
-          }
-        ],
-        "protection_status": "SKIPPED"
-      },
-      {
-        "symbol": "DOGE-USDT",
-        "cycleId": "cycle_2026-04-26_0800",
-        "execution_action": "DO_NOTHING",
-        "order_status": "SKIPPED",
-        "requested_size_usd": 0.0,
-        "requested_leverage": 1.0,
-        "avg_fill_price": null,
-        "filled_size": 0.0,
-        "exchange_order_id": null,
-        "executed_at": null,
-        "sync_status": "SKIPPED",
-        "failure_reason": null,
-        "history": [
-          {
-            "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-04-26T08:07:11Z",
-            "payload": {
-              "review_note": "rule evaluation rejected or produced no approved candidates"
-            }
-          },
-          {
-            "type": "EXECUTION_SKIPPED",
-            "at": "2026-04-26T08:07:11Z",
-            "payload": {
-              "reason": "do_nothing",
-              "execution_action": "DO_NOTHING"
-            }
-          }
-        ],
-        "protection_status": "SKIPPED"
-      }
-    ],
-    "record_count": 5,
-    "post_trade_review": {
-      "evaluated_count": 250,
-      "record_count": 250
-    }
-  },
-  {
     "cycleId": "cycle_2026-04-26_1200",
     "generated_at": "2026-04-26T12:07:52Z",
     "generated_at_local": "2026-04-26T20:07:52+0800",
@@ -100872,6 +99104,2083 @@
     "post_trade_review": {
       "evaluated_count": 131,
       "record_count": 131
+    }
+  },
+  {
+    "cycleId": "cycle_2026-05-04_1600",
+    "generated_at": "2026-05-04T16:08:14Z",
+    "generated_at_local": "2026-05-05T00:08:14+0800",
+    "cycle_local_time": "2026-05-05 00:00:00 CST",
+    "local_timezone": "Asia/Shanghai",
+    "timeframe": "4h",
+    "snapshots": [
+      {
+        "decision_id": "cycle_2026-05-04_1600_BTC",
+        "symbol": "BTC-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777910842,
+        "snapshot_time": "2026-05-04T16:07:22Z",
+        "snapshot_time_local": "2026-05-05T00:07:22+0800",
+        "local_timezone": "Asia/Shanghai",
+        "market_snapshot": {
+          "price": 79900.0,
+          "change_24h": 1.7431310652722223,
+          "rsi_4h": 63.337819043374566,
+          "adx_14": 31.360771242552225,
+          "volume_ratio": 1.6207783269940264,
+          "bb_width": 0.0338361115401817,
+          "bb_pct_b": 1.0178569642267306,
+          "bb_mid_slope_pct": 0.005030140007164169,
+          "adx_delta": 1.2068261397175455,
+          "recent_close_drift_pct": 0.01714550000045089,
+          "range_edge_close_count": 0,
+          "wick_ratio_lower": 15.95,
+          "wick_ratio_upper": 25.0,
+          "funding_rate": -4.61363808895e-05,
+          "funding_zscore": -0.75,
+          "oi_now": 2547837896.650013,
+          "delta_oi_24h_percent": -2.0033887311693,
+          "natr_percent": 1.0878532939088679,
+          "whale_ls_ratio": 0.4731693683622135,
+          "whale_pos_ratio": 1.1052700728225666,
+          "atr_14": 873.9642857142826,
+          "macd_line_4h": 604.6392442741635,
+          "macd_signal_4h": 506.3668703426503,
+          "macd_hist_4h": 98.27237393151324,
+          "rel_volume_60": 3.2338506703334233,
+          "volume_usd_4h": 2990368688.86636,
+          "sma50_4h": 77577.078,
+          "sma5_1d": 77828.04333333332,
+          "sma10_1d": 77569.645,
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": 0.0032303587338176768,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "bearish_divergence_4h": false,
+          "bullish_divergence_4h": false,
+          "macd_cross_up_4h": false,
+          "macd_cross_down_4h": false,
+          "structure_support_12bar_volume_confirmed": 78146.8,
+          "structure_resistance_12bar_volume_confirmed": 80465.4,
+          "structure_support_stop_long": 77709.8179,
+          "structure_resistance_stop_short": 80902.3821
+        },
+        "onchain_snapshot": {
+          "token_net_flow": 0.0,
+          "stablecoin_net_flow": 0.0,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "token_flow_semantic": "UNAVAILABLE",
+          "stablecoin_flow_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "sentiment_score": 0.0,
+          "liquidation_long_usd": 10232838.41884,
+          "liquidation_short_usd": 12140748.77958002,
+          "liquidation_long_to_volume_4h": 0.0034219320369888,
+          "liquidation_short_to_volume_4h": 0.0040599504752648,
+          "qlib_relative_score_8h": -0.0001,
+          "qlib_rank_8h": 3,
+          "qlib_percentile_8h": 0.5,
+          "p_up_8h": 0.1798,
+          "p_down_8h": 0.3308,
+          "p_flat_8h": 0.4893,
+          "confidence_8h": 0.3308
+        },
+        "macro_snapshot": {
+          "event_type": "FED_SPEECH",
+          "policy_stance": "HAWKISH",
+          "market_impact": "RISK_OFF",
+          "impact_horizon": "MULTI_DAY",
+          "crypto_relevance": "HIGH",
+          "key_tags": [
+            "FED_HAWKISH",
+            "USD_WEAKNESS"
+          ],
+          "brief_rationale": "The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.",
+          "news_summary": "Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.",
+          "classification_basis": {
+            "fear_greed_index": 40.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.64,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.244,
+            "usdjpy_change_5d_pct": -1.46,
+            "dxy_level": 98.39,
+            "dxy_change_5d_pct": -0.53,
+            "vix_level": 18.48,
+            "vix_change_5d_pct": 3.65,
+            "us10y_level": 4.44,
+            "us10y_change_5d_pct": 2.02,
+            "global_stable_flow": -1322701346.6054077,
+            "global_stable_market_cap": 266468743726.39856,
+            "global_stable_flow_ratio_pct": -0.4963814247435768
+          },
+          "key_events": [
+            "FED_HAWKISH",
+            "USD_WEAKNESS"
+          ],
+          "event_facts": {
+            "fear_greed_index": 40.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.64,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.244,
+            "usdjpy_change_5d_pct": -1.46,
+            "dxy_level": 98.39,
+            "dxy_change_5d_pct": -0.53,
+            "vix_level": 18.48,
+            "vix_change_5d_pct": 3.65,
+            "us10y_level": 4.44,
+            "us10y_change_5d_pct": 2.02,
+            "global_stable_flow": -1322701346.6054077,
+            "global_stable_market_cap": 266468743726.39856,
+            "global_stable_flow_ratio_pct": -0.4963814247435768
+          },
+          "provenance": {
+            "generation_mode": "llm_refined",
+            "llm_enabled": true,
+            "llm_attempted": true,
+            "llm_applied": true,
+            "llm_override_fields": [
+              "brief_rationale",
+              "key_tags",
+              "news_summary"
+            ],
+            "llm_audit": {
+              "enabled": true,
+              "provider": "deepseek",
+              "model": "deepseek-chat",
+              "status": "parsed",
+              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
+              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
+              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.\", \"brief_rationale\": \"The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"MEDIUM\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\"] }",
+              "parsed_response": {
+                "news_summary": "Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.",
+                "brief_rationale": "The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.",
+                "market_impact": "MIXED",
+                "impact_horizon": "NOISE",
+                "crypto_relevance": "MEDIUM",
+                "key_tags": [
+                  "FED_HAWKISH",
+                  "USD_WEAKNESS"
+                ]
+              },
+              "error": null
+            }
+          },
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "fear_greed_index": 40.0,
+          "fear_greed_state": "FEAR",
+          "dxy_level": 98.39,
+          "dxy_trend": "DOWN",
+          "usdjpy_level": 157.244,
+          "usdjpy_trend": "DOWN",
+          "fed_event_risk": "HIGH",
+          "macro_event_window": true,
+          "risk_off_score": 0.8,
+          "news_headlines": [
+            "Pirro appears to drop plans to appeal criminal investigation of Fed Chair Powell",
+            "Circle jumps 16% on Clarity Act compromise that preserves stablecoin rewards",
+            "New college graduates overestimate starting salaries by nearly $24,000, report finds",
+            "Warsh's take on Fed independence is met with confusion and some concern",
+            "Billionaire Warren Buffett Says 30-Year Mortgages Are 'Incredibly Attractive' For Buyers Even With High Interest Rates \u2014 'You've Got A One-Way Bet'"
+          ]
+        },
+        "position_snapshot": {
+          "position_side": "NONE",
+          "position_size_usd": 0.0,
+          "entry_price": null,
+          "current_price": null,
+          "unrealized_pnl_pct": 0.0,
+          "distance_to_liq": null,
+          "open_positions": []
+        },
+        "decision_ready_features": {
+          "regime_1d": "BEAR",
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "event_risk_active": true,
+          "usd_strength_flag": false,
+          "yen_stress_flag": true,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "flow_token_semantic": "UNAVAILABLE",
+          "flow_stablecoin_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "flow_support_long": false,
+          "flow_support_short": false,
+          "qlib_relative_score_8h": -0.0001,
+          "qlib_percentile_8h": 0.5,
+          "p_up_8h": 0.1798,
+          "p_down_8h": 0.3308,
+          "p_flat_8h": 0.4893,
+          "confidence_8h": 0.3308,
+          "qlib_direction": "FLAT",
+          "qlib_direction_confident": false,
+          "qlib_top_bucket": true,
+          "qlib_bottom_bucket": true,
+          "range_regime": false,
+          "grid_candidate_eligible": false,
+          "range_lower_bound": 78146.8,
+          "range_upper_bound": 80465.4,
+          "range_width_pct": 0.0292,
+          "price_position_in_range": 0.7561,
+          "grid_mode": "ARITHMETIC",
+          "grid_count": 4,
+          "grid_spacing_pct": 0.0073,
+          "min_profitable_spacing_pct": 0.0034,
+          "grid_spacing_profitable": true,
+          "grid_bb_width": 0.0338,
+          "grid_bb_pct_b": 1.0179,
+          "grid_bb_mid_slope_pct": 0.005,
+          "grid_bb_width_ok": true,
+          "grid_bb_slope_ok": true,
+          "grid_adx_delta": 1.2068,
+          "grid_recent_close_drift_pct": 0.0171,
+          "grid_range_edge_close_count": 0,
+          "grid_trend_risk_ok": true,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "grid_macro_trend_ok": false,
+          "grid_macro_block_reasons": [
+            "directional_swing_macro"
+          ],
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": 0.0032303587338176768,
+          "max_profitable_grid_count": 8,
+          "grid_review_after_hours": 36,
+          "grid_extension_step_hours": 12,
+          "grid_max_lifetime_hours": 60
+        },
+        "quality_score": 1.0,
+        "is_decision_eligible": true
+      },
+      {
+        "decision_id": "cycle_2026-05-04_1600_ETH",
+        "symbol": "ETH-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777910852,
+        "snapshot_time": "2026-05-04T16:07:32Z",
+        "snapshot_time_local": "2026-05-05T00:07:32+0800",
+        "local_timezone": "Asia/Shanghai",
+        "market_snapshot": {
+          "price": 2345.26,
+          "change_24h": 1.0038975860806822,
+          "rsi_4h": 58.08623509049513,
+          "adx_14": 24.8179153846555,
+          "volume_ratio": 1.4050193430601647,
+          "bb_width": 0.0420888487062793,
+          "bb_pct_b": 0.8113151528807397,
+          "bb_mid_slope_pct": 0.004962672670839984,
+          "adx_delta": 2.587343178632473,
+          "recent_close_drift_pct": 0.00916411211127293,
+          "range_edge_close_count": 0,
+          "wick_ratio_lower": 20.58,
+          "wick_ratio_upper": 57.2,
+          "funding_rate": -3.87996129053e-05,
+          "funding_zscore": -0.79,
+          "oi_now": 1580018974.7093248,
+          "delta_oi_24h_percent": 1.0464974244321872,
+          "natr_percent": 1.3521761791463804,
+          "whale_ls_ratio": 0.8321707016823964,
+          "whale_pos_ratio": 0.9986984555972339,
+          "atr_14": 31.78999999999993,
+          "macd_line_4h": 15.601434811595936,
+          "macd_signal_4h": 11.143850895177753,
+          "macd_hist_4h": 4.457583916418184,
+          "rel_volume_60": 2.635307522541226,
+          "volume_usd_4h": 2771983414.98615,
+          "sma50_4h": 2304.5798,
+          "sma5_1d": 2298.899,
+          "sma10_1d": 2306.3885,
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.0031883916066054495,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "bearish_divergence_4h": false,
+          "bullish_divergence_4h": false,
+          "macd_cross_up_4h": false,
+          "macd_cross_down_4h": false,
+          "structure_support_12bar_volume_confirmed": 2308.01,
+          "structure_resistance_12bar_volume_confirmed": 2392.0,
+          "structure_support_stop_long": 2292.115,
+          "structure_resistance_stop_short": 2407.895
+        },
+        "onchain_snapshot": {
+          "token_net_flow": 7208425.574637236,
+          "stablecoin_net_flow": 4369951.753168598,
+          "flow_data_available": true,
+          "flow_schema_version": "flow_semantics_v1",
+          "token_flow_semantic": "ACCUMULATION_HINT",
+          "stablecoin_flow_semantic": "BUYING_POWER",
+          "flow_composite_semantic": "LONG_SUPPORT",
+          "flow_signal_mixed": false,
+          "sentiment_score": 0.05173701487730181,
+          "liquidation_long_usd": 7727311.851930007,
+          "liquidation_short_usd": 5853014.452820001,
+          "liquidation_long_to_volume_4h": 0.0027876472168462,
+          "liquidation_short_to_volume_4h": 0.0021114897084798,
+          "qlib_relative_score_8h": -0.0001,
+          "qlib_rank_8h": 4,
+          "qlib_percentile_8h": 0.25,
+          "p_up_8h": 0.1433,
+          "p_down_8h": 0.3288,
+          "p_flat_8h": 0.5279,
+          "confidence_8h": 0.3288
+        },
+        "macro_snapshot": {
+          "event_type": "FED_SPEECH",
+          "policy_stance": "HAWKISH",
+          "market_impact": "RISK_OFF",
+          "impact_horizon": "MULTI_DAY",
+          "crypto_relevance": "HIGH",
+          "key_tags": [
+            "FED_HAWKISH",
+            "USD_WEAKNESS"
+          ],
+          "brief_rationale": "The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.",
+          "news_summary": "Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.",
+          "classification_basis": {
+            "fear_greed_index": 40.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.64,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.244,
+            "usdjpy_change_5d_pct": -1.46,
+            "dxy_level": 98.39,
+            "dxy_change_5d_pct": -0.53,
+            "vix_level": 18.48,
+            "vix_change_5d_pct": 3.65,
+            "us10y_level": 4.44,
+            "us10y_change_5d_pct": 2.02,
+            "global_stable_flow": -1322701346.6054077,
+            "global_stable_market_cap": 266468743726.39856,
+            "global_stable_flow_ratio_pct": -0.4963814247435768
+          },
+          "key_events": [
+            "FED_HAWKISH",
+            "USD_WEAKNESS"
+          ],
+          "event_facts": {
+            "fear_greed_index": 40.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.64,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.244,
+            "usdjpy_change_5d_pct": -1.46,
+            "dxy_level": 98.39,
+            "dxy_change_5d_pct": -0.53,
+            "vix_level": 18.48,
+            "vix_change_5d_pct": 3.65,
+            "us10y_level": 4.44,
+            "us10y_change_5d_pct": 2.02,
+            "global_stable_flow": -1322701346.6054077,
+            "global_stable_market_cap": 266468743726.39856,
+            "global_stable_flow_ratio_pct": -0.4963814247435768
+          },
+          "provenance": {
+            "generation_mode": "llm_refined",
+            "llm_enabled": true,
+            "llm_attempted": true,
+            "llm_applied": true,
+            "llm_override_fields": [
+              "brief_rationale",
+              "key_tags",
+              "news_summary"
+            ],
+            "llm_audit": {
+              "enabled": true,
+              "provider": "deepseek",
+              "model": "deepseek-chat",
+              "status": "parsed",
+              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
+              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
+              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.\", \"brief_rationale\": \"The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"MEDIUM\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\"] }",
+              "parsed_response": {
+                "news_summary": "Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.",
+                "brief_rationale": "The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.",
+                "market_impact": "MIXED",
+                "impact_horizon": "NOISE",
+                "crypto_relevance": "MEDIUM",
+                "key_tags": [
+                  "FED_HAWKISH",
+                  "USD_WEAKNESS"
+                ]
+              },
+              "error": null
+            }
+          },
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "fear_greed_index": 40.0,
+          "fear_greed_state": "FEAR",
+          "dxy_level": 98.39,
+          "dxy_trend": "DOWN",
+          "usdjpy_level": 157.244,
+          "usdjpy_trend": "DOWN",
+          "fed_event_risk": "HIGH",
+          "macro_event_window": true,
+          "risk_off_score": 0.8,
+          "news_headlines": [
+            "Pirro appears to drop plans to appeal criminal investigation of Fed Chair Powell",
+            "Circle jumps 16% on Clarity Act compromise that preserves stablecoin rewards",
+            "New college graduates overestimate starting salaries by nearly $24,000, report finds",
+            "Warsh's take on Fed independence is met with confusion and some concern",
+            "Billionaire Warren Buffett Says 30-Year Mortgages Are 'Incredibly Attractive' For Buyers Even With High Interest Rates \u2014 'You've Got A One-Way Bet'"
+          ]
+        },
+        "position_snapshot": {
+          "position_side": "NONE",
+          "position_size_usd": 0.0,
+          "entry_price": null,
+          "current_price": null,
+          "unrealized_pnl_pct": 0.0,
+          "distance_to_liq": null,
+          "open_positions": []
+        },
+        "decision_ready_features": {
+          "regime_1d": "BEAR",
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "event_risk_active": true,
+          "usd_strength_flag": false,
+          "yen_stress_flag": true,
+          "flow_data_available": true,
+          "flow_schema_version": "flow_semantics_v1",
+          "flow_token_semantic": "ACCUMULATION_HINT",
+          "flow_stablecoin_semantic": "BUYING_POWER",
+          "flow_composite_semantic": "LONG_SUPPORT",
+          "flow_signal_mixed": false,
+          "flow_support_long": true,
+          "flow_support_short": false,
+          "qlib_relative_score_8h": -0.0001,
+          "qlib_percentile_8h": 0.25,
+          "p_up_8h": 0.1433,
+          "p_down_8h": 0.3288,
+          "p_flat_8h": 0.5279,
+          "confidence_8h": 0.3288,
+          "qlib_direction": "FLAT",
+          "qlib_direction_confident": false,
+          "qlib_top_bucket": false,
+          "qlib_bottom_bucket": true,
+          "range_regime": false,
+          "grid_candidate_eligible": false,
+          "range_lower_bound": 2308.01,
+          "range_upper_bound": 2392.0,
+          "range_width_pct": 0.0357,
+          "price_position_in_range": 0.4435,
+          "grid_mode": "ARITHMETIC",
+          "grid_count": 4,
+          "grid_spacing_pct": 0.0089,
+          "min_profitable_spacing_pct": 0.0034,
+          "grid_spacing_profitable": true,
+          "grid_bb_width": 0.0421,
+          "grid_bb_pct_b": 0.8113,
+          "grid_bb_mid_slope_pct": 0.005,
+          "grid_bb_width_ok": true,
+          "grid_bb_slope_ok": true,
+          "grid_adx_delta": 2.5873,
+          "grid_recent_close_drift_pct": 0.0092,
+          "grid_range_edge_close_count": 0,
+          "grid_trend_risk_ok": false,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "grid_macro_trend_ok": false,
+          "grid_macro_block_reasons": [
+            "directional_swing_macro"
+          ],
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.0031883916066054495,
+          "max_profitable_grid_count": 10,
+          "grid_review_after_hours": 24,
+          "grid_extension_step_hours": 12,
+          "grid_max_lifetime_hours": 48
+        },
+        "quality_score": 1.0,
+        "is_decision_eligible": true
+      },
+      {
+        "decision_id": "cycle_2026-05-04_1600_SOL",
+        "symbol": "SOL-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777910863,
+        "snapshot_time": "2026-05-04T16:07:43Z",
+        "snapshot_time_local": "2026-05-05T00:07:43+0800",
+        "local_timezone": "Asia/Shanghai",
+        "market_snapshot": {
+          "price": 84.38,
+          "change_24h": 0.6080839394300595,
+          "rsi_4h": 52.55481845876956,
+          "adx_14": 19.722700094583143,
+          "volume_ratio": 1.3095141405689188,
+          "bb_width": 0.0208051315212997,
+          "bb_pct_b": 0.7015156900604292,
+          "bb_mid_slope_pct": 0.0013737325681662427,
+          "adx_delta": 0.8736055109341834,
+          "recent_close_drift_pct": 0.0037914050202265564,
+          "range_edge_close_count": 0,
+          "wick_ratio_lower": 20.0,
+          "wick_ratio_upper": 49.14,
+          "funding_rate": -3.67907342212e-05,
+          "funding_zscore": -0.67,
+          "oi_now": 227312672.58240017,
+          "delta_oi_24h_percent": 1.6621748819553517,
+          "natr_percent": 1.1684838158497028,
+          "whale_ls_ratio": 1.6129032258064515,
+          "whale_pos_ratio": 0.8534385324053145,
+          "atr_14": 0.9778571428571448,
+          "macd_line_4h": 0.1085042132896347,
+          "macd_signal_4h": 0.024408874220122,
+          "macd_hist_4h": 0.0840953390695126,
+          "rel_volume_60": 2.052155926500843,
+          "volume_usd_4h": 164842865.8769,
+          "sma50_4h": 84.21679999999998,
+          "sma5_1d": 83.77133333333333,
+          "sma10_1d": 84.54566666666666,
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.00917130561806622,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "bearish_divergence_4h": false,
+          "bullish_divergence_4h": false,
+          "macd_cross_up_4h": false,
+          "macd_cross_down_4h": false,
+          "structure_support_12bar_volume_confirmed": 83.19,
+          "structure_resistance_12bar_volume_confirmed": 85.87,
+          "structure_support_stop_long": 82.7011,
+          "structure_resistance_stop_short": 86.3589
+        },
+        "onchain_snapshot": {
+          "token_net_flow": -999435.8104391835,
+          "stablecoin_net_flow": -83141.56808900005,
+          "flow_data_available": true,
+          "flow_schema_version": "flow_semantics_v1",
+          "token_flow_semantic": "DISTRIBUTION_PRESSURE",
+          "stablecoin_flow_semantic": "CAPITAL_WITHDRAWAL",
+          "flow_composite_semantic": "SHORT_SUPPORT",
+          "flow_signal_mixed": false,
+          "sentiment_score": 0.09464143161216423,
+          "liquidation_long_usd": 767511.0818,
+          "liquidation_short_usd": 477615.47419999976,
+          "liquidation_long_to_volume_4h": 0.0046560163687833,
+          "liquidation_short_to_volume_4h": 0.0028973985113597,
+          "qlib_relative_score_8h": -0.0001,
+          "qlib_rank_8h": 5,
+          "qlib_percentile_8h": 0.0,
+          "p_up_8h": 0.2342,
+          "p_down_8h": 0.3647,
+          "p_flat_8h": 0.4011,
+          "confidence_8h": 0.3647
+        },
+        "macro_snapshot": {
+          "event_type": "FED_SPEECH",
+          "policy_stance": "HAWKISH",
+          "market_impact": "RISK_OFF",
+          "impact_horizon": "MULTI_DAY",
+          "crypto_relevance": "HIGH",
+          "key_tags": [
+            "FED_HAWKISH",
+            "USD_WEAKNESS"
+          ],
+          "brief_rationale": "The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.",
+          "news_summary": "Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.",
+          "classification_basis": {
+            "fear_greed_index": 40.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.64,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.244,
+            "usdjpy_change_5d_pct": -1.46,
+            "dxy_level": 98.39,
+            "dxy_change_5d_pct": -0.53,
+            "vix_level": 18.48,
+            "vix_change_5d_pct": 3.65,
+            "us10y_level": 4.44,
+            "us10y_change_5d_pct": 2.02,
+            "global_stable_flow": -1322701346.6054077,
+            "global_stable_market_cap": 266468743726.39856,
+            "global_stable_flow_ratio_pct": -0.4963814247435768
+          },
+          "key_events": [
+            "FED_HAWKISH",
+            "USD_WEAKNESS"
+          ],
+          "event_facts": {
+            "fear_greed_index": 40.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.64,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.244,
+            "usdjpy_change_5d_pct": -1.46,
+            "dxy_level": 98.39,
+            "dxy_change_5d_pct": -0.53,
+            "vix_level": 18.48,
+            "vix_change_5d_pct": 3.65,
+            "us10y_level": 4.44,
+            "us10y_change_5d_pct": 2.02,
+            "global_stable_flow": -1322701346.6054077,
+            "global_stable_market_cap": 266468743726.39856,
+            "global_stable_flow_ratio_pct": -0.4963814247435768
+          },
+          "provenance": {
+            "generation_mode": "llm_refined",
+            "llm_enabled": true,
+            "llm_attempted": true,
+            "llm_applied": true,
+            "llm_override_fields": [
+              "brief_rationale",
+              "key_tags",
+              "news_summary"
+            ],
+            "llm_audit": {
+              "enabled": true,
+              "provider": "deepseek",
+              "model": "deepseek-chat",
+              "status": "parsed",
+              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
+              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
+              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.\", \"brief_rationale\": \"The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"MEDIUM\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\"] }",
+              "parsed_response": {
+                "news_summary": "Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.",
+                "brief_rationale": "The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.",
+                "market_impact": "MIXED",
+                "impact_horizon": "NOISE",
+                "crypto_relevance": "MEDIUM",
+                "key_tags": [
+                  "FED_HAWKISH",
+                  "USD_WEAKNESS"
+                ]
+              },
+              "error": null
+            }
+          },
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "fear_greed_index": 40.0,
+          "fear_greed_state": "FEAR",
+          "dxy_level": 98.39,
+          "dxy_trend": "DOWN",
+          "usdjpy_level": 157.244,
+          "usdjpy_trend": "DOWN",
+          "fed_event_risk": "HIGH",
+          "macro_event_window": true,
+          "risk_off_score": 0.8,
+          "news_headlines": [
+            "Pirro appears to drop plans to appeal criminal investigation of Fed Chair Powell",
+            "Circle jumps 16% on Clarity Act compromise that preserves stablecoin rewards",
+            "New college graduates overestimate starting salaries by nearly $24,000, report finds",
+            "Warsh's take on Fed independence is met with confusion and some concern",
+            "Billionaire Warren Buffett Says 30-Year Mortgages Are 'Incredibly Attractive' For Buyers Even With High Interest Rates \u2014 'You've Got A One-Way Bet'"
+          ]
+        },
+        "position_snapshot": {
+          "position_side": "NONE",
+          "position_size_usd": 0.0,
+          "entry_price": null,
+          "current_price": null,
+          "unrealized_pnl_pct": 0.0,
+          "distance_to_liq": null,
+          "open_positions": []
+        },
+        "decision_ready_features": {
+          "regime_1d": "BEAR",
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "event_risk_active": true,
+          "usd_strength_flag": false,
+          "yen_stress_flag": true,
+          "flow_data_available": true,
+          "flow_schema_version": "flow_semantics_v1",
+          "flow_token_semantic": "DISTRIBUTION_PRESSURE",
+          "flow_stablecoin_semantic": "CAPITAL_WITHDRAWAL",
+          "flow_composite_semantic": "SHORT_SUPPORT",
+          "flow_signal_mixed": false,
+          "flow_support_long": false,
+          "flow_support_short": true,
+          "qlib_relative_score_8h": -0.0001,
+          "qlib_percentile_8h": 0.0,
+          "p_up_8h": 0.2342,
+          "p_down_8h": 0.3647,
+          "p_flat_8h": 0.4011,
+          "confidence_8h": 0.3647,
+          "qlib_direction": "FLAT",
+          "qlib_direction_confident": false,
+          "qlib_top_bucket": false,
+          "qlib_bottom_bucket": true,
+          "range_regime": false,
+          "grid_candidate_eligible": false,
+          "range_lower_bound": 83.19,
+          "range_upper_bound": 85.87,
+          "range_width_pct": 0.0317,
+          "price_position_in_range": 0.444,
+          "grid_mode": "ARITHMETIC",
+          "grid_count": 4,
+          "grid_spacing_pct": 0.0079,
+          "min_profitable_spacing_pct": 0.0034,
+          "grid_spacing_profitable": true,
+          "grid_bb_width": 0.0208,
+          "grid_bb_pct_b": 0.7015,
+          "grid_bb_mid_slope_pct": 0.0014,
+          "grid_bb_width_ok": false,
+          "grid_bb_slope_ok": true,
+          "grid_adx_delta": 0.8736,
+          "grid_recent_close_drift_pct": 0.0038,
+          "grid_range_edge_close_count": 0,
+          "grid_trend_risk_ok": true,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "grid_macro_trend_ok": false,
+          "grid_macro_block_reasons": [
+            "directional_swing_macro",
+            "risk_off_with_short_flow_support"
+          ],
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.00917130561806622,
+          "max_profitable_grid_count": 9,
+          "grid_review_after_hours": 36,
+          "grid_extension_step_hours": 12,
+          "grid_max_lifetime_hours": 60
+        },
+        "quality_score": 1.0,
+        "is_decision_eligible": true
+      },
+      {
+        "decision_id": "cycle_2026-05-04_1600_BNB",
+        "symbol": "BNB-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777910874,
+        "snapshot_time": "2026-05-04T16:07:54Z",
+        "snapshot_time_local": "2026-05-05T00:07:54+0800",
+        "local_timezone": "Asia/Shanghai",
+        "market_snapshot": {
+          "price": 625.4,
+          "change_24h": 1.361426256077792,
+          "rsi_4h": 57.11767081750199,
+          "adx_14": 19.230472511123853,
+          "volume_ratio": 1.506229119697816,
+          "bb_width": 0.0242547496178422,
+          "bb_pct_b": 0.8892138941530707,
+          "bb_mid_slope_pct": 0.002083484749376107,
+          "adx_delta": 3.8813045419679426,
+          "recent_close_drift_pct": 0.008673703533731033,
+          "range_edge_close_count": 1,
+          "wick_ratio_lower": 25.68,
+          "wick_ratio_upper": 41.89,
+          "funding_rate": 5.08095021192e-05,
+          "funding_zscore": 0.5,
+          "oi_now": 47320371.918,
+          "delta_oi_24h_percent": -0.3555055355879506,
+          "natr_percent": 0.8164345784466216,
+          "whale_ls_ratio": 0.7261904761904762,
+          "whale_pos_ratio": 0.9068501864563157,
+          "atr_14": 5.135714285714268,
+          "macd_line_4h": 1.000782963107099,
+          "macd_signal_4h": -0.2110898600078362,
+          "macd_hist_4h": 1.2118728231149354,
+          "rel_volume_60": 1.762712138564535,
+          "volume_usd_4h": 10244393.912,
+          "sma50_4h": 621.4739999999999,
+          "sma5_1d": 618.2566666666667,
+          "sma10_1d": 623.3566666666667,
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.008160000000000037,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "bearish_divergence_4h": false,
+          "bullish_divergence_4h": false,
+          "macd_cross_up_4h": false,
+          "macd_cross_down_4h": false,
+          "structure_support_12bar_volume_confirmed": 615.2,
+          "structure_resistance_12bar_volume_confirmed": 638.9,
+          "structure_support_stop_long": 612.6321,
+          "structure_resistance_stop_short": 641.4679
+        },
+        "onchain_snapshot": {
+          "token_net_flow": 0.0,
+          "stablecoin_net_flow": 0.0,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "token_flow_semantic": "UNAVAILABLE",
+          "stablecoin_flow_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "sentiment_score": 0.0,
+          "liquidation_long_usd": 18139.943999999996,
+          "liquidation_short_usd": 10260.503000000002,
+          "liquidation_long_to_volume_4h": 0.0017707191031332,
+          "liquidation_short_to_volume_4h": 0.0010015724783855,
+          "qlib_relative_score_8h": -0.0001,
+          "qlib_rank_8h": 2,
+          "qlib_percentile_8h": 0.75,
+          "p_up_8h": 0.1662,
+          "p_down_8h": 0.3404,
+          "p_flat_8h": 0.4934,
+          "confidence_8h": 0.3404
+        },
+        "macro_snapshot": {
+          "event_type": "FED_SPEECH",
+          "policy_stance": "HAWKISH",
+          "market_impact": "RISK_OFF",
+          "impact_horizon": "MULTI_DAY",
+          "crypto_relevance": "HIGH",
+          "key_tags": [
+            "FED_HAWKISH",
+            "USD_WEAKNESS"
+          ],
+          "brief_rationale": "The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.",
+          "news_summary": "Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.",
+          "classification_basis": {
+            "fear_greed_index": 40.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.64,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.244,
+            "usdjpy_change_5d_pct": -1.46,
+            "dxy_level": 98.39,
+            "dxy_change_5d_pct": -0.53,
+            "vix_level": 18.48,
+            "vix_change_5d_pct": 3.65,
+            "us10y_level": 4.44,
+            "us10y_change_5d_pct": 2.02,
+            "global_stable_flow": -1322701346.6054077,
+            "global_stable_market_cap": 266468743726.39856,
+            "global_stable_flow_ratio_pct": -0.4963814247435768
+          },
+          "key_events": [
+            "FED_HAWKISH",
+            "USD_WEAKNESS"
+          ],
+          "event_facts": {
+            "fear_greed_index": 40.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.64,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.244,
+            "usdjpy_change_5d_pct": -1.46,
+            "dxy_level": 98.39,
+            "dxy_change_5d_pct": -0.53,
+            "vix_level": 18.48,
+            "vix_change_5d_pct": 3.65,
+            "us10y_level": 4.44,
+            "us10y_change_5d_pct": 2.02,
+            "global_stable_flow": -1322701346.6054077,
+            "global_stable_market_cap": 266468743726.39856,
+            "global_stable_flow_ratio_pct": -0.4963814247435768
+          },
+          "provenance": {
+            "generation_mode": "llm_refined",
+            "llm_enabled": true,
+            "llm_attempted": true,
+            "llm_applied": true,
+            "llm_override_fields": [
+              "brief_rationale",
+              "key_tags",
+              "news_summary"
+            ],
+            "llm_audit": {
+              "enabled": true,
+              "provider": "deepseek",
+              "model": "deepseek-chat",
+              "status": "parsed",
+              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
+              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
+              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.\", \"brief_rationale\": \"The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"MEDIUM\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\"] }",
+              "parsed_response": {
+                "news_summary": "Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.",
+                "brief_rationale": "The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.",
+                "market_impact": "MIXED",
+                "impact_horizon": "NOISE",
+                "crypto_relevance": "MEDIUM",
+                "key_tags": [
+                  "FED_HAWKISH",
+                  "USD_WEAKNESS"
+                ]
+              },
+              "error": null
+            }
+          },
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "fear_greed_index": 40.0,
+          "fear_greed_state": "FEAR",
+          "dxy_level": 98.39,
+          "dxy_trend": "DOWN",
+          "usdjpy_level": 157.244,
+          "usdjpy_trend": "DOWN",
+          "fed_event_risk": "HIGH",
+          "macro_event_window": true,
+          "risk_off_score": 0.8,
+          "news_headlines": [
+            "Pirro appears to drop plans to appeal criminal investigation of Fed Chair Powell",
+            "Circle jumps 16% on Clarity Act compromise that preserves stablecoin rewards",
+            "New college graduates overestimate starting salaries by nearly $24,000, report finds",
+            "Warsh's take on Fed independence is met with confusion and some concern",
+            "Billionaire Warren Buffett Says 30-Year Mortgages Are 'Incredibly Attractive' For Buyers Even With High Interest Rates \u2014 'You've Got A One-Way Bet'"
+          ]
+        },
+        "position_snapshot": {
+          "position_side": "SHORT",
+          "position_size_usd": 138.24,
+          "entry_price": 628.3,
+          "current_price": 625.2,
+          "unrealized_pnl_pct": 0.009899999999999999,
+          "distance_to_liq": 0.495,
+          "open_positions": [
+            {
+              "symbol": "BNB",
+              "instId": "BNB-USDT-SWAP",
+              "leverage": 2,
+              "type": "short",
+              "entryPrice": 628.3,
+              "currentPrice": 625.2,
+              "pnl": 1.36399999999996,
+              "pnlPercent": 0.99,
+              "amount": "0.44",
+              "margin": 69.12034575313824,
+              "stopLoss": 632.5,
+              "takeProfit": 615.5,
+              "name": "BNB"
+            }
+          ]
+        },
+        "decision_ready_features": {
+          "regime_1d": "BEAR",
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "event_risk_active": true,
+          "usd_strength_flag": false,
+          "yen_stress_flag": true,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "flow_token_semantic": "UNAVAILABLE",
+          "flow_stablecoin_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "flow_support_long": false,
+          "flow_support_short": false,
+          "qlib_relative_score_8h": -0.0001,
+          "qlib_percentile_8h": 0.75,
+          "p_up_8h": 0.1662,
+          "p_down_8h": 0.3404,
+          "p_flat_8h": 0.4934,
+          "confidence_8h": 0.3404,
+          "qlib_direction": "FLAT",
+          "qlib_direction_confident": false,
+          "qlib_top_bucket": true,
+          "qlib_bottom_bucket": false,
+          "range_regime": false,
+          "grid_candidate_eligible": false,
+          "range_lower_bound": 615.2,
+          "range_upper_bound": 638.9,
+          "range_width_pct": 0.0378,
+          "price_position_in_range": 0.4304,
+          "grid_mode": "ARITHMETIC",
+          "grid_count": 5,
+          "grid_spacing_pct": 0.0076,
+          "min_profitable_spacing_pct": 0.0034,
+          "grid_spacing_profitable": true,
+          "grid_bb_width": 0.0243,
+          "grid_bb_pct_b": 0.8892,
+          "grid_bb_mid_slope_pct": 0.0021,
+          "grid_bb_width_ok": false,
+          "grid_bb_slope_ok": true,
+          "grid_adx_delta": 3.8813,
+          "grid_recent_close_drift_pct": 0.0087,
+          "grid_range_edge_close_count": 1,
+          "grid_trend_risk_ok": false,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "grid_macro_trend_ok": false,
+          "grid_macro_block_reasons": [
+            "directional_swing_macro"
+          ],
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": -0.008160000000000037,
+          "max_profitable_grid_count": 11,
+          "grid_review_after_hours": 36,
+          "grid_extension_step_hours": 12,
+          "grid_max_lifetime_hours": 60
+        },
+        "quality_score": 1.0,
+        "is_decision_eligible": true
+      },
+      {
+        "decision_id": "cycle_2026-05-04_1600_DOGE",
+        "symbol": "DOGE-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777910884,
+        "snapshot_time": "2026-05-04T16:08:04Z",
+        "snapshot_time_local": "2026-05-05T00:08:04+0800",
+        "local_timezone": "Asia/Shanghai",
+        "market_snapshot": {
+          "price": 0.11018,
+          "change_24h": 1.811125485122901,
+          "rsi_4h": 58.549962496652384,
+          "adx_14": 43.45754692932388,
+          "volume_ratio": 1.4671775729295806,
+          "bb_width": 0.0521016859475695,
+          "bb_pct_b": 0.7088096843913476,
+          "bb_mid_slope_pct": 0.004219641513933882,
+          "adx_delta": -0.3739929917474143,
+          "recent_close_drift_pct": 0.016252253654487202,
+          "range_edge_close_count": 0,
+          "wick_ratio_lower": 21.05,
+          "wick_ratio_upper": 71.38,
+          "funding_rate": 2.6867166901e-05,
+          "funding_zscore": 0.3,
+          "oi_now": 118031165.67340001,
+          "delta_oi_24h_percent": -1.8012515120207346,
+          "natr_percent": 1.9247075257231325,
+          "whale_ls_ratio": 1.118867924528302,
+          "whale_pos_ratio": 0.8776627090552174,
+          "atr_14": 0.002025,
+          "macd_line_4h": 0.0015350357950574,
+          "macd_signal_4h": 0.0015489308923118,
+          "macd_hist_4h": -1.3895097254414904e-05,
+          "rel_volume_60": 1.7024101126384081,
+          "volume_usd_4h": 167524905.0681,
+          "sma50_4h": 0.1048778,
+          "sma5_1d": 0.10808333333333332,
+          "sma10_1d": 0.10375899999999999,
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": 0.039240774349667266,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "bearish_divergence_4h": false,
+          "bullish_divergence_4h": false,
+          "macd_cross_up_4h": false,
+          "macd_cross_down_4h": true,
+          "structure_support_12bar_volume_confirmed": 0.1076,
+          "structure_resistance_12bar_volume_confirmed": 0.11372,
+          "structure_support_stop_long": 0.1066,
+          "structure_resistance_stop_short": 0.1147
+        },
+        "onchain_snapshot": {
+          "token_net_flow": 0.0,
+          "stablecoin_net_flow": 0.0,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "token_flow_semantic": "UNAVAILABLE",
+          "stablecoin_flow_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "sentiment_score": 0.0,
+          "liquidation_long_usd": 2155688.843199999,
+          "liquidation_short_usd": 3023583.603800004,
+          "liquidation_long_to_volume_4h": 0.0128678708537318,
+          "liquidation_short_to_volume_4h": 0.0180485618097852,
+          "qlib_relative_score_8h": 0.0006,
+          "qlib_rank_8h": 1,
+          "qlib_percentile_8h": 1.0,
+          "p_up_8h": 0.3467,
+          "p_down_8h": 0.329,
+          "p_flat_8h": 0.3243,
+          "confidence_8h": 0.3467
+        },
+        "macro_snapshot": {
+          "event_type": "FED_SPEECH",
+          "policy_stance": "HAWKISH",
+          "market_impact": "RISK_OFF",
+          "impact_horizon": "MULTI_DAY",
+          "crypto_relevance": "HIGH",
+          "key_tags": [
+            "FED_HAWKISH",
+            "USD_WEAKNESS"
+          ],
+          "brief_rationale": "The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.",
+          "news_summary": "Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.",
+          "classification_basis": {
+            "fear_greed_index": 40.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.64,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.244,
+            "usdjpy_change_5d_pct": -1.46,
+            "dxy_level": 98.39,
+            "dxy_change_5d_pct": -0.53,
+            "vix_level": 18.48,
+            "vix_change_5d_pct": 3.65,
+            "us10y_level": 4.44,
+            "us10y_change_5d_pct": 2.02,
+            "global_stable_flow": -1322701346.6054077,
+            "global_stable_market_cap": 266468743726.39856,
+            "global_stable_flow_ratio_pct": -0.4963814247435768
+          },
+          "key_events": [
+            "FED_HAWKISH",
+            "USD_WEAKNESS"
+          ],
+          "event_facts": {
+            "fear_greed_index": 40.0,
+            "fear_greed_state": "FEAR",
+            "fed_implied_rate": 3.64,
+            "fed_change_5d_bps": 0.0,
+            "usdjpy_level": 157.244,
+            "usdjpy_change_5d_pct": -1.46,
+            "dxy_level": 98.39,
+            "dxy_change_5d_pct": -0.53,
+            "vix_level": 18.48,
+            "vix_change_5d_pct": 3.65,
+            "us10y_level": 4.44,
+            "us10y_change_5d_pct": 2.02,
+            "global_stable_flow": -1322701346.6054077,
+            "global_stable_market_cap": 266468743726.39856,
+            "global_stable_flow_ratio_pct": -0.4963814247435768
+          },
+          "provenance": {
+            "generation_mode": "llm_refined",
+            "llm_enabled": true,
+            "llm_attempted": true,
+            "llm_applied": true,
+            "llm_override_fields": [
+              "brief_rationale",
+              "key_tags",
+              "news_summary"
+            ],
+            "llm_audit": {
+              "enabled": true,
+              "provider": "deepseek",
+              "model": "deepseek-chat",
+              "status": "parsed",
+              "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
+              "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
+              "raw_response_preview": "{ \"news_summary\": \"Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.\", \"brief_rationale\": \"The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"MEDIUM\", \"key_tags\": [\"FED_HAWKISH\", \"USD_WEAKNESS\"] }",
+              "parsed_response": {
+                "news_summary": "Pirro drops appeal plans on Powell investigation; Circle rises on stablecoin bill; graduates overestimate salaries; Warsh comments on Fed independence cause concern; Buffett calls 30-year mortgages attractive.",
+                "brief_rationale": "The headlines are mixed: Pirro dropping appeal is neutral for Fed independence, Circle news is positive for crypto, Warsh comments add uncertainty, and Buffett's view is pro-housing. Overall, no strong directional signal.",
+                "market_impact": "MIXED",
+                "impact_horizon": "NOISE",
+                "crypto_relevance": "MEDIUM",
+                "key_tags": [
+                  "FED_HAWKISH",
+                  "USD_WEAKNESS"
+                ]
+              },
+              "error": null
+            }
+          },
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "fear_greed_index": 40.0,
+          "fear_greed_state": "FEAR",
+          "dxy_level": 98.39,
+          "dxy_trend": "DOWN",
+          "usdjpy_level": 157.244,
+          "usdjpy_trend": "DOWN",
+          "fed_event_risk": "HIGH",
+          "macro_event_window": true,
+          "risk_off_score": 0.8,
+          "news_headlines": [
+            "Pirro appears to drop plans to appeal criminal investigation of Fed Chair Powell",
+            "Circle jumps 16% on Clarity Act compromise that preserves stablecoin rewards",
+            "New college graduates overestimate starting salaries by nearly $24,000, report finds",
+            "Warsh's take on Fed independence is met with confusion and some concern",
+            "Billionaire Warren Buffett Says 30-Year Mortgages Are 'Incredibly Attractive' For Buyers Even With High Interest Rates \u2014 'You've Got A One-Way Bet'"
+          ]
+        },
+        "position_snapshot": {
+          "position_side": "NONE",
+          "position_size_usd": 0.0,
+          "entry_price": null,
+          "current_price": null,
+          "unrealized_pnl_pct": 0.0,
+          "distance_to_liq": null,
+          "open_positions": []
+        },
+        "decision_ready_features": {
+          "regime_1d": "BEAR",
+          "macro_mode": "RISK_OFF",
+          "macro_horizon": "MULTI_DAY",
+          "macro_permission": "ALLOW_SHORT",
+          "event_risk_active": true,
+          "usd_strength_flag": false,
+          "yen_stress_flag": true,
+          "flow_data_available": false,
+          "flow_schema_version": "flow_semantics_v1",
+          "flow_token_semantic": "UNAVAILABLE",
+          "flow_stablecoin_semantic": "UNAVAILABLE",
+          "flow_composite_semantic": "UNAVAILABLE",
+          "flow_signal_mixed": false,
+          "flow_support_long": false,
+          "flow_support_short": false,
+          "qlib_relative_score_8h": 0.0006,
+          "qlib_percentile_8h": 1.0,
+          "p_up_8h": 0.3467,
+          "p_down_8h": 0.329,
+          "p_flat_8h": 0.3243,
+          "confidence_8h": 0.3467,
+          "qlib_direction": "FLAT",
+          "qlib_direction_confident": false,
+          "qlib_top_bucket": true,
+          "qlib_bottom_bucket": false,
+          "range_regime": false,
+          "grid_candidate_eligible": false,
+          "range_lower_bound": 0.1076,
+          "range_upper_bound": 0.1137,
+          "range_width_pct": 0.0553,
+          "price_position_in_range": 0.4216,
+          "grid_mode": "ARITHMETIC",
+          "grid_count": 7,
+          "grid_spacing_pct": 0.0079,
+          "min_profitable_spacing_pct": 0.0034,
+          "grid_spacing_profitable": true,
+          "grid_bb_width": 0.0521,
+          "grid_bb_pct_b": 0.7088,
+          "grid_bb_mid_slope_pct": 0.0042,
+          "grid_bb_width_ok": true,
+          "grid_bb_slope_ok": true,
+          "grid_adx_delta": -0.374,
+          "grid_recent_close_drift_pct": 0.0163,
+          "grid_range_edge_close_count": 0,
+          "grid_trend_risk_ok": false,
+          "grid_preflight_data_ok": true,
+          "grid_preflight_missing_fields": [],
+          "grid_macro_trend_ok": false,
+          "grid_macro_block_reasons": [
+            "directional_swing_macro"
+          ],
+          "ma5_cross_up_ma10_1d": false,
+          "ma5_cross_down_ma10_1d": false,
+          "ma5_10_gap_pct_1d": 0.039240774349667266,
+          "max_profitable_grid_count": 16,
+          "grid_review_after_hours": 36,
+          "grid_extension_step_hours": 12,
+          "grid_max_lifetime_hours": 60
+        },
+        "quality_score": 1.0,
+        "is_decision_eligible": true
+      }
+    ],
+    "candidate_batches": [
+      {
+        "symbol": "BTC-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777910842,
+        "candidate_proposals": [],
+        "e_strategy_diagnostic": {
+          "qlib_inputs": {
+            "qlib_relative_score_8h": -0.0001,
+            "qlib_percentile_8h": 0.5,
+            "qlib_rank_8h": 3,
+            "p_up_8h": 0.1798,
+            "p_down_8h": 0.3308,
+            "p_flat_8h": 0.4893,
+            "funding_zscore": -0.75,
+            "token_net_flow": 0.0,
+            "stablecoin_net_flow": 0.0,
+            "regime_1d": "BEAR",
+            "whale_bias": "neutral",
+            "is_overheated": false,
+            "is_squeeze_zone": false
+          },
+          "config": {
+            "qlib_rank_bucket_size": 3,
+            "qlib_prob_threshold": 0.55,
+            "qlib_prob_gap_threshold": 0.15,
+            "qlib_flat_max_threshold": 0.4
+          },
+          "long_path": {
+            "candidate": "Blueprint_E1",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": false,
+              "overheated_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate",
+              "regime"
+            ]
+          },
+          "short_path": {
+            "candidate": "Blueprint_E2",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": true,
+              "flat_gate_pass": false,
+              "regime_pass": true,
+              "squeeze_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "p_flat_gate"
+            ]
+          },
+          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, p_flat_gate"
+        }
+      },
+      {
+        "symbol": "ETH-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777910852,
+        "candidate_proposals": [
+          {
+            "strategy_family": "DIRECTIONAL",
+            "decision_intent": "LONG",
+            "trigger_source": "Blueprint_F1",
+            "rationale": "zero-axis MACD long with rel_volume_60 confirmation",
+            "entry_type": "MARKET",
+            "proposed_entry_price": 2345.26,
+            "proposed_sl_price": 2292.115,
+            "proposed_tp_price": 2451.55,
+            "reference_values": {
+              "structure_support_stop_long": 2292.115,
+              "sma50_4h": 2304.5798
+            },
+            "invalidation_basis": "volume-confirmed support broken with sma50 confirmation or long momentum reverses",
+            "invalidation_conditions": {
+              "operator": "OR",
+              "rules": [
+                {
+                  "field": "price",
+                  "op": "<=",
+                  "value_ref": "structure_support_stop_long"
+                }
+              ],
+              "persistence": 1
+            }
+          }
+        ],
+        "e_strategy_diagnostic": {
+          "qlib_inputs": {
+            "qlib_relative_score_8h": -0.0001,
+            "qlib_percentile_8h": 0.25,
+            "qlib_rank_8h": 4,
+            "p_up_8h": 0.1433,
+            "p_down_8h": 0.3288,
+            "p_flat_8h": 0.5279,
+            "funding_zscore": -0.79,
+            "token_net_flow": 7208425.574637236,
+            "stablecoin_net_flow": 4369951.753168598,
+            "regime_1d": "BEAR",
+            "whale_bias": "strong_inflow",
+            "is_overheated": false,
+            "is_squeeze_zone": false
+          },
+          "config": {
+            "qlib_rank_bucket_size": 3,
+            "qlib_prob_threshold": 0.55,
+            "qlib_prob_gap_threshold": 0.15,
+            "qlib_flat_max_threshold": 0.4
+          },
+          "long_path": {
+            "candidate": "Blueprint_E1",
+            "checks": {
+              "rank_bucket_pass": false,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": false,
+              "overheated_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "rank_bucket",
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate",
+              "regime"
+            ]
+          },
+          "short_path": {
+            "candidate": "Blueprint_E2",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": true,
+              "flat_gate_pass": false,
+              "regime_pass": true,
+              "squeeze_pass": true,
+              "funding_pass": true,
+              "whale_pass": false
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "p_flat_gate",
+              "whale_inflow"
+            ]
+          },
+          "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, p_flat_gate, whale_inflow"
+        }
+      },
+      {
+        "symbol": "SOL-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777910863,
+        "candidate_proposals": [],
+        "e_strategy_diagnostic": {
+          "qlib_inputs": {
+            "qlib_relative_score_8h": -0.0001,
+            "qlib_percentile_8h": 0.0,
+            "qlib_rank_8h": 5,
+            "p_up_8h": 0.2342,
+            "p_down_8h": 0.3647,
+            "p_flat_8h": 0.4011,
+            "funding_zscore": -0.67,
+            "token_net_flow": -999435.8104391835,
+            "stablecoin_net_flow": -83141.56808900005,
+            "regime_1d": "BEAR",
+            "whale_bias": "neutral",
+            "is_overheated": false,
+            "is_squeeze_zone": false
+          },
+          "config": {
+            "qlib_rank_bucket_size": 3,
+            "qlib_prob_threshold": 0.55,
+            "qlib_prob_gap_threshold": 0.15,
+            "qlib_flat_max_threshold": 0.4
+          },
+          "long_path": {
+            "candidate": "Blueprint_E1",
+            "checks": {
+              "rank_bucket_pass": false,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": false,
+              "overheated_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "rank_bucket",
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate",
+              "regime"
+            ]
+          },
+          "short_path": {
+            "candidate": "Blueprint_E2",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": true,
+              "squeeze_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate"
+            ]
+          },
+          "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, prob_gap, p_flat_gate"
+        }
+      },
+      {
+        "symbol": "BNB-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777910874,
+        "candidate_proposals": [],
+        "e_strategy_diagnostic": {
+          "qlib_inputs": {
+            "qlib_relative_score_8h": -0.0001,
+            "qlib_percentile_8h": 0.75,
+            "qlib_rank_8h": 2,
+            "p_up_8h": 0.1662,
+            "p_down_8h": 0.3404,
+            "p_flat_8h": 0.4934,
+            "funding_zscore": 0.5,
+            "token_net_flow": 0.0,
+            "stablecoin_net_flow": 0.0,
+            "regime_1d": "BEAR",
+            "whale_bias": "neutral",
+            "is_overheated": false,
+            "is_squeeze_zone": false
+          },
+          "config": {
+            "qlib_rank_bucket_size": 3,
+            "qlib_prob_threshold": 0.55,
+            "qlib_prob_gap_threshold": 0.15,
+            "qlib_flat_max_threshold": 0.4
+          },
+          "long_path": {
+            "candidate": "Blueprint_E1",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": false,
+              "regime_pass": false,
+              "overheated_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "prob_gap",
+              "p_flat_gate",
+              "regime"
+            ]
+          },
+          "short_path": {
+            "candidate": "Blueprint_E2",
+            "checks": {
+              "rank_bucket_pass": false,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": true,
+              "flat_gate_pass": false,
+              "regime_pass": true,
+              "squeeze_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "rank_bucket",
+              "prob_threshold",
+              "p_flat_gate"
+            ]
+          },
+          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime; short blocked by rank_bucket, prob_threshold, p_flat_gate"
+        }
+      },
+      {
+        "symbol": "DOGE-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "timeframe": "4h",
+        "snapshot_timestamp": 1777910884,
+        "candidate_proposals": [],
+        "e_strategy_diagnostic": {
+          "qlib_inputs": {
+            "qlib_relative_score_8h": 0.0006,
+            "qlib_percentile_8h": 1.0,
+            "qlib_rank_8h": 1,
+            "p_up_8h": 0.3467,
+            "p_down_8h": 0.329,
+            "p_flat_8h": 0.3243,
+            "funding_zscore": 0.3,
+            "token_net_flow": 0.0,
+            "stablecoin_net_flow": 0.0,
+            "regime_1d": "BEAR",
+            "whale_bias": "neutral",
+            "is_overheated": false,
+            "is_squeeze_zone": false
+          },
+          "config": {
+            "qlib_rank_bucket_size": 3,
+            "qlib_prob_threshold": 0.55,
+            "qlib_prob_gap_threshold": 0.15,
+            "qlib_flat_max_threshold": 0.4
+          },
+          "long_path": {
+            "candidate": "Blueprint_E1",
+            "checks": {
+              "rank_bucket_pass": true,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": true,
+              "regime_pass": false,
+              "overheated_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "prob_threshold",
+              "prob_gap",
+              "regime"
+            ]
+          },
+          "short_path": {
+            "candidate": "Blueprint_E2",
+            "checks": {
+              "rank_bucket_pass": false,
+              "prob_threshold_pass": false,
+              "prob_gap_pass": false,
+              "flat_gate_pass": true,
+              "regime_pass": true,
+              "squeeze_pass": true,
+              "funding_pass": true,
+              "whale_pass": true
+            },
+            "eligible": false,
+            "blocked_by": [
+              "rank_bucket",
+              "prob_threshold",
+              "prob_gap"
+            ]
+          },
+          "summary": "No E candidate: long blocked by prob_threshold, prob_gap, regime; short blocked by rank_bucket, prob_threshold, prob_gap"
+        }
+      }
+    ],
+    "rule_evaluations": [
+      {
+        "symbol": "BTC-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "stage": "pre_trade_filter",
+        "passed": false,
+        "reason_codes": [],
+        "approved_candidates": [],
+        "rule_trace": [
+          {
+            "rule": "DATA_ELIGIBILITY_CHECK",
+            "passed": true
+          }
+        ],
+        "candidate_structure": {
+          "overall_state": "no_candidate",
+          "has_directional_conflict": false,
+          "long_count": 0,
+          "short_count": 0,
+          "grid_count": 0,
+          "resonance_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_resonance_strength": 0
+        }
+      },
+      {
+        "symbol": "ETH-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "stage": "pre_trade_filter",
+        "passed": false,
+        "reason_codes": [
+          "BEAR_MARKET_LONG_BLOCKED"
+        ],
+        "approved_candidates": [],
+        "rule_trace": [
+          {
+            "rule": "DATA_ELIGIBILITY_CHECK",
+            "passed": true
+          },
+          {
+            "rule": "CANDIDATE_CONFLICT_CHECK",
+            "passed": true
+          },
+          {
+            "rule": "REGIME_PERMISSION_CHECK",
+            "passed": false,
+            "detail": "macro_short_only"
+          }
+        ],
+        "candidate_structure": {
+          "overall_state": "single_signal",
+          "has_directional_conflict": false,
+          "long_count": 1,
+          "short_count": 0,
+          "grid_count": 0,
+          "resonance_groups": {
+            "LONG": [
+              "Blueprint_F1"
+            ],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_resonance_strength": 0
+        }
+      },
+      {
+        "symbol": "SOL-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "stage": "pre_trade_filter",
+        "passed": false,
+        "reason_codes": [],
+        "approved_candidates": [],
+        "rule_trace": [
+          {
+            "rule": "DATA_ELIGIBILITY_CHECK",
+            "passed": true
+          }
+        ],
+        "candidate_structure": {
+          "overall_state": "no_candidate",
+          "has_directional_conflict": false,
+          "long_count": 0,
+          "short_count": 0,
+          "grid_count": 0,
+          "resonance_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_resonance_strength": 0
+        }
+      },
+      {
+        "symbol": "BNB-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "stage": "pre_trade_filter",
+        "passed": false,
+        "reason_codes": [],
+        "approved_candidates": [],
+        "rule_trace": [
+          {
+            "rule": "DATA_ELIGIBILITY_CHECK",
+            "passed": true
+          }
+        ],
+        "candidate_structure": {
+          "overall_state": "no_candidate",
+          "has_directional_conflict": false,
+          "long_count": 0,
+          "short_count": 0,
+          "grid_count": 0,
+          "resonance_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_resonance_strength": 0
+        }
+      },
+      {
+        "symbol": "DOGE-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "stage": "pre_trade_filter",
+        "passed": false,
+        "reason_codes": [],
+        "approved_candidates": [],
+        "rule_trace": [
+          {
+            "rule": "DATA_ELIGIBILITY_CHECK",
+            "passed": true
+          }
+        ],
+        "candidate_structure": {
+          "overall_state": "no_candidate",
+          "has_directional_conflict": false,
+          "long_count": 0,
+          "short_count": 0,
+          "grid_count": 0,
+          "resonance_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_groups": {
+            "LONG": [],
+            "SHORT": [],
+            "GRID_NEUTRAL": []
+          },
+          "approved_resonance_strength": 0
+        }
+      }
+    ],
+    "research_outputs": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "risk_reviews": [
+      {
+        "symbol": "BTC-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "strategy_family": null,
+        "approved": false,
+        "final_intent": "NO_TRADE",
+        "approved_risk_fraction": 0.0,
+        "approved_position_size_usd": 0.0,
+        "leverage": 1.0,
+        "max_holding_bars": 0,
+        "execution_action": "DO_NOTHING",
+        "next_position_state": "candidate",
+        "review_note": "rule evaluation rejected or produced no approved candidates"
+      },
+      {
+        "symbol": "ETH-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "strategy_family": null,
+        "approved": false,
+        "final_intent": "NO_TRADE",
+        "approved_risk_fraction": 0.0,
+        "approved_position_size_usd": 0.0,
+        "leverage": 1.0,
+        "max_holding_bars": 0,
+        "execution_action": "DO_NOTHING",
+        "next_position_state": "candidate",
+        "review_note": "rule evaluation rejected or produced no approved candidates"
+      },
+      {
+        "symbol": "SOL-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "strategy_family": null,
+        "approved": false,
+        "final_intent": "NO_TRADE",
+        "approved_risk_fraction": 0.0,
+        "approved_position_size_usd": 0.0,
+        "leverage": 1.0,
+        "max_holding_bars": 0,
+        "execution_action": "DO_NOTHING",
+        "next_position_state": "candidate",
+        "review_note": "rule evaluation rejected or produced no approved candidates"
+      },
+      {
+        "symbol": "BNB-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "strategy_family": null,
+        "approved": false,
+        "final_intent": "NO_TRADE",
+        "approved_risk_fraction": 0.0,
+        "approved_position_size_usd": 0.0,
+        "leverage": 1.0,
+        "max_holding_bars": 0,
+        "execution_action": "DO_NOTHING",
+        "next_position_state": "candidate",
+        "review_note": "rule evaluation rejected or produced no approved candidates"
+      },
+      {
+        "symbol": "DOGE-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "strategy_family": null,
+        "approved": false,
+        "final_intent": "NO_TRADE",
+        "approved_risk_fraction": 0.0,
+        "approved_position_size_usd": 0.0,
+        "leverage": 1.0,
+        "max_holding_bars": 0,
+        "execution_action": "DO_NOTHING",
+        "next_position_state": "candidate",
+        "review_note": "rule evaluation rejected or produced no approved candidates"
+      }
+    ],
+    "executions": [
+      {
+        "symbol": "BTC-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "strategy_family": null,
+        "execution_action": "DO_NOTHING",
+        "order_status": "SKIPPED",
+        "requested_size_usd": 0.0,
+        "requested_leverage": 1.0,
+        "avg_fill_price": null,
+        "filled_size": 0.0,
+        "exchange_order_id": null,
+        "executed_at": null,
+        "sync_status": "SKIPPED",
+        "failure_reason": null,
+        "history": [
+          {
+            "type": "EXECUTION_NOT_REQUESTED",
+            "at": "2026-05-04T16:07:24Z",
+            "payload": {
+              "review_note": "rule evaluation rejected or produced no approved candidates"
+            }
+          },
+          {
+            "type": "EXECUTION_SKIPPED",
+            "at": "2026-05-04T16:07:28Z",
+            "payload": {
+              "reason": "do_nothing",
+              "execution_action": "DO_NOTHING"
+            }
+          }
+        ],
+        "protection_status": "SKIPPED"
+      },
+      {
+        "symbol": "ETH-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "strategy_family": null,
+        "execution_action": "DO_NOTHING",
+        "order_status": "SKIPPED",
+        "requested_size_usd": 0.0,
+        "requested_leverage": 1.0,
+        "avg_fill_price": null,
+        "filled_size": 0.0,
+        "exchange_order_id": null,
+        "executed_at": null,
+        "sync_status": "SKIPPED",
+        "failure_reason": null,
+        "history": [
+          {
+            "type": "EXECUTION_NOT_REQUESTED",
+            "at": "2026-05-04T16:07:34Z",
+            "payload": {
+              "review_note": "rule evaluation rejected or produced no approved candidates"
+            }
+          },
+          {
+            "type": "EXECUTION_SKIPPED",
+            "at": "2026-05-04T16:07:38Z",
+            "payload": {
+              "reason": "do_nothing",
+              "execution_action": "DO_NOTHING"
+            }
+          }
+        ],
+        "protection_status": "SKIPPED"
+      },
+      {
+        "symbol": "SOL-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "strategy_family": null,
+        "execution_action": "DO_NOTHING",
+        "order_status": "SKIPPED",
+        "requested_size_usd": 0.0,
+        "requested_leverage": 1.0,
+        "avg_fill_price": null,
+        "filled_size": 0.0,
+        "exchange_order_id": null,
+        "executed_at": null,
+        "sync_status": "SKIPPED",
+        "failure_reason": null,
+        "history": [
+          {
+            "type": "EXECUTION_NOT_REQUESTED",
+            "at": "2026-05-04T16:07:44Z",
+            "payload": {
+              "review_note": "rule evaluation rejected or produced no approved candidates"
+            }
+          },
+          {
+            "type": "EXECUTION_SKIPPED",
+            "at": "2026-05-04T16:07:48Z",
+            "payload": {
+              "reason": "do_nothing",
+              "execution_action": "DO_NOTHING"
+            }
+          }
+        ],
+        "protection_status": "SKIPPED"
+      },
+      {
+        "symbol": "BNB-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "strategy_family": null,
+        "execution_action": "DO_NOTHING",
+        "order_status": "SKIPPED",
+        "requested_size_usd": 0.0,
+        "requested_leverage": 1.0,
+        "avg_fill_price": null,
+        "filled_size": 0.0,
+        "exchange_order_id": null,
+        "executed_at": null,
+        "sync_status": "SKIPPED",
+        "failure_reason": null,
+        "history": [
+          {
+            "type": "EXECUTION_NOT_REQUESTED",
+            "at": "2026-05-04T16:07:55Z",
+            "payload": {
+              "review_note": "rule evaluation rejected or produced no approved candidates"
+            }
+          },
+          {
+            "type": "EXECUTION_SKIPPED",
+            "at": "2026-05-04T16:07:59Z",
+            "payload": {
+              "reason": "do_nothing",
+              "execution_action": "DO_NOTHING"
+            }
+          }
+        ],
+        "protection_status": "SKIPPED"
+      },
+      {
+        "symbol": "DOGE-USDT",
+        "cycleId": "cycle_2026-05-04_1600",
+        "strategy_family": null,
+        "execution_action": "DO_NOTHING",
+        "order_status": "SKIPPED",
+        "requested_size_usd": 0.0,
+        "requested_leverage": 1.0,
+        "avg_fill_price": null,
+        "filled_size": 0.0,
+        "exchange_order_id": null,
+        "executed_at": null,
+        "sync_status": "SKIPPED",
+        "failure_reason": null,
+        "history": [
+          {
+            "type": "EXECUTION_NOT_REQUESTED",
+            "at": "2026-05-04T16:08:06Z",
+            "payload": {
+              "review_note": "rule evaluation rejected or produced no approved candidates"
+            }
+          },
+          {
+            "type": "EXECUTION_SKIPPED",
+            "at": "2026-05-04T16:08:09Z",
+            "payload": {
+              "reason": "do_nothing",
+              "execution_action": "DO_NOTHING"
+            }
+          }
+        ],
+        "protection_status": "SKIPPED"
+      }
+    ],
+    "record_count": 5,
+    "post_trade_review": {
+      "evaluated_count": 136,
+      "record_count": 136
     }
   }
 ]
