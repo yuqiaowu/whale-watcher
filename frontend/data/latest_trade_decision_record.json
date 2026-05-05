@@ -3,9 +3,9 @@
   "cycleId": "cycle_2026-05-05_0000",
   "symbol": "DOGE-USDT",
   "timeframe": "4h",
-  "snapshot_timestamp": 1777939651,
-  "snapshot_time": "2026-05-05T00:07:31Z",
-  "snapshot_time_local": "2026-05-05T08:07:31+0800",
+  "snapshot_timestamp": 1777946855,
+  "snapshot_time": "2026-05-05T02:07:35Z",
+  "snapshot_time_local": "2026-05-05T10:07:35+0800",
   "local_timezone": "Asia/Shanghai",
   "positionState": "candidate",
   "snapshot": {
@@ -13,16 +13,16 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-05_0000",
     "timeframe": "4h",
-    "snapshot_timestamp": 1777939651,
-    "snapshot_time": "2026-05-05T00:07:31Z",
-    "snapshot_time_local": "2026-05-05T08:07:31+0800",
+    "snapshot_timestamp": 1777946855,
+    "snapshot_time": "2026-05-05T02:07:35Z",
+    "snapshot_time_local": "2026-05-05T10:07:35+0800",
     "local_timezone": "Asia/Shanghai",
     "market_snapshot": {
-      "price": 0.11035,
-      "change_24h": 0.2817157397310112,
+      "price": 0.11123,
+      "change_24h": 1.0814249363867654,
       "rsi_4h": 57.57447712625191,
       "adx_14": 42.23644505657937,
-      "volume_ratio": 1.4605689488764333,
+      "volume_ratio": 1.2454532292751603,
       "bb_width": 0.0536807330993399,
       "bb_pct_b": 0.657217547191962,
       "bb_mid_slope_pct": 0.001965563690678063,
@@ -31,13 +31,13 @@
       "range_edge_close_count": 0,
       "wick_ratio_lower": 11.34,
       "wick_ratio_upper": 55.67,
-      "funding_rate": 0.0001,
-      "funding_zscore": 1.68,
-      "oi_now": 118213279.47050002,
+      "funding_rate": 5.56180137272e-05,
+      "funding_zscore": 0.78,
+      "oi_now": 119155986.18490002,
       "delta_oi_24h_percent": -1.8012515120207346,
-      "natr_percent": 1.8119388041975666,
-      "whale_ls_ratio": 1.1261770244821092,
-      "whale_pos_ratio": 0.8780088871975588,
+      "natr_percent": 1.8610155194334992,
+      "whale_ls_ratio": 1.1793893129770991,
+      "whale_pos_ratio": 0.8777753825225963,
       "atr_14": 0.002015,
       "macd_line_4h": 0.0013890461988022,
       "macd_signal_4h": 0.0015053616815398,
@@ -71,10 +71,10 @@
       "flow_composite_semantic": "UNAVAILABLE",
       "flow_signal_mixed": false,
       "sentiment_score": 0.0,
-      "liquidation_long_usd": 2159378.8378999997,
-      "liquidation_short_usd": 2910341.753400005,
-      "liquidation_long_to_volume_4h": 0.0699671399169655,
-      "liquidation_short_to_volume_4h": 0.094299474039652,
+      "liquidation_long_usd": 2119216.1394999996,
+      "liquidation_short_usd": 1112593.0925999996,
+      "liquidation_long_to_volume_4h": 0.0686658077518655,
+      "liquidation_short_to_volume_4h": 0.0360496987440601,
       "qlib_relative_score_8h": 0.0006,
       "qlib_rank_8h": 3,
       "qlib_percentile_8h": 0.5,
@@ -86,34 +86,36 @@
     "macro_snapshot": {
       "event_type": "MACRO_REGIME_UPDATE",
       "policy_stance": "HAWKISH",
-      "market_impact": "RISK_OFF",
-      "impact_horizon": "SWING",
+      "market_impact": "MIXED",
+      "impact_horizon": "MULTI_DAY",
       "crypto_relevance": "HIGH",
       "key_tags": [
         "FED_HAWKISH",
+        "LIQUIDITY_EXPANDING",
         "USD_WEAKNESS"
       ],
-      "brief_rationale": "Headlines are mostly company-specific or legal news with no direct macro or crypto impact. The Fed investigation mention is minor and unlikely to shift policy. Overall noise.",
+      "brief_rationale": "Fed pricing remains restrictive; DXY is weaker (-0.43%/5d); stablecoin flow is $1,443,409,407. Classified as MIXED with MULTI_DAY horizon.",
       "news_summary": "Pinterest surges 15% after earnings beat as company posts strong guidance | Pirro changes course in Fed investigation, move unlikely to satisfy Powell | SEC and Elon Musk agree to settle lawsuit over Twitter buyout in 2022",
       "classification_basis": {
         "fear_greed_index": 50.0,
         "fear_greed_state": "NEUTRAL",
         "fed_implied_rate": 3.64,
         "fed_change_5d_bps": 4.0,
-        "usdjpy_level": 157.209,
+        "usdjpy_level": 157.205,
         "usdjpy_change_5d_pct": 0.11,
-        "dxy_level": 98.46,
-        "dxy_change_5d_pct": -0.46,
+        "dxy_level": 98.49,
+        "dxy_change_5d_pct": -0.43,
         "vix_level": 18.29,
         "vix_change_5d_pct": 2.58,
         "us10y_level": 4.45,
         "us10y_change_5d_pct": 2.11,
-        "global_stable_flow": -927538914.4682922,
-        "global_stable_market_cap": 266870929485.46667,
-        "global_stable_flow_ratio_pct": -0.34756086631714017
+        "global_stable_flow": 1443409406.9676971,
+        "global_stable_market_cap": 268309919036.6698,
+        "global_stable_flow_ratio_pct": 0.5379634909324493
       },
       "key_events": [
         "FED_HAWKISH",
+        "LIQUIDITY_EXPANDING",
         "USD_WEAKNESS"
       ],
       "event_facts": {
@@ -121,26 +123,24 @@
         "fear_greed_state": "NEUTRAL",
         "fed_implied_rate": 3.64,
         "fed_change_5d_bps": 4.0,
-        "usdjpy_level": 157.209,
+        "usdjpy_level": 157.205,
         "usdjpy_change_5d_pct": 0.11,
-        "dxy_level": 98.46,
-        "dxy_change_5d_pct": -0.46,
+        "dxy_level": 98.49,
+        "dxy_change_5d_pct": -0.43,
         "vix_level": 18.29,
         "vix_change_5d_pct": 2.58,
         "us10y_level": 4.45,
         "us10y_change_5d_pct": 2.11,
-        "global_stable_flow": -927538914.4682922,
-        "global_stable_market_cap": 266870929485.46667,
-        "global_stable_flow_ratio_pct": -0.34756086631714017
+        "global_stable_flow": 1443409406.9676971,
+        "global_stable_market_cap": 268309919036.6698,
+        "global_stable_flow_ratio_pct": 0.5379634909324493
       },
       "provenance": {
-        "generation_mode": "llm_refined",
+        "generation_mode": "llm_noop",
         "llm_enabled": true,
         "llm_attempted": true,
-        "llm_applied": true,
-        "llm_override_fields": [
-          "brief_rationale"
-        ],
+        "llm_applied": false,
+        "llm_override_fields": [],
         "llm_audit": {
           "enabled": true,
           "provider": "deepseek",
@@ -148,32 +148,34 @@
           "status": "parsed",
           "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
           "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-          "raw_response_preview": "{ \"news_summary\": \"Pinterest surges 15% after earnings beat as company posts strong guidance | Pirro changes course in Fed investigation, move unlikely to satisfy Powell | SEC and Elon Musk agree to settle lawsuit over Twitter buyout in 2022\", \"brief_rationale\": \"Headlines are mostly company-specific or legal news with no direct macro or crypto impact. The Fed investigation mention is minor and unlikely to shift policy. Overall noise.\", \"market_impact\": \"NO_CLEAR_IMPACT\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"LOW\", \"key_tags\": [\"MACRO_NOISE\"] }",
+          "raw_response_preview": "{ \"news_summary\": \"Pinterest surges 15% after earnings beat as company posts strong guidance | Pirro changes course in Fed investigation, move unlikely to satisfy Powell | SEC and Elon Musk agree to settle lawsuit over Twitter buyout in 2022\", \"brief_rationale\": \"Fed pricing remains restrictive; DXY is weaker (-0.43%/5d); stablecoin flow is $1,443,409,407. Classified as MIXED with MULTI_DAY horizon.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_EXPANDING\", \"USD_WEAKNESS\"] }",
           "parsed_response": {
             "news_summary": "Pinterest surges 15% after earnings beat as company posts strong guidance | Pirro changes course in Fed investigation, move unlikely to satisfy Powell | SEC and Elon Musk agree to settle lawsuit over Twitter buyout in 2022",
-            "brief_rationale": "Headlines are mostly company-specific or legal news with no direct macro or crypto impact. The Fed investigation mention is minor and unlikely to shift policy. Overall noise.",
-            "market_impact": "NO_CLEAR_IMPACT",
-            "impact_horizon": "NOISE",
-            "crypto_relevance": "LOW",
+            "brief_rationale": "Fed pricing remains restrictive; DXY is weaker (-0.43%/5d); stablecoin flow is $1,443,409,407. Classified as MIXED with MULTI_DAY horizon.",
+            "market_impact": "MIXED",
+            "impact_horizon": "MULTI_DAY",
+            "crypto_relevance": "HIGH",
             "key_tags": [
-              "MACRO_NOISE"
+              "FED_HAWKISH",
+              "LIQUIDITY_EXPANDING",
+              "USD_WEAKNESS"
             ]
           },
           "error": null
         }
       },
       "macro_mode": "RISK_OFF",
-      "macro_horizon": "SWING",
+      "macro_horizon": "MULTI_DAY",
       "macro_permission": "ALLOW_SHORT",
       "fear_greed_index": 50.0,
       "fear_greed_state": "NEUTRAL",
-      "dxy_level": 98.46,
+      "dxy_level": 98.49,
       "dxy_trend": "DOWN",
-      "usdjpy_level": 157.209,
+      "usdjpy_level": 157.205,
       "usdjpy_trend": "FLAT",
       "fed_event_risk": "LOW",
       "macro_event_window": false,
-      "risk_off_score": 0.8,
+      "risk_off_score": 0.5,
       "news_headlines": [
         "Pinterest surges 15% after earnings beat as company posts strong guidance",
         "Pirro changes course in Fed investigation, move unlikely to satisfy Powell",
@@ -194,7 +196,7 @@
     "decision_ready_features": {
       "regime_1d": "BEAR",
       "macro_mode": "RISK_OFF",
-      "macro_horizon": "SWING",
+      "macro_horizon": "MULTI_DAY",
       "macro_permission": "ALLOW_SHORT",
       "event_risk_active": false,
       "usd_strength_flag": false,
@@ -222,7 +224,7 @@
       "range_lower_bound": 0.1076,
       "range_upper_bound": 0.1137,
       "range_width_pct": 0.0553,
-      "price_position_in_range": 0.4493,
+      "price_position_in_range": 0.5931,
       "grid_mode": "ARITHMETIC",
       "grid_count": 7,
       "grid_spacing_pct": 0.0079,
@@ -241,6 +243,7 @@
       "grid_preflight_missing_fields": [],
       "grid_macro_trend_ok": false,
       "grid_macro_block_reasons": [
+        "bullish_liquidity_macro_cluster",
         "directional_swing_macro"
       ],
       "ma5_cross_up_ma10_1d": false,
@@ -258,7 +261,7 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-05_0000",
     "timeframe": "4h",
-    "snapshot_timestamp": 1777939651,
+    "snapshot_timestamp": 1777946855,
     "candidate_proposals": [],
     "e_strategy_diagnostic": {
       "qlib_inputs": {
@@ -268,7 +271,7 @@
         "p_up_8h": 0.0913,
         "p_down_8h": 0.3452,
         "p_flat_8h": 0.5635,
-        "funding_zscore": 1.68,
+        "funding_zscore": 0.78,
         "token_net_flow": 0.0,
         "stablecoin_net_flow": 0.0,
         "regime_1d": "BEAR",
@@ -387,14 +390,14 @@
     "history": [
       {
         "type": "EXECUTION_NOT_REQUESTED",
-        "at": "2026-05-05T00:07:33Z",
+        "at": "2026-05-05T02:07:37Z",
         "payload": {
           "review_note": "rule evaluation rejected or produced no approved candidates"
         }
       },
       {
         "type": "EXECUTION_SKIPPED",
-        "at": "2026-05-05T00:07:37Z",
+        "at": "2026-05-05T02:07:41Z",
         "payload": {
           "reason": "do_nothing",
           "execution_action": "DO_NOTHING"
@@ -446,10 +449,10 @@
       "execution_action": "DO_NOTHING"
     },
     "feedback_packets": [],
-    "generated_at": "2026-05-05T00:08:10Z"
+    "generated_at": "2026-05-05T02:08:14Z"
   },
-  "created_at": "2026-05-05T00:07:33Z",
-  "created_at_local": "2026-05-05T08:07:33+0800",
-  "updated_at": "2026-05-05T00:08:10Z",
-  "updated_at_local": "2026-05-05T08:07:37+0800"
+  "created_at": "2026-05-05T02:07:37Z",
+  "created_at_local": "2026-05-05T10:07:37+0800",
+  "updated_at": "2026-05-05T02:08:14Z",
+  "updated_at_local": "2026-05-05T10:07:41+0800"
 }
