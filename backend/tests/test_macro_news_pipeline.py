@@ -59,6 +59,11 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertIn("YEN_STRESS", result["key_tags"])
         self.assertIn("classification_basis", result)
         self.assertIn("event_facts", result)
+        self.assertEqual(result["fear_greed_index"], 29)
+        self.assertIsNone(result["fear_greed_change_5d"])
+        self.assertEqual(result["vix_level"], 24.8)
+        self.assertEqual(result["vix_change_5d_pct"], 10.0)
+        self.assertEqual(result["event_facts"]["vix_level"], 24.8)
         self.assertIn("news_summary", result)
         self.assertIn("brief_rationale", result)
         self.assertTrue(result["macro_event_window"])
@@ -158,6 +163,7 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertIn("SENTIMENT_COOLING", result["key_tags"])
         self.assertEqual(result["macro_bias_tier"], "MILD_RISK_OFF")
         self.assertEqual(result["macro_permission"], "ALLOW_BOTH")
+        self.assertEqual(result["fear_greed_change_5d"], -14)
 
     def test_fear_greed_recovery_offsets_absolute_fear(self):
         whale_analysis = {
@@ -182,6 +188,29 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertIn("SENTIMENT_RELIEF", result["key_tags"])
         self.assertEqual(result["macro_bias_tier"], "NO_CLEAR_EDGE")
         self.assertEqual(result["macro_permission"], "ALLOW_BOTH")
+
+    def test_missing_fear_greed_change_stays_null_and_does_not_add_sentiment_tag(self):
+        whale_analysis = {
+            "fear_greed": {"value": 58, "value_classification": "Neutral"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": 0, "trend": "flat"},
+                "japan_macro": {"price": 145.0, "change_5d_pct": 0.0},
+                "liquidity_monitor": {
+                    "dxy": {"price": 104.0, "change_5d_pct": 0.0},
+                    "vix": {"price": 17.0, "change_5d_pct": 0.0},
+                    "us10y": {"price": 4.2, "change_5d_pct": 0.0},
+                },
+                "global_stable_flow": 0,
+            },
+            "news": {"macro": {"items": []}, "calendar": {"items": []}, "general": {"items": []}},
+        }
+
+        result = build_macro_news_snapshot(whale_analysis)
+
+        self.assertIsNone(result["fear_greed_change_5d"])
+        self.assertIsNone(result["event_facts"]["fear_greed_change_5d"])
+        self.assertNotIn("SENTIMENT_COOLING", result["key_tags"])
+        self.assertNotIn("SENTIMENT_RELIEF", result["key_tags"])
 
     def test_foreign_inflation_forecast_does_not_force_multi_day(self):
         facts = {

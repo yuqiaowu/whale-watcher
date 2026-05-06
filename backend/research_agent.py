@@ -29,6 +29,15 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
         return default
 
 
+def _optional_float(value: Any) -> Optional[float]:
+    try:
+        if value is None:
+            return None
+        return float(value)
+    except Exception:
+        return None
+
+
 def _flow_alignment_for_intent(intent: str, features: Dict[str, Any], onchain: Dict[str, Any]) -> Tuple[str, bool]:
     flow_data_available = bool(
         features.get("flow_data_available")
@@ -202,9 +211,14 @@ def _deterministic_research_output(
     macro_horizon = features.get("macro_horizon", macro_snapshot.get("macro_horizon", "INTRADAY"))
     macro_bias_tier = features.get("macro_bias_tier", macro_snapshot.get("macro_bias_tier", "NO_CLEAR_EDGE"))
     macro_impact_score = _safe_float(features.get("macro_impact_score"), _safe_float(macro_snapshot.get("macro_impact_score")))
-    fear_greed_change_5d = _safe_float(
-        features.get("fear_greed_change_5d"),
-        _safe_float((macro_snapshot.get("event_facts") or {}).get("fear_greed_change_5d")),
+    fear_greed_change_5d = _optional_float(
+        features.get(
+            "fear_greed_change_5d",
+            macro_snapshot.get(
+                "fear_greed_change_5d",
+                (macro_snapshot.get("event_facts") or {}).get("fear_greed_change_5d"),
+            ),
+        )
     )
     regime_1d = features.get("regime_1d", "CHOP")
     position_side = position_snapshot.get("position_side", "NONE")

@@ -368,6 +368,8 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             "macro_bias_tier": "STRONG_RISK_OFF",
             "macro_impact_score": -8,
             "event_facts": {"fear_greed_change_5d": -12},
+            "vix_level": 24.5,
+            "vix_change_5d_pct": 9.2,
         }
         fake_db = FakeDB(store)
 
@@ -386,6 +388,8 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual("STRONG_RISK_OFF", features["macro_bias_tier"])
         self.assertEqual(-8, features["macro_impact_score"])
         self.assertEqual(-12, features["fear_greed_change_5d"])
+        self.assertEqual(24.5, features["vix_level"])
+        self.assertEqual(9.2, features["vix_change_5d_pct"])
 
     def test_conflicted_research_waits_for_confirmation(self):
         store = {

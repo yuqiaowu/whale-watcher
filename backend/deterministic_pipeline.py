@@ -221,6 +221,20 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
         return default
 
 
+def _optional_float(value: Any) -> Optional[float]:
+    try:
+        if value is None:
+            return None
+        if isinstance(value, str):
+            cleaned = value.replace("%", "").replace(",", "").strip()
+            if cleaned == "":
+                return None
+            return float(cleaned)
+        return float(value)
+    except Exception:
+        return None
+
+
 def _token_flow_semantic(token_flow: float, flow_data_available: bool) -> str:
     if not flow_data_available:
         return "UNAVAILABLE"
@@ -767,8 +781,20 @@ def _build_decision_snapshot(
         "macro_permission": macro_snapshot["macro_permission"],
         "macro_bias_tier": macro_snapshot.get("macro_bias_tier"),
         "macro_impact_score": _safe_float(macro_snapshot.get("macro_impact_score")),
-        "fear_greed_change_5d": _safe_float(
-            (macro_snapshot.get("event_facts") or {}).get("fear_greed_change_5d")
+        "fear_greed_change_5d": _optional_float(
+            macro_snapshot.get(
+                "fear_greed_change_5d",
+                (macro_snapshot.get("event_facts") or {}).get("fear_greed_change_5d"),
+            )
+        ),
+        "vix_level": _optional_float(
+            macro_snapshot.get("vix_level", (macro_snapshot.get("event_facts") or {}).get("vix_level"))
+        ),
+        "vix_change_5d_pct": _optional_float(
+            macro_snapshot.get(
+                "vix_change_5d_pct",
+                (macro_snapshot.get("event_facts") or {}).get("vix_change_5d_pct"),
+            )
         ),
         "event_risk_active": bool(macro_snapshot["macro_event_window"]),
         "usd_strength_flag": "USD_STRENGTH" in (macro_snapshot.get("key_events") or []) or macro_snapshot.get("dxy_trend") == "UP",
