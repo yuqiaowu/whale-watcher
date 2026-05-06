@@ -38,6 +38,20 @@ class NewsFetcherTests(unittest.TestCase):
         self.assertEqual(2, result["lookback_sessions"])
         self.assertAlmostEqual(6.25, result["change_pct"], places=4)
 
+    def test_one_day_change_uses_previous_session(self):
+        dates = pd.date_range("2026-04-27", periods=8, freq="B", tz="America/New_York")
+        hist = pd.DataFrame(
+            {"Close": [20.0, 18.0, 17.0, 16.0, 15.0, 14.0, 13.0, 12.0]},
+            index=dates,
+        )
+
+        result = _liquidity_change_from_history(hist, lookback_sessions=1)
+
+        self.assertEqual(12.0, result["latest"])
+        self.assertEqual(13.0, result["reference"])
+        self.assertEqual(1, result["lookback_sessions"])
+        self.assertAlmostEqual(-7.6923, result["change_pct"], places=4)
+
 
 if __name__ == "__main__":
     unittest.main()

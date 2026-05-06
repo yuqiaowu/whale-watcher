@@ -802,6 +802,12 @@ def _build_decision_snapshot(
         "vix_level": _optional_float(
             macro_snapshot.get("vix_level", (macro_snapshot.get("event_facts") or {}).get("vix_level"))
         ),
+        "vix_change_1d_pct": _optional_float(
+            macro_snapshot.get(
+                "vix_change_1d_pct",
+                (macro_snapshot.get("event_facts") or {}).get("vix_change_1d_pct"),
+            )
+        ),
         "vix_change_5d_pct": _optional_float(
             macro_snapshot.get(
                 "vix_change_5d_pct",

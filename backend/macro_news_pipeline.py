@@ -207,6 +207,7 @@ def _base_event_facts(fear_greed: Dict[str, Any], macro_data: Dict[str, Any]) ->
         "dxy_level": _safe_float(dxy.get("price")),
         "dxy_change_5d_pct": _safe_float(dxy.get("change_5d_pct")),
         "vix_level": _optional_float(vix.get("price")),
+        "vix_change_1d_pct": _optional_float(vix.get("change_1d_pct")),
         "vix_change_5d_pct": _optional_float(vix.get("change_5d_pct")),
         "us10y_level": _safe_float(us10y.get("price")),
         "us10y_change_5d_pct": _safe_float(us10y.get("change_5d_pct")),
@@ -296,12 +297,13 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
         tags.append("USD_WEAKNESS")
 
     vix_level = _safe_float(facts.get("vix_level"))
+    vix_change_1d_pct = _safe_float(facts.get("vix_change_1d_pct"), _safe_float(facts.get("vix_change_5d_pct")))
     vix_change_5d_pct = _safe_float(facts.get("vix_change_5d_pct"))
     us10y_change_5d_pct = _safe_float(facts.get("us10y_change_5d_pct"))
     yen_risk_context = (
         facts["fear_greed_index"] <= 35
         or vix_level >= 24
-        or vix_change_5d_pct >= vix_relief_threshold
+        or vix_change_1d_pct >= vix_relief_threshold
         or facts["dxy_change_5d_pct"] >= dxy_threshold
         or us10y_change_5d_pct >= 0.5
     )
@@ -309,7 +311,7 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
         fed_change_5d_bps <= -fed_move_threshold
         or facts["dxy_change_5d_pct"] <= -dxy_threshold
         or us10y_change_5d_pct <= -0.5
-        or (vix_level > 0 and vix_level < 18 and vix_change_5d_pct <= -vix_relief_threshold)
+        or (vix_level > 0 and vix_level < 18 and vix_change_1d_pct <= -vix_relief_threshold)
     )
     if facts["usdjpy_change_5d_pct"] <= -yen_threshold and yen_risk_context and not yen_relief_context:
         tags.append("YEN_STRESS")
@@ -323,13 +325,13 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
         elif fear_greed_change_5d >= 10:
             tags.append("SENTIMENT_RELIEF")
 
-    if facts["fear_greed_index"] <= 35 or vix_level >= 24 or vix_change_5d_pct >= 8:
+    if facts["fear_greed_index"] <= 35 or vix_level >= 24 or vix_change_1d_pct >= 8:
         tags.append("RISK_OFF_NEWS")
     elif facts["fear_greed_index"] >= 65 and vix_level > 0 and vix_level < 18:
         tags.append("RISK_ON_NEWS")
-    if vix_level > 0 and vix_level < 18 and vix_change_5d_pct <= -vix_relief_threshold:
+    if vix_level > 0 and vix_level < 18 and vix_change_1d_pct <= -vix_relief_threshold:
         tags.append("VOL_PRESSURE_EASING")
-    elif vix_change_5d_pct >= vix_relief_threshold:
+    elif vix_change_1d_pct >= vix_relief_threshold:
         tags.append("VOL_PRESSURE_RISING")
 
     if facts["global_stable_flow"] >= stable_flow_thresholds["tag"]:
@@ -517,9 +519,9 @@ def _brief_rationale(tags: List[str], facts: Dict[str, Any], market_impact: str,
     if "RISK_ON_NEWS" in tags:
         parts.append(f"sentiment supports risk-on ({facts['fear_greed_index']:.0f}, VIX {vix_text})")
     if "VOL_PRESSURE_EASING" in tags:
-        parts.append(f"volatility pressure eased (VIX {vix_text}, {facts['vix_change_5d_pct']:+.2f}%/5d)")
+        parts.append(f"volatility pressure eased (VIX {vix_text}, {facts.get('vix_change_1d_pct', facts.get('vix_change_5d_pct')):+.2f}%/1d)")
     if "VOL_PRESSURE_RISING" in tags:
-        parts.append(f"volatility pressure rose (VIX {vix_text}, {facts['vix_change_5d_pct']:+.2f}%/5d)")
+        parts.append(f"volatility pressure rose (VIX {vix_text}, {facts.get('vix_change_1d_pct', facts.get('vix_change_5d_pct')):+.2f}%/1d)")
     if "SENTIMENT_COOLING" in tags:
         parts.append(f"fear/greed cooled ({facts['fear_greed_change_5d']:+.1f}/5d)")
     if "SENTIMENT_RELIEF" in tags:
@@ -895,6 +897,7 @@ def build_macro_news_snapshot(whale_analysis: Dict[str, Any]) -> Dict[str, Any]:
     classification["fear_greed_state"] = facts.get("fear_greed_state", "NEUTRAL")
     classification["fear_greed_change_5d"] = facts.get("fear_greed_change_5d")
     classification["vix_level"] = facts.get("vix_level")
+    classification["vix_change_1d_pct"] = facts.get("vix_change_1d_pct")
     classification["vix_change_5d_pct"] = facts.get("vix_change_5d_pct")
     classification["dxy_level"] = facts.get("dxy_level", 0.0)
     classification["dxy_trend"] = _trend_label(_safe_float(facts.get("dxy_change_5d_pct")), positive_label="UP", negative_label="DOWN")

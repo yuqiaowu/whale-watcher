@@ -28,7 +28,7 @@ class MacroNewsPipelineTests(unittest.TestCase):
                 "japan_macro": {"price": 142.1, "change_5d_pct": -1.2},
                 "liquidity_monitor": {
                     "dxy": {"price": 105.2, "change_5d_pct": 0.8},
-                    "vix": {"price": 24.8, "change_5d_pct": 10.0},
+                    "vix": {"price": 24.8, "change_1d_pct": 9.0, "change_5d_pct": 10.0},
                     "us10y": {"price": 4.45, "change_5d_pct": 0.2},
                 },
                 "global_stable_flow": -150000000,
@@ -62,6 +62,7 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertEqual(result["fear_greed_index"], 29)
         self.assertIsNone(result["fear_greed_change_5d"])
         self.assertEqual(result["vix_level"], 24.8)
+        self.assertEqual(result["vix_change_1d_pct"], 9.0)
         self.assertEqual(result["vix_change_5d_pct"], 10.0)
         self.assertEqual(result["event_facts"]["vix_level"], 24.8)
         self.assertIn("news_summary", result)
@@ -149,7 +150,7 @@ class MacroNewsPipelineTests(unittest.TestCase):
                 "japan_macro": {"price": 155.9, "change_5d_pct": -2.25},
                 "liquidity_monitor": {
                     "dxy": {"price": 97.8, "change_5d_pct": -0.42},
-                    "vix": {"price": 16.74, "change_5d_pct": -0.89},
+                    "vix": {"price": 16.74, "change_1d_pct": -0.89, "change_5d_pct": 2.5},
                     "us10y": {"price": 4.42, "change_5d_pct": -0.05},
                 },
                 "global_stable_flow": -544_910_719,
@@ -177,7 +178,7 @@ class MacroNewsPipelineTests(unittest.TestCase):
                 "japan_macro": {"price": 156.474, "change_5d_pct": -1.93},
                 "liquidity_monitor": {
                     "dxy": {"price": 97.97, "change_5d_pct": -0.24},
-                    "vix": {"price": 17.22, "change_5d_pct": 1.95},
+                    "vix": {"price": 17.22, "change_1d_pct": -0.52, "change_5d_pct": 1.95},
                     "us10y": {"price": 4.35, "change_5d_pct": -0.82},
                 },
                 "global_stable_flow": 302_452_325,
@@ -189,7 +190,7 @@ class MacroNewsPipelineTests(unittest.TestCase):
         result = build_macro_news_snapshot(whale_analysis)
 
         self.assertIn("RATE_EXPECTATION_EASING", result["key_tags"])
-        self.assertIn("VOL_PRESSURE_RISING", result["key_tags"])
+        self.assertNotIn("VOL_PRESSURE_RISING", result["key_tags"])
         self.assertIn("LIQUIDITY_EXPANDING", result["key_tags"])
         self.assertNotIn("YEN_STRESS", result["key_tags"])
 
@@ -350,7 +351,7 @@ class MacroNewsPipelineTests(unittest.TestCase):
                 "japan_macro": {"price": 156.474, "change_5d_pct": -1.93},
                 "liquidity_monitor": {
                     "dxy": {"price": 97.97, "change_5d_pct": -0.24},
-                    "vix": {"price": 17.22, "change_5d_pct": 1.95},
+                    "vix": {"price": 17.22, "change_1d_pct": -0.52, "change_5d_pct": 1.95},
                     "us10y": {"price": 4.35, "change_5d_pct": -0.82},
                 },
                 "global_stable_flow": 302_452_325,
@@ -406,7 +407,7 @@ class MacroNewsPipelineTests(unittest.TestCase):
                 "japan_macro": {"price": 142.1, "change_5d_pct": -1.2},
                 "liquidity_monitor": {
                     "dxy": {"price": 105.2, "change_5d_pct": 0.8},
-                    "vix": {"price": 24.8, "change_5d_pct": 10.0},
+                    "vix": {"price": 24.8, "change_1d_pct": 9.0, "change_5d_pct": 10.0},
                     "us10y": {"price": 4.45, "change_5d_pct": 0.2},
                 },
                 "global_stable_flow": -150000000,

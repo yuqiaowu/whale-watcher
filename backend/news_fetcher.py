@@ -516,20 +516,24 @@ def fetch_liquidity_monitor() -> Dict[str, Any]:
                     result[key] = None
                     continue
                 
-                change = _liquidity_change_from_history(hist)
-                if not change:
+                change_5d = _liquidity_change_from_history(hist, lookback_sessions=5)
+                change_1d = _liquidity_change_from_history(hist, lookback_sessions=1)
+                if not change_5d or not change_1d:
                     result[key] = None
                     continue
-                latest = change["latest"]
-                change_pct = change["change_pct"]
+                latest = change_5d["latest"]
+                change_pct = change_5d["change_pct"]
                 
                 item = {
                     "price": round(latest, 2),
                     "change_5d_pct": round(change_pct, 2),
-                    "change_reference_price": round(change["reference"], 2),
-                    "change_reference_date": change["reference_date"],
-                    "change_latest_date": change["latest_date"],
-                    "change_lookback_sessions": change["lookback_sessions"],
+                    "change_1d_pct": round(change_1d["change_pct"], 2),
+                    "change_reference_price": round(change_5d["reference"], 2),
+                    "change_reference_date": change_5d["reference_date"],
+                    "change_latest_date": change_5d["latest_date"],
+                    "change_lookback_sessions": change_5d["lookback_sessions"],
+                    "change_1d_reference_price": round(change_1d["reference"], 2),
+                    "change_1d_reference_date": change_1d["reference_date"],
                     "trend": "Neutral"
                 }
                 
@@ -572,6 +576,7 @@ def fetch_liquidity_monitor() -> Dict[str, Any]:
                     else: item["trend_zh"] = f"中性 {move_zh}".strip()
 
                 elif key == "vix":
+                    vix_move_pct = change_1d["change_pct"]
                     # Zone Logic
                     zone = "Normal" # Renamed from Neutral for clarity
                     if latest > 30: zone = "Extreme Panic"
@@ -581,10 +586,10 @@ def fetch_liquidity_monitor() -> Dict[str, Any]:
                     # Movement Logic
                     move = ""
                     move_zh = ""
-                    if change_pct > 2.0: 
+                    if vix_move_pct > 2.0:
                         move = "Rising"
                         move_zh = "上升"
-                    elif change_pct < -2.0: 
+                    elif vix_move_pct < -2.0:
                         move = "Subsiding"
                         move_zh = "回落"
                     
