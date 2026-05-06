@@ -281,21 +281,28 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
     return sorted(set(tags))
 
 
+MACRO_TAG_WEIGHTS = {
+    "FED_HAWKISH": -5,
+    "FED_DOVISH": 5,
+    "USD_STRENGTH": -2,
+    "USD_WEAKNESS": 2,
+    "YEN_STRESS": -2,
+    "YEN_RELIEF": 2,
+    "RISK_OFF_NEWS": -3,
+    "RISK_ON_NEWS": 3,
+    "LIQUIDITY_CONTRACTING": -4,
+    "LIQUIDITY_EXPANDING": 4,
+    "CPI_HOT": -4,
+    "CPI_COOL": 4,
+}
+
+
+def _market_impact_score(tags: List[str]) -> int:
+    return sum(MACRO_TAG_WEIGHTS.get(tag, 0) for tag in tags)
+
+
 def _market_impact(tags: List[str]) -> str:
-    weights = {
-        "FED_HAWKISH": -5,
-        "FED_DOVISH": 5,
-        "USD_STRENGTH": -2,
-        "USD_WEAKNESS": 2,
-        "YEN_STRESS": -2,
-        "YEN_RELIEF": 2,
-        "RISK_OFF_NEWS": -3,
-        "RISK_ON_NEWS": 3,
-        "LIQUIDITY_CONTRACTING": -4,
-        "LIQUIDITY_EXPANDING": 4,
-        "CPI_HOT": -4,
-        "CPI_COOL": 4,
-    }
+    weights = MACRO_TAG_WEIGHTS
     score = sum(weights.get(tag, 0) for tag in tags)
     positive = any(weights.get(tag, 0) > 0 for tag in tags)
     negative = any(weights.get(tag, 0) < 0 for tag in tags)
@@ -308,6 +315,50 @@ def _market_impact(tags: List[str]) -> str:
     if score != 0:
         return "MIXED"
     return "NO_CLEAR_IMPACT"
+
+
+def _macro_bias_tier(score: int, market_impact: str) -> str:
+    if score <= -6:
+        return "STRONG_RISK_OFF"
+    if score <= -3 or (market_impact == "RISK_OFF" and score < 0):
+        return "MILD_RISK_OFF"
+    if score >= 6:
+        return "STRONG_RISK_ON"
+    if score >= 3 or (market_impact == "RISK_ON" and score > 0):
+        return "MILD_RISK_ON"
+    return "NO_CLEAR_EDGE"
+
+
+def _macro_bias_policy(tier: str) -> Dict[str, Any]:
+    if tier == "STRONG_RISK_OFF":
+        return {
+            "macro_mode": "RISK_OFF",
+            "macro_permission": "ALLOW_SHORT",
+            "risk_off_score": 0.85,
+        }
+    if tier == "MILD_RISK_OFF":
+        return {
+            "macro_mode": "MIXED",
+            "macro_permission": "ALLOW_BOTH",
+            "risk_off_score": 0.65,
+        }
+    if tier == "MILD_RISK_ON":
+        return {
+            "macro_mode": "MIXED",
+            "macro_permission": "ALLOW_BOTH",
+            "risk_off_score": 0.35,
+        }
+    if tier == "STRONG_RISK_ON":
+        return {
+            "macro_mode": "RISK_ON",
+            "macro_permission": "ALLOW_LONG",
+            "risk_off_score": 0.15,
+        }
+    return {
+        "macro_mode": "MIXED",
+        "macro_permission": "ALLOW_BOTH",
+        "risk_off_score": 0.5,
+    }
 
 
 def _impact_horizon(facts: Dict[str, Any], tags: List[str], headlines: List[str]) -> str:
@@ -551,35 +602,18 @@ def build_macro_news_snapshot(whale_analysis: Dict[str, Any]) -> Dict[str, Any]:
     classification = _llm_summary_override(classification, headlines)
     facts = classification.get("event_facts", {})
 
+    key_tags = classification.get("key_tags", [])
     market_impact = classification.get("market_impact", "NO_CLEAR_IMPACT")
-    if market_impact == "RISK_OFF":
-        macro_mode = "RISK_OFF"
-        macro_permission = "ALLOW_SHORT"
-    elif market_impact == "RISK_ON":
-        macro_mode = "RISK_ON"
-        macro_permission = "ALLOW_LONG"
-    elif "FED_HAWKISH" in classification.get("key_tags", []) or "RISK_OFF_NEWS" in classification.get("key_tags", []):
-        macro_mode = "RISK_OFF"
-        macro_permission = "ALLOW_SHORT"
-    elif "FED_DOVISH" in classification.get("key_tags", []) or "RISK_ON_NEWS" in classification.get("key_tags", []):
-        macro_mode = "RISK_ON"
-        macro_permission = "ALLOW_LONG"
-    else:
-        macro_mode = "MIXED"
-        macro_permission = "ALLOW_BOTH"
-
+    macro_impact_score = _market_impact_score(key_tags)
+    macro_bias_tier = _macro_bias_tier(macro_impact_score, market_impact)
+    macro_policy = _macro_bias_policy(macro_bias_tier)
     event_window = classification.get("event_type") in {"FED_SPEECH", "MACRO_DATA_RELEASE"}
-    risk_off_score = 0.5
-    if market_impact == "RISK_OFF":
-        risk_off_score = 0.8
-    elif market_impact == "RISK_ON":
-        risk_off_score = 0.2
-    elif market_impact == "MIXED":
-        risk_off_score = 0.5
 
-    classification["macro_mode"] = macro_mode
+    classification["macro_mode"] = macro_policy["macro_mode"]
     classification["macro_horizon"] = classification.get("impact_horizon", "INTRADAY")
-    classification["macro_permission"] = macro_permission
+    classification["macro_permission"] = macro_policy["macro_permission"]
+    classification["macro_impact_score"] = macro_impact_score
+    classification["macro_bias_tier"] = macro_bias_tier
     classification["fear_greed_index"] = facts.get("fear_greed_index", 50.0)
     classification["fear_greed_state"] = facts.get("fear_greed_state", "NEUTRAL")
     classification["dxy_level"] = facts.get("dxy_level", 0.0)
@@ -588,6 +622,6 @@ def build_macro_news_snapshot(whale_analysis: Dict[str, Any]) -> Dict[str, Any]:
     classification["usdjpy_trend"] = _trend_label(_safe_float(facts.get("usdjpy_change_5d_pct")), positive_label="UP", negative_label="DOWN")
     classification["fed_event_risk"] = "HIGH" if event_window and classification.get("policy_stance") != "NOT_APPLICABLE" else "LOW"
     classification["macro_event_window"] = event_window
-    classification["risk_off_score"] = round(risk_off_score, 2)
+    classification["risk_off_score"] = round(macro_policy["risk_off_score"], 2)
     classification["news_headlines"] = headlines
     return classification

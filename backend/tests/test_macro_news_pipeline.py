@@ -10,7 +10,9 @@ if str(BACKEND_DIR) not in sys.path:
 
 from macro_news_pipeline import (
     _impact_horizon,
+    _macro_bias_tier,
     _market_impact,
+    _market_impact_score,
     _policy_stance,
     _llm_summary_override,
     build_macro_news_snapshot,
@@ -47,6 +49,8 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertEqual(result["market_impact"], "RISK_OFF")
         self.assertEqual(result["macro_mode"], "RISK_OFF")
         self.assertEqual(result["macro_permission"], "ALLOW_SHORT")
+        self.assertEqual(result["macro_bias_tier"], "STRONG_RISK_OFF")
+        self.assertLessEqual(result["macro_impact_score"], -6)
         self.assertEqual(result["impact_horizon"], "MULTI_DAY")
         self.assertEqual(result["macro_horizon"], "MULTI_DAY")
         self.assertEqual(result["policy_stance"], "HAWKISH")
@@ -101,6 +105,36 @@ class MacroNewsPipelineTests(unittest.TestCase):
         result = _market_impact(tags)
 
         self.assertEqual(result, "RISK_ON")
+
+    def test_macro_bias_tier_splits_mild_and_strong_edges(self):
+        self.assertEqual(_macro_bias_tier(_market_impact_score(["FED_HAWKISH"]), "RISK_OFF"), "MILD_RISK_OFF")
+        self.assertEqual(_macro_bias_tier(_market_impact_score(["FED_HAWKISH", "RISK_OFF_NEWS"]), "RISK_OFF"), "STRONG_RISK_OFF")
+        self.assertEqual(_macro_bias_tier(_market_impact_score(["RISK_ON_NEWS"]), "RISK_ON"), "MILD_RISK_ON")
+        self.assertEqual(_macro_bias_tier(_market_impact_score(["FED_DOVISH", "LIQUIDITY_EXPANDING"]), "RISK_ON"), "STRONG_RISK_ON")
+
+    def test_mild_macro_edge_keeps_both_directions_allowed(self):
+        whale_analysis = {
+            "fear_greed": {"value": 50, "value_classification": "Neutral"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": 4, "trend": "restrictive"},
+                "japan_macro": {"price": 145.0, "change_5d_pct": 0.0},
+                "liquidity_monitor": {
+                    "dxy": {"price": 104.0, "change_5d_pct": 0.0},
+                    "vix": {"price": 17.0, "change_5d_pct": 0.0},
+                    "us10y": {"price": 4.2, "change_5d_pct": 0.0},
+                },
+                "global_stable_flow": 0,
+            },
+            "news": {"macro": {"items": [{"title": "Fed officials say policy remains restrictive"}]}},
+        }
+
+        result = build_macro_news_snapshot(whale_analysis)
+
+        self.assertEqual(result["market_impact"], "RISK_OFF")
+        self.assertEqual(result["macro_bias_tier"], "MILD_RISK_OFF")
+        self.assertEqual(result["macro_mode"], "MIXED")
+        self.assertEqual(result["macro_permission"], "ALLOW_BOTH")
+        self.assertEqual(result["risk_off_score"], 0.65)
 
     def test_foreign_inflation_forecast_does_not_force_multi_day(self):
         facts = {
