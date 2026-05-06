@@ -5,6 +5,10 @@ from typing import Any, Dict, List, Optional
 
 from llm_client import call_llm_json_with_audit
 
+ALLOWED_MARKET_IMPACTS = {"RISK_ON", "RISK_OFF", "MIXED", "NO_CLEAR_IMPACT"}
+ALLOWED_IMPACT_HORIZONS = {"INTRADAY", "SWING", "MULTI_DAY", "NOISE"}
+ALLOWED_CRYPTO_RELEVANCE = {"HIGH", "MEDIUM", "LOW"}
+
 
 def _safe_float(value: Any, default: float = 0.0) -> float:
     try:
@@ -357,6 +361,7 @@ MACRO_TAG_WEIGHTS = {
     "CPI_HOT": -4,
     "CPI_COOL": 4,
 }
+ALLOWED_MACRO_TAGS = set(MACRO_TAG_WEIGHTS) | {"MACRO_NOISE"}
 
 
 def _market_impact_score(tags: List[str]) -> int:
@@ -671,14 +676,193 @@ def _llm_summary_override(classification: Dict[str, Any], headlines: List[str]) 
     return merged
 
 
+def _macro_view(classification: Dict[str, Any]) -> Dict[str, Any]:
+    return {
+        "event_type": classification.get("event_type"),
+        "policy_stance": classification.get("policy_stance"),
+        "market_impact": classification.get("market_impact"),
+        "impact_horizon": classification.get("impact_horizon"),
+        "crypto_relevance": classification.get("crypto_relevance"),
+        "key_tags": classification.get("key_tags", []),
+        "news_summary": classification.get("news_summary"),
+        "brief_rationale": classification.get("brief_rationale"),
+    }
+
+
+def _normalize_llm_macro_view(result: Any) -> Optional[Dict[str, Any]]:
+    if not isinstance(result, dict):
+        return None
+    tags = result.get("key_tags")
+    return {
+        "market_impact": result.get("market_impact"),
+        "impact_horizon": result.get("impact_horizon"),
+        "crypto_relevance": result.get("crypto_relevance"),
+        "key_tags": tags if isinstance(tags, list) else [],
+        "news_summary": result.get("news_summary"),
+        "brief_rationale": result.get("brief_rationale"),
+    }
+
+
+def _filtered_macro_tags(tags: Any) -> List[str]:
+    if not isinstance(tags, list):
+        return []
+    deduped: List[str] = []
+    seen = set()
+    for tag in tags:
+        if not isinstance(tag, str):
+            continue
+        normalized = tag.strip().upper()
+        if normalized not in ALLOWED_MACRO_TAGS or normalized in seen:
+            continue
+        seen.add(normalized)
+        deduped.append(normalized)
+    return deduped
+
+
+def _final_macro_decision_fallback(
+    classification: Dict[str, Any],
+    deterministic_view: Dict[str, Any],
+    *,
+    source: str,
+    reason: str,
+    audit: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    merged = dict(classification)
+    final_decision = {
+        "source": source,
+        "selected_view": "deterministic",
+        "market_impact": merged.get("market_impact"),
+        "impact_horizon": merged.get("impact_horizon"),
+        "crypto_relevance": merged.get("crypto_relevance"),
+        "key_tags": merged.get("key_tags", []),
+        "confidence": "LOW",
+        "reason": reason,
+        "deterministic_view": deterministic_view,
+        "llm_view": _normalize_llm_macro_view(
+            ((merged.get("provenance") or {}).get("llm_audit") or {}).get("parsed_response")
+        ),
+        "adjudication_audit": audit,
+    }
+    merged["final_macro_decision"] = final_decision
+    merged["macro_decision_source"] = final_decision["source"]
+    return merged
+
+
+def _llm_final_macro_adjudication(
+    classification: Dict[str, Any],
+    deterministic_classification: Dict[str, Any],
+    headlines: List[str],
+) -> Dict[str, Any]:
+    llm_enabled = os.getenv("ENABLE_MACRO_NEWS_LLM", "").strip() == "1"
+    deterministic_view = _macro_view(deterministic_classification)
+    llm_view = _normalize_llm_macro_view(
+        ((classification.get("provenance") or {}).get("llm_audit") or {}).get("parsed_response")
+    )
+    if not llm_enabled or not llm_view:
+        return _final_macro_decision_fallback(
+            classification,
+            deterministic_view,
+            source="deterministic",
+            reason="LLM adjudication unavailable; using deterministic macro classification.",
+        )
+
+    facts = classification.get("event_facts") or classification.get("classification_basis") or {}
+    prompt = (
+        "You are the final macro decision adjudicator for a crypto trading system. "
+        "Compare the deterministic program conclusion with the first-pass LLM conclusion. "
+        "Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. "
+        "Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. "
+        "Do not blindly defer to either side. "
+        "Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, "
+        "final_crypto_relevance, final_key_tags, confidence, reason. "
+        "Allowed selected_view: deterministic, llm, blended. "
+        "Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. "
+        "Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. "
+        "Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. "
+        "Allowed final_key_tags must come from ALLOWED_TAGS.\n\n"
+        f"HEADLINES: {json.dumps(headlines, ensure_ascii=False)}\n"
+        f"STRUCTURED_FACTS: {json.dumps(facts, ensure_ascii=False)}\n"
+        f"DETERMINISTIC_VIEW: {json.dumps(deterministic_view, ensure_ascii=False)}\n"
+        f"LLM_VIEW: {json.dumps(llm_view, ensure_ascii=False)}\n"
+        f"ALLOWED_TAGS: {json.dumps(sorted(ALLOWED_MACRO_TAGS), ensure_ascii=False)}"
+    )
+    result, audit = call_llm_json_with_audit(
+        prompt,
+        system_prompt=(
+            "You are a constrained final macro adjudicator. "
+            "Choose the best final macro conclusion from deterministic and LLM evidence. "
+            "Output only a JSON object."
+        ),
+        temperature=0.0,
+        enable_env_flag="ENABLE_MACRO_NEWS_LLM",
+    )
+    if not isinstance(result, dict):
+        return _final_macro_decision_fallback(
+            classification,
+            deterministic_view,
+            source="deterministic",
+            reason="LLM adjudication failed; using deterministic macro classification.",
+            audit=audit,
+        )
+
+    market_impact = result.get("final_market_impact")
+    impact_horizon = result.get("final_impact_horizon")
+    crypto_relevance = result.get("final_crypto_relevance")
+    if (
+        market_impact not in ALLOWED_MARKET_IMPACTS
+        or impact_horizon not in ALLOWED_IMPACT_HORIZONS
+        or crypto_relevance not in ALLOWED_CRYPTO_RELEVANCE
+    ):
+        return _final_macro_decision_fallback(
+            classification,
+            deterministic_view,
+            source="deterministic",
+            reason="LLM adjudication returned invalid classification fields; using deterministic macro classification.",
+            audit=audit,
+        )
+
+    final_tags = _filtered_macro_tags(result.get("final_key_tags"))
+    if not final_tags:
+        final_tags = ["MACRO_NOISE"] if market_impact in {"MIXED", "NO_CLEAR_IMPACT"} else list(classification.get("key_tags", []))
+
+    merged = dict(classification)
+    merged["market_impact"] = market_impact
+    merged["impact_horizon"] = impact_horizon
+    merged["crypto_relevance"] = crypto_relevance
+    merged["key_tags"] = final_tags
+    merged["key_events"] = final_tags
+    if isinstance(result.get("reason"), str) and result["reason"].strip():
+        merged["brief_rationale"] = result["reason"].strip()
+
+    selected_view = result.get("selected_view") if result.get("selected_view") in {"deterministic", "llm", "blended"} else "blended"
+    confidence = result.get("confidence") if result.get("confidence") in {"LOW", "MEDIUM", "HIGH"} else "MEDIUM"
+    final_decision = {
+        "source": "llm_adjudicated",
+        "selected_view": selected_view,
+        "market_impact": market_impact,
+        "impact_horizon": impact_horizon,
+        "crypto_relevance": crypto_relevance,
+        "key_tags": final_tags,
+        "confidence": confidence,
+        "reason": merged.get("brief_rationale"),
+        "deterministic_view": deterministic_view,
+        "llm_view": llm_view,
+        "adjudication_audit": audit,
+    }
+    merged["final_macro_decision"] = final_decision
+    merged["macro_decision_source"] = final_decision["source"]
+    return merged
+
+
 def build_macro_news_snapshot(whale_analysis: Dict[str, Any]) -> Dict[str, Any]:
     fear_greed = whale_analysis.get("fear_greed", {}) if isinstance(whale_analysis.get("fear_greed"), dict) else {}
     macro_data = whale_analysis.get("macro", {}) if isinstance(whale_analysis.get("macro"), dict) else {}
     news_obj = whale_analysis.get("news", {}) if isinstance(whale_analysis.get("news"), dict) else {}
 
-    classification = _deterministic_classification(fear_greed, macro_data, news_obj)
+    deterministic_classification = _deterministic_classification(fear_greed, macro_data, news_obj)
     headlines = _event_headlines(news_obj)
-    classification = _llm_summary_override(classification, headlines)
+    classification = _llm_summary_override(deterministic_classification, headlines)
+    classification = _llm_final_macro_adjudication(classification, deterministic_classification, headlines)
     facts = classification.get("event_facts", {})
 
     key_tags = classification.get("key_tags", [])

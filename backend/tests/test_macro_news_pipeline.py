@@ -317,6 +317,108 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertEqual(result["crypto_relevance"], "MEDIUM")
         self.assertEqual(result["key_tags"], ["FED_HAWKISH", "RISK_OFF_NEWS"])
 
+    def test_llm_adjudication_becomes_final_macro_conclusion(self):
+        whale_analysis = {
+            "fear_greed": {"value": 46, "value_classification": "Fear"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": -3.3, "trend": "restrictive"},
+                "japan_macro": {"price": 156.474, "change_5d_pct": -1.93},
+                "liquidity_monitor": {
+                    "dxy": {"price": 97.97, "change_5d_pct": -0.24},
+                    "vix": {"price": 17.22, "change_5d_pct": 1.95},
+                    "us10y": {"price": 4.35, "change_5d_pct": -0.82},
+                },
+                "global_stable_flow": 302_452_325,
+                "global_stable_market_cap": 268_621_121_668,
+            },
+            "news": {
+                "macro": {"items": [{"title": "Corporate earnings mixed while auto debt stress rises"}]},
+                "general": {"items": [{"title": "Political hearing dominates headlines"}]},
+            },
+        }
+        first_pass_llm = {
+            "news_summary": "mixed headlines",
+            "brief_rationale": "news looks noisy",
+            "market_impact": "MIXED",
+            "impact_horizon": "NOISE",
+            "crypto_relevance": "LOW",
+            "key_tags": ["MACRO_NOISE"],
+        }
+        adjudication = {
+            "selected_view": "llm",
+            "final_market_impact": "MIXED",
+            "final_impact_horizon": "NOISE",
+            "final_crypto_relevance": "LOW",
+            "final_key_tags": ["MACRO_NOISE"],
+            "confidence": "HIGH",
+            "reason": "Marginal facts are mixed and the headlines do not create a tradeable macro shock.",
+        }
+
+        with patch(
+            "macro_news_pipeline.call_llm_json_with_audit",
+            side_effect=[
+                (first_pass_llm, {"status": "parsed", "parsed_response": first_pass_llm}),
+                (adjudication, {"status": "parsed", "parsed_response": adjudication}),
+            ],
+        ), patch.dict("os.environ", {"ENABLE_MACRO_NEWS_LLM": "1"}, clear=False):
+            result = build_macro_news_snapshot(whale_analysis)
+
+        self.assertEqual(result["market_impact"], "MIXED")
+        self.assertEqual(result["impact_horizon"], "NOISE")
+        self.assertEqual(result["crypto_relevance"], "LOW")
+        self.assertEqual(result["key_tags"], ["MACRO_NOISE"])
+        self.assertEqual(result["macro_permission"], "ALLOW_BOTH")
+        self.assertEqual(result["macro_decision_source"], "llm_adjudicated")
+        self.assertEqual(result["final_macro_decision"]["selected_view"], "llm")
+        self.assertEqual(result["final_macro_decision"]["llm_view"]["market_impact"], "MIXED")
+        self.assertEqual(result["final_macro_decision"]["deterministic_view"]["market_impact"], "RISK_OFF")
+
+    def test_llm_adjudication_invalid_result_falls_back_to_deterministic(self):
+        whale_analysis = {
+            "fear_greed": {"value": 29, "value_classification": "Fear"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": 0, "trend": "restrictive"},
+                "japan_macro": {"price": 142.1, "change_5d_pct": -1.2},
+                "liquidity_monitor": {
+                    "dxy": {"price": 105.2, "change_5d_pct": 0.8},
+                    "vix": {"price": 24.8, "change_5d_pct": 10.0},
+                    "us10y": {"price": 4.45, "change_5d_pct": 0.2},
+                },
+                "global_stable_flow": -150000000,
+            },
+            "news": {"macro": {"items": [{"title": "Powell says policy must stay restrictive"}]}},
+        }
+        first_pass_llm = {
+            "news_summary": "mixed",
+            "brief_rationale": "mixed",
+            "market_impact": "MIXED",
+            "impact_horizon": "NOISE",
+            "crypto_relevance": "LOW",
+            "key_tags": ["MACRO_NOISE"],
+        }
+        bad_adjudication = {
+            "selected_view": "llm",
+            "final_market_impact": "BULLISH",
+            "final_impact_horizon": "NOISE",
+            "final_crypto_relevance": "LOW",
+            "final_key_tags": ["MACRO_NOISE"],
+            "confidence": "HIGH",
+            "reason": "invalid",
+        }
+
+        with patch(
+            "macro_news_pipeline.call_llm_json_with_audit",
+            side_effect=[
+                (first_pass_llm, {"status": "parsed", "parsed_response": first_pass_llm}),
+                (bad_adjudication, {"status": "parsed", "parsed_response": bad_adjudication}),
+            ],
+        ), patch.dict("os.environ", {"ENABLE_MACRO_NEWS_LLM": "1"}, clear=False):
+            result = build_macro_news_snapshot(whale_analysis)
+
+        self.assertEqual(result["market_impact"], "RISK_OFF")
+        self.assertEqual(result["macro_decision_source"], "deterministic")
+        self.assertEqual(result["final_macro_decision"]["selected_view"], "deterministic")
+
 
 if __name__ == "__main__":
     unittest.main()
