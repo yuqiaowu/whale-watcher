@@ -65,6 +65,16 @@ graph TD
 *   **角色**: 作为主系统的骨架。保留其 `run_daily_cycle.py` 作为主心跳，负责调度各个模块。
 *   **职责**: 维护账户状态 (`portfolio_state.json`)，进行最终的买卖操作。
 
+#### A1. Candidate / Rule Contract
+*   **Candidate Layer** 只负责输出可审计候选，不负责最终批准开仓。
+*   结构型候选必须携带 `reference_values` 与 `invalidation_conditions`。例如 `Blueprint_A2` 的上影线反抽空单必须优先使用真实已完成 4H K 线高点 `trigger_candle_high`，而不是用 `price + ATR` 合成高点。
+*   **Rule Engine** 批准开仓前必须按顺序执行：
+    1. schema 校验；
+    2. `PRE_TRADE_INVALIDATION_CHECK`：若当前价已经触发 `invalidation_conditions`，返回 `INVALIDATION_TRIGGERED`，不得开仓；
+    3. `MIN_RRR_CHECK`：使用候选最终 `entry / SL / TP` 计算 RRR，低于阈值返回 `LOW_RRR`，不得开仓；
+    4. 仓位冲突、宏观权限、强平距离与风险预算检查。
+*   这保证模型、研究层与执行层看到的是同一套结构依据：A2 若因真实上影线顶部被突破而失效，不能继续作为可执行 candidate；若真实结构止损导致 RRR 不达标，也不能开仓。
+
 #### B. 情报中心 (Intelligence Center)
 *   **来源**: `news_analyse` + `crypto_signal_lab`
 *   **集成方式**:

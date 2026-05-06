@@ -262,6 +262,85 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         blocked_rsi = dp._build_candidate_proposals(build_snapshot("BTC-USDT", "BEAR", 60, 35))
         self.assertNotIn("Blueprint_A2", [item["trigger_source"] for item in blocked_rsi["candidate_proposals"]])
 
+    def test_a2_uses_real_trigger_candle_high_when_available(self):
+        snapshot = {
+            "symbol": "BTC-USDT",
+            "cycleId": "cycle_test",
+            "timeframe": "4h",
+            "snapshot_timestamp": 1712743200,
+            "market_snapshot": {
+                "price": 100.0,
+                "atr_14": 2.0,
+                "rsi_4h": 61,
+                "wick_ratio_upper": 35,
+                "trigger_candle_high": 106.0,
+            },
+            "onchain_snapshot": {
+                "token_net_flow": 0.0,
+                "stablecoin_net_flow": 0.0,
+                "qlib_relative_score_8h": 0.0,
+                "qlib_rank_8h": 3,
+                "qlib_percentile_8h": 0.5,
+                "p_up_8h": 0.2,
+                "p_down_8h": 0.2,
+                "p_flat_8h": 0.6,
+            },
+            "macro_snapshot": {},
+            "position_snapshot": {"position_side": "NONE"},
+            "decision_ready_features": {
+                "regime_1d": "BEAR",
+                "flow_support_long": False,
+                "flow_support_short": False,
+            },
+        }
+
+        proposal = dp._build_candidate_proposals(snapshot)["candidate_proposals"][0]
+
+        self.assertEqual("Blueprint_A2", proposal["trigger_source"])
+        self.assertEqual(106.0, proposal["reference_values"]["trigger_candle_high"])
+        self.assertEqual(106.212, proposal["proposed_sl_price"])
+
+    def test_a2_rejects_entry_when_price_has_already_broken_trigger_candle_high(self):
+        snapshot = {
+            "symbol": "BTC-USDT",
+            "cycleId": "cycle_test",
+            "timeframe": "4h",
+            "snapshot_timestamp": 1712743200,
+            "is_decision_eligible": True,
+            "market_snapshot": {
+                "price": 107.0,
+                "atr_14": 2.0,
+                "rsi_4h": 61,
+                "wick_ratio_upper": 35,
+                "trigger_candle_high": 106.0,
+            },
+            "onchain_snapshot": {
+                "token_net_flow": 0.0,
+                "stablecoin_net_flow": 0.0,
+                "qlib_relative_score_8h": 0.0,
+                "qlib_rank_8h": 3,
+                "qlib_percentile_8h": 0.5,
+                "p_up_8h": 0.2,
+                "p_down_8h": 0.2,
+                "p_flat_8h": 0.6,
+            },
+            "macro_snapshot": {},
+            "position_snapshot": {"position_side": "NONE"},
+            "decision_ready_features": {
+                "regime_1d": "BEAR",
+                "flow_support_long": False,
+                "flow_support_short": False,
+                "macro_permission": "ALLOW_BOTH",
+            },
+        }
+
+        candidate_batch = dp._build_candidate_proposals(snapshot)
+        result = dp._evaluate_rules(snapshot, candidate_batch)
+
+        self.assertFalse(result["passed"])
+        self.assertIn("INVALIDATION_TRIGGERED", result["reason_codes"])
+        self.assertEqual([], result["approved_candidates"])
+
     def test_qlib_coin_map_converts_rank_to_percentile_scale(self):
         qlib_payload = {
             "coins": [

@@ -490,6 +490,10 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
             "rsi_4h": _safe_float(latest.get("rsi_14")),
             "adx_14_4h": _safe_float(latest.get("adx_14")),
             "atr_14": atr,
+            "trigger_candle_open": latest_open,
+            "trigger_candle_high": latest_high,
+            "trigger_candle_low": latest_low,
+            "trigger_candle_close": latest_close,
             "wick_ratio_lower": round(lower_shadow / full_range * 100, 2),
             "wick_ratio_upper": round(upper_shadow / full_range * 100, 2),
             "rel_volume_60": _safe_float(latest.get("rel_volume_60")),
@@ -695,6 +699,10 @@ def _build_decision_snapshot(
         "whale_ls_ratio": _safe_float(market.get("whale_ls_ratio")),
         "whale_pos_ratio": _safe_float(market.get("whale_pos_ratio")),
         "atr_14": _safe_float(chart_context.get("atr_14"), _safe_float(market_data.get("atr_14"))),
+        "trigger_candle_open": _optional_float(chart_context.get("trigger_candle_open")),
+        "trigger_candle_high": _optional_float(chart_context.get("trigger_candle_high")),
+        "trigger_candle_low": _optional_float(chart_context.get("trigger_candle_low")),
+        "trigger_candle_close": _optional_float(chart_context.get("trigger_candle_close")),
         "macd_line_4h": _safe_float(chart_context.get("macd_line_4h"), _safe_float(market_data.get("macd"))),
         "macd_signal_4h": _safe_float(chart_context.get("macd_signal_4h"), _safe_float(market_data.get("macd_signal"))),
         "macd_hist_4h": _safe_float(chart_context.get("macd_hist_4h"), _safe_float(market.get("macd_hist"), _safe_float(market_data.get("macd_hist")))),
@@ -1335,7 +1343,8 @@ def _build_candidate_proposals(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         and market.get("rsi_4h", 50) > 60
         and features.get("regime_1d") == "BEAR"
     ):
-        trigger_high = round(price + atr * 0.5, 4)
+        raw_trigger_high = _optional_float(market.get("trigger_candle_high"))
+        trigger_high = round(raw_trigger_high if raw_trigger_high is not None and raw_trigger_high > 0 else price + atr * 0.5, 4)
         sl = round(trigger_high * 1.002, 4)
         tp = round(price - max(sl - price, atr) * 2.0, 4)
         add_candidate(
@@ -1735,6 +1744,87 @@ def _summarize_candidate_structure(proposals: List[Dict[str, Any]], approved_can
     }
 
 
+def _snapshot_field_value(snapshot: Dict[str, Any], field: Any) -> Optional[float]:
+    if not field:
+        return None
+    key = str(field)
+    for section in (
+        "market_snapshot",
+        "decision_ready_features",
+        "onchain_snapshot",
+        "macro_snapshot",
+        "position_snapshot",
+    ):
+        value = (snapshot.get(section) or {}).get(key)
+        parsed = _optional_float(value)
+        if parsed is not None:
+            return parsed
+    return None
+
+
+def _proposal_reference_value(proposal: Dict[str, Any], value_ref: Any) -> Optional[float]:
+    if not value_ref:
+        return None
+    refs = proposal.get("reference_values") or {}
+    return _optional_float(refs.get(str(value_ref)))
+
+
+def _compare_numeric_rule(left: float, op: Any, right: float) -> bool:
+    operator = str(op or "").strip()
+    if operator == ">=":
+        return left >= right
+    if operator == ">":
+        return left > right
+    if operator == "<=":
+        return left <= right
+    if operator == "<":
+        return left < right
+    if operator == "==":
+        return left == right
+    if operator == "!=":
+        return left != right
+    return False
+
+
+def _candidate_invalidation_triggered(snapshot: Dict[str, Any], proposal: Dict[str, Any]) -> Tuple[bool, Optional[Dict[str, Any]]]:
+    conditions = proposal.get("invalidation_conditions") or {}
+    rules = conditions.get("rules") or []
+    if not isinstance(rules, list) or not rules:
+        return False, None
+
+    operator = str(conditions.get("operator") or "OR").upper()
+    evaluated: List[Dict[str, Any]] = []
+    for rule in rules:
+        if not isinstance(rule, dict):
+            continue
+        left = _snapshot_field_value(snapshot, rule.get("field"))
+        if "value" in rule:
+            right = _optional_float(rule.get("value"))
+        else:
+            right = _proposal_reference_value(proposal, rule.get("value_ref"))
+        if left is None or right is None:
+            continue
+        matched = _compare_numeric_rule(left, rule.get("op"), right)
+        evaluated.append({
+            "field": rule.get("field"),
+            "op": rule.get("op"),
+            "left": left,
+            "right": right,
+            "matched": matched,
+        })
+
+    if not evaluated:
+        return False, None
+    triggered = all(item["matched"] for item in evaluated) if operator == "AND" else any(item["matched"] for item in evaluated)
+    if not triggered:
+        return False, None
+    return True, {
+        "trigger_source": proposal.get("trigger_source"),
+        "operator": operator,
+        "rules": evaluated,
+    }
+
+
 def _evaluate_rules(snapshot: Dict[str, Any], candidate_batch: Dict[str, Any]) -> Dict[str, Any]:
     passed = True
     reason_codes: List[str] = []
@@ -1781,6 +1871,17 @@ def _evaluate_rules(snapshot: Dict[str, Any], candidate_batch: Dict[str, Any]) -
         sl = _safe_float(proposal.get("proposed_sl_price"))
         tp = _safe_float(proposal.get("proposed_tp_price"))
         intent = proposal.get("decision_intent")
+
+        invalidated, invalidation_detail = _candidate_invalidation_triggered(snapshot, proposal)
+        if invalidated:
+            passed = False
+            reason_codes.append("INVALIDATION_TRIGGERED")
+            rule_trace.append({
+                "rule": "PRE_TRADE_INVALIDATION_CHECK",
+                "passed": False,
+                "detail": invalidation_detail,
+            })
+            continue
 
         if intent == "GRID_NEUTRAL":
             if not snapshot["decision_ready_features"].get("grid_candidate_eligible") or not snapshot["decision_ready_features"].get("range_regime"):
