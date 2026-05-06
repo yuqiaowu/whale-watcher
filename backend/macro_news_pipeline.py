@@ -181,6 +181,7 @@ def _base_event_facts(fear_greed: Dict[str, Any], macro_data: Dict[str, Any]) ->
     return {
         "fear_greed_index": _safe_float(fear_greed.get("value"), 50.0),
         "fear_greed_state": str(fear_greed.get("value_classification") or "NEUTRAL").upper(),
+        "fear_greed_change_5d": _safe_float(macro_data.get("fear_greed_change_5d")),
         "fed_implied_rate": _safe_float(fed.get("implied_rate")),
         "fed_change_5d_bps": _safe_float(fed.get("change_5d_bps")),
         "usdjpy_level": _safe_float(japan.get("price")),
@@ -260,6 +261,12 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
     elif facts["usdjpy_change_5d_pct"] >= yen_threshold:
         tags.append("YEN_RELIEF")
 
+    fear_greed_change_5d = facts.get("fear_greed_change_5d", 0.0)
+    if fear_greed_change_5d <= -10:
+        tags.append("SENTIMENT_COOLING")
+    elif fear_greed_change_5d >= 10:
+        tags.append("SENTIMENT_RELIEF")
+
     if facts["fear_greed_index"] <= 35 or facts["vix_level"] >= 24 or facts["vix_change_5d_pct"] >= 8:
         tags.append("RISK_OFF_NEWS")
     elif facts["fear_greed_index"] >= 65 and facts["vix_level"] < 18:
@@ -290,6 +297,8 @@ MACRO_TAG_WEIGHTS = {
     "YEN_RELIEF": 2,
     "RISK_OFF_NEWS": -3,
     "RISK_ON_NEWS": 3,
+    "SENTIMENT_COOLING": -3,
+    "SENTIMENT_RELIEF": 3,
     "LIQUIDITY_CONTRACTING": -4,
     "LIQUIDITY_EXPANDING": 4,
     "CPI_HOT": -4,
@@ -430,6 +439,10 @@ def _brief_rationale(tags: List[str], facts: Dict[str, Any], market_impact: str,
         parts.append(f"fear/vix imply risk-off ({facts['fear_greed_index']:.0f}, VIX {facts['vix_level']:.2f})")
     if "RISK_ON_NEWS" in tags:
         parts.append(f"sentiment supports risk-on ({facts['fear_greed_index']:.0f}, VIX {facts['vix_level']:.2f})")
+    if "SENTIMENT_COOLING" in tags:
+        parts.append(f"fear/greed cooled ({facts['fear_greed_change_5d']:+.1f}/5d)")
+    if "SENTIMENT_RELIEF" in tags:
+        parts.append(f"fear/greed recovered ({facts['fear_greed_change_5d']:+.1f}/5d)")
     if "LIQUIDITY_EXPANDING" in tags or "LIQUIDITY_CONTRACTING" in tags:
         parts.append(f"stablecoin flow is ${facts['global_stable_flow']:,.0f}")
     if not parts:

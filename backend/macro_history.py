@@ -30,11 +30,12 @@ class MacroHistory:
         except Exception as e:
             print(f"⚠️ Failed to save macro history: {e}")
 
-    def add_snapshot(self, fed_data, japan_data, liquidity_data, stable_data=None):
+    def add_snapshot(self, fed_data, japan_data, liquidity_data, stable_data=None, fear_greed_data=None):
         """
         Record a snapshot of current macro data.
         """
         stable_data = stable_data or {}
+        fear_greed_data = fear_greed_data or {}
         snapshot = {
             "timestamp": datetime.utcnow().isoformat(),
             "fed": fed_data.get("price"),
@@ -45,6 +46,7 @@ class MacroHistory:
             "us10y": liquidity_data.get("us10y", {}).get("price"),
             "global_stable_flow": stable_data.get("global_stable_flow"),
             "global_stable_market_cap": stable_data.get("global_stable_market_cap"),
+            "fear_greed": fear_greed_data.get("value"),
         }
         self.history.append(snapshot)
         self._prune()

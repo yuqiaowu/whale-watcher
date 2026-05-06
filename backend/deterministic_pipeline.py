@@ -765,6 +765,11 @@ def _build_decision_snapshot(
         "macro_mode": macro_snapshot["macro_mode"],
         "macro_horizon": macro_snapshot["macro_horizon"],
         "macro_permission": macro_snapshot["macro_permission"],
+        "macro_bias_tier": macro_snapshot.get("macro_bias_tier"),
+        "macro_impact_score": _safe_float(macro_snapshot.get("macro_impact_score")),
+        "fear_greed_change_5d": _safe_float(
+            (macro_snapshot.get("event_facts") or {}).get("fear_greed_change_5d")
+        ),
         "event_risk_active": bool(macro_snapshot["macro_event_window"]),
         "usd_strength_flag": "USD_STRENGTH" in (macro_snapshot.get("key_events") or []) or macro_snapshot.get("dxy_trend") == "UP",
         "yen_stress_flag": "YEN_STRESS" in (macro_snapshot.get("key_events") or []) or macro_snapshot.get("usdjpy_trend") == "DOWN",

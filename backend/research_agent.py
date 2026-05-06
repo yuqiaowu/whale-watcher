@@ -200,6 +200,12 @@ def _deterministic_research_output(
     macro_permission = features.get("macro_permission", "ALLOW_BOTH")
     macro_mode = features.get("macro_mode", macro_snapshot.get("macro_mode", "MIXED"))
     macro_horizon = features.get("macro_horizon", macro_snapshot.get("macro_horizon", "INTRADAY"))
+    macro_bias_tier = features.get("macro_bias_tier", macro_snapshot.get("macro_bias_tier", "NO_CLEAR_EDGE"))
+    macro_impact_score = _safe_float(features.get("macro_impact_score"), _safe_float(macro_snapshot.get("macro_impact_score")))
+    fear_greed_change_5d = _safe_float(
+        features.get("fear_greed_change_5d"),
+        _safe_float((macro_snapshot.get("event_facts") or {}).get("fear_greed_change_5d")),
+    )
     regime_1d = features.get("regime_1d", "CHOP")
     position_side = position_snapshot.get("position_side", "NONE")
 
@@ -423,6 +429,9 @@ def _deterministic_research_output(
         "macro_horizon": macro_horizon,
         "macro_mode": macro_mode,
         "macro_permission": macro_permission,
+        "macro_bias_tier": macro_bias_tier,
+        "macro_impact_score": macro_impact_score,
+        "fear_greed_change_5d": fear_greed_change_5d,
         "scenario_label": scenario_label,
         "conflict_state": conflict_state,
         "primary_driver": "technical_confirmation" if technical_confirmation == "STRONG" else "macro_filter",

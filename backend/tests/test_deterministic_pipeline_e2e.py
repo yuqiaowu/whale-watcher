@@ -365,6 +365,9 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             "macro_event_window": False,
             "key_events": ["FED_HAWKISH", "RISK_OFF_NEWS"],
             "risk_off_score": 0.8,
+            "macro_bias_tier": "STRONG_RISK_OFF",
+            "macro_impact_score": -8,
+            "event_facts": {"fear_greed_change_5d": -12},
         }
         fake_db = FakeDB(store)
 
@@ -379,6 +382,10 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         modes = {snapshot["macro_snapshot"]["macro_mode"] for snapshot in result["snapshots"]}
         self.assertEqual({"MULTI_DAY"}, horizons)
         self.assertEqual({"RISK_OFF"}, modes)
+        features = result["snapshots"][0]["decision_ready_features"]
+        self.assertEqual("STRONG_RISK_OFF", features["macro_bias_tier"])
+        self.assertEqual(-8, features["macro_impact_score"])
+        self.assertEqual(-12, features["fear_greed_change_5d"])
 
     def test_conflicted_research_waits_for_confirmation(self):
         store = {

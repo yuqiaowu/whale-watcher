@@ -1239,6 +1239,17 @@ def main():
     print("Fetching Fear & Greed Index...")
     fear_greed = fetch_fear_greed_index()
     print(f"Fear & Greed: {fear_greed['value']} ({fear_greed['value_classification']})")
+    try:
+        if mh is None:
+            data_dir_path = os.path.join(base_dir, "../frontend/data")
+            mh = MacroHistory(data_dir_path)
+        fear_value = float(fear_greed.get("value"))
+        mh.update_latest_snapshot({"fear_greed": fear_value})
+        fear_change = mh.get_change_absolute("fear_greed", fear_value, days=5)
+        if fear_change is not None:
+            macro_data["fear_greed_change_5d"] = round(fear_change, 1)
+    except Exception as e:
+        print(f"⚠️ Fear & Greed history update failed: {e}")
     
     # Merge with History (Keep last 24h/7d deduplicated)
     old_eth_txs = []

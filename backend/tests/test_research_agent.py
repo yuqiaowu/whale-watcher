@@ -33,12 +33,18 @@ class ResearchAgentTests(unittest.TestCase):
                 "macro_mode": "RISK_OFF",
                 "macro_horizon": "SWING",
                 "macro_permission": "ALLOW_SHORT",
+                "macro_bias_tier": "STRONG_RISK_OFF",
+                "macro_impact_score": -8,
+                "event_facts": {"fear_greed_change_5d": -12},
             },
             "position_snapshot": {"position_side": "NONE"},
             "decision_ready_features": {
                 "macro_mode": "RISK_OFF",
                 "macro_horizon": "SWING",
                 "macro_permission": "ALLOW_SHORT",
+                "macro_bias_tier": "STRONG_RISK_OFF",
+                "macro_impact_score": -8,
+                "fear_greed_change_5d": -12,
                 "regime_1d": "BEAR",
                 "flow_data_available": True,
                 "flow_composite_semantic": "MIXED",
@@ -70,6 +76,9 @@ class ResearchAgentTests(unittest.TestCase):
         self.assertEqual(result["selected_trigger_sources"], ["Blueprint_A2"])
         self.assertIn(result["scenario_label"], {"trend_following", "range_rotation", "trend_breakdown", "wait_no_trade"})
         self.assertEqual(result["macro_permission"], "ALLOW_SHORT")
+        self.assertEqual(result["macro_bias_tier"], "STRONG_RISK_OFF")
+        self.assertEqual(result["macro_impact_score"], -8)
+        self.assertEqual(result["fear_greed_change_5d"], -12)
         self.assertNotIn(result["selected_intent"], {"LONG"})
         self.assertEqual(result["onchain_context"]["bias"], "MIXED_FLOW")
         self.assertEqual(result["derivatives_context"]["bias"], "SHORT_CROWDING")
