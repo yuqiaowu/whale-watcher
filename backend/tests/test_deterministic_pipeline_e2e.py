@@ -1239,7 +1239,18 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             "decision_ready_features": {"regime_1d": "BULL", "flow_support_long": True, "flow_support_short": True},
         }
 
-        def build(symbol, rsi, macd_line, macd_signal, support, resistance):
+        def build(
+            symbol,
+            rsi,
+            macd_line,
+            macd_signal,
+            support,
+            resistance,
+            *,
+            rsi_delta=1.0,
+            macd_cross_up=False,
+            macd_cross_down=False,
+        ):
             return {
                 **base_snapshot,
                 "symbol": symbol,
@@ -1247,8 +1258,11 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
                     "price": 100.0,
                     "atr_14": 2.0,
                     "rsi_4h": rsi,
+                    "rsi_delta_4h": rsi_delta,
                     "macd_line_4h": macd_line,
                     "macd_signal_4h": macd_signal,
+                    "macd_cross_up_4h": macd_cross_up,
+                    "macd_cross_down_4h": macd_cross_down,
                     "rel_volume_60": 1.6,
                     "structure_support_stop_long": support,
                     "structure_resistance_stop_short": resistance,
@@ -1256,23 +1270,75 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
                 "onchain_snapshot": {},
             }
 
-        bnb_batch = dp._build_candidate_proposals(build("BNB-USDT", 55, 1.2, 0.8, 95.0, 105.0))
+        bnb_batch = dp._build_candidate_proposals(
+            build("BNB-USDT", 55, 1.2, 0.8, 95.0, 105.0, rsi_delta=1.0, macd_cross_up=True)
+        )
         self.assertIn("Blueprint_F1", [c["trigger_source"] for c in bnb_batch["candidate_proposals"]])
 
-        eth_short_batch = dp._build_candidate_proposals(build("ETH-USDT", 45, -1.2, -0.8, 95.0, 105.0))
+        stale_macd_long_batch = dp._build_candidate_proposals(
+            build("BNB-USDT", 55, 1.2, 0.8, 95.0, 105.0, rsi_delta=1.0, macd_cross_up=False)
+        )
+        self.assertNotIn("Blueprint_F1", [c["trigger_source"] for c in stale_macd_long_batch["candidate_proposals"]])
+
+        falling_rsi_long_batch = dp._build_candidate_proposals(
+            build("BNB-USDT", 55, 1.2, 0.8, 95.0, 105.0, rsi_delta=-1.0, macd_cross_up=True)
+        )
+        self.assertNotIn("Blueprint_F1", [c["trigger_source"] for c in falling_rsi_long_batch["candidate_proposals"]])
+
+        overheated_long_batch = dp._build_candidate_proposals(
+            build("BNB-USDT", 72, 1.2, 0.8, 95.0, 105.0, rsi_delta=1.0, macd_cross_up=True)
+        )
+        self.assertNotIn("Blueprint_F1", [c["trigger_source"] for c in overheated_long_batch["candidate_proposals"]])
+
+        extended_long_batch = dp._build_candidate_proposals(
+            build("BNB-USDT", 65, 1.2, 0.8, 95.0, 105.0, rsi_delta=1.0, macd_cross_up=True)
+        )
+        self.assertNotIn("Blueprint_F1", [c["trigger_source"] for c in extended_long_batch["candidate_proposals"]])
+
+        eth_short_batch = dp._build_candidate_proposals(
+            build("ETH-USDT", 45, -1.2, -0.8, 95.0, 105.0, rsi_delta=-1.0, macd_cross_down=True)
+        )
         self.assertIn("Blueprint_F2", [c["trigger_source"] for c in eth_short_batch["candidate_proposals"]])
 
-        doge_long_batch = dp._build_candidate_proposals(build("DOGE-USDT", 55, 1.2, 0.8, 95.0, 105.0))
+        stale_macd_short_batch = dp._build_candidate_proposals(
+            build("ETH-USDT", 45, -1.2, -0.8, 95.0, 105.0, rsi_delta=-1.0, macd_cross_down=False)
+        )
+        self.assertNotIn("Blueprint_F2", [c["trigger_source"] for c in stale_macd_short_batch["candidate_proposals"]])
+
+        rising_rsi_short_batch = dp._build_candidate_proposals(
+            build("ETH-USDT", 45, -1.2, -0.8, 95.0, 105.0, rsi_delta=1.0, macd_cross_down=True)
+        )
+        self.assertNotIn("Blueprint_F2", [c["trigger_source"] for c in rising_rsi_short_batch["candidate_proposals"]])
+
+        oversold_short_batch = dp._build_candidate_proposals(
+            build("ETH-USDT", 28, -1.2, -0.8, 95.0, 105.0, rsi_delta=-1.0, macd_cross_down=True)
+        )
+        self.assertNotIn("Blueprint_F2", [c["trigger_source"] for c in oversold_short_batch["candidate_proposals"]])
+
+        extended_short_batch = dp._build_candidate_proposals(
+            build("ETH-USDT", 35, -1.2, -0.8, 95.0, 105.0, rsi_delta=-1.0, macd_cross_down=True)
+        )
+        self.assertNotIn("Blueprint_F2", [c["trigger_source"] for c in extended_short_batch["candidate_proposals"]])
+
+        doge_long_batch = dp._build_candidate_proposals(
+            build("DOGE-USDT", 55, 1.2, 0.8, 95.0, 105.0, rsi_delta=1.0, macd_cross_up=True)
+        )
         self.assertNotIn("Blueprint_F1", [c["trigger_source"] for c in doge_long_batch["candidate_proposals"]])
 
-        doge_short_batch = dp._build_candidate_proposals(build("DOGE-USDT", 45, -1.2, -0.8, 95.0, 105.0))
+        doge_short_batch = dp._build_candidate_proposals(
+            build("DOGE-USDT", 45, -1.2, -0.8, 95.0, 105.0, rsi_delta=-1.0, macd_cross_down=True)
+        )
         self.assertIn("Blueprint_F2", [c["trigger_source"] for c in doge_short_batch["candidate_proposals"]])
 
-        btc_batch = dp._build_candidate_proposals(build("BTC-USDT", 55, 1.2, 0.8, 95.0, 105.0))
+        btc_batch = dp._build_candidate_proposals(
+            build("BTC-USDT", 55, 1.2, 0.8, 95.0, 105.0, rsi_delta=1.0, macd_cross_up=True)
+        )
         self.assertNotIn("Blueprint_F1", [c["trigger_source"] for c in btc_batch["candidate_proposals"]])
         self.assertNotIn("Blueprint_F2", [c["trigger_source"] for c in btc_batch["candidate_proposals"]])
 
-        sol_batch = dp._build_candidate_proposals(build("SOL-USDT", 45, -1.2, -0.8, 95.0, 105.0))
+        sol_batch = dp._build_candidate_proposals(
+            build("SOL-USDT", 45, -1.2, -0.8, 95.0, 105.0, rsi_delta=-1.0, macd_cross_down=True)
+        )
         self.assertNotIn("Blueprint_F1", [c["trigger_source"] for c in sol_batch["candidate_proposals"]])
         self.assertNotIn("Blueprint_F2", [c["trigger_source"] for c in sol_batch["candidate_proposals"]])
 

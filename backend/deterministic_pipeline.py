@@ -417,6 +417,7 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
         frame["bb_pct_b"] = frame["bb_pos_20"] if "bb_pos_20" in frame.columns else 0.5
         frame["bb_mid_20"] = frame["close"].rolling(20, min_periods=20).mean()
         frame["bb_mid_slope_pct"] = (frame["bb_mid_20"] - frame["bb_mid_20"].shift(3)) / frame["bb_mid_20"].replace(0, pd.NA)
+        frame["rsi_delta_4h"] = pd.to_numeric(frame["rsi_14"], errors="coerce") - pd.to_numeric(frame["rsi_14"], errors="coerce").shift(1)
         if "adx_14" not in frame.columns or frame["adx_14"].isna().all():
             frame["adx_14"] = _compute_adx_series(frame)
         else:
@@ -488,6 +489,7 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
             "macd_signal_4h": _safe_float(latest.get("macd_signal")),
             "macd_hist_4h": _safe_float(latest.get("macd_hist")),
             "rsi_4h": _safe_float(latest.get("rsi_14")),
+            "rsi_delta_4h": _safe_float(latest.get("rsi_delta_4h")),
             "adx_14_4h": _safe_float(latest.get("adx_14")),
             "atr_14": atr,
             "trigger_candle_open": latest_open,
@@ -681,6 +683,7 @@ def _build_decision_snapshot(
         "price": _safe_float(market.get("price"), _safe_float(market_data.get("close"))),
         "change_24h": _safe_float(market.get("change_24h")),
         "rsi_4h": _safe_float(chart_context.get("rsi_4h"), _safe_float(market.get("rsi_4h"), _safe_float(market.get("rsi_14"), _safe_float(market_data.get("rsi_14"))))),
+        "rsi_delta_4h": _safe_float(chart_context.get("rsi_delta_4h"), _safe_float(market.get("rsi_delta_4h"))),
         "adx_14": _safe_float(chart_context.get("adx_14_4h"), _safe_float(market.get("adx_14"))),
         "volume_ratio": _safe_float(market.get("volume_ratio"), _safe_float(market.get("vol_ratio_20"), 1.0)),
         "bb_width": _safe_float(chart_context.get("bb_width"), _safe_float(market.get("bb_width"), _safe_float(market_data.get("bb_width_20")))),
@@ -1592,13 +1595,19 @@ def _build_candidate_proposals(snapshot: Dict[str, Any]) -> Dict[str, Any]:
     macd_line = _safe_float(market.get("macd_line_4h"))
     macd_signal = _safe_float(market.get("macd_signal_4h"))
     rel_volume_60 = _safe_float(market.get("rel_volume_60"))
+    rsi_4h = _safe_float(market.get("rsi_4h"), 50.0)
+    rsi_delta_4h = _safe_float(market.get("rsi_delta_4h"))
+    macd_cross_up_4h = bool(market.get("macd_cross_up_4h"))
+    macd_cross_down_4h = bool(market.get("macd_cross_down_4h"))
     support_stop_long = market.get("structure_support_stop_long")
     resistance_stop_short = market.get("structure_resistance_stop_short")
     symbol_base = str(symbol).replace("-USDT", "").upper()
 
     if (
         symbol_base not in {"SOL", "DOGE", "BTC"}
-        and market.get("rsi_4h", 50) > 50
+        and 50 < rsi_4h <= 60
+        and rsi_delta_4h > 0
+        and macd_cross_up_4h
         and macd_line > macd_signal
         and macd_line > 0
         and macd_signal > 0
@@ -1611,7 +1620,7 @@ def _build_candidate_proposals(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         add_candidate(
             "LONG",
             "Blueprint_F1",
-            "zero-axis MACD long with rel_volume_60 confirmation",
+            "fresh zero-axis MACD cross-up long with rising RSI and rel_volume_60 confirmation",
             price,
             sl,
             tp,
@@ -1631,7 +1640,9 @@ def _build_candidate_proposals(snapshot: Dict[str, Any]) -> Dict[str, Any]:
 
     if (
         symbol_base in {"BNB", "ETH", "DOGE"}
-        and market.get("rsi_4h", 50) < 50
+        and 40 <= rsi_4h < 50
+        and rsi_delta_4h < 0
+        and macd_cross_down_4h
         and macd_line < macd_signal
         and macd_line < 0
         and macd_signal < 0
@@ -1644,7 +1655,7 @@ def _build_candidate_proposals(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         add_candidate(
             "SHORT",
             "Blueprint_F2",
-            "zero-axis MACD short with rel_volume_60 confirmation",
+            "fresh zero-axis MACD cross-down short with falling RSI and rel_volume_60 confirmation",
             price,
             sl,
             tp,

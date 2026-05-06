@@ -500,6 +500,11 @@ def _crypto_relevance(tags: List[str], facts: Dict[str, Any]) -> str:
 def _brief_rationale(tags: List[str], facts: Dict[str, Any], market_impact: str, impact_horizon: str) -> str:
     parts: List[str] = []
     vix_text = f"{facts['vix_level']:.2f}" if facts.get("vix_level") is not None else "N/A"
+    vix_change = facts.get("vix_change_1d_pct")
+    vix_change_label = "1d"
+    if vix_change is None:
+        vix_change = facts.get("vix_change_5d_pct")
+        vix_change_label = "5d"
     if "FED_HAWKISH" in tags:
         parts.append("Fed pricing remains restrictive")
     if "FED_DOVISH" in tags:
@@ -519,9 +524,9 @@ def _brief_rationale(tags: List[str], facts: Dict[str, Any], market_impact: str,
     if "RISK_ON_NEWS" in tags:
         parts.append(f"sentiment supports risk-on ({facts['fear_greed_index']:.0f}, VIX {vix_text})")
     if "VOL_PRESSURE_EASING" in tags:
-        parts.append(f"volatility pressure eased (VIX {vix_text}, {facts.get('vix_change_1d_pct', facts.get('vix_change_5d_pct')):+.2f}%/1d)")
+        parts.append(f"volatility pressure eased (VIX {vix_text}, {_safe_float(vix_change):+.2f}%/{vix_change_label})")
     if "VOL_PRESSURE_RISING" in tags:
-        parts.append(f"volatility pressure rose (VIX {vix_text}, {facts.get('vix_change_1d_pct', facts.get('vix_change_5d_pct')):+.2f}%/1d)")
+        parts.append(f"volatility pressure rose (VIX {vix_text}, {_safe_float(vix_change):+.2f}%/{vix_change_label})")
     if "SENTIMENT_COOLING" in tags:
         parts.append(f"fear/greed cooled ({facts['fear_greed_change_5d']:+.1f}/5d)")
     if "SENTIMENT_RELIEF" in tags:
