@@ -1,7 +1,7 @@
 {
   "cycleId": "cycle_2026-05-06_1600",
-  "generated_at": "2026-05-06T18:04:00Z",
-  "generated_at_local": "2026-05-07T02:04:00+0800",
+  "generated_at": "2026-05-06T19:58:43Z",
+  "generated_at_local": "2026-05-07T03:58:43+0800",
   "cycle_local_time": "2026-05-07 00:00:00 CST",
   "local_timezone": "Asia/Shanghai",
   "timeframe": "4h",
@@ -11,16 +11,16 @@
       "symbol": "BTC-USDT",
       "cycleId": "cycle_2026-05-06_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778090591,
-      "snapshot_time": "2026-05-06T18:03:11Z",
-      "snapshot_time_local": "2026-05-07T02:03:11+0800",
+      "snapshot_timestamp": 1778097458,
+      "snapshot_time": "2026-05-06T19:57:38Z",
+      "snapshot_time_local": "2026-05-07T03:57:38+0800",
       "local_timezone": "Asia/Shanghai",
       "market_snapshot": {
-        "price": 81444.0,
-        "change_24h": 0.7031813174108746,
+        "price": 81461.2,
+        "change_24h": 0.7244486264656751,
         "rsi_4h": 62.35245196417269,
         "adx_14": 36.94475802878426,
-        "volume_ratio": 1.2406680827973857,
+        "volume_ratio": 1.2352745575121777,
         "bb_width": 0.0603896867438622,
         "bb_pct_b": 0.7735237689045331,
         "bb_mid_slope_pct": 0.006438703876448738,
@@ -29,13 +29,13 @@
         "range_edge_close_count": 2,
         "wick_ratio_lower": 39.75,
         "wick_ratio_upper": 2.02,
-        "funding_rate": -2.2063915118e-06,
-        "funding_zscore": 0.32,
-        "oi_now": 2789307436.238409,
+        "funding_rate": 1.35655439949e-05,
+        "funding_zscore": 0.72,
+        "oi_now": 2789896504.652329,
         "delta_oi_24h_percent": -5.165988328527626,
-        "natr_percent": 1.1420892772383053,
-        "whale_ls_ratio": 0.4912901469787697,
-        "whale_pos_ratio": 1.1052464944091422,
+        "natr_percent": 1.1578431452343958,
+        "whale_ls_ratio": 0.4998629010145325,
+        "whale_pos_ratio": 1.102764809457878,
         "atr_14": 1094.5142857142855,
         "trigger_candle_open": 82490.0,
         "trigger_candle_high": 82518.8,
@@ -73,13 +73,13 @@
         "flow_composite_semantic": "UNAVAILABLE",
         "flow_signal_mixed": false,
         "sentiment_score": 0.0,
-        "liquidation_long_usd": 5671704.839770009,
-        "liquidation_short_usd": 13089929.839670017,
-        "liquidation_long_to_volume_4h": 0.0022367280694584,
-        "liquidation_short_to_volume_4h": 0.0051622244680875,
-        "funding_rate": -2.2063915118e-06,
-        "funding_zscore": 0.32,
-        "oi_now": 2789307436.238409,
+        "liquidation_long_usd": 6128824.660340006,
+        "liquidation_short_usd": 12494733.108440006,
+        "liquidation_long_to_volume_4h": 0.0024170006264161,
+        "liquidation_short_to_volume_4h": 0.0049274990595547,
+        "funding_rate": 1.35655439949e-05,
+        "funding_zscore": 0.72,
+        "oi_now": 2789896504.652329,
         "delta_oi_24h_percent": -5.165988328527626,
         "qlib_relative_score_8h": 0.0003,
         "qlib_rank_8h": 4,
@@ -92,38 +92,40 @@
       "macro_snapshot": {
         "event_type": "MACRO_REGIME_UPDATE",
         "policy_stance": "HAWKISH",
-        "market_impact": "MIXED",
+        "market_impact": "RISK_ON",
         "impact_horizon": "SWING",
-        "crypto_relevance": "MEDIUM",
+        "crypto_relevance": "HIGH",
         "key_tags": [
-          "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
-          "MACRO_NOISE"
+          "RATE_EXPECTATION_EASING",
+          "USD_WEAKNESS",
+          "VOL_PRESSURE_EASING",
+          "LIQUIDITY_EXPANDING"
         ],
-        "brief_rationale": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.",
-        "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
+        "brief_rationale": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.",
+        "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
         "classification_basis": {
           "fear_greed_index": 46.0,
           "fear_greed_state": "FEAR",
           "fear_greed_change_5d": null,
           "fed_implied_rate": 3.605,
           "fed_change_5d_bps": -3.7,
-          "usdjpy_level": 156.467,
-          "usdjpy_change_5d_pct": -1.93,
-          "dxy_level": 98.06,
-          "dxy_change_5d_pct": -0.16,
-          "vix_level": 17.01,
-          "vix_change_5d_pct": 0.71,
-          "us10y_level": 4.35,
-          "us10y_change_5d_pct": -0.96,
-          "global_stable_flow": -425700006.0082245,
-          "global_stable_market_cap": 267896276981.59543,
-          "global_stable_flow_ratio_pct": -0.15890478613761036
+          "usdjpy_level": 156.381,
+          "usdjpy_change_5d_pct": -1.99,
+          "dxy_level": 98.02,
+          "dxy_change_5d_pct": -0.91,
+          "vix_level": 17.33,
+          "vix_change_5d_pct": -7.87,
+          "us10y_level": 4.36,
+          "us10y_change_5d_pct": -1.4,
+          "global_stable_flow": 269458417.1001892,
+          "global_stable_market_cap": 268591240491.89252,
+          "global_stable_flow_ratio_pct": 0.10032286109059572
         },
         "key_events": [
-          "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
-          "MACRO_NOISE"
+          "RATE_EXPECTATION_EASING",
+          "USD_WEAKNESS",
+          "VOL_PRESSURE_EASING",
+          "LIQUIDITY_EXPANDING"
         ],
         "event_facts": {
           "fear_greed_index": 46.0,
@@ -131,17 +133,17 @@
           "fear_greed_change_5d": null,
           "fed_implied_rate": 3.605,
           "fed_change_5d_bps": -3.7,
-          "usdjpy_level": 156.467,
-          "usdjpy_change_5d_pct": -1.93,
-          "dxy_level": 98.06,
-          "dxy_change_5d_pct": -0.16,
-          "vix_level": 17.01,
-          "vix_change_5d_pct": 0.71,
-          "us10y_level": 4.35,
-          "us10y_change_5d_pct": -0.96,
-          "global_stable_flow": -425700006.0082245,
-          "global_stable_market_cap": 267896276981.59543,
-          "global_stable_flow_ratio_pct": -0.15890478613761036
+          "usdjpy_level": 156.381,
+          "usdjpy_change_5d_pct": -1.99,
+          "dxy_level": 98.02,
+          "dxy_change_5d_pct": -0.91,
+          "vix_level": 17.33,
+          "vix_change_5d_pct": -7.87,
+          "us10y_level": 4.36,
+          "us10y_change_5d_pct": -1.4,
+          "global_stable_flow": 269458417.1001892,
+          "global_stable_market_cap": 268591240491.89252,
+          "global_stable_flow_ratio_pct": 0.10032286109059572
         },
         "provenance": {
           "generation_mode": "llm_refined",
@@ -150,6 +152,7 @@
           "llm_applied": true,
           "llm_override_fields": [
             "brief_rationale",
+            "key_tags",
             "news_summary"
           ],
           "llm_audit": {
@@ -159,15 +162,17 @@
             "status": "parsed",
             "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
             "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-            "raw_response_preview": "{ \"news_summary\": \"Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.\", \"brief_rationale\": \"Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"LOW\", \"key_tags\": [\"MACRO_NOISE\"] }",
+            "raw_response_preview": "{ \"news_summary\": \"Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.\", \"brief_rationale\": \"Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment.\", \"market_impact\": \"RISK_ON\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"RATE_EXPECTATION_EASING\", \"USD_WEAKNESS\", \"VOL_PRESSURE_EASING\"] }",
             "parsed_response": {
-              "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
-              "brief_rationale": "Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal.",
-              "market_impact": "MIXED",
-              "impact_horizon": "NOISE",
-              "crypto_relevance": "LOW",
+              "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
+              "brief_rationale": "Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment.",
+              "market_impact": "RISK_ON",
+              "impact_horizon": "SWING",
+              "crypto_relevance": "HIGH",
               "key_tags": [
-                "MACRO_NOISE"
+                "RATE_EXPECTATION_EASING",
+                "USD_WEAKNESS",
+                "VOL_PRESSURE_EASING"
               ]
             },
             "error": null
@@ -176,39 +181,44 @@
         "final_macro_decision": {
           "source": "llm_adjudicated",
           "selected_view": "blended",
-          "market_impact": "MIXED",
+          "market_impact": "RISK_ON",
           "impact_horizon": "SWING",
-          "crypto_relevance": "MEDIUM",
+          "crypto_relevance": "HIGH",
           "key_tags": [
-            "FED_HAWKISH",
-            "LIQUIDITY_CONTRACTING",
-            "MACRO_NOISE"
+            "RATE_EXPECTATION_EASING",
+            "USD_WEAKNESS",
+            "VOL_PRESSURE_EASING",
+            "LIQUIDITY_EXPANDING"
           ],
           "confidence": "MEDIUM",
-          "reason": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.",
+          "reason": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.",
           "deterministic_view": {
             "event_type": "MACRO_REGIME_UPDATE",
             "policy_stance": "HAWKISH",
-            "market_impact": "RISK_OFF",
+            "market_impact": "RISK_ON",
             "impact_horizon": "SWING",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "LIQUIDITY_CONTRACTING",
-              "RATE_EXPECTATION_EASING"
+              "LIQUIDITY_EXPANDING",
+              "RATE_EXPECTATION_EASING",
+              "USD_WEAKNESS",
+              "VOL_PRESSURE_EASING"
             ],
-            "news_summary": "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds | Surging gas prices are hitting lower-income households harder, New York Fed study shows | CVS blows past estimates, hikes outlook as insurance business outperforms",
-            "brief_rationale": "Fed pricing remains restrictive; rate expectations eased (-3.7 bps/5d); stablecoin flow is $-425,700,006. Classified as RISK_OFF with SWING horizon."
+            "news_summary": "Surging gas prices are hitting lower-income households harder, New York Fed study shows | Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel | Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
+            "brief_rationale": "Fed pricing remains restrictive; rate expectations eased (-3.7 bps/5d); DXY is weaker (-0.91%/5d); volatility pressure eased (VIX 17.33, -7.87%/5d); stablecoin flow is $269,458,417. Classified as RISK_ON with SWING horizon."
           },
           "llm_view": {
-            "market_impact": "MIXED",
-            "impact_horizon": "NOISE",
-            "crypto_relevance": "LOW",
+            "market_impact": "RISK_ON",
+            "impact_horizon": "SWING",
+            "crypto_relevance": "HIGH",
             "key_tags": [
-              "MACRO_NOISE"
+              "RATE_EXPECTATION_EASING",
+              "USD_WEAKNESS",
+              "VOL_PRESSURE_EASING"
             ],
-            "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
-            "brief_rationale": "Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal."
+            "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
+            "brief_rationale": "Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment."
           },
           "adjudication_audit": {
             "enabled": true,
@@ -216,48 +226,49 @@
             "model": "deepseek-chat",
             "status": "parsed",
             "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds\", \"Surging gas prices are hitting lower-income households harder, New York Fed study shows\", \"CVS blows past estimates, hikes outlook as insurance business outperforms\", \"Uber and Disney are seeing the same remarkable dynamic in this economy. Both stoc...",
-            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"MEDIUM\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"MACRO_NOISE\"], \"confidence\": 0.7, \"reason\": \"Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.\" }",
+            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Surging gas prices are hitting lower-income households harder, New York Fed study shows\", \"Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel\", \"Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds\", \"CVS blows past estimates, hikes outlook as insurance business outperforms\",...",
+            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_ON\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"RATE_EXPECTATION_EASING\", \"USD_WEAKNESS\", \"VOL_PRESSURE_EASING\", \"LIQUIDITY_EXPANDING\"], \"confidence\": 0.75, \"reason\": \"Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.\" }",
             "parsed_response": {
               "selected_view": "blended",
-              "final_market_impact": "MIXED",
+              "final_market_impact": "RISK_ON",
               "final_impact_horizon": "SWING",
-              "final_crypto_relevance": "MEDIUM",
+              "final_crypto_relevance": "HIGH",
               "final_key_tags": [
-                "FED_HAWKISH",
-                "LIQUIDITY_CONTRACTING",
-                "MACRO_NOISE"
+                "RATE_EXPECTATION_EASING",
+                "USD_WEAKNESS",
+                "VOL_PRESSURE_EASING",
+                "LIQUIDITY_EXPANDING"
               ],
-              "confidence": 0.7,
-              "reason": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity."
+              "confidence": 0.75,
+              "reason": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets."
             },
             "error": null
           }
         },
         "macro_decision_source": "llm_adjudicated",
-        "macro_mode": "RISK_OFF",
+        "macro_mode": "RISK_ON",
         "macro_horizon": "SWING",
-        "macro_permission": "ALLOW_SHORT",
-        "macro_impact_score": -9,
-        "macro_bias_tier": "STRONG_RISK_OFF",
+        "macro_permission": "ALLOW_LONG",
+        "macro_impact_score": 10,
+        "macro_bias_tier": "STRONG_RISK_ON",
         "fear_greed_index": 46.0,
         "fear_greed_state": "FEAR",
         "fear_greed_change_5d": null,
-        "vix_level": 17.01,
-        "vix_change_5d_pct": 0.71,
-        "dxy_level": 98.06,
-        "dxy_trend": "FLAT",
-        "usdjpy_level": 156.467,
+        "vix_level": 17.33,
+        "vix_change_5d_pct": -7.87,
+        "dxy_level": 98.02,
+        "dxy_trend": "DOWN",
+        "usdjpy_level": 156.381,
         "usdjpy_trend": "DOWN",
         "fed_event_risk": "LOW",
         "macro_event_window": false,
-        "risk_off_score": 0.85,
+        "risk_off_score": 0.15,
         "news_headlines": [
-          "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
           "Surging gas prices are hitting lower-income households harder, New York Fed study shows",
+          "Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel",
+          "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
           "CVS blows past estimates, hikes outlook as insurance business outperforms",
-          "Uber and Disney are seeing the same remarkable dynamic in this economy. Both stocks are surging",
-          "Epstein files: Commerce Sec. Howard Lutnick answering questions from House panel"
+          "Uber and Disney are seeing the same remarkable dynamic in this economy. Both stocks are surging"
         ]
       },
       "position_snapshot": {
@@ -270,15 +281,15 @@
         "open_positions": []
       },
       "decision_ready_features": {
-        "regime_1d": "BEAR",
-        "macro_mode": "RISK_OFF",
+        "regime_1d": "BULL",
+        "macro_mode": "RISK_ON",
         "macro_horizon": "SWING",
-        "macro_permission": "ALLOW_SHORT",
-        "macro_bias_tier": "STRONG_RISK_OFF",
-        "macro_impact_score": -9.0,
+        "macro_permission": "ALLOW_LONG",
+        "macro_bias_tier": "STRONG_RISK_ON",
+        "macro_impact_score": 10.0,
         "fear_greed_change_5d": null,
-        "vix_level": 17.01,
-        "vix_change_5d_pct": 0.71,
+        "vix_level": 17.33,
+        "vix_change_5d_pct": -7.87,
         "event_risk_active": false,
         "usd_strength_flag": false,
         "yen_stress_flag": false,
@@ -290,9 +301,9 @@
         "flow_signal_mixed": false,
         "flow_support_long": false,
         "flow_support_short": false,
-        "funding_rate": -2.2063915118e-06,
-        "funding_zscore": 0.32,
-        "oi_now": 2789307436.238409,
+        "funding_rate": 1.35655439949e-05,
+        "funding_zscore": 0.72,
+        "oi_now": 2789896504.652329,
         "delta_oi_24h_percent": -5.165988328527626,
         "qlib_relative_score_8h": 0.0003,
         "qlib_percentile_8h": 0.25,
@@ -309,7 +320,7 @@
         "range_lower_bound": 78423.5,
         "range_upper_bound": 82800.0,
         "range_width_pct": 0.0543,
-        "price_position_in_range": 0.6902,
+        "price_position_in_range": 0.6941,
         "grid_mode": "ARITHMETIC",
         "grid_count": 7,
         "grid_spacing_pct": 0.0078,
@@ -328,7 +339,7 @@
         "grid_preflight_missing_fields": [],
         "grid_macro_trend_ok": false,
         "grid_macro_block_reasons": [
-          "bearish_liquidity_macro_cluster",
+          "bullish_liquidity_macro_cluster",
           "directional_swing_macro"
         ],
         "ma5_cross_up_ma10_1d": false,
@@ -347,16 +358,16 @@
       "symbol": "ETH-USDT",
       "cycleId": "cycle_2026-05-06_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778090601,
-      "snapshot_time": "2026-05-06T18:03:21Z",
-      "snapshot_time_local": "2026-05-07T02:03:21+0800",
+      "snapshot_timestamp": 1778097469,
+      "snapshot_time": "2026-05-06T19:57:49Z",
+      "snapshot_time_local": "2026-05-07T03:57:49+0800",
       "local_timezone": "Asia/Shanghai",
       "market_snapshot": {
-        "price": 2349.6,
-        "change_24h": -0.4280205110819134,
+        "price": 2348.8,
+        "change_24h": -0.4619231258210636,
         "rsi_4h": 51.74050462561867,
         "adx_14": 31.05222363401409,
-        "volume_ratio": 1.2572811911222423,
+        "volume_ratio": 1.2871718121804634,
         "bb_width": 0.0405824513340661,
         "bb_pct_b": 0.479007293785137,
         "bb_mid_slope_pct": 0.004497397264018167,
@@ -365,13 +376,13 @@
         "range_edge_close_count": 1,
         "wick_ratio_lower": 20.17,
         "wick_ratio_upper": 4.65,
-        "funding_rate": 7.36448098114e-05,
-        "funding_zscore": 1.47,
-        "oi_now": 1770223240.2096043,
+        "funding_rate": 9.76687356597e-05,
+        "funding_zscore": 1.96,
+        "oi_now": 1769620508.4288046,
         "delta_oi_24h_percent": 4.022131787818082,
-        "natr_percent": 1.4678146991961802,
-        "whale_ls_ratio": 1.2464183381088825,
-        "whale_pos_ratio": 0.9343047482227834,
+        "natr_percent": 1.5015901534916531,
+        "whale_ls_ratio": 1.2456225680933852,
+        "whale_pos_ratio": 0.9343125456110665,
         "atr_14": 38.12357142857137,
         "trigger_candle_open": 2409.77,
         "trigger_candle_high": 2412.98,
@@ -400,22 +411,22 @@
         "structure_resistance_stop_short": 2442.8318
       },
       "onchain_snapshot": {
-        "token_net_flow": 10991533.842840182,
-        "stablecoin_net_flow": -15208327.748599503,
+        "token_net_flow": 12694318.987738213,
+        "stablecoin_net_flow": -8645196.459517766,
         "flow_data_available": true,
         "flow_schema_version": "flow_semantics_v1",
         "token_flow_semantic": "ACCUMULATION_HINT",
         "stablecoin_flow_semantic": "CAPITAL_WITHDRAWAL",
         "flow_composite_semantic": "MIXED",
         "flow_signal_mixed": true,
-        "sentiment_score": -0.015226742704061373,
-        "liquidation_long_usd": 12585732.708449997,
-        "liquidation_short_usd": 3331398.766089999,
-        "liquidation_long_to_volume_4h": 0.0037271686464146,
-        "liquidation_short_to_volume_4h": 0.0009865683085211,
-        "funding_rate": 7.36448098114e-05,
-        "funding_zscore": 1.47,
-        "oi_now": 1770223240.2096043,
+        "sentiment_score": -0.005496502490266037,
+        "liquidation_long_usd": 13784827.473940007,
+        "liquidation_short_usd": 2288061.32746,
+        "liquidation_long_to_volume_4h": 0.0040822714058283,
+        "liquidation_short_to_volume_4h": 0.0006775918922111,
+        "funding_rate": 9.76687356597e-05,
+        "funding_zscore": 1.96,
+        "oi_now": 1769620508.4288046,
         "delta_oi_24h_percent": 4.022131787818082,
         "qlib_relative_score_8h": 0.0012,
         "qlib_rank_8h": 1,
@@ -428,38 +439,40 @@
       "macro_snapshot": {
         "event_type": "MACRO_REGIME_UPDATE",
         "policy_stance": "HAWKISH",
-        "market_impact": "MIXED",
+        "market_impact": "RISK_ON",
         "impact_horizon": "SWING",
-        "crypto_relevance": "MEDIUM",
+        "crypto_relevance": "HIGH",
         "key_tags": [
-          "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
-          "MACRO_NOISE"
+          "RATE_EXPECTATION_EASING",
+          "USD_WEAKNESS",
+          "VOL_PRESSURE_EASING",
+          "LIQUIDITY_EXPANDING"
         ],
-        "brief_rationale": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.",
-        "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
+        "brief_rationale": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.",
+        "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
         "classification_basis": {
           "fear_greed_index": 46.0,
           "fear_greed_state": "FEAR",
           "fear_greed_change_5d": null,
           "fed_implied_rate": 3.605,
           "fed_change_5d_bps": -3.7,
-          "usdjpy_level": 156.467,
-          "usdjpy_change_5d_pct": -1.93,
-          "dxy_level": 98.06,
-          "dxy_change_5d_pct": -0.16,
-          "vix_level": 17.01,
-          "vix_change_5d_pct": 0.71,
-          "us10y_level": 4.35,
-          "us10y_change_5d_pct": -0.96,
-          "global_stable_flow": -425700006.0082245,
-          "global_stable_market_cap": 267896276981.59543,
-          "global_stable_flow_ratio_pct": -0.15890478613761036
+          "usdjpy_level": 156.381,
+          "usdjpy_change_5d_pct": -1.99,
+          "dxy_level": 98.02,
+          "dxy_change_5d_pct": -0.91,
+          "vix_level": 17.33,
+          "vix_change_5d_pct": -7.87,
+          "us10y_level": 4.36,
+          "us10y_change_5d_pct": -1.4,
+          "global_stable_flow": 269458417.1001892,
+          "global_stable_market_cap": 268591240491.89252,
+          "global_stable_flow_ratio_pct": 0.10032286109059572
         },
         "key_events": [
-          "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
-          "MACRO_NOISE"
+          "RATE_EXPECTATION_EASING",
+          "USD_WEAKNESS",
+          "VOL_PRESSURE_EASING",
+          "LIQUIDITY_EXPANDING"
         ],
         "event_facts": {
           "fear_greed_index": 46.0,
@@ -467,17 +480,17 @@
           "fear_greed_change_5d": null,
           "fed_implied_rate": 3.605,
           "fed_change_5d_bps": -3.7,
-          "usdjpy_level": 156.467,
-          "usdjpy_change_5d_pct": -1.93,
-          "dxy_level": 98.06,
-          "dxy_change_5d_pct": -0.16,
-          "vix_level": 17.01,
-          "vix_change_5d_pct": 0.71,
-          "us10y_level": 4.35,
-          "us10y_change_5d_pct": -0.96,
-          "global_stable_flow": -425700006.0082245,
-          "global_stable_market_cap": 267896276981.59543,
-          "global_stable_flow_ratio_pct": -0.15890478613761036
+          "usdjpy_level": 156.381,
+          "usdjpy_change_5d_pct": -1.99,
+          "dxy_level": 98.02,
+          "dxy_change_5d_pct": -0.91,
+          "vix_level": 17.33,
+          "vix_change_5d_pct": -7.87,
+          "us10y_level": 4.36,
+          "us10y_change_5d_pct": -1.4,
+          "global_stable_flow": 269458417.1001892,
+          "global_stable_market_cap": 268591240491.89252,
+          "global_stable_flow_ratio_pct": 0.10032286109059572
         },
         "provenance": {
           "generation_mode": "llm_refined",
@@ -486,6 +499,7 @@
           "llm_applied": true,
           "llm_override_fields": [
             "brief_rationale",
+            "key_tags",
             "news_summary"
           ],
           "llm_audit": {
@@ -495,15 +509,17 @@
             "status": "parsed",
             "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
             "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-            "raw_response_preview": "{ \"news_summary\": \"Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.\", \"brief_rationale\": \"Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"LOW\", \"key_tags\": [\"MACRO_NOISE\"] }",
+            "raw_response_preview": "{ \"news_summary\": \"Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.\", \"brief_rationale\": \"Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment.\", \"market_impact\": \"RISK_ON\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"RATE_EXPECTATION_EASING\", \"USD_WEAKNESS\", \"VOL_PRESSURE_EASING\"] }",
             "parsed_response": {
-              "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
-              "brief_rationale": "Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal.",
-              "market_impact": "MIXED",
-              "impact_horizon": "NOISE",
-              "crypto_relevance": "LOW",
+              "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
+              "brief_rationale": "Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment.",
+              "market_impact": "RISK_ON",
+              "impact_horizon": "SWING",
+              "crypto_relevance": "HIGH",
               "key_tags": [
-                "MACRO_NOISE"
+                "RATE_EXPECTATION_EASING",
+                "USD_WEAKNESS",
+                "VOL_PRESSURE_EASING"
               ]
             },
             "error": null
@@ -512,39 +528,44 @@
         "final_macro_decision": {
           "source": "llm_adjudicated",
           "selected_view": "blended",
-          "market_impact": "MIXED",
+          "market_impact": "RISK_ON",
           "impact_horizon": "SWING",
-          "crypto_relevance": "MEDIUM",
+          "crypto_relevance": "HIGH",
           "key_tags": [
-            "FED_HAWKISH",
-            "LIQUIDITY_CONTRACTING",
-            "MACRO_NOISE"
+            "RATE_EXPECTATION_EASING",
+            "USD_WEAKNESS",
+            "VOL_PRESSURE_EASING",
+            "LIQUIDITY_EXPANDING"
           ],
           "confidence": "MEDIUM",
-          "reason": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.",
+          "reason": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.",
           "deterministic_view": {
             "event_type": "MACRO_REGIME_UPDATE",
             "policy_stance": "HAWKISH",
-            "market_impact": "RISK_OFF",
+            "market_impact": "RISK_ON",
             "impact_horizon": "SWING",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "LIQUIDITY_CONTRACTING",
-              "RATE_EXPECTATION_EASING"
+              "LIQUIDITY_EXPANDING",
+              "RATE_EXPECTATION_EASING",
+              "USD_WEAKNESS",
+              "VOL_PRESSURE_EASING"
             ],
-            "news_summary": "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds | Surging gas prices are hitting lower-income households harder, New York Fed study shows | CVS blows past estimates, hikes outlook as insurance business outperforms",
-            "brief_rationale": "Fed pricing remains restrictive; rate expectations eased (-3.7 bps/5d); stablecoin flow is $-425,700,006. Classified as RISK_OFF with SWING horizon."
+            "news_summary": "Surging gas prices are hitting lower-income households harder, New York Fed study shows | Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel | Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
+            "brief_rationale": "Fed pricing remains restrictive; rate expectations eased (-3.7 bps/5d); DXY is weaker (-0.91%/5d); volatility pressure eased (VIX 17.33, -7.87%/5d); stablecoin flow is $269,458,417. Classified as RISK_ON with SWING horizon."
           },
           "llm_view": {
-            "market_impact": "MIXED",
-            "impact_horizon": "NOISE",
-            "crypto_relevance": "LOW",
+            "market_impact": "RISK_ON",
+            "impact_horizon": "SWING",
+            "crypto_relevance": "HIGH",
             "key_tags": [
-              "MACRO_NOISE"
+              "RATE_EXPECTATION_EASING",
+              "USD_WEAKNESS",
+              "VOL_PRESSURE_EASING"
             ],
-            "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
-            "brief_rationale": "Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal."
+            "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
+            "brief_rationale": "Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment."
           },
           "adjudication_audit": {
             "enabled": true,
@@ -552,48 +573,49 @@
             "model": "deepseek-chat",
             "status": "parsed",
             "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds\", \"Surging gas prices are hitting lower-income households harder, New York Fed study shows\", \"CVS blows past estimates, hikes outlook as insurance business outperforms\", \"Uber and Disney are seeing the same remarkable dynamic in this economy. Both stoc...",
-            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"MEDIUM\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"MACRO_NOISE\"], \"confidence\": 0.7, \"reason\": \"Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.\" }",
+            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Surging gas prices are hitting lower-income households harder, New York Fed study shows\", \"Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel\", \"Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds\", \"CVS blows past estimates, hikes outlook as insurance business outperforms\",...",
+            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_ON\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"RATE_EXPECTATION_EASING\", \"USD_WEAKNESS\", \"VOL_PRESSURE_EASING\", \"LIQUIDITY_EXPANDING\"], \"confidence\": 0.75, \"reason\": \"Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.\" }",
             "parsed_response": {
               "selected_view": "blended",
-              "final_market_impact": "MIXED",
+              "final_market_impact": "RISK_ON",
               "final_impact_horizon": "SWING",
-              "final_crypto_relevance": "MEDIUM",
+              "final_crypto_relevance": "HIGH",
               "final_key_tags": [
-                "FED_HAWKISH",
-                "LIQUIDITY_CONTRACTING",
-                "MACRO_NOISE"
+                "RATE_EXPECTATION_EASING",
+                "USD_WEAKNESS",
+                "VOL_PRESSURE_EASING",
+                "LIQUIDITY_EXPANDING"
               ],
-              "confidence": 0.7,
-              "reason": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity."
+              "confidence": 0.75,
+              "reason": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets."
             },
             "error": null
           }
         },
         "macro_decision_source": "llm_adjudicated",
-        "macro_mode": "RISK_OFF",
+        "macro_mode": "RISK_ON",
         "macro_horizon": "SWING",
-        "macro_permission": "ALLOW_SHORT",
-        "macro_impact_score": -9,
-        "macro_bias_tier": "STRONG_RISK_OFF",
+        "macro_permission": "ALLOW_LONG",
+        "macro_impact_score": 10,
+        "macro_bias_tier": "STRONG_RISK_ON",
         "fear_greed_index": 46.0,
         "fear_greed_state": "FEAR",
         "fear_greed_change_5d": null,
-        "vix_level": 17.01,
-        "vix_change_5d_pct": 0.71,
-        "dxy_level": 98.06,
-        "dxy_trend": "FLAT",
-        "usdjpy_level": 156.467,
+        "vix_level": 17.33,
+        "vix_change_5d_pct": -7.87,
+        "dxy_level": 98.02,
+        "dxy_trend": "DOWN",
+        "usdjpy_level": 156.381,
         "usdjpy_trend": "DOWN",
         "fed_event_risk": "LOW",
         "macro_event_window": false,
-        "risk_off_score": 0.85,
+        "risk_off_score": 0.15,
         "news_headlines": [
-          "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
           "Surging gas prices are hitting lower-income households harder, New York Fed study shows",
+          "Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel",
+          "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
           "CVS blows past estimates, hikes outlook as insurance business outperforms",
-          "Uber and Disney are seeing the same remarkable dynamic in this economy. Both stocks are surging",
-          "Epstein files: Commerce Sec. Howard Lutnick answering questions from House panel"
+          "Uber and Disney are seeing the same remarkable dynamic in this economy. Both stocks are surging"
         ]
       },
       "position_snapshot": {
@@ -606,15 +628,15 @@
         "open_positions": []
       },
       "decision_ready_features": {
-        "regime_1d": "BEAR",
-        "macro_mode": "RISK_OFF",
+        "regime_1d": "BULL",
+        "macro_mode": "RISK_ON",
         "macro_horizon": "SWING",
-        "macro_permission": "ALLOW_SHORT",
-        "macro_bias_tier": "STRONG_RISK_OFF",
-        "macro_impact_score": -9.0,
+        "macro_permission": "ALLOW_LONG",
+        "macro_bias_tier": "STRONG_RISK_ON",
+        "macro_impact_score": 10.0,
         "fear_greed_change_5d": null,
-        "vix_level": 17.01,
-        "vix_change_5d_pct": 0.71,
+        "vix_level": 17.33,
+        "vix_change_5d_pct": -7.87,
         "event_risk_active": false,
         "usd_strength_flag": false,
         "yen_stress_flag": false,
@@ -626,9 +648,9 @@
         "flow_signal_mixed": true,
         "flow_support_long": false,
         "flow_support_short": false,
-        "funding_rate": 7.36448098114e-05,
-        "funding_zscore": 1.47,
-        "oi_now": 1770223240.2096043,
+        "funding_rate": 9.76687356597e-05,
+        "funding_zscore": 1.96,
+        "oi_now": 1769620508.4288046,
         "delta_oi_24h_percent": 4.022131787818082,
         "qlib_relative_score_8h": 0.0012,
         "qlib_percentile_8h": 1.0,
@@ -645,7 +667,7 @@
         "range_lower_bound": 2324.25,
         "range_upper_bound": 2423.77,
         "range_width_pct": 0.0419,
-        "price_position_in_range": 0.2547,
+        "price_position_in_range": 0.2467,
         "grid_mode": "ARITHMETIC",
         "grid_count": 5,
         "grid_spacing_pct": 0.0084,
@@ -664,7 +686,7 @@
         "grid_preflight_missing_fields": [],
         "grid_macro_trend_ok": false,
         "grid_macro_block_reasons": [
-          "bearish_liquidity_macro_cluster",
+          "bullish_liquidity_macro_cluster",
           "directional_swing_macro"
         ],
         "ma5_cross_up_ma10_1d": false,
@@ -683,16 +705,16 @@
       "symbol": "SOL-USDT",
       "cycleId": "cycle_2026-05-06_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778090611,
-      "snapshot_time": "2026-05-06T18:03:31Z",
-      "snapshot_time_local": "2026-05-07T02:03:31+0800",
+      "snapshot_timestamp": 1778097481,
+      "snapshot_time": "2026-05-06T19:58:01Z",
+      "snapshot_time_local": "2026-05-07T03:58:01+0800",
       "local_timezone": "Asia/Shanghai",
       "market_snapshot": {
-        "price": 88.85,
-        "change_24h": 3.026437847866419,
+        "price": 89.16,
+        "change_24h": 3.3858998144712453,
         "rsi_4h": 70.818045166175,
         "adx_14": 34.3209481351844,
-        "volume_ratio": 1.3586404952280002,
+        "volume_ratio": 1.3262278965241905,
         "bb_width": 0.0810874217351477,
         "bb_pct_b": 0.9956782834787662,
         "bb_mid_slope_pct": 0.008610755254490988,
@@ -701,13 +723,13 @@
         "range_edge_close_count": 3,
         "wick_ratio_lower": 59.6,
         "wick_ratio_upper": 4.0,
-        "funding_rate": -3.3529387059e-06,
-        "funding_zscore": -0.37,
-        "oi_now": 275431525.0765003,
+        "funding_rate": 1.16908734077e-05,
+        "funding_zscore": -0.13,
+        "oi_now": 276392512.95240027,
         "delta_oi_24h_percent": 8.099235499310641,
-        "natr_percent": 1.376616356816846,
-        "whale_ls_ratio": 1.2644757433489828,
-        "whale_pos_ratio": 0.9190330781533631,
+        "natr_percent": 1.378731360687501,
+        "whale_ls_ratio": 1.266355140186916,
+        "whale_pos_ratio": 0.9206294635387045,
         "atr_14": 1.3471428571428572,
         "trigger_candle_open": 89.82,
         "trigger_candle_high": 89.92,
@@ -736,22 +758,22 @@
         "structure_resistance_stop_short": 90.7136
       },
       "onchain_snapshot": {
-        "token_net_flow": -972881.4478667082,
-        "stablecoin_net_flow": 6341.69553600009,
+        "token_net_flow": -797034.0312447817,
+        "stablecoin_net_flow": 79894.67384400009,
         "flow_data_available": true,
         "flow_schema_version": "flow_semantics_v1",
         "token_flow_semantic": "DISTRIBUTION_PRESSURE",
         "stablecoin_flow_semantic": "BUYING_POWER",
         "flow_composite_semantic": "MIXED",
         "flow_signal_mixed": true,
-        "sentiment_score": -0.09288864034117074,
+        "sentiment_score": 0.011944369877336472,
         "liquidation_long_usd": 321446.5555999999,
-        "liquidation_short_usd": 3033799.6669,
+        "liquidation_short_usd": 2655140.8341999985,
         "liquidation_long_to_volume_4h": 0.0013838079522166,
-        "liquidation_short_to_volume_4h": 0.0130603238123125,
-        "funding_rate": -3.3529387059e-06,
-        "funding_zscore": -0.37,
-        "oi_now": 275431525.0765003,
+        "liquidation_short_to_volume_4h": 0.0114302204724609,
+        "funding_rate": 1.16908734077e-05,
+        "funding_zscore": -0.13,
+        "oi_now": 276392512.95240027,
         "delta_oi_24h_percent": 8.099235499310641,
         "qlib_relative_score_8h": 0.0008,
         "qlib_rank_8h": 3,
@@ -764,38 +786,40 @@
       "macro_snapshot": {
         "event_type": "MACRO_REGIME_UPDATE",
         "policy_stance": "HAWKISH",
-        "market_impact": "MIXED",
+        "market_impact": "RISK_ON",
         "impact_horizon": "SWING",
-        "crypto_relevance": "MEDIUM",
+        "crypto_relevance": "HIGH",
         "key_tags": [
-          "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
-          "MACRO_NOISE"
+          "RATE_EXPECTATION_EASING",
+          "USD_WEAKNESS",
+          "VOL_PRESSURE_EASING",
+          "LIQUIDITY_EXPANDING"
         ],
-        "brief_rationale": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.",
-        "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
+        "brief_rationale": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.",
+        "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
         "classification_basis": {
           "fear_greed_index": 46.0,
           "fear_greed_state": "FEAR",
           "fear_greed_change_5d": null,
           "fed_implied_rate": 3.605,
           "fed_change_5d_bps": -3.7,
-          "usdjpy_level": 156.467,
-          "usdjpy_change_5d_pct": -1.93,
-          "dxy_level": 98.06,
-          "dxy_change_5d_pct": -0.16,
-          "vix_level": 17.01,
-          "vix_change_5d_pct": 0.71,
-          "us10y_level": 4.35,
-          "us10y_change_5d_pct": -0.96,
-          "global_stable_flow": -425700006.0082245,
-          "global_stable_market_cap": 267896276981.59543,
-          "global_stable_flow_ratio_pct": -0.15890478613761036
+          "usdjpy_level": 156.381,
+          "usdjpy_change_5d_pct": -1.99,
+          "dxy_level": 98.02,
+          "dxy_change_5d_pct": -0.91,
+          "vix_level": 17.33,
+          "vix_change_5d_pct": -7.87,
+          "us10y_level": 4.36,
+          "us10y_change_5d_pct": -1.4,
+          "global_stable_flow": 269458417.1001892,
+          "global_stable_market_cap": 268591240491.89252,
+          "global_stable_flow_ratio_pct": 0.10032286109059572
         },
         "key_events": [
-          "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
-          "MACRO_NOISE"
+          "RATE_EXPECTATION_EASING",
+          "USD_WEAKNESS",
+          "VOL_PRESSURE_EASING",
+          "LIQUIDITY_EXPANDING"
         ],
         "event_facts": {
           "fear_greed_index": 46.0,
@@ -803,17 +827,17 @@
           "fear_greed_change_5d": null,
           "fed_implied_rate": 3.605,
           "fed_change_5d_bps": -3.7,
-          "usdjpy_level": 156.467,
-          "usdjpy_change_5d_pct": -1.93,
-          "dxy_level": 98.06,
-          "dxy_change_5d_pct": -0.16,
-          "vix_level": 17.01,
-          "vix_change_5d_pct": 0.71,
-          "us10y_level": 4.35,
-          "us10y_change_5d_pct": -0.96,
-          "global_stable_flow": -425700006.0082245,
-          "global_stable_market_cap": 267896276981.59543,
-          "global_stable_flow_ratio_pct": -0.15890478613761036
+          "usdjpy_level": 156.381,
+          "usdjpy_change_5d_pct": -1.99,
+          "dxy_level": 98.02,
+          "dxy_change_5d_pct": -0.91,
+          "vix_level": 17.33,
+          "vix_change_5d_pct": -7.87,
+          "us10y_level": 4.36,
+          "us10y_change_5d_pct": -1.4,
+          "global_stable_flow": 269458417.1001892,
+          "global_stable_market_cap": 268591240491.89252,
+          "global_stable_flow_ratio_pct": 0.10032286109059572
         },
         "provenance": {
           "generation_mode": "llm_refined",
@@ -822,6 +846,7 @@
           "llm_applied": true,
           "llm_override_fields": [
             "brief_rationale",
+            "key_tags",
             "news_summary"
           ],
           "llm_audit": {
@@ -831,15 +856,17 @@
             "status": "parsed",
             "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
             "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-            "raw_response_preview": "{ \"news_summary\": \"Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.\", \"brief_rationale\": \"Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"LOW\", \"key_tags\": [\"MACRO_NOISE\"] }",
+            "raw_response_preview": "{ \"news_summary\": \"Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.\", \"brief_rationale\": \"Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment.\", \"market_impact\": \"RISK_ON\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"RATE_EXPECTATION_EASING\", \"USD_WEAKNESS\", \"VOL_PRESSURE_EASING\"] }",
             "parsed_response": {
-              "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
-              "brief_rationale": "Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal.",
-              "market_impact": "MIXED",
-              "impact_horizon": "NOISE",
-              "crypto_relevance": "LOW",
+              "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
+              "brief_rationale": "Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment.",
+              "market_impact": "RISK_ON",
+              "impact_horizon": "SWING",
+              "crypto_relevance": "HIGH",
               "key_tags": [
-                "MACRO_NOISE"
+                "RATE_EXPECTATION_EASING",
+                "USD_WEAKNESS",
+                "VOL_PRESSURE_EASING"
               ]
             },
             "error": null
@@ -848,39 +875,44 @@
         "final_macro_decision": {
           "source": "llm_adjudicated",
           "selected_view": "blended",
-          "market_impact": "MIXED",
+          "market_impact": "RISK_ON",
           "impact_horizon": "SWING",
-          "crypto_relevance": "MEDIUM",
+          "crypto_relevance": "HIGH",
           "key_tags": [
-            "FED_HAWKISH",
-            "LIQUIDITY_CONTRACTING",
-            "MACRO_NOISE"
+            "RATE_EXPECTATION_EASING",
+            "USD_WEAKNESS",
+            "VOL_PRESSURE_EASING",
+            "LIQUIDITY_EXPANDING"
           ],
           "confidence": "MEDIUM",
-          "reason": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.",
+          "reason": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.",
           "deterministic_view": {
             "event_type": "MACRO_REGIME_UPDATE",
             "policy_stance": "HAWKISH",
-            "market_impact": "RISK_OFF",
+            "market_impact": "RISK_ON",
             "impact_horizon": "SWING",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "LIQUIDITY_CONTRACTING",
-              "RATE_EXPECTATION_EASING"
+              "LIQUIDITY_EXPANDING",
+              "RATE_EXPECTATION_EASING",
+              "USD_WEAKNESS",
+              "VOL_PRESSURE_EASING"
             ],
-            "news_summary": "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds | Surging gas prices are hitting lower-income households harder, New York Fed study shows | CVS blows past estimates, hikes outlook as insurance business outperforms",
-            "brief_rationale": "Fed pricing remains restrictive; rate expectations eased (-3.7 bps/5d); stablecoin flow is $-425,700,006. Classified as RISK_OFF with SWING horizon."
+            "news_summary": "Surging gas prices are hitting lower-income households harder, New York Fed study shows | Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel | Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
+            "brief_rationale": "Fed pricing remains restrictive; rate expectations eased (-3.7 bps/5d); DXY is weaker (-0.91%/5d); volatility pressure eased (VIX 17.33, -7.87%/5d); stablecoin flow is $269,458,417. Classified as RISK_ON with SWING horizon."
           },
           "llm_view": {
-            "market_impact": "MIXED",
-            "impact_horizon": "NOISE",
-            "crypto_relevance": "LOW",
+            "market_impact": "RISK_ON",
+            "impact_horizon": "SWING",
+            "crypto_relevance": "HIGH",
             "key_tags": [
-              "MACRO_NOISE"
+              "RATE_EXPECTATION_EASING",
+              "USD_WEAKNESS",
+              "VOL_PRESSURE_EASING"
             ],
-            "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
-            "brief_rationale": "Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal."
+            "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
+            "brief_rationale": "Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment."
           },
           "adjudication_audit": {
             "enabled": true,
@@ -888,48 +920,49 @@
             "model": "deepseek-chat",
             "status": "parsed",
             "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds\", \"Surging gas prices are hitting lower-income households harder, New York Fed study shows\", \"CVS blows past estimates, hikes outlook as insurance business outperforms\", \"Uber and Disney are seeing the same remarkable dynamic in this economy. Both stoc...",
-            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"MEDIUM\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"MACRO_NOISE\"], \"confidence\": 0.7, \"reason\": \"Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.\" }",
+            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Surging gas prices are hitting lower-income households harder, New York Fed study shows\", \"Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel\", \"Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds\", \"CVS blows past estimates, hikes outlook as insurance business outperforms\",...",
+            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_ON\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"RATE_EXPECTATION_EASING\", \"USD_WEAKNESS\", \"VOL_PRESSURE_EASING\", \"LIQUIDITY_EXPANDING\"], \"confidence\": 0.75, \"reason\": \"Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.\" }",
             "parsed_response": {
               "selected_view": "blended",
-              "final_market_impact": "MIXED",
+              "final_market_impact": "RISK_ON",
               "final_impact_horizon": "SWING",
-              "final_crypto_relevance": "MEDIUM",
+              "final_crypto_relevance": "HIGH",
               "final_key_tags": [
-                "FED_HAWKISH",
-                "LIQUIDITY_CONTRACTING",
-                "MACRO_NOISE"
+                "RATE_EXPECTATION_EASING",
+                "USD_WEAKNESS",
+                "VOL_PRESSURE_EASING",
+                "LIQUIDITY_EXPANDING"
               ],
-              "confidence": 0.7,
-              "reason": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity."
+              "confidence": 0.75,
+              "reason": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets."
             },
             "error": null
           }
         },
         "macro_decision_source": "llm_adjudicated",
-        "macro_mode": "RISK_OFF",
+        "macro_mode": "RISK_ON",
         "macro_horizon": "SWING",
-        "macro_permission": "ALLOW_SHORT",
-        "macro_impact_score": -9,
-        "macro_bias_tier": "STRONG_RISK_OFF",
+        "macro_permission": "ALLOW_LONG",
+        "macro_impact_score": 10,
+        "macro_bias_tier": "STRONG_RISK_ON",
         "fear_greed_index": 46.0,
         "fear_greed_state": "FEAR",
         "fear_greed_change_5d": null,
-        "vix_level": 17.01,
-        "vix_change_5d_pct": 0.71,
-        "dxy_level": 98.06,
-        "dxy_trend": "FLAT",
-        "usdjpy_level": 156.467,
+        "vix_level": 17.33,
+        "vix_change_5d_pct": -7.87,
+        "dxy_level": 98.02,
+        "dxy_trend": "DOWN",
+        "usdjpy_level": 156.381,
         "usdjpy_trend": "DOWN",
         "fed_event_risk": "LOW",
         "macro_event_window": false,
-        "risk_off_score": 0.85,
+        "risk_off_score": 0.15,
         "news_headlines": [
-          "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
           "Surging gas prices are hitting lower-income households harder, New York Fed study shows",
+          "Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel",
+          "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
           "CVS blows past estimates, hikes outlook as insurance business outperforms",
-          "Uber and Disney are seeing the same remarkable dynamic in this economy. Both stocks are surging",
-          "Epstein files: Commerce Sec. Howard Lutnick answering questions from House panel"
+          "Uber and Disney are seeing the same remarkable dynamic in this economy. Both stocks are surging"
         ]
       },
       "position_snapshot": {
@@ -942,15 +975,15 @@
         "open_positions": []
       },
       "decision_ready_features": {
-        "regime_1d": "BEAR",
-        "macro_mode": "RISK_OFF",
+        "regime_1d": "BULL",
+        "macro_mode": "RISK_ON",
         "macro_horizon": "SWING",
-        "macro_permission": "ALLOW_SHORT",
-        "macro_bias_tier": "STRONG_RISK_OFF",
-        "macro_impact_score": -9.0,
+        "macro_permission": "ALLOW_LONG",
+        "macro_bias_tier": "STRONG_RISK_ON",
+        "macro_impact_score": 10.0,
         "fear_greed_change_5d": null,
-        "vix_level": 17.01,
-        "vix_change_5d_pct": 0.71,
+        "vix_level": 17.33,
+        "vix_change_5d_pct": -7.87,
         "event_risk_active": false,
         "usd_strength_flag": false,
         "yen_stress_flag": false,
@@ -962,9 +995,9 @@
         "flow_signal_mixed": true,
         "flow_support_long": false,
         "flow_support_short": false,
-        "funding_rate": -3.3529387059e-06,
-        "funding_zscore": -0.37,
-        "oi_now": 275431525.0765003,
+        "funding_rate": 1.16908734077e-05,
+        "funding_zscore": -0.13,
+        "oi_now": 276392512.95240027,
         "delta_oi_24h_percent": 8.099235499310641,
         "qlib_relative_score_8h": 0.0008,
         "qlib_percentile_8h": 0.5,
@@ -981,7 +1014,7 @@
         "range_lower_bound": 83.54,
         "range_upper_bound": 90.04,
         "range_width_pct": 0.0749,
-        "price_position_in_range": 0.8169,
+        "price_position_in_range": 0.8646,
         "grid_mode": "ARITHMETIC",
         "grid_count": 9,
         "grid_spacing_pct": 0.0083,
@@ -1000,7 +1033,7 @@
         "grid_preflight_missing_fields": [],
         "grid_macro_trend_ok": false,
         "grid_macro_block_reasons": [
-          "bearish_liquidity_macro_cluster",
+          "bullish_liquidity_macro_cluster",
           "directional_swing_macro"
         ],
         "ma5_cross_up_ma10_1d": false,
@@ -1019,16 +1052,16 @@
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-05-06_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778090620,
-      "snapshot_time": "2026-05-06T18:03:40Z",
-      "snapshot_time_local": "2026-05-07T02:03:40+0800",
+      "snapshot_timestamp": 1778097492,
+      "snapshot_time": "2026-05-06T19:58:12Z",
+      "snapshot_time_local": "2026-05-07T03:58:12+0800",
       "local_timezone": "Asia/Shanghai",
       "market_snapshot": {
-        "price": 648.7,
-        "change_24h": 2.9519123948579624,
+        "price": 650.1,
+        "change_24h": 3.174099349309633,
         "rsi_4h": 72.71538516832995,
         "adx_14": 35.366346137968975,
-        "volume_ratio": 1.5240581452844446,
+        "volume_ratio": 1.5200348350198774,
         "bb_width": 0.0582634568641421,
         "bb_pct_b": 1.0343175932864972,
         "bb_mid_slope_pct": 0.0069993477880469866,
@@ -1039,11 +1072,11 @@
         "wick_ratio_upper": 56.8,
         "funding_rate": 0.0001,
         "funding_zscore": 1.0,
-        "oi_now": 50523240.521000005,
+        "oi_now": 50632277.883,
         "delta_oi_24h_percent": 1.962031091653568,
-        "natr_percent": 1.0732643684946297,
-        "whale_ls_ratio": 0.7192982456140351,
-        "whale_pos_ratio": 0.9181605449153858,
+        "natr_percent": 1.072051809808879,
+        "whale_ls_ratio": 0.7396449704142012,
+        "whale_pos_ratio": 0.9242289885153882,
         "atr_14": 7.571428571428563,
         "trigger_candle_open": 652.1,
         "trigger_candle_high": 663.8,
@@ -1087,7 +1120,7 @@
         "liquidation_short_to_volume_4h": 0.0085810724483912,
         "funding_rate": 0.0001,
         "funding_zscore": 1.0,
-        "oi_now": 50523240.521000005,
+        "oi_now": 50632277.883,
         "delta_oi_24h_percent": 1.962031091653568,
         "qlib_relative_score_8h": 0.0008,
         "qlib_rank_8h": 2,
@@ -1100,38 +1133,40 @@
       "macro_snapshot": {
         "event_type": "MACRO_REGIME_UPDATE",
         "policy_stance": "HAWKISH",
-        "market_impact": "MIXED",
+        "market_impact": "RISK_ON",
         "impact_horizon": "SWING",
-        "crypto_relevance": "MEDIUM",
+        "crypto_relevance": "HIGH",
         "key_tags": [
-          "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
-          "MACRO_NOISE"
+          "RATE_EXPECTATION_EASING",
+          "USD_WEAKNESS",
+          "VOL_PRESSURE_EASING",
+          "LIQUIDITY_EXPANDING"
         ],
-        "brief_rationale": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.",
-        "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
+        "brief_rationale": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.",
+        "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
         "classification_basis": {
           "fear_greed_index": 46.0,
           "fear_greed_state": "FEAR",
           "fear_greed_change_5d": null,
           "fed_implied_rate": 3.605,
           "fed_change_5d_bps": -3.7,
-          "usdjpy_level": 156.467,
-          "usdjpy_change_5d_pct": -1.93,
-          "dxy_level": 98.06,
-          "dxy_change_5d_pct": -0.16,
-          "vix_level": 17.01,
-          "vix_change_5d_pct": 0.71,
-          "us10y_level": 4.35,
-          "us10y_change_5d_pct": -0.96,
-          "global_stable_flow": -425700006.0082245,
-          "global_stable_market_cap": 267896276981.59543,
-          "global_stable_flow_ratio_pct": -0.15890478613761036
+          "usdjpy_level": 156.381,
+          "usdjpy_change_5d_pct": -1.99,
+          "dxy_level": 98.02,
+          "dxy_change_5d_pct": -0.91,
+          "vix_level": 17.33,
+          "vix_change_5d_pct": -7.87,
+          "us10y_level": 4.36,
+          "us10y_change_5d_pct": -1.4,
+          "global_stable_flow": 269458417.1001892,
+          "global_stable_market_cap": 268591240491.89252,
+          "global_stable_flow_ratio_pct": 0.10032286109059572
         },
         "key_events": [
-          "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
-          "MACRO_NOISE"
+          "RATE_EXPECTATION_EASING",
+          "USD_WEAKNESS",
+          "VOL_PRESSURE_EASING",
+          "LIQUIDITY_EXPANDING"
         ],
         "event_facts": {
           "fear_greed_index": 46.0,
@@ -1139,17 +1174,17 @@
           "fear_greed_change_5d": null,
           "fed_implied_rate": 3.605,
           "fed_change_5d_bps": -3.7,
-          "usdjpy_level": 156.467,
-          "usdjpy_change_5d_pct": -1.93,
-          "dxy_level": 98.06,
-          "dxy_change_5d_pct": -0.16,
-          "vix_level": 17.01,
-          "vix_change_5d_pct": 0.71,
-          "us10y_level": 4.35,
-          "us10y_change_5d_pct": -0.96,
-          "global_stable_flow": -425700006.0082245,
-          "global_stable_market_cap": 267896276981.59543,
-          "global_stable_flow_ratio_pct": -0.15890478613761036
+          "usdjpy_level": 156.381,
+          "usdjpy_change_5d_pct": -1.99,
+          "dxy_level": 98.02,
+          "dxy_change_5d_pct": -0.91,
+          "vix_level": 17.33,
+          "vix_change_5d_pct": -7.87,
+          "us10y_level": 4.36,
+          "us10y_change_5d_pct": -1.4,
+          "global_stable_flow": 269458417.1001892,
+          "global_stable_market_cap": 268591240491.89252,
+          "global_stable_flow_ratio_pct": 0.10032286109059572
         },
         "provenance": {
           "generation_mode": "llm_refined",
@@ -1158,6 +1193,7 @@
           "llm_applied": true,
           "llm_override_fields": [
             "brief_rationale",
+            "key_tags",
             "news_summary"
           ],
           "llm_audit": {
@@ -1167,15 +1203,17 @@
             "status": "parsed",
             "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
             "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-            "raw_response_preview": "{ \"news_summary\": \"Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.\", \"brief_rationale\": \"Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"LOW\", \"key_tags\": [\"MACRO_NOISE\"] }",
+            "raw_response_preview": "{ \"news_summary\": \"Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.\", \"brief_rationale\": \"Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment.\", \"market_impact\": \"RISK_ON\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"RATE_EXPECTATION_EASING\", \"USD_WEAKNESS\", \"VOL_PRESSURE_EASING\"] }",
             "parsed_response": {
-              "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
-              "brief_rationale": "Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal.",
-              "market_impact": "MIXED",
-              "impact_horizon": "NOISE",
-              "crypto_relevance": "LOW",
+              "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
+              "brief_rationale": "Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment.",
+              "market_impact": "RISK_ON",
+              "impact_horizon": "SWING",
+              "crypto_relevance": "HIGH",
               "key_tags": [
-                "MACRO_NOISE"
+                "RATE_EXPECTATION_EASING",
+                "USD_WEAKNESS",
+                "VOL_PRESSURE_EASING"
               ]
             },
             "error": null
@@ -1184,39 +1222,44 @@
         "final_macro_decision": {
           "source": "llm_adjudicated",
           "selected_view": "blended",
-          "market_impact": "MIXED",
+          "market_impact": "RISK_ON",
           "impact_horizon": "SWING",
-          "crypto_relevance": "MEDIUM",
+          "crypto_relevance": "HIGH",
           "key_tags": [
-            "FED_HAWKISH",
-            "LIQUIDITY_CONTRACTING",
-            "MACRO_NOISE"
+            "RATE_EXPECTATION_EASING",
+            "USD_WEAKNESS",
+            "VOL_PRESSURE_EASING",
+            "LIQUIDITY_EXPANDING"
           ],
           "confidence": "MEDIUM",
-          "reason": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.",
+          "reason": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.",
           "deterministic_view": {
             "event_type": "MACRO_REGIME_UPDATE",
             "policy_stance": "HAWKISH",
-            "market_impact": "RISK_OFF",
+            "market_impact": "RISK_ON",
             "impact_horizon": "SWING",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "LIQUIDITY_CONTRACTING",
-              "RATE_EXPECTATION_EASING"
+              "LIQUIDITY_EXPANDING",
+              "RATE_EXPECTATION_EASING",
+              "USD_WEAKNESS",
+              "VOL_PRESSURE_EASING"
             ],
-            "news_summary": "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds | Surging gas prices are hitting lower-income households harder, New York Fed study shows | CVS blows past estimates, hikes outlook as insurance business outperforms",
-            "brief_rationale": "Fed pricing remains restrictive; rate expectations eased (-3.7 bps/5d); stablecoin flow is $-425,700,006. Classified as RISK_OFF with SWING horizon."
+            "news_summary": "Surging gas prices are hitting lower-income households harder, New York Fed study shows | Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel | Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
+            "brief_rationale": "Fed pricing remains restrictive; rate expectations eased (-3.7 bps/5d); DXY is weaker (-0.91%/5d); volatility pressure eased (VIX 17.33, -7.87%/5d); stablecoin flow is $269,458,417. Classified as RISK_ON with SWING horizon."
           },
           "llm_view": {
-            "market_impact": "MIXED",
-            "impact_horizon": "NOISE",
-            "crypto_relevance": "LOW",
+            "market_impact": "RISK_ON",
+            "impact_horizon": "SWING",
+            "crypto_relevance": "HIGH",
             "key_tags": [
-              "MACRO_NOISE"
+              "RATE_EXPECTATION_EASING",
+              "USD_WEAKNESS",
+              "VOL_PRESSURE_EASING"
             ],
-            "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
-            "brief_rationale": "Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal."
+            "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
+            "brief_rationale": "Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment."
           },
           "adjudication_audit": {
             "enabled": true,
@@ -1224,48 +1267,49 @@
             "model": "deepseek-chat",
             "status": "parsed",
             "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds\", \"Surging gas prices are hitting lower-income households harder, New York Fed study shows\", \"CVS blows past estimates, hikes outlook as insurance business outperforms\", \"Uber and Disney are seeing the same remarkable dynamic in this economy. Both stoc...",
-            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"MEDIUM\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"MACRO_NOISE\"], \"confidence\": 0.7, \"reason\": \"Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.\" }",
+            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Surging gas prices are hitting lower-income households harder, New York Fed study shows\", \"Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel\", \"Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds\", \"CVS blows past estimates, hikes outlook as insurance business outperforms\",...",
+            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_ON\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"RATE_EXPECTATION_EASING\", \"USD_WEAKNESS\", \"VOL_PRESSURE_EASING\", \"LIQUIDITY_EXPANDING\"], \"confidence\": 0.75, \"reason\": \"Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.\" }",
             "parsed_response": {
               "selected_view": "blended",
-              "final_market_impact": "MIXED",
+              "final_market_impact": "RISK_ON",
               "final_impact_horizon": "SWING",
-              "final_crypto_relevance": "MEDIUM",
+              "final_crypto_relevance": "HIGH",
               "final_key_tags": [
-                "FED_HAWKISH",
-                "LIQUIDITY_CONTRACTING",
-                "MACRO_NOISE"
+                "RATE_EXPECTATION_EASING",
+                "USD_WEAKNESS",
+                "VOL_PRESSURE_EASING",
+                "LIQUIDITY_EXPANDING"
               ],
-              "confidence": 0.7,
-              "reason": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity."
+              "confidence": 0.75,
+              "reason": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets."
             },
             "error": null
           }
         },
         "macro_decision_source": "llm_adjudicated",
-        "macro_mode": "RISK_OFF",
+        "macro_mode": "RISK_ON",
         "macro_horizon": "SWING",
-        "macro_permission": "ALLOW_SHORT",
-        "macro_impact_score": -9,
-        "macro_bias_tier": "STRONG_RISK_OFF",
+        "macro_permission": "ALLOW_LONG",
+        "macro_impact_score": 10,
+        "macro_bias_tier": "STRONG_RISK_ON",
         "fear_greed_index": 46.0,
         "fear_greed_state": "FEAR",
         "fear_greed_change_5d": null,
-        "vix_level": 17.01,
-        "vix_change_5d_pct": 0.71,
-        "dxy_level": 98.06,
-        "dxy_trend": "FLAT",
-        "usdjpy_level": 156.467,
+        "vix_level": 17.33,
+        "vix_change_5d_pct": -7.87,
+        "dxy_level": 98.02,
+        "dxy_trend": "DOWN",
+        "usdjpy_level": 156.381,
         "usdjpy_trend": "DOWN",
         "fed_event_risk": "LOW",
         "macro_event_window": false,
-        "risk_off_score": 0.85,
+        "risk_off_score": 0.15,
         "news_headlines": [
-          "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
           "Surging gas prices are hitting lower-income households harder, New York Fed study shows",
+          "Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel",
+          "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
           "CVS blows past estimates, hikes outlook as insurance business outperforms",
-          "Uber and Disney are seeing the same remarkable dynamic in this economy. Both stocks are surging",
-          "Epstein files: Commerce Sec. Howard Lutnick answering questions from House panel"
+          "Uber and Disney are seeing the same remarkable dynamic in this economy. Both stocks are surging"
         ]
       },
       "position_snapshot": {
@@ -1278,15 +1322,15 @@
         "open_positions": []
       },
       "decision_ready_features": {
-        "regime_1d": "BEAR",
-        "macro_mode": "RISK_OFF",
+        "regime_1d": "BULL",
+        "macro_mode": "RISK_ON",
         "macro_horizon": "SWING",
-        "macro_permission": "ALLOW_SHORT",
-        "macro_bias_tier": "STRONG_RISK_OFF",
-        "macro_impact_score": -9.0,
+        "macro_permission": "ALLOW_LONG",
+        "macro_bias_tier": "STRONG_RISK_ON",
+        "macro_impact_score": 10.0,
         "fear_greed_change_5d": null,
-        "vix_level": 17.01,
-        "vix_change_5d_pct": 0.71,
+        "vix_level": 17.33,
+        "vix_change_5d_pct": -7.87,
         "event_risk_active": false,
         "usd_strength_flag": false,
         "yen_stress_flag": false,
@@ -1300,7 +1344,7 @@
         "flow_support_short": false,
         "funding_rate": 0.0001,
         "funding_zscore": 1.0,
-        "oi_now": 50523240.521000005,
+        "oi_now": 50632277.883,
         "delta_oi_24h_percent": 1.962031091653568,
         "qlib_relative_score_8h": 0.0008,
         "qlib_percentile_8h": 0.75,
@@ -1317,7 +1361,7 @@
         "range_lower_bound": 620.7,
         "range_upper_bound": 652.4,
         "range_width_pct": 0.0498,
-        "price_position_in_range": 0.8833,
+        "price_position_in_range": 0.9274,
         "grid_mode": "ARITHMETIC",
         "grid_count": 6,
         "grid_spacing_pct": 0.0083,
@@ -1336,7 +1380,7 @@
         "grid_preflight_missing_fields": [],
         "grid_macro_trend_ok": false,
         "grid_macro_block_reasons": [
-          "bearish_liquidity_macro_cluster",
+          "bullish_liquidity_macro_cluster",
           "directional_swing_macro"
         ],
         "ma5_cross_up_ma10_1d": false,
@@ -1355,16 +1399,16 @@
       "symbol": "DOGE-USDT",
       "cycleId": "cycle_2026-05-06_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778090630,
-      "snapshot_time": "2026-05-06T18:03:50Z",
-      "snapshot_time_local": "2026-05-07T02:03:50+0800",
+      "snapshot_timestamp": 1778097512,
+      "snapshot_time": "2026-05-06T19:58:32Z",
+      "snapshot_time_local": "2026-05-07T03:58:32+0800",
       "local_timezone": "Asia/Shanghai",
       "market_snapshot": {
-        "price": 0.11309,
-        "change_24h": -1.4809652408746468,
+        "price": 0.1129,
+        "change_24h": -1.6464848854429854,
         "rsi_4h": 56.788275812489424,
         "adx_14": 43.25641841260037,
-        "volume_ratio": 1.4568413149830095,
+        "volume_ratio": 1.4252456917625658,
         "bb_width": 0.0910861711629949,
         "bb_pct_b": 0.62042616705379,
         "bb_mid_slope_pct": 0.009435354407115423,
@@ -1375,11 +1419,11 @@
         "wick_ratio_upper": 3.54,
         "funding_rate": 0.0001,
         "funding_zscore": 1.51,
-        "oi_now": 126379675.22350007,
+        "oi_now": 126167347.53500009,
         "delta_oi_24h_percent": 0.6609489869831913,
-        "natr_percent": 1.9449217435889423,
-        "whale_ls_ratio": 1.0973282442748091,
-        "whale_pos_ratio": 0.8712301037216287,
+        "natr_percent": 1.9494602048302085,
+        "whale_ls_ratio": 1.14453125,
+        "whale_pos_ratio": 0.8689531169490795,
         "atr_14": 0.0023107142857142,
         "trigger_candle_open": 0.11651,
         "trigger_candle_high": 0.1167,
@@ -1417,13 +1461,13 @@
         "flow_composite_semantic": "UNAVAILABLE",
         "flow_signal_mixed": false,
         "sentiment_score": 0.0,
-        "liquidation_long_usd": 2070258.4896000004,
+        "liquidation_long_usd": 2078098.4286,
         "liquidation_short_usd": 2994210.9785,
-        "liquidation_long_to_volume_4h": 0.0090316699824788,
+        "liquidation_long_to_volume_4h": 0.0090658723500027,
         "liquidation_short_to_volume_4h": 0.0130624873906215,
         "funding_rate": 0.0001,
         "funding_zscore": 1.51,
-        "oi_now": 126379675.22350007,
+        "oi_now": 126167347.53500009,
         "delta_oi_24h_percent": 0.6609489869831913,
         "qlib_relative_score_8h": -0.0008,
         "qlib_rank_8h": 5,
@@ -1436,38 +1480,40 @@
       "macro_snapshot": {
         "event_type": "MACRO_REGIME_UPDATE",
         "policy_stance": "HAWKISH",
-        "market_impact": "MIXED",
+        "market_impact": "RISK_ON",
         "impact_horizon": "SWING",
-        "crypto_relevance": "MEDIUM",
+        "crypto_relevance": "HIGH",
         "key_tags": [
-          "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
-          "MACRO_NOISE"
+          "RATE_EXPECTATION_EASING",
+          "USD_WEAKNESS",
+          "VOL_PRESSURE_EASING",
+          "LIQUIDITY_EXPANDING"
         ],
-        "brief_rationale": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.",
-        "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
+        "brief_rationale": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.",
+        "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
         "classification_basis": {
           "fear_greed_index": 46.0,
           "fear_greed_state": "FEAR",
           "fear_greed_change_5d": null,
           "fed_implied_rate": 3.605,
           "fed_change_5d_bps": -3.7,
-          "usdjpy_level": 156.467,
-          "usdjpy_change_5d_pct": -1.93,
-          "dxy_level": 98.06,
-          "dxy_change_5d_pct": -0.16,
-          "vix_level": 17.01,
-          "vix_change_5d_pct": 0.71,
-          "us10y_level": 4.35,
-          "us10y_change_5d_pct": -0.96,
-          "global_stable_flow": -425700006.0082245,
-          "global_stable_market_cap": 267896276981.59543,
-          "global_stable_flow_ratio_pct": -0.15890478613761036
+          "usdjpy_level": 156.381,
+          "usdjpy_change_5d_pct": -1.99,
+          "dxy_level": 98.02,
+          "dxy_change_5d_pct": -0.91,
+          "vix_level": 17.33,
+          "vix_change_5d_pct": -7.87,
+          "us10y_level": 4.36,
+          "us10y_change_5d_pct": -1.4,
+          "global_stable_flow": 269458417.1001892,
+          "global_stable_market_cap": 268591240491.89252,
+          "global_stable_flow_ratio_pct": 0.10032286109059572
         },
         "key_events": [
-          "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
-          "MACRO_NOISE"
+          "RATE_EXPECTATION_EASING",
+          "USD_WEAKNESS",
+          "VOL_PRESSURE_EASING",
+          "LIQUIDITY_EXPANDING"
         ],
         "event_facts": {
           "fear_greed_index": 46.0,
@@ -1475,17 +1521,17 @@
           "fear_greed_change_5d": null,
           "fed_implied_rate": 3.605,
           "fed_change_5d_bps": -3.7,
-          "usdjpy_level": 156.467,
-          "usdjpy_change_5d_pct": -1.93,
-          "dxy_level": 98.06,
-          "dxy_change_5d_pct": -0.16,
-          "vix_level": 17.01,
-          "vix_change_5d_pct": 0.71,
-          "us10y_level": 4.35,
-          "us10y_change_5d_pct": -0.96,
-          "global_stable_flow": -425700006.0082245,
-          "global_stable_market_cap": 267896276981.59543,
-          "global_stable_flow_ratio_pct": -0.15890478613761036
+          "usdjpy_level": 156.381,
+          "usdjpy_change_5d_pct": -1.99,
+          "dxy_level": 98.02,
+          "dxy_change_5d_pct": -0.91,
+          "vix_level": 17.33,
+          "vix_change_5d_pct": -7.87,
+          "us10y_level": 4.36,
+          "us10y_change_5d_pct": -1.4,
+          "global_stable_flow": 269458417.1001892,
+          "global_stable_market_cap": 268591240491.89252,
+          "global_stable_flow_ratio_pct": 0.10032286109059572
         },
         "provenance": {
           "generation_mode": "llm_refined",
@@ -1494,6 +1540,7 @@
           "llm_applied": true,
           "llm_override_fields": [
             "brief_rationale",
+            "key_tags",
             "news_summary"
           ],
           "llm_audit": {
@@ -1503,15 +1550,17 @@
             "status": "parsed",
             "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
             "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-            "raw_response_preview": "{ \"news_summary\": \"Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.\", \"brief_rationale\": \"Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"NOISE\", \"crypto_relevance\": \"LOW\", \"key_tags\": [\"MACRO_NOISE\"] }",
+            "raw_response_preview": "{ \"news_summary\": \"Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.\", \"brief_rationale\": \"Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment.\", \"market_impact\": \"RISK_ON\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"RATE_EXPECTATION_EASING\", \"USD_WEAKNESS\", \"VOL_PRESSURE_EASING\"] }",
             "parsed_response": {
-              "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
-              "brief_rationale": "Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal.",
-              "market_impact": "MIXED",
-              "impact_horizon": "NOISE",
-              "crypto_relevance": "LOW",
+              "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
+              "brief_rationale": "Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment.",
+              "market_impact": "RISK_ON",
+              "impact_horizon": "SWING",
+              "crypto_relevance": "HIGH",
               "key_tags": [
-                "MACRO_NOISE"
+                "RATE_EXPECTATION_EASING",
+                "USD_WEAKNESS",
+                "VOL_PRESSURE_EASING"
               ]
             },
             "error": null
@@ -1520,39 +1569,44 @@
         "final_macro_decision": {
           "source": "llm_adjudicated",
           "selected_view": "blended",
-          "market_impact": "MIXED",
+          "market_impact": "RISK_ON",
           "impact_horizon": "SWING",
-          "crypto_relevance": "MEDIUM",
+          "crypto_relevance": "HIGH",
           "key_tags": [
-            "FED_HAWKISH",
-            "LIQUIDITY_CONTRACTING",
-            "MACRO_NOISE"
+            "RATE_EXPECTATION_EASING",
+            "USD_WEAKNESS",
+            "VOL_PRESSURE_EASING",
+            "LIQUIDITY_EXPANDING"
           ],
           "confidence": "MEDIUM",
-          "reason": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.",
+          "reason": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.",
           "deterministic_view": {
             "event_type": "MACRO_REGIME_UPDATE",
             "policy_stance": "HAWKISH",
-            "market_impact": "RISK_OFF",
+            "market_impact": "RISK_ON",
             "impact_horizon": "SWING",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "LIQUIDITY_CONTRACTING",
-              "RATE_EXPECTATION_EASING"
+              "LIQUIDITY_EXPANDING",
+              "RATE_EXPECTATION_EASING",
+              "USD_WEAKNESS",
+              "VOL_PRESSURE_EASING"
             ],
-            "news_summary": "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds | Surging gas prices are hitting lower-income households harder, New York Fed study shows | CVS blows past estimates, hikes outlook as insurance business outperforms",
-            "brief_rationale": "Fed pricing remains restrictive; rate expectations eased (-3.7 bps/5d); stablecoin flow is $-425,700,006. Classified as RISK_OFF with SWING horizon."
+            "news_summary": "Surging gas prices are hitting lower-income households harder, New York Fed study shows | Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel | Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
+            "brief_rationale": "Fed pricing remains restrictive; rate expectations eased (-3.7 bps/5d); DXY is weaker (-0.91%/5d); volatility pressure eased (VIX 17.33, -7.87%/5d); stablecoin flow is $269,458,417. Classified as RISK_ON with SWING horizon."
           },
           "llm_view": {
-            "market_impact": "MIXED",
-            "impact_horizon": "NOISE",
-            "crypto_relevance": "LOW",
+            "market_impact": "RISK_ON",
+            "impact_horizon": "SWING",
+            "crypto_relevance": "HIGH",
             "key_tags": [
-              "MACRO_NOISE"
+              "RATE_EXPECTATION_EASING",
+              "USD_WEAKNESS",
+              "VOL_PRESSURE_EASING"
             ],
-            "news_summary": "Consumer financial stress from auto debt and gas prices, mixed with strong corporate earnings and political news.",
-            "brief_rationale": "Headlines show consumer strain (auto debt, gas prices) which is negative for risk, but strong earnings from CVS, Uber, Disney provide offset. Political news is noise. Overall mixed with no clear macro signal."
+            "news_summary": "Surging gas prices hit lower-income households harder; car debt at $1.68 trillion; CVS beats estimates; Uber and Disney stocks surge on consumer strength.",
+            "brief_rationale": "Headlines show mixed consumer signals: gas and auto debt stress lower-income, but corporate earnings and stock surges indicate overall resilience. Macro data shows easing rate expectations and USD weakness, supporting risk-on sentiment."
           },
           "adjudication_audit": {
             "enabled": true,
@@ -1560,48 +1614,49 @@
             "model": "deepseek-chat",
             "status": "parsed",
             "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds\", \"Surging gas prices are hitting lower-income households harder, New York Fed study shows\", \"CVS blows past estimates, hikes outlook as insurance business outperforms\", \"Uber and Disney are seeing the same remarkable dynamic in this economy. Both stoc...",
-            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"MEDIUM\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"MACRO_NOISE\"], \"confidence\": 0.7, \"reason\": \"Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity.\" }",
+            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Surging gas prices are hitting lower-income households harder, New York Fed study shows\", \"Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel\", \"Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds\", \"CVS blows past estimates, hikes outlook as insurance business outperforms\",...",
+            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_ON\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"RATE_EXPECTATION_EASING\", \"USD_WEAKNESS\", \"VOL_PRESSURE_EASING\", \"LIQUIDITY_EXPANDING\"], \"confidence\": 0.75, \"reason\": \"Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets.\" }",
             "parsed_response": {
               "selected_view": "blended",
-              "final_market_impact": "MIXED",
+              "final_market_impact": "RISK_ON",
               "final_impact_horizon": "SWING",
-              "final_crypto_relevance": "MEDIUM",
+              "final_crypto_relevance": "HIGH",
               "final_key_tags": [
-                "FED_HAWKISH",
-                "LIQUIDITY_CONTRACTING",
-                "MACRO_NOISE"
+                "RATE_EXPECTATION_EASING",
+                "USD_WEAKNESS",
+                "VOL_PRESSURE_EASING",
+                "LIQUIDITY_EXPANDING"
               ],
-              "confidence": 0.7,
-              "reason": "Deterministic view emphasizes hawkish Fed and contracting liquidity (stablecoin outflow), supporting RISK_OFF. LLM view highlights mixed headlines (consumer strain vs. strong earnings) and low crypto relevance. Blended: market impact is MIXED due to contradictory signals, but the liquidity contraction and Fed stance suggest a SWING horizon. Crypto relevance is MEDIUM because stablecoin flow directly impacts crypto liquidity, but macro noise reduces clarity."
+              "confidence": 0.75,
+              "reason": "Both deterministic and LLM views agree on RISK_ON, SWING, and HIGH relevance. Deterministic adds FED_HAWKISH and LIQUIDITY_EXPANDING; LLM omits FED_HAWKISH. Given mixed consumer headlines but clear macro easing (rate expectations, USD weakness, VIX drop), blended view retains LIQUIDITY_EXPANDING but drops FED_HAWKISH as rate expectations are easing, not tightening. Tags reflect consensus macro support for risk assets."
             },
             "error": null
           }
         },
         "macro_decision_source": "llm_adjudicated",
-        "macro_mode": "RISK_OFF",
+        "macro_mode": "RISK_ON",
         "macro_horizon": "SWING",
-        "macro_permission": "ALLOW_SHORT",
-        "macro_impact_score": -9,
-        "macro_bias_tier": "STRONG_RISK_OFF",
+        "macro_permission": "ALLOW_LONG",
+        "macro_impact_score": 10,
+        "macro_bias_tier": "STRONG_RISK_ON",
         "fear_greed_index": 46.0,
         "fear_greed_state": "FEAR",
         "fear_greed_change_5d": null,
-        "vix_level": 17.01,
-        "vix_change_5d_pct": 0.71,
-        "dxy_level": 98.06,
-        "dxy_trend": "FLAT",
-        "usdjpy_level": 156.467,
+        "vix_level": 17.33,
+        "vix_change_5d_pct": -7.87,
+        "dxy_level": 98.02,
+        "dxy_trend": "DOWN",
+        "usdjpy_level": 156.381,
         "usdjpy_trend": "DOWN",
         "fed_event_risk": "LOW",
         "macro_event_window": false,
-        "risk_off_score": 0.85,
+        "risk_off_score": 0.15,
         "news_headlines": [
-          "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
           "Surging gas prices are hitting lower-income households harder, New York Fed study shows",
+          "Epstein files: Commerce Sec. Howard Lutnick questioned by House Oversight panel",
+          "Car payments squeeze Americans as auto debt hits $1.68 trillion, report finds",
           "CVS blows past estimates, hikes outlook as insurance business outperforms",
-          "Uber and Disney are seeing the same remarkable dynamic in this economy. Both stocks are surging",
-          "Epstein files: Commerce Sec. Howard Lutnick answering questions from House panel"
+          "Uber and Disney are seeing the same remarkable dynamic in this economy. Both stocks are surging"
         ]
       },
       "position_snapshot": {
@@ -1614,15 +1669,15 @@
         "open_positions": []
       },
       "decision_ready_features": {
-        "regime_1d": "BEAR",
-        "macro_mode": "RISK_OFF",
+        "regime_1d": "BULL",
+        "macro_mode": "RISK_ON",
         "macro_horizon": "SWING",
-        "macro_permission": "ALLOW_SHORT",
-        "macro_bias_tier": "STRONG_RISK_OFF",
-        "macro_impact_score": -9.0,
+        "macro_permission": "ALLOW_LONG",
+        "macro_bias_tier": "STRONG_RISK_ON",
+        "macro_impact_score": 10.0,
         "fear_greed_change_5d": null,
-        "vix_level": 17.01,
-        "vix_change_5d_pct": 0.71,
+        "vix_level": 17.33,
+        "vix_change_5d_pct": -7.87,
         "event_risk_active": false,
         "usd_strength_flag": false,
         "yen_stress_flag": false,
@@ -1636,7 +1691,7 @@
         "flow_support_short": false,
         "funding_rate": 0.0001,
         "funding_zscore": 1.51,
-        "oi_now": 126379675.22350007,
+        "oi_now": 126167347.53500009,
         "delta_oi_24h_percent": 0.6609489869831913,
         "qlib_relative_score_8h": -0.0008,
         "qlib_percentile_8h": 0.0,
@@ -1651,12 +1706,12 @@
         "range_regime": false,
         "grid_candidate_eligible": false,
         "range_lower_bound": 0.1096,
-        "range_upper_bound": 0.1177,
-        "range_width_pct": 0.0716,
-        "price_position_in_range": 0.4337,
+        "range_upper_bound": 0.1175,
+        "range_width_pct": 0.0699,
+        "price_position_in_range": 0.4207,
         "grid_mode": "ARITHMETIC",
         "grid_count": 9,
-        "grid_spacing_pct": 0.008,
+        "grid_spacing_pct": 0.0078,
         "min_profitable_spacing_pct": 0.0034,
         "grid_spacing_profitable": true,
         "grid_bb_width": 0.0911,
@@ -1672,13 +1727,13 @@
         "grid_preflight_missing_fields": [],
         "grid_macro_trend_ok": false,
         "grid_macro_block_reasons": [
-          "bearish_liquidity_macro_cluster",
+          "bullish_liquidity_macro_cluster",
           "directional_swing_macro"
         ],
         "ma5_cross_up_ma10_1d": false,
         "ma5_cross_down_ma10_1d": false,
         "ma5_10_gap_pct_1d": 0.034649976409530624,
-        "max_profitable_grid_count": 21,
+        "max_profitable_grid_count": 20,
         "grid_review_after_hours": 36,
         "grid_extension_step_hours": 12,
         "grid_max_lifetime_hours": 60
@@ -1692,7 +1747,7 @@
       "symbol": "BTC-USDT",
       "cycleId": "cycle_2026-05-06_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778090591,
+      "snapshot_timestamp": 1778097458,
       "candidate_proposals": [],
       "e_strategy_diagnostic": {
         "qlib_inputs": {
@@ -1702,10 +1757,10 @@
           "p_up_8h": 0.2911,
           "p_down_8h": 0.3083,
           "p_flat_8h": 0.4006,
-          "funding_zscore": 0.32,
+          "funding_zscore": 0.72,
           "token_net_flow": 0.0,
           "stablecoin_net_flow": 0.0,
-          "regime_1d": "BEAR",
+          "regime_1d": "BULL",
           "whale_bias": "neutral",
           "is_overheated": false,
           "is_squeeze_zone": false
@@ -1723,7 +1778,7 @@
             "prob_threshold_pass": false,
             "prob_gap_pass": false,
             "flat_gate_pass": false,
-            "regime_pass": false,
+            "regime_pass": true,
             "overheated_pass": true,
             "funding_pass": true,
             "whale_pass": true
@@ -1733,8 +1788,7 @@
             "rank_bucket",
             "prob_threshold",
             "prob_gap",
-            "p_flat_gate",
-            "regime"
+            "p_flat_gate"
           ]
         },
         "short_path": {
@@ -1744,7 +1798,7 @@
             "prob_threshold_pass": false,
             "prob_gap_pass": false,
             "flat_gate_pass": false,
-            "regime_pass": true,
+            "regime_pass": false,
             "squeeze_pass": true,
             "funding_pass": true,
             "whale_pass": true
@@ -1753,17 +1807,18 @@
           "blocked_by": [
             "prob_threshold",
             "prob_gap",
-            "p_flat_gate"
+            "p_flat_gate",
+            "regime"
           ]
         },
-        "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime; short blocked by prob_threshold, prob_gap, p_flat_gate"
+        "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate; short blocked by prob_threshold, prob_gap, p_flat_gate, regime"
       }
     },
     {
       "symbol": "ETH-USDT",
       "cycleId": "cycle_2026-05-06_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778090601,
+      "snapshot_timestamp": 1778097469,
       "candidate_proposals": [],
       "e_strategy_diagnostic": {
         "qlib_inputs": {
@@ -1773,10 +1828,10 @@
           "p_up_8h": 0.2553,
           "p_down_8h": 0.353,
           "p_flat_8h": 0.3918,
-          "funding_zscore": 1.47,
-          "token_net_flow": 10991533.842840182,
-          "stablecoin_net_flow": -15208327.748599503,
-          "regime_1d": "BEAR",
+          "funding_zscore": 1.96,
+          "token_net_flow": 12694318.987738213,
+          "stablecoin_net_flow": -8645196.459517766,
+          "regime_1d": "BULL",
           "whale_bias": "strong_outflow",
           "is_overheated": false,
           "is_squeeze_zone": false
@@ -1794,7 +1849,7 @@
             "prob_threshold_pass": false,
             "prob_gap_pass": false,
             "flat_gate_pass": true,
-            "regime_pass": false,
+            "regime_pass": true,
             "overheated_pass": true,
             "funding_pass": true,
             "whale_pass": false
@@ -1803,7 +1858,6 @@
           "blocked_by": [
             "prob_threshold",
             "prob_gap",
-            "regime",
             "whale_outflow"
           ]
         },
@@ -1814,7 +1868,7 @@
             "prob_threshold_pass": false,
             "prob_gap_pass": false,
             "flat_gate_pass": true,
-            "regime_pass": true,
+            "regime_pass": false,
             "squeeze_pass": true,
             "funding_pass": true,
             "whale_pass": true
@@ -1823,17 +1877,18 @@
           "blocked_by": [
             "rank_bucket",
             "prob_threshold",
-            "prob_gap"
+            "prob_gap",
+            "regime"
           ]
         },
-        "summary": "No E candidate: long blocked by prob_threshold, prob_gap, regime, whale_outflow; short blocked by rank_bucket, prob_threshold, prob_gap"
+        "summary": "No E candidate: long blocked by prob_threshold, prob_gap, whale_outflow; short blocked by rank_bucket, prob_threshold, prob_gap, regime"
       }
     },
     {
       "symbol": "SOL-USDT",
       "cycleId": "cycle_2026-05-06_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778090611,
+      "snapshot_timestamp": 1778097481,
       "candidate_proposals": [],
       "e_strategy_diagnostic": {
         "qlib_inputs": {
@@ -1843,10 +1898,10 @@
           "p_up_8h": 0.2158,
           "p_down_8h": 0.3404,
           "p_flat_8h": 0.4438,
-          "funding_zscore": -0.37,
-          "token_net_flow": -972881.4478667082,
-          "stablecoin_net_flow": 6341.69553600009,
-          "regime_1d": "BEAR",
+          "funding_zscore": -0.13,
+          "token_net_flow": -797034.0312447817,
+          "stablecoin_net_flow": 79894.67384400009,
+          "regime_1d": "BULL",
           "whale_bias": "neutral",
           "is_overheated": true,
           "is_squeeze_zone": false
@@ -1864,7 +1919,7 @@
             "prob_threshold_pass": false,
             "prob_gap_pass": false,
             "flat_gate_pass": false,
-            "regime_pass": false,
+            "regime_pass": true,
             "overheated_pass": false,
             "funding_pass": true,
             "whale_pass": true
@@ -1874,7 +1929,6 @@
             "prob_threshold",
             "prob_gap",
             "p_flat_gate",
-            "regime",
             "overheated"
           ]
         },
@@ -1885,7 +1939,7 @@
             "prob_threshold_pass": false,
             "prob_gap_pass": false,
             "flat_gate_pass": false,
-            "regime_pass": true,
+            "regime_pass": false,
             "squeeze_pass": true,
             "funding_pass": true,
             "whale_pass": true
@@ -1894,52 +1948,28 @@
           "blocked_by": [
             "prob_threshold",
             "prob_gap",
-            "p_flat_gate"
+            "p_flat_gate",
+            "regime"
           ]
         },
-        "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime, overheated; short blocked by prob_threshold, prob_gap, p_flat_gate"
+        "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, overheated; short blocked by prob_threshold, prob_gap, p_flat_gate, regime"
       }
     },
     {
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-05-06_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778090620,
+      "snapshot_timestamp": 1778097492,
       "candidate_proposals": [
-        {
-          "strategy_family": "DIRECTIONAL",
-          "decision_intent": "SHORT",
-          "trigger_source": "Blueprint_A2",
-          "rationale": "bearish wick reversal in daily bear regime",
-          "entry_type": "MARKET",
-          "proposed_entry_price": 648.7,
-          "proposed_sl_price": 665.1276,
-          "proposed_tp_price": 615.8448,
-          "reference_values": {
-            "trigger_candle_high": 663.8
-          },
-          "invalidation_basis": "trigger candle high broken",
-          "invalidation_conditions": {
-            "operator": "OR",
-            "rules": [
-              {
-                "field": "price",
-                "op": ">=",
-                "value_ref": "trigger_candle_high"
-              }
-            ],
-            "persistence": 1
-          }
-        },
         {
           "strategy_family": "DIRECTIONAL",
           "decision_intent": "LONG",
           "trigger_source": "Blueprint_F1",
           "rationale": "zero-axis MACD long with rel_volume_60 confirmation",
           "entry_type": "MARKET",
-          "proposed_entry_price": 648.7,
+          "proposed_entry_price": 650.1,
           "proposed_sl_price": 616.9143,
-          "proposed_tp_price": 712.2714,
+          "proposed_tp_price": 716.4714,
           "reference_values": {
             "structure_support_stop_long": 616.9143,
             "sma50_4h": 622.54
@@ -1969,7 +1999,7 @@
           "funding_zscore": 1.0,
           "token_net_flow": 0.0,
           "stablecoin_net_flow": 0.0,
-          "regime_1d": "BEAR",
+          "regime_1d": "BULL",
           "whale_bias": "neutral",
           "is_overheated": true,
           "is_squeeze_zone": false
@@ -1987,7 +2017,7 @@
             "prob_threshold_pass": false,
             "prob_gap_pass": false,
             "flat_gate_pass": false,
-            "regime_pass": false,
+            "regime_pass": true,
             "overheated_pass": false,
             "funding_pass": true,
             "whale_pass": true
@@ -1997,7 +2027,6 @@
             "prob_threshold",
             "prob_gap",
             "p_flat_gate",
-            "regime",
             "overheated"
           ]
         },
@@ -2008,7 +2037,7 @@
             "prob_threshold_pass": false,
             "prob_gap_pass": false,
             "flat_gate_pass": false,
-            "regime_pass": true,
+            "regime_pass": false,
             "squeeze_pass": true,
             "funding_pass": true,
             "whale_pass": true
@@ -2018,17 +2047,18 @@
             "rank_bucket",
             "prob_threshold",
             "prob_gap",
-            "p_flat_gate"
+            "p_flat_gate",
+            "regime"
           ]
         },
-        "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, regime, overheated; short blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate"
+        "summary": "No E candidate: long blocked by prob_threshold, prob_gap, p_flat_gate, overheated; short blocked by rank_bucket, prob_threshold, prob_gap, p_flat_gate, regime"
       }
     },
     {
       "symbol": "DOGE-USDT",
       "cycleId": "cycle_2026-05-06_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778090630,
+      "snapshot_timestamp": 1778097512,
       "candidate_proposals": [],
       "e_strategy_diagnostic": {
         "qlib_inputs": {
@@ -2041,7 +2071,7 @@
           "funding_zscore": 1.51,
           "token_net_flow": 0.0,
           "stablecoin_net_flow": 0.0,
-          "regime_1d": "BEAR",
+          "regime_1d": "BULL",
           "whale_bias": "neutral",
           "is_overheated": false,
           "is_squeeze_zone": false
@@ -2059,7 +2089,7 @@
             "prob_threshold_pass": false,
             "prob_gap_pass": true,
             "flat_gate_pass": true,
-            "regime_pass": false,
+            "regime_pass": true,
             "overheated_pass": true,
             "funding_pass": true,
             "whale_pass": true
@@ -2067,8 +2097,7 @@
           "eligible": false,
           "blocked_by": [
             "rank_bucket",
-            "prob_threshold",
-            "regime"
+            "prob_threshold"
           ]
         },
         "short_path": {
@@ -2078,7 +2107,7 @@
             "prob_threshold_pass": false,
             "prob_gap_pass": false,
             "flat_gate_pass": true,
-            "regime_pass": true,
+            "regime_pass": false,
             "squeeze_pass": true,
             "funding_pass": true,
             "whale_pass": true
@@ -2086,10 +2115,11 @@
           "eligible": false,
           "blocked_by": [
             "prob_threshold",
-            "prob_gap"
+            "prob_gap",
+            "regime"
           ]
         },
-        "summary": "No E candidate: long blocked by rank_bucket, prob_threshold, regime; short blocked by prob_threshold, prob_gap"
+        "summary": "No E candidate: long blocked by rank_bucket, prob_threshold; short blocked by prob_threshold, prob_gap, regime"
       }
     }
   ],
@@ -2194,38 +2224,36 @@
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-05-06_1600",
       "stage": "pre_trade_filter",
-      "passed": false,
-      "reason_codes": [
-        "BEAR_MARKET_LONG_BLOCKED",
-        "CANDIDATE_CONFLICT"
-      ],
+      "passed": true,
+      "reason_codes": [],
       "approved_candidates": [
         {
           "strategy_family": "DIRECTIONAL",
-          "decision_intent": "SHORT",
-          "trigger_source": "Blueprint_A2",
-          "rationale": "bearish wick reversal in daily bear regime",
+          "decision_intent": "LONG",
+          "trigger_source": "Blueprint_F1",
+          "rationale": "zero-axis MACD long with rel_volume_60 confirmation",
           "entry_type": "MARKET",
-          "proposed_entry_price": 648.7,
-          "proposed_sl_price": 665.1276,
-          "proposed_tp_price": 615.8448,
+          "proposed_entry_price": 650.1,
+          "proposed_sl_price": 616.9143,
+          "proposed_tp_price": 716.4714,
           "reference_values": {
-            "trigger_candle_high": 663.8
+            "structure_support_stop_long": 616.9143,
+            "sma50_4h": 622.54
           },
-          "invalidation_basis": "trigger candle high broken",
+          "invalidation_basis": "volume-confirmed support broken with sma50 confirmation or long momentum reverses",
           "invalidation_conditions": {
             "operator": "OR",
             "rules": [
               {
                 "field": "price",
-                "op": ">=",
-                "value_ref": "trigger_candle_high"
+                "op": "<=",
+                "value_ref": "structure_support_stop_long"
               }
             ],
             "persistence": 1
           },
           "rrr": 2.0,
-          "estimated_distance_to_liq": 0.308,
+          "estimated_distance_to_liq": 0.2823,
           "resonance_bonus": 0.0
         }
       ],
@@ -2236,52 +2264,36 @@
         },
         {
           "rule": "CANDIDATE_CONFLICT_CHECK",
-          "passed": false,
-          "detail": {
-            "LONG": [
-              "Blueprint_F1"
-            ],
-            "SHORT": [
-              "Blueprint_A2"
-            ],
-            "GRID_NEUTRAL": []
-          }
+          "passed": true
         },
         {
           "rule": "CANDIDATE_ACCEPTED",
           "passed": true,
           "detail": {
-            "trigger_source": "Blueprint_A2",
+            "trigger_source": "Blueprint_F1",
             "rrr": 2.0,
-            "estimated_distance_to_liq": 0.308
+            "estimated_distance_to_liq": 0.2823
           }
-        },
-        {
-          "rule": "REGIME_PERMISSION_CHECK",
-          "passed": false,
-          "detail": "macro_short_only"
         }
       ],
       "candidate_structure": {
-        "overall_state": "directional_conflict",
-        "has_directional_conflict": true,
+        "overall_state": "single_signal",
+        "has_directional_conflict": false,
         "long_count": 1,
-        "short_count": 1,
+        "short_count": 0,
         "grid_count": 0,
         "resonance_groups": {
           "LONG": [
             "Blueprint_F1"
           ],
-          "SHORT": [
-            "Blueprint_A2"
-          ],
+          "SHORT": [],
           "GRID_NEUTRAL": []
         },
         "approved_groups": {
-          "LONG": [],
-          "SHORT": [
-            "Blueprint_A2"
+          "LONG": [
+            "Blueprint_F1"
           ],
+          "SHORT": [],
           "GRID_NEUTRAL": []
         },
         "approved_resonance_strength": 1
@@ -2324,7 +2336,138 @@
     null,
     null,
     null,
-    null,
+    {
+      "symbol": "BNB-USDT",
+      "cycleId": "cycle_2026-05-06_1600",
+      "strategy_family": "DIRECTIONAL",
+      "selected_intent": "LONG",
+      "selected_trigger_sources": [
+        "Blueprint_F1"
+      ],
+      "macro_direction_bias": "LONG_BIAS",
+      "macro_horizon": "SWING",
+      "macro_mode": "RISK_ON",
+      "macro_permission": "ALLOW_LONG",
+      "macro_bias_tier": "STRONG_RISK_ON",
+      "macro_impact_score": 10.0,
+      "fear_greed_change_5d": null,
+      "scenario_label": "range_rotation",
+      "conflict_state": "none",
+      "primary_driver": "technical_confirmation",
+      "secondary_driver": "flow_unavailable",
+      "macro_alignment": "SUPPORT",
+      "technical_confirmation": "STRONG",
+      "flow_alignment": "UNAVAILABLE",
+      "flow_data_available": false,
+      "thesis_strength": "HIGH",
+      "holding_horizon": "SHORT",
+      "thesis_change": "REVERSED",
+      "change_reason": "selected intent changed from SHORT to LONG",
+      "risk_note": "",
+      "summary": "Blueprint_F1 selected with range_rotation; macro=RISK_ON, regime=BULL, flow_alignment=UNAVAILABLE.",
+      "scenario_candidates": [
+        {
+          "trigger_source": "Blueprint_F1",
+          "intent": "LONG",
+          "scenario_label": "range_rotation",
+          "macro_alignment": "SUPPORT",
+          "technical_confirmation": "STRONG",
+          "flow_alignment": "UNAVAILABLE",
+          "flow_data_available": false,
+          "support_reasons": [
+            "acceptable_rrr",
+            "macro_support",
+            "technical_confirmation"
+          ],
+          "risk_reasons": [
+            "flow_unavailable"
+          ],
+          "score_breakdown": {
+            "rrr_component": 0.1,
+            "macro_component": 0.35,
+            "technical_component": 0.2,
+            "flow_component": 0.0,
+            "event_component": 0.0
+          },
+          "score": 0.65
+        }
+      ],
+      "candidate_structure": {
+        "overall_state": "single_signal",
+        "has_directional_conflict": false,
+        "long_count": 1,
+        "short_count": 0,
+        "grid_count": 0,
+        "resonance_groups": {
+          "LONG": [
+            "Blueprint_F1"
+          ],
+          "SHORT": [],
+          "GRID_NEUTRAL": []
+        },
+        "approved_groups": {
+          "LONG": [
+            "Blueprint_F1"
+          ],
+          "SHORT": [],
+          "GRID_NEUTRAL": []
+        },
+        "approved_resonance_strength": 1
+      },
+      "onchain_context": {
+        "token_net_flow": 0.0,
+        "stablecoin_net_flow": 0.0,
+        "token_flow_semantic": "UNAVAILABLE",
+        "stablecoin_flow_semantic": "UNAVAILABLE",
+        "flow_composite_semantic": "UNAVAILABLE",
+        "bias": "NEUTRAL"
+      },
+      "derivatives_context": {
+        "funding_zscore": 1.0,
+        "delta_oi_24h_percent": 1.962031091653568,
+        "liquidation_short_to_volume_4h": 0.0085810724483912,
+        "liquidation_long_to_volume_4h": 0.0014880668979485,
+        "bias": "SHORT_SQUEEZE_RISK"
+      },
+      "context_summary": "onchain=NEUTRAL, derivatives=SHORT_SQUEEZE_RISK, token_flow=0.0[UNAVAILABLE], stablecoin_flow=0.0[UNAVAILABLE], funding_z=1.0, oi_change=1.962, short_liq_ratio=0.0086, long_liq_ratio=0.0015",
+      "provenance": {
+        "generation_mode": "llm_noop",
+        "llm_enabled": true,
+        "llm_attempted": true,
+        "llm_applied": false,
+        "llm_override_fields": [],
+        "llm_audit": {
+          "enabled": true,
+          "provider": "deepseek",
+          "model": "deepseek-chat",
+          "status": "parsed",
+          "system_prompt_preview": "Use fixed reasoning order: macro -> technical -> onchain -> conflict -> continuity -> final output.",
+          "user_prompt_preview": "You are a constrained research/thesis agent. Do not invent new trade directions or trigger sources outside the approved candidates. Do not produce leverage or position size. Use fixed reasoning order: macro -> technical -> onchain -> conflict -> continuity -> final output. If candidates conflict, internally compare at least three scenarios: trend_following, countertrend, wait_no_trade, then return one final structured answer only. Return only valid JSON with keys: selected_intent, selected_trigger_sources, scenario_label, conflict_state, primary_driver, secondary_driver, macro_alignment, technical_confirmation, flow_alignment, flow_data_available, thesis_strength, holding_horizon, thesis_change, change_reason, risk_note, summary. FEW_SHOT_EXAMPLES: [{\"case\": {\"macro_permission\": \"ALLOW_SHORT\", \"approved_candidates\": [{\"decision_intent\": \"LONG\", \"trigger_source\": \"Blueprint_A1\", \"rrr\": 2.0}, {\"decision_intent\": \"SHORT\", \"trigger_source\": \"Blueprint_A2\", \"rrr\": 2.1}], \"note\": \"macro and candidate directions conflict\"}, \"expected_output\": {\"selected_intent\": \"SHORT\", \"selected_trigger_sources\": [\"Blueprint_A2\"], \"scenario_label\": \"trend_breakdown\", \"conflict_state\": \"candidate_conf...",
+          "raw_response_preview": "{ \"selected_intent\": \"LONG\", \"selected_trigger_sources\": [\"Blueprint_F1\"], \"scenario_label\": \"range_rotation\", \"conflict_state\": \"none\", \"primary_driver\": \"technical_confirmation\", \"secondary_driver\": \"flow_unavailable\", \"macro_alignment\": \"SUPPORT\", \"technical_confirmation\": \"STRONG\", \"flow_alignment\": \"UNAVAILABLE\", \"flow_data_available\": false, \"thesis_strength\": \"HIGH\", \"holding_horizon\": \"SHORT\", \"thesis_change\": \"REVERSED\", \"change_reason\": \"selected intent changed from SHORT to LONG\", \"risk_note\": \"\", \"summary\": \"Blueprint_F1 selected with range_rotation; macro=RISK_ON, regime=BULL, flow_alignment=UNAVAILABLE.\" }",
+          "parsed_response": {
+            "selected_intent": "LONG",
+            "selected_trigger_sources": [
+              "Blueprint_F1"
+            ],
+            "scenario_label": "range_rotation",
+            "conflict_state": "none",
+            "primary_driver": "technical_confirmation",
+            "secondary_driver": "flow_unavailable",
+            "macro_alignment": "SUPPORT",
+            "technical_confirmation": "STRONG",
+            "flow_alignment": "UNAVAILABLE",
+            "flow_data_available": false,
+            "thesis_strength": "HIGH",
+            "holding_horizon": "SHORT",
+            "thesis_change": "REVERSED",
+            "change_reason": "selected intent changed from SHORT to LONG",
+            "risk_note": "",
+            "summary": "Blueprint_F1 selected with range_rotation; macro=RISK_ON, regime=BULL, flow_alignment=UNAVAILABLE."
+          },
+          "error": null
+        }
+      }
+    },
     null
   ],
   "risk_reviews": [
@@ -2373,16 +2516,67 @@
     {
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-05-06_1600",
-      "strategy_family": null,
-      "approved": false,
-      "final_intent": "NO_TRADE",
-      "approved_risk_fraction": 0.0,
-      "approved_position_size_usd": 0.0,
-      "leverage": 1.0,
-      "max_holding_bars": 0,
-      "execution_action": "DO_NOTHING",
-      "next_position_state": "candidate",
-      "review_note": "rule evaluation rejected or produced no approved candidates"
+      "strategy_family": "DIRECTIONAL",
+      "approved": true,
+      "final_intent": "LONG",
+      "approved_risk_fraction": 0.02,
+      "approved_position_size_usd": 371.28,
+      "leverage": 3.0,
+      "max_holding_bars": 3,
+      "execution_action": "OPEN_LONG",
+      "next_position_state": "approved",
+      "review_note": "approved from Blueprint_F1 with deterministic risk defaults; max loss capped at 2.0% of equity",
+      "approved_candidate": {
+        "strategy_family": "DIRECTIONAL",
+        "decision_intent": "LONG",
+        "trigger_source": "Blueprint_F1",
+        "rationale": "zero-axis MACD long with rel_volume_60 confirmation",
+        "entry_type": "MARKET",
+        "proposed_entry_price": 650.1,
+        "proposed_sl_price": 616.9143,
+        "proposed_tp_price": 716.4714,
+        "reference_values": {
+          "structure_support_stop_long": 616.9143,
+          "sma50_4h": 622.54
+        },
+        "invalidation_basis": "volume-confirmed support broken with sma50 confirmation or long momentum reverses",
+        "invalidation_conditions": {
+          "operator": "OR",
+          "rules": [
+            {
+              "field": "price",
+              "op": "<=",
+              "value_ref": "structure_support_stop_long"
+            }
+          ],
+          "persistence": 1
+        },
+        "rrr": 2.0,
+        "estimated_distance_to_liq": 0.2823,
+        "resonance_bonus": 0.0
+      },
+      "candidate_structure": {
+        "overall_state": "single_signal",
+        "has_directional_conflict": false,
+        "long_count": 1,
+        "short_count": 0,
+        "grid_count": 0,
+        "resonance_groups": {
+          "LONG": [
+            "Blueprint_F1"
+          ],
+          "SHORT": [],
+          "GRID_NEUTRAL": []
+        },
+        "approved_groups": {
+          "LONG": [
+            "Blueprint_F1"
+          ],
+          "SHORT": [],
+          "GRID_NEUTRAL": []
+        },
+        "approved_resonance_strength": 1
+      }
     },
     {
       "symbol": "DOGE-USDT",
@@ -2417,14 +2611,14 @@
       "history": [
         {
           "type": "EXECUTION_NOT_REQUESTED",
-          "at": "2026-05-06T18:03:12Z",
+          "at": "2026-05-06T19:57:40Z",
           "payload": {
             "review_note": "rule evaluation rejected or produced no approved candidates"
           }
         },
         {
           "type": "EXECUTION_SKIPPED",
-          "at": "2026-05-06T18:03:16Z",
+          "at": "2026-05-06T19:57:44Z",
           "payload": {
             "reason": "do_nothing",
             "execution_action": "DO_NOTHING"
@@ -2450,14 +2644,14 @@
       "history": [
         {
           "type": "EXECUTION_NOT_REQUESTED",
-          "at": "2026-05-06T18:03:22Z",
+          "at": "2026-05-06T19:57:51Z",
           "payload": {
             "review_note": "rule evaluation rejected or produced no approved candidates"
           }
         },
         {
           "type": "EXECUTION_SKIPPED",
-          "at": "2026-05-06T18:03:26Z",
+          "at": "2026-05-06T19:57:55Z",
           "payload": {
             "reason": "do_nothing",
             "execution_action": "DO_NOTHING"
@@ -2483,14 +2677,14 @@
       "history": [
         {
           "type": "EXECUTION_NOT_REQUESTED",
-          "at": "2026-05-06T18:03:32Z",
+          "at": "2026-05-06T19:58:03Z",
           "payload": {
             "review_note": "rule evaluation rejected or produced no approved candidates"
           }
         },
         {
           "type": "EXECUTION_SKIPPED",
-          "at": "2026-05-06T18:03:36Z",
+          "at": "2026-05-06T19:58:07Z",
           "payload": {
             "reason": "do_nothing",
             "execution_action": "DO_NOTHING"
@@ -2502,35 +2696,51 @@
     {
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-05-06_1600",
-      "strategy_family": null,
-      "execution_action": "DO_NOTHING",
-      "order_status": "SKIPPED",
-      "requested_size_usd": 0.0,
-      "requested_leverage": 1.0,
+      "strategy_family": "DIRECTIONAL",
+      "execution_action": "OPEN_LONG",
+      "order_status": "SUBMITTED",
+      "requested_size_usd": 371.28,
+      "requested_leverage": 3.0,
+      "entry_type": "MARKET",
+      "proposed_entry_price": 650.1,
+      "proposed_sl_price": 616.9143,
+      "proposed_tp_price": 716.4714,
+      "requested_protection": {
+        "stop_loss": 616.9143,
+        "take_profit": 716.4714
+      },
+      "grid_config": null,
       "avg_fill_price": null,
       "filled_size": 0.0,
-      "exchange_order_id": null,
-      "executed_at": null,
-      "sync_status": "SKIPPED",
+      "exchange_order_id": "3543183854844256256",
+      "exchange_algo_id": null,
+      "executed_at": "2026-05-06T19:58:27Z",
+      "sync_status": "SUBMITTED",
       "failure_reason": null,
+      "protection_status": "PENDING_SYNC",
       "history": [
         {
-          "type": "EXECUTION_NOT_REQUESTED",
-          "at": "2026-05-06T18:03:42Z",
+          "type": "EXECUTION_REQUEST_CREATED",
+          "at": "2026-05-06T19:58:17Z",
           "payload": {
-            "review_note": "rule evaluation rejected or produced no approved candidates"
+            "execution_action": "OPEN_LONG",
+            "requested_size_usd": 371.28,
+            "requested_leverage": 3.0,
+            "requested_protection": {
+              "stop_loss": 616.9143,
+              "take_profit": 716.4714
+            }
           }
         },
         {
-          "type": "EXECUTION_SKIPPED",
-          "at": "2026-05-06T18:03:45Z",
+          "type": "EXECUTION_SUBMITTED",
+          "at": "2026-05-06T19:58:27Z",
           "payload": {
-            "reason": "do_nothing",
-            "execution_action": "DO_NOTHING"
+            "exchange_order_id": "3543183854844256256",
+            "execution_action": "OPEN_LONG"
           }
         }
-      ],
-      "protection_status": "SKIPPED"
+      ]
     },
     {
       "symbol": "DOGE-USDT",
@@ -2549,14 +2759,14 @@
       "history": [
         {
           "type": "EXECUTION_NOT_REQUESTED",
-          "at": "2026-05-06T18:03:51Z",
+          "at": "2026-05-06T19:58:34Z",
           "payload": {
             "review_note": "rule evaluation rejected or produced no approved candidates"
           }
         },
         {
           "type": "EXECUTION_SKIPPED",
-          "at": "2026-05-06T18:03:55Z",
+          "at": "2026-05-06T19:58:38Z",
           "payload": {
             "reason": "do_nothing",
             "execution_action": "DO_NOTHING"
