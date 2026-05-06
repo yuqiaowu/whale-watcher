@@ -35,6 +35,50 @@ class FakeExecutor:
 
 
 class DeterministicPipelineE2ETests(unittest.TestCase):
+    def test_yen_stress_flag_uses_macro_tag_not_usdjpy_trend_alone(self):
+        macro_snapshot = {
+            "macro_mode": "MIXED",
+            "macro_horizon": "NOISE",
+            "macro_permission": "ALLOW_BOTH",
+            "macro_bias_tier": "NO_CLEAR_EDGE",
+            "macro_impact_score": 0,
+            "macro_event_window": False,
+            "key_events": [],
+            "key_tags": [],
+            "usdjpy_trend": "DOWN",
+            "dxy_trend": "DOWN",
+            "event_facts": {},
+        }
+        whale_analysis = {
+            "btc": {
+                "market": {
+                    "price": 50000,
+                    "funding_rate": 0.0,
+                    "funding_zscore": 0.0,
+                },
+                "stats_24h": {},
+            }
+        }
+        qlib_coin = {
+            "rank": 3,
+            "qlib_percentile": 0.5,
+            "p_up_8h": 0.3,
+            "p_down_8h": 0.3,
+            "p_flat_8h": 0.4,
+            "market_data": {"close": 50000, "atr_14": 500},
+        }
+
+        snapshot = dp._build_decision_snapshot(
+            "BTC",
+            whale_analysis,
+            qlib_coin,
+            {"positions": []},
+            "cycle_test",
+            macro_snapshot=macro_snapshot,
+        )
+
+        self.assertFalse(snapshot["decision_ready_features"]["yen_stress_flag"])
+
     def test_chart_feature_context_backfills_adx_delta_when_csv_lacks_adx(self):
         rows = []
         base_time = pd.Timestamp("2026-01-01 00:00:00")

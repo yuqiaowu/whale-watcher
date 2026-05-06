@@ -164,9 +164,34 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertIn("RATE_EXPECTATION_EASING", result["key_tags"])
         self.assertIn("VOL_PRESSURE_EASING", result["key_tags"])
         self.assertIn("LIQUIDITY_CONTRACTING", result["key_tags"])
-        self.assertEqual(result["macro_impact_score"], -5)
+        self.assertNotIn("YEN_STRESS", result["key_tags"])
+        self.assertEqual(result["macro_impact_score"], -3)
         self.assertEqual(result["macro_bias_tier"], "MILD_RISK_OFF")
         self.assertEqual(result["macro_permission"], "ALLOW_BOTH")
+
+    def test_yen_strength_requires_risk_context_before_stress_tag(self):
+        whale_analysis = {
+            "fear_greed": {"value": 46, "value_classification": "Fear"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": -3.3, "trend": "restrictive"},
+                "japan_macro": {"price": 156.474, "change_5d_pct": -1.93},
+                "liquidity_monitor": {
+                    "dxy": {"price": 97.97, "change_5d_pct": -0.24},
+                    "vix": {"price": 17.22, "change_5d_pct": 1.95},
+                    "us10y": {"price": 4.35, "change_5d_pct": -0.82},
+                },
+                "global_stable_flow": 302_452_325,
+                "global_stable_market_cap": 268_621_121_668,
+            },
+            "news": {"macro": {"items": []}, "calendar": {"items": []}, "general": {"items": []}},
+        }
+
+        result = build_macro_news_snapshot(whale_analysis)
+
+        self.assertIn("RATE_EXPECTATION_EASING", result["key_tags"])
+        self.assertIn("VOL_PRESSURE_RISING", result["key_tags"])
+        self.assertIn("LIQUIDITY_EXPANDING", result["key_tags"])
+        self.assertNotIn("YEN_STRESS", result["key_tags"])
 
     def test_geopolitical_relief_adds_positive_margin_tag(self):
         whale_analysis = {
@@ -371,7 +396,7 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertEqual(result["macro_decision_source"], "llm_adjudicated")
         self.assertEqual(result["final_macro_decision"]["selected_view"], "llm")
         self.assertEqual(result["final_macro_decision"]["llm_view"]["market_impact"], "MIXED")
-        self.assertEqual(result["final_macro_decision"]["deterministic_view"]["market_impact"], "RISK_OFF")
+        self.assertEqual(result["final_macro_decision"]["deterministic_view"]["market_impact"], "MIXED")
 
     def test_llm_adjudication_invalid_result_falls_back_to_deterministic(self):
         whale_analysis = {

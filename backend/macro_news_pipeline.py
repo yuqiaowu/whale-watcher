@@ -236,7 +236,7 @@ def _policy_stance(macro_data: Dict[str, Any]) -> str:
             _safe_float(fed.get("change_30d_std_bps")),
             _safe_float(fed.get("vol_30d_bps")),
             _safe_float(fed.get("change_std_bps")),
-        ], default=4.0),
+        ], default=2.5),
         floor=2.5,
     )
     if _contains_unnegated(text, ["restrictive", "hawkish", "hawk"]) or "高位" in text or change_bps >= move_threshold:
@@ -268,7 +268,7 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
             _nested_float(macro_data, "fed_futures", "change_30d_std_bps"),
             _nested_float(macro_data, "fed_futures", "vol_30d_bps"),
             _nested_float(macro_data, "fed_futures", "change_std_bps"),
-        ], default=4.0),
+        ], default=2.5),
         floor=2.5,
     )
     vix_relief_threshold = _scaled_threshold(
@@ -295,9 +295,25 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
     elif facts["dxy_change_5d_pct"] <= -dxy_threshold:
         tags.append("USD_WEAKNESS")
 
-    if facts["usdjpy_change_5d_pct"] <= -yen_threshold:
+    vix_level = _safe_float(facts.get("vix_level"))
+    vix_change_5d_pct = _safe_float(facts.get("vix_change_5d_pct"))
+    us10y_change_5d_pct = _safe_float(facts.get("us10y_change_5d_pct"))
+    yen_risk_context = (
+        facts["fear_greed_index"] <= 35
+        or vix_level >= 24
+        or vix_change_5d_pct >= vix_relief_threshold
+        or facts["dxy_change_5d_pct"] >= dxy_threshold
+        or us10y_change_5d_pct >= 0.5
+    )
+    yen_relief_context = (
+        fed_change_5d_bps <= -fed_move_threshold
+        or facts["dxy_change_5d_pct"] <= -dxy_threshold
+        or us10y_change_5d_pct <= -0.5
+        or (vix_level > 0 and vix_level < 18 and vix_change_5d_pct <= -vix_relief_threshold)
+    )
+    if facts["usdjpy_change_5d_pct"] <= -yen_threshold and yen_risk_context and not yen_relief_context:
         tags.append("YEN_STRESS")
-    elif facts["usdjpy_change_5d_pct"] >= yen_threshold:
+    elif facts["usdjpy_change_5d_pct"] >= yen_threshold and not yen_risk_context:
         tags.append("YEN_RELIEF")
 
     fear_greed_change_5d = facts.get("fear_greed_change_5d")
@@ -307,8 +323,6 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
         elif fear_greed_change_5d >= 10:
             tags.append("SENTIMENT_RELIEF")
 
-    vix_level = _safe_float(facts.get("vix_level"))
-    vix_change_5d_pct = _safe_float(facts.get("vix_change_5d_pct"))
     if facts["fear_greed_index"] <= 35 or vix_level >= 24 or vix_change_5d_pct >= 8:
         tags.append("RISK_OFF_NEWS")
     elif facts["fear_greed_index"] >= 65 and vix_level > 0 and vix_level < 18:

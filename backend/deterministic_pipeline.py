@@ -810,7 +810,7 @@ def _build_decision_snapshot(
         ),
         "event_risk_active": bool(macro_snapshot["macro_event_window"]),
         "usd_strength_flag": "USD_STRENGTH" in (macro_snapshot.get("key_events") or []) or macro_snapshot.get("dxy_trend") == "UP",
-        "yen_stress_flag": "YEN_STRESS" in (macro_snapshot.get("key_events") or []) or macro_snapshot.get("usdjpy_trend") == "DOWN",
+        "yen_stress_flag": "YEN_STRESS" in (macro_snapshot.get("key_events") or []),
         "flow_data_available": flow_data_available,
         "flow_schema_version": flow_semantics["schema_version"],
         "flow_token_semantic": flow_semantics["token_semantic"],
