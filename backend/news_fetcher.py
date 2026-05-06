@@ -12,6 +12,7 @@ from xml.etree import ElementTree
 import yfinance as yf
 
 HTTP_TIMEOUT = (5.0, 10.0)
+LIQUIDITY_CHANGE_LOOKBACK_SESSIONS = 5
 
 def _resolve_proxy() -> Optional[str]:
     proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY")
@@ -37,6 +38,34 @@ def _build_session() -> requests.Session:
         }
     )
     return session
+
+
+def _liquidity_change_from_history(
+    hist: pd.DataFrame,
+    *,
+    lookback_sessions: int = LIQUIDITY_CHANGE_LOOKBACK_SESSIONS,
+) -> Optional[Dict[str, Any]]:
+    if hist is None or hist.empty or "Close" not in hist:
+        return None
+    closes = hist["Close"].dropna()
+    if closes.empty:
+        return None
+    latest = closes.iloc[-1]
+    ref_idx = -(lookback_sessions + 1) if len(closes) > lookback_sessions else 0
+    reference = closes.iloc[ref_idx]
+    if reference == 0:
+        return None
+    change_pct = ((latest - reference) / reference) * 100
+    latest_date = closes.index[-1]
+    reference_date = closes.index[ref_idx]
+    return {
+        "latest": float(latest),
+        "reference": float(reference),
+        "change_pct": float(change_pct),
+        "lookback_sessions": int(min(lookback_sessions, len(closes) - 1)),
+        "latest_date": latest_date.isoformat() if hasattr(latest_date, "isoformat") else str(latest_date),
+        "reference_date": reference_date.isoformat() if hasattr(reference_date, "isoformat") else str(reference_date),
+    }
 
 
 def _fetch_json(
@@ -481,19 +510,26 @@ def fetch_liquidity_monitor() -> Dict[str, Any]:
             try:
                 symbol = info["symbol"]
                 ticker = yf.Ticker(symbol)
-                hist = ticker.history(period="5d")
+                hist = ticker.history(period="10d")
                 
                 if hist.empty:
                     result[key] = None
                     continue
                 
-                latest = hist["Close"].iloc[-1]
-                prev = hist["Close"].iloc[0]
-                change_pct = ((latest - prev) / prev) * 100
+                change = _liquidity_change_from_history(hist)
+                if not change:
+                    result[key] = None
+                    continue
+                latest = change["latest"]
+                change_pct = change["change_pct"]
                 
                 item = {
                     "price": round(latest, 2),
                     "change_5d_pct": round(change_pct, 2),
+                    "change_reference_price": round(change["reference"], 2),
+                    "change_reference_date": change["reference_date"],
+                    "change_latest_date": change["latest_date"],
+                    "change_lookback_sessions": change["lookback_sessions"],
                     "trend": "Neutral"
                 }
                 
