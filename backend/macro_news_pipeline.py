@@ -259,11 +259,32 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
         ], default=0.6),
         floor=0.45,
     )
+    fed_move_threshold = _scaled_threshold(
+        baseline=_first_positive_float([
+            _nested_float(macro_data, "fed_futures", "change_30d_std_bps"),
+            _nested_float(macro_data, "fed_futures", "vol_30d_bps"),
+            _nested_float(macro_data, "fed_futures", "change_std_bps"),
+        ], default=4.0),
+        floor=2.5,
+    )
+    vix_relief_threshold = _scaled_threshold(
+        baseline=_first_positive_float([
+            _nested_float(macro_data, "liquidity_monitor", "vix", "change_30d_std_pct"),
+            _nested_float(macro_data, "liquidity_monitor", "vix", "vol_30d_pct"),
+        ], default=0.75),
+        floor=0.75,
+    )
     stable_flow_thresholds = _stable_flow_thresholds(macro_data)
     if stance == "HAWKISH":
         tags.append("FED_HAWKISH")
     elif stance == "DOVISH":
         tags.append("FED_DOVISH")
+
+    fed_change_5d_bps = facts.get("fed_change_5d_bps")
+    if fed_change_5d_bps <= -fed_move_threshold:
+        tags.append("RATE_EXPECTATION_EASING")
+    elif fed_change_5d_bps >= fed_move_threshold:
+        tags.append("RATE_EXPECTATION_TIGHTENING")
 
     if facts["dxy_change_5d_pct"] >= dxy_threshold:
         tags.append("USD_STRENGTH")
@@ -288,6 +309,10 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
         tags.append("RISK_OFF_NEWS")
     elif facts["fear_greed_index"] >= 65 and vix_level > 0 and vix_level < 18:
         tags.append("RISK_ON_NEWS")
+    if vix_level > 0 and vix_level < 18 and vix_change_5d_pct <= -vix_relief_threshold:
+        tags.append("VOL_PRESSURE_EASING")
+    elif vix_change_5d_pct >= vix_relief_threshold:
+        tags.append("VOL_PRESSURE_RISING")
 
     if facts["global_stable_flow"] >= stable_flow_thresholds["tag"]:
         tags.append("LIQUIDITY_EXPANDING")
@@ -295,6 +320,11 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
         tags.append("LIQUIDITY_CONTRACTING")
 
     joined = " ".join(headlines).lower()
+    if any(token in joined for token in ["ceasefire", "cease-fire", "truce", "de-escalation", "deescalation", "peace talks", "peace deal"]):
+        tags.append("GEOPOLITICAL_RISK_EASING")
+    elif any(token in joined for token in ["war risk", "war risks", "war poses", "escalation", "strike", "missile", "invasion"]):
+        tags.append("GEOPOLITICAL_RISK_RISING")
+
     if "cpi" in joined and any(token in joined for token in ["hot", "sticky", "higher-than-expected", "inflation"]):
         tags.append("CPI_HOT")
     elif "cpi" in joined and any(token in joined for token in ["cool", "below expectations", "softer"]):
@@ -316,6 +346,12 @@ MACRO_TAG_WEIGHTS = {
     "RISK_ON_NEWS": 3,
     "SENTIMENT_COOLING": -3,
     "SENTIMENT_RELIEF": 3,
+    "RATE_EXPECTATION_TIGHTENING": -2,
+    "RATE_EXPECTATION_EASING": 2,
+    "VOL_PRESSURE_RISING": -2,
+    "VOL_PRESSURE_EASING": 2,
+    "GEOPOLITICAL_RISK_RISING": -2,
+    "GEOPOLITICAL_RISK_EASING": 2,
     "LIQUIDITY_CONTRACTING": -4,
     "LIQUIDITY_EXPANDING": 4,
     "CPI_HOT": -4,
@@ -447,6 +483,10 @@ def _brief_rationale(tags: List[str], facts: Dict[str, Any], market_impact: str,
         parts.append("Fed pricing remains restrictive")
     if "FED_DOVISH" in tags:
         parts.append("Fed pricing is easing")
+    if "RATE_EXPECTATION_EASING" in tags:
+        parts.append(f"rate expectations eased ({facts['fed_change_5d_bps']:+.1f} bps/5d)")
+    if "RATE_EXPECTATION_TIGHTENING" in tags:
+        parts.append(f"rate expectations tightened ({facts['fed_change_5d_bps']:+.1f} bps/5d)")
     if "USD_STRENGTH" in tags:
         parts.append(f"DXY is stronger ({facts['dxy_change_5d_pct']:+.2f}%/5d)")
     if "USD_WEAKNESS" in tags:
@@ -457,10 +497,18 @@ def _brief_rationale(tags: List[str], facts: Dict[str, Any], market_impact: str,
         parts.append(f"fear/vix imply risk-off ({facts['fear_greed_index']:.0f}, VIX {vix_text})")
     if "RISK_ON_NEWS" in tags:
         parts.append(f"sentiment supports risk-on ({facts['fear_greed_index']:.0f}, VIX {vix_text})")
+    if "VOL_PRESSURE_EASING" in tags:
+        parts.append(f"volatility pressure eased (VIX {vix_text}, {facts['vix_change_5d_pct']:+.2f}%/5d)")
+    if "VOL_PRESSURE_RISING" in tags:
+        parts.append(f"volatility pressure rose (VIX {vix_text}, {facts['vix_change_5d_pct']:+.2f}%/5d)")
     if "SENTIMENT_COOLING" in tags:
         parts.append(f"fear/greed cooled ({facts['fear_greed_change_5d']:+.1f}/5d)")
     if "SENTIMENT_RELIEF" in tags:
         parts.append(f"fear/greed recovered ({facts['fear_greed_change_5d']:+.1f}/5d)")
+    if "GEOPOLITICAL_RISK_EASING" in tags:
+        parts.append("geopolitical risk is easing")
+    if "GEOPOLITICAL_RISK_RISING" in tags:
+        parts.append("geopolitical risk is rising")
     if "LIQUIDITY_EXPANDING" in tags or "LIQUIDITY_CONTRACTING" in tags:
         parts.append(f"stablecoin flow is ${facts['global_stable_flow']:,.0f}")
     if not parts:

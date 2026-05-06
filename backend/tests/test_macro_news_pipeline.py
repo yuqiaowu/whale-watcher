@@ -24,7 +24,7 @@ class MacroNewsPipelineTests(unittest.TestCase):
         whale_analysis = {
             "fear_greed": {"value": 29, "value_classification": "Fear"},
             "macro": {
-                "fed_futures": {"change_5d_bps": 4, "trend": "restrictive"},
+                "fed_futures": {"change_5d_bps": 0, "trend": "restrictive"},
                 "japan_macro": {"price": 142.1, "change_5d_pct": -1.2},
                 "liquidity_monitor": {
                     "dxy": {"price": 105.2, "change_5d_pct": 0.8},
@@ -121,7 +121,7 @@ class MacroNewsPipelineTests(unittest.TestCase):
         whale_analysis = {
             "fear_greed": {"value": 50, "value_classification": "Neutral"},
             "macro": {
-                "fed_futures": {"change_5d_bps": 4, "trend": "restrictive"},
+                "fed_futures": {"change_5d_bps": 0, "trend": "restrictive"},
                 "japan_macro": {"price": 145.0, "change_5d_pct": 0.0},
                 "liquidity_monitor": {
                     "dxy": {"price": 104.0, "change_5d_pct": 0.0},
@@ -140,6 +140,55 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertEqual(result["macro_mode"], "MIXED")
         self.assertEqual(result["macro_permission"], "ALLOW_BOTH")
         self.assertEqual(result["risk_off_score"], 0.65)
+
+    def test_rate_and_vol_relief_offset_but_do_not_flip_risk_off(self):
+        whale_analysis = {
+            "fear_greed": {"value": 46, "value_classification": "Fear"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": -5.3, "trend": "restrictive"},
+                "japan_macro": {"price": 155.9, "change_5d_pct": -2.25},
+                "liquidity_monitor": {
+                    "dxy": {"price": 97.8, "change_5d_pct": -0.42},
+                    "vix": {"price": 16.74, "change_5d_pct": -0.89},
+                    "us10y": {"price": 4.42, "change_5d_pct": -0.05},
+                },
+                "global_stable_flow": -544_910_719,
+                "global_stable_market_cap": 267_761_692_719,
+            },
+            "news": {"macro": {"items": []}, "calendar": {"items": []}, "general": {"items": []}},
+        }
+
+        result = build_macro_news_snapshot(whale_analysis)
+
+        self.assertIn("FED_HAWKISH", result["key_tags"])
+        self.assertIn("RATE_EXPECTATION_EASING", result["key_tags"])
+        self.assertIn("VOL_PRESSURE_EASING", result["key_tags"])
+        self.assertIn("LIQUIDITY_CONTRACTING", result["key_tags"])
+        self.assertEqual(result["macro_impact_score"], -5)
+        self.assertEqual(result["macro_bias_tier"], "MILD_RISK_OFF")
+        self.assertEqual(result["macro_permission"], "ALLOW_BOTH")
+
+    def test_geopolitical_relief_adds_positive_margin_tag(self):
+        whale_analysis = {
+            "fear_greed": {"value": 50, "value_classification": "Neutral"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": 0, "trend": "flat"},
+                "japan_macro": {"price": 145.0, "change_5d_pct": 0.0},
+                "liquidity_monitor": {
+                    "dxy": {"price": 104.0, "change_5d_pct": 0.0},
+                    "vix": {"price": 17.0, "change_5d_pct": 0.0},
+                    "us10y": {"price": 4.2, "change_5d_pct": 0.0},
+                },
+                "global_stable_flow": 0,
+            },
+            "news": {"macro": {"items": [{"title": "Ceasefire talks signal de-escalation in the region"}]}},
+        }
+
+        result = build_macro_news_snapshot(whale_analysis)
+
+        self.assertIn("GEOPOLITICAL_RISK_EASING", result["key_tags"])
+        self.assertEqual(result["macro_bias_tier"], "NO_CLEAR_EDGE")
+        self.assertEqual(result["macro_permission"], "ALLOW_BOTH")
 
     def test_fear_greed_cooling_from_greed_registers_mild_risk_off(self):
         whale_analysis = {
