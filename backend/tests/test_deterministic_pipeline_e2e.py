@@ -391,6 +391,36 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(24.5, features["vix_level"])
         self.assertEqual(9.2, features["vix_change_5d_pct"])
 
+    def test_derivatives_fields_are_mirrored_for_downstream_context(self):
+        whale_analysis = {
+            "fear_greed": {"value": 50, "value_classification": "Neutral"},
+            "macro": {},
+            "news": {},
+            "sol": {
+                "market": {
+                    "price": 88,
+                    "funding_rate": 0.0001,
+                    "funding_zscore": 1.34,
+                    "delta_oi_24h_percent": 6.45,
+                    "oi_now": 256_500_000,
+                }
+            },
+        }
+        snapshot = dp._build_decision_snapshot(
+            "SOL",
+            whale_analysis,
+            {"rank": 1, "p_up_8h": 0.2, "p_down_8h": 0.3, "p_flat_8h": 0.5, "market_data": {"close": 88}},
+            {"positions": [], "total_equity": 10000},
+            "cycle_test",
+        )
+
+        self.assertEqual(1.34, snapshot["market_snapshot"]["funding_zscore"])
+        self.assertEqual(6.45, snapshot["market_snapshot"]["delta_oi_24h_percent"])
+        self.assertEqual(1.34, snapshot["onchain_snapshot"]["funding_zscore"])
+        self.assertEqual(6.45, snapshot["onchain_snapshot"]["delta_oi_24h_percent"])
+        self.assertEqual(1.34, snapshot["decision_ready_features"]["funding_zscore"])
+        self.assertEqual(6.45, snapshot["decision_ready_features"]["delta_oi_24h_percent"])
+
     def test_conflicted_research_waits_for_confirmation(self):
         store = {
             "whale_analysis": {
