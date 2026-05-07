@@ -246,8 +246,9 @@ def gather_news(session: requests.Session = None) -> Dict[str, Any]:
     # 关键词：加密货币，比特币，以太坊，监管，美联储，加息，降息，关税，CPI, PCE
     # 使用单词边界 \b 防止匹配到 unrelated words (e.g. "sec" in "secondary")
     MACRO_KEYWORDS = [
-        r"\bcrypto", r"\bbitcoin", r"\bbtc\b", r"\bethereum", r"\beth\b", r"\bdoge", 
-        r"\bregulation", r"\bsec\b", r"\bgensler",
+        r"\bcrypto", r"\bbitcoin", r"\bbtc\b", r"\bethereum", r"\beth\b", r"\bsolana", r"\bsol\b", r"\bbnb\b", r"\bdoge",
+        r"\bregulation", r"\bsec\b", r"\bgensler", r"\betf\b",
+        r"\bexchange", r"\bliquidation", r"\bleverage", r"\bhack", r"\bexploit",
         r"\bfed\b", r"\bfederal reserve", r"\bpowell", r"\bfomc", 
         r"\brate", r"\binterest", r"\bhike", r"\bcut",
         r"\binflation", r"\bcpi\b", r"\bpce\b", r"\bppi\b", 
@@ -260,7 +261,7 @@ def gather_news(session: requests.Session = None) -> Dict[str, Any]:
     keyword_pattern = re.compile("|".join(MACRO_KEYWORDS), re.IGNORECASE)
 
     news: Dict[str, Any] = {}
-    crypto_compare_cache = _fetch_cryptocompare_news(session, categories="BTC,ETH", lang="EN", limit=30)
+    crypto_compare_cache = _fetch_cryptocompare_news(session, categories="BTC,ETH,SOL,BNB,DOGE", lang="EN", limit=50)
     
     for topic, urls in feeds.items():
         topic_items: List[Dict[str, Any]] = []

@@ -9,6 +9,7 @@ if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
 from macro_news_pipeline import (
+    _event_headlines,
     _impact_horizon,
     _macro_bias_tier,
     _market_impact,
@@ -216,6 +217,39 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertEqual(result["macro_bias_tier"], "NO_CLEAR_EDGE")
         self.assertEqual(result["macro_permission"], "ALLOW_BOTH")
 
+    def test_event_headlines_rank_crypto_and_macro_events_across_buckets(self):
+        news_obj = {
+            "macro": {
+                "items": [
+                    {"title": f"Routine lifestyle headline {idx}", "summary": "low relevance"}
+                    for idx in range(8)
+                ]
+            },
+            "bitcoin": {
+                "items": [
+                    {
+                        "title": "Bitcoin drops as ETF outflows and liquidations hit crypto markets",
+                        "summary": "BTC leverage unwinds across major exchanges",
+                        "sentiment": "Bearish",
+                    }
+                ]
+            },
+            "general": {
+                "items": [
+                    {
+                        "title": "Stablecoin regulation bill advances after exchange probe",
+                        "summary": "Crypto market structure remains in focus",
+                        "sentiment": "Bearish",
+                    }
+                ]
+            },
+        }
+
+        headlines = _event_headlines(news_obj, limit=3)
+
+        self.assertIn("Bitcoin drops as ETF outflows and liquidations hit crypto markets", headlines)
+        self.assertIn("Stablecoin regulation bill advances after exchange probe", headlines)
+
     def test_fear_greed_cooling_from_greed_registers_mild_risk_off(self):
         whale_analysis = {
             "fear_greed": {"value": 58, "value_classification": "Neutral"},
@@ -286,6 +320,44 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertIsNone(result["event_facts"]["fear_greed_change_5d"])
         self.assertNotIn("SENTIMENT_COOLING", result["key_tags"])
         self.assertNotIn("SENTIMENT_RELIEF", result["key_tags"])
+
+    def test_macro_snapshot_records_news_selection_for_auditability(self):
+        whale_analysis = {
+            "fear_greed": {"value": 52, "value_classification": "Neutral"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": 0, "trend": "flat"},
+                "japan_macro": {"price": 145.0, "change_5d_pct": 0.0},
+                "liquidity_monitor": {
+                    "dxy": {"price": 104.0, "change_5d_pct": 0.0},
+                    "vix": {"price": 17.0, "change_5d_pct": 0.0},
+                    "us10y": {"price": 4.2, "change_5d_pct": 0.0},
+                },
+                "global_stable_flow": 0,
+            },
+            "news": {
+                "macro": {
+                    "items": [
+                        {"title": f"Routine market commentary item {idx}", "summary": "low relevance"}
+                        for idx in range(14)
+                    ]
+                },
+                "general": {
+                    "items": [
+                        {
+                            "title": "Major crypto exchange probe triggers liquidation risk",
+                            "summary": "Crypto leverage and exchange risk rise",
+                            "sentiment": "Bearish",
+                        }
+                    ]
+                },
+            },
+        }
+
+        result = build_macro_news_snapshot(whale_analysis)
+
+        self.assertIn("news_selection", result)
+        self.assertGreater(result["news_selection"]["candidate_count"], len(result["news_selection"]["selected"]))
+        self.assertIn("Major crypto exchange probe triggers liquidation risk", result["news_headlines"])
 
     def test_foreign_inflation_forecast_does_not_force_multi_day(self):
         facts = {

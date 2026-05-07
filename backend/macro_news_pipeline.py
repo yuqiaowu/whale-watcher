@@ -8,6 +8,7 @@ from llm_client import call_llm_json_with_audit
 ALLOWED_MARKET_IMPACTS = {"RISK_ON", "RISK_OFF", "MIXED", "NO_CLEAR_IMPACT"}
 ALLOWED_IMPACT_HORIZONS = {"INTRADAY", "SWING", "MULTI_DAY", "NOISE"}
 ALLOWED_CRYPTO_RELEVANCE = {"HIGH", "MEDIUM", "LOW"}
+EVENT_NEWS_BUCKETS = ["macro", "calendar", "general", "bitcoin", "ethereum", "solana", "bnb", "doge"]
 
 
 def _safe_float(value: Any, default: float = 0.0) -> float:
@@ -33,25 +34,94 @@ def _optional_float(value: Any) -> Optional[float]:
         return None
 
 
-def _event_headlines(news_obj: Dict[str, Any], limit: int = 5) -> List[str]:
-    headlines: List[str] = []
-    for bucket_name in ["macro", "calendar", "general"]:
+def _news_text(item: Dict[str, Any]) -> str:
+    return f"{item.get('title') or ''} {item.get('summary') or ''} {item.get('tags') or ''}".lower()
+
+
+def _word_hit(text: str, pattern: str) -> bool:
+    return bool(re.search(pattern, text, re.IGNORECASE))
+
+
+def _news_relevance_score(bucket_name: str, item: Dict[str, Any]) -> int:
+    text = _news_text(item)
+    score = {
+        "calendar": 7,
+        "macro": 6,
+        "general": 4,
+        "bitcoin": 3,
+        "ethereum": 3,
+        "solana": 3,
+        "bnb": 3,
+        "doge": 3,
+    }.get(bucket_name, 1)
+
+    macro_patterns = [
+        r"\bfed\b|\bfomc\b|\bpowell\b|\bfederal reserve\b",
+        r"\bcpi\b|\bpce\b|\bppi\b|\binflation\b",
+        r"\bpayroll|\bnfp\b|\bjobs report\b|\bunemployment\b",
+        r"\bdxy\b|\bdollar\b|\busd\b|\btreasury|\byield",
+        r"\bliquidity\b|\bcredit\b|\bbank",
+    ]
+    crypto_patterns = [
+        r"\bcrypto|\bbitcoin\b|\bbtc\b|\bethereum\b|\beth\b",
+        r"\bsolana\b|\bsol\b|\bbnb\b|\bdoge\b",
+        r"\bstablecoin\b|\busdt\b|\busdc\b",
+        r"\betf\b|\bsec\b|\bregulation\b|\bexchange\b",
+        r"\bliquidation\b|\bleverage\b|\bhack\b|\bexploit\b",
+    ]
+    risk_event_patterns = [
+        r"\bshock\b|\bcrisis\b|\bsanction\b|\bdefault\b",
+        r"\bplunge\b|\bcrash\b|\bdrop\b|\bselloff\b|\bdump\b",
+        r"\bsurge\b|\brally\b|\bbreakout\b|\brebound\b",
+        r"\bceasefire\b|\bde-escalation\b|\bescalation\b|\bstrike\b",
+        r"\bapproval\b|\breject\b|\blawsuit\b|\bprobe\b",
+    ]
+
+    score += 4 * sum(1 for pattern in macro_patterns if _word_hit(text, pattern))
+    score += 5 * sum(1 for pattern in crypto_patterns if _word_hit(text, pattern))
+    score += 3 * sum(1 for pattern in risk_event_patterns if _word_hit(text, pattern))
+
+    sentiment = str(item.get("sentiment") or "").upper()
+    if sentiment in {"BULLISH", "BEARISH"}:
+        score += 1
+    if item.get("source"):
+        score += 1
+    return score
+
+
+def _rank_event_news(news_obj: Dict[str, Any], limit: int = 12, scan_per_bucket: int = 15) -> Dict[str, Any]:
+    ranked: List[Dict[str, Any]] = []
+    seen = set()
+    for bucket_name in EVENT_NEWS_BUCKETS:
         bucket = news_obj.get(bucket_name, {})
         if not isinstance(bucket, dict):
             continue
-        for item in bucket.get("items", [])[:limit]:
+        for item in bucket.get("items", [])[:scan_per_bucket]:
             title = str(item.get("title") or "").strip()
-            if title:
-                headlines.append(title)
-    deduped: List[str] = []
-    seen = set()
-    for headline in headlines:
-        normalized = headline.lower()
-        if normalized in seen:
-            continue
-        seen.add(normalized)
-        deduped.append(headline)
-    return deduped[:limit]
+            if not title:
+                continue
+            normalized = title.lower()
+            if normalized in seen:
+                continue
+            seen.add(normalized)
+            ranked.append({
+                "title": title,
+                "bucket": bucket_name,
+                "score": _news_relevance_score(bucket_name, item),
+                "published": item.get("published"),
+                "source": item.get("source") or item.get("link"),
+                "sentiment": item.get("sentiment"),
+            })
+    ranked.sort(key=lambda event: (event["score"], str(event.get("published") or "")), reverse=True)
+    return {
+        "selected": ranked[:limit],
+        "dropped": ranked[limit:limit + 20],
+        "candidate_count": len(ranked),
+    }
+
+
+def _event_headlines(news_obj: Dict[str, Any], limit: int = 12) -> List[str]:
+    return [event["title"] for event in _rank_event_news(news_obj, limit=limit)["selected"]]
 
 
 def _nested_float(obj: Dict[str, Any], *path: str, default: float = 0.0) -> float:
@@ -544,7 +614,8 @@ def _brief_rationale(tags: List[str], facts: Dict[str, Any], market_impact: str,
 
 def _deterministic_classification(fear_greed: Dict[str, Any], macro_data: Dict[str, Any], news_obj: Dict[str, Any]) -> Dict[str, Any]:
     facts = _base_event_facts(fear_greed, macro_data)
-    headlines = _event_headlines(news_obj)
+    news_selection = _rank_event_news(news_obj)
+    headlines = [event["title"] for event in news_selection["selected"]]
     tags = _key_tags(facts, macro_data, headlines)
     market_impact = _market_impact(tags)
     impact_horizon = _impact_horizon(facts, tags, headlines)
@@ -580,6 +651,7 @@ def _deterministic_classification(fear_greed: Dict[str, Any], macro_data: Dict[s
         "classification_basis": facts,
         "key_events": tags,
         "event_facts": facts,
+        "news_selection": news_selection,
     }
 
 
@@ -881,7 +953,7 @@ def build_macro_news_snapshot(whale_analysis: Dict[str, Any]) -> Dict[str, Any]:
     news_obj = whale_analysis.get("news", {}) if isinstance(whale_analysis.get("news"), dict) else {}
 
     deterministic_classification = _deterministic_classification(fear_greed, macro_data, news_obj)
-    headlines = _event_headlines(news_obj)
+    headlines = [event["title"] for event in (deterministic_classification.get("news_selection") or {}).get("selected", [])]
     classification = _llm_summary_override(deterministic_classification, headlines)
     classification = _llm_final_macro_adjudication(classification, deterministic_classification, headlines)
     facts = classification.get("event_facts", {})
@@ -912,4 +984,5 @@ def build_macro_news_snapshot(whale_analysis: Dict[str, Any]) -> Dict[str, Any]:
     classification["macro_event_window"] = event_window
     classification["risk_off_score"] = round(macro_policy["risk_off_score"], 2)
     classification["news_headlines"] = headlines
+    classification["news_selection"] = deterministic_classification.get("news_selection", classification.get("news_selection"))
     return classification
