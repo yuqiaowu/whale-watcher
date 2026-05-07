@@ -3,9 +3,9 @@
   "cycleId": "cycle_2026-05-07_1200",
   "symbol": "DOGE-USDT",
   "timeframe": "4h",
-  "snapshot_timestamp": 1778156338,
-  "snapshot_time": "2026-05-07T12:18:58Z",
-  "snapshot_time_local": "2026-05-07T20:18:58+0800",
+  "snapshot_timestamp": 1778163518,
+  "snapshot_time": "2026-05-07T14:18:38Z",
+  "snapshot_time_local": "2026-05-07T22:18:38+0800",
   "local_timezone": "Asia/Shanghai",
   "positionState": "candidate",
   "snapshot": {
@@ -13,17 +13,17 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-07_1200",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778156338,
-    "snapshot_time": "2026-05-07T12:18:58Z",
-    "snapshot_time_local": "2026-05-07T20:18:58+0800",
+    "snapshot_timestamp": 1778163518,
+    "snapshot_time": "2026-05-07T14:18:38Z",
+    "snapshot_time_local": "2026-05-07T22:18:38+0800",
     "local_timezone": "Asia/Shanghai",
     "market_snapshot": {
-      "price": 0.11123,
-      "change_24h": -1.0585305105853144,
+      "price": 0.10921,
+      "change_24h": -2.855363814267928,
       "rsi_4h": 48.86444711001771,
       "rsi_delta_4h": -2.109731947832536,
       "adx_14": 32.3714170828873,
-      "volume_ratio": 0.9759596971235818,
+      "volume_ratio": 0.8219858156695048,
       "bb_width": 0.0706125784083448,
       "bb_pct_b": 0.3321011134033263,
       "bb_mid_slope_pct": 0.0014680694886224479,
@@ -32,13 +32,13 @@
       "range_edge_close_count": 3,
       "wick_ratio_lower": 34.55,
       "wick_ratio_upper": 13.64,
-      "funding_rate": 5.70885999406e-05,
-      "funding_zscore": 0.56,
-      "oi_now": 124301098.90450007,
+      "funding_rate": 3.75122376608e-05,
+      "funding_zscore": 0.2,
+      "oi_now": 122043720.32150008,
       "delta_oi_24h_percent": 0.6609489869831913,
-      "natr_percent": 1.7307697458588245,
-      "whale_ls_ratio": 1.2474849094567404,
-      "whale_pos_ratio": 0.837010295455154,
+      "natr_percent": 1.98712131518979,
+      "whale_ls_ratio": 1.2254697286012526,
+      "whale_pos_ratio": 0.8402981901284075,
       "atr_14": 0.0020421428571428,
       "trigger_candle_open": 0.11163,
       "trigger_candle_high": 0.11178,
@@ -76,13 +76,13 @@
       "flow_composite_semantic": "UNAVAILABLE",
       "flow_signal_mixed": false,
       "sentiment_score": 0.0,
-      "liquidation_long_usd": 2728098.6442,
-      "liquidation_short_usd": 206979.75979999997,
-      "liquidation_long_to_volume_4h": 0.0401981121516331,
-      "liquidation_short_to_volume_4h": 0.0030498147914289,
-      "funding_rate": 5.70885999406e-05,
-      "funding_zscore": 0.56,
-      "oi_now": 124301098.90450007,
+      "liquidation_long_usd": 2381284.6857999996,
+      "liquidation_short_usd": 208145.26539999997,
+      "liquidation_long_to_volume_4h": 0.0350822630998465,
+      "liquidation_short_to_volume_4h": 0.0030669883364258,
+      "funding_rate": 3.75122376608e-05,
+      "funding_zscore": 0.2,
+      "oi_now": 122043720.32150008,
       "delta_oi_24h_percent": 0.6609489869831913,
       "qlib_relative_score_8h": 0.0047,
       "qlib_rank_8h": 1,
@@ -93,58 +93,58 @@
       "confidence_8h": 0.4881
     },
     "macro_snapshot": {
-      "event_type": "MACRO_REGIME_UPDATE",
+      "event_type": "FED_LEADERSHIP",
       "policy_stance": "HAWKISH",
-      "market_impact": "MIXED",
-      "impact_horizon": "SWING",
-      "crypto_relevance": "MEDIUM",
+      "market_impact": "RISK_OFF",
+      "impact_horizon": "MULTI_DAY",
+      "crypto_relevance": "HIGH",
       "key_tags": [
         "FED_HAWKISH",
-        "GEOPOLITICAL_RISK_RISING"
+        "LIQUIDITY_CONTRACTING"
       ],
-      "brief_rationale": "Deterministic view is hawkish but ignores mixed signals from earnings beats and geopolitical risks. LLM view captures the mixed impact better. Blended conclusion uses FED_HAWKISH from deterministic and GEOPOLITICAL_RISK_RISING from LLM, with MIXED impact and SWING horizon.",
-      "news_summary": "McDonald's and Shell beat earnings estimates amid challenging environment and Iran war; shipping giant warns of bigger impact ahead.",
+      "brief_rationale": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: stablecoin outflow (-$749M), VIX up 2.49% in 5 days, and USDJPY down 2.38% (yen relief but risk-off). Fed hawkish rhetoric and oil price spike reinforce the view. No contradictory evidence strong enough to shift to MIXED or NO_CLEAR_IMPACT.",
+      "news_summary": "Fed hawkish rhetoric persists; oil prices rise on Iran war; ADB invests in SE Asia; Dow edges higher; Kraken acquires stablecoin firm.",
       "classification_basis": {
         "fear_greed_index": 47.0,
         "fear_greed_state": "NEUTRAL",
         "fear_greed_change_5d": null,
-        "fed_implied_rate": 3.63,
-        "fed_change_5d_bps": -1.0,
-        "usdjpy_level": 156.371,
+        "fed_implied_rate": 3.637,
+        "fed_change_5d_bps": -0.3,
+        "usdjpy_level": 156.374,
         "usdjpy_change_5d_pct": -2.38,
-        "dxy_level": 97.91,
-        "dxy_change_5d_pct": -0.17,
-        "vix_level": 17.46,
-        "vix_change_1d_pct": 0.4,
-        "vix_change_5d_pct": 3.37,
-        "us10y_level": 4.36,
-        "us10y_change_5d_pct": -1.4,
-        "global_stable_flow": -197534515.0773468,
-        "global_stable_market_cap": 268608133418.04694,
-        "global_stable_flow_ratio_pct": -0.07354003490650633
+        "dxy_level": 97.9,
+        "dxy_change_5d_pct": -0.18,
+        "vix_level": 17.31,
+        "vix_change_1d_pct": -0.46,
+        "vix_change_5d_pct": 2.49,
+        "us10y_level": 4.34,
+        "us10y_change_5d_pct": -1.18,
+        "global_stable_flow": -749879626.6237793,
+        "global_stable_market_cap": 268077844274.53967,
+        "global_stable_flow_ratio_pct": -0.2797245809899248
       },
       "key_events": [
         "FED_HAWKISH",
-        "GEOPOLITICAL_RISK_RISING"
+        "LIQUIDITY_CONTRACTING"
       ],
       "event_facts": {
         "fear_greed_index": 47.0,
         "fear_greed_state": "NEUTRAL",
         "fear_greed_change_5d": null,
-        "fed_implied_rate": 3.63,
-        "fed_change_5d_bps": -1.0,
-        "usdjpy_level": 156.371,
+        "fed_implied_rate": 3.637,
+        "fed_change_5d_bps": -0.3,
+        "usdjpy_level": 156.374,
         "usdjpy_change_5d_pct": -2.38,
-        "dxy_level": 97.91,
-        "dxy_change_5d_pct": -0.17,
-        "vix_level": 17.46,
-        "vix_change_1d_pct": 0.4,
-        "vix_change_5d_pct": 3.37,
-        "us10y_level": 4.36,
-        "us10y_change_5d_pct": -1.4,
-        "global_stable_flow": -197534515.0773468,
-        "global_stable_market_cap": 268608133418.04694,
-        "global_stable_flow_ratio_pct": -0.07354003490650633
+        "dxy_level": 97.9,
+        "dxy_change_5d_pct": -0.18,
+        "vix_level": 17.31,
+        "vix_change_1d_pct": -0.46,
+        "vix_change_5d_pct": 2.49,
+        "us10y_level": 4.34,
+        "us10y_change_5d_pct": -1.18,
+        "global_stable_flow": -749879626.6237793,
+        "global_stable_market_cap": 268077844274.53967,
+        "global_stable_flow_ratio_pct": -0.2797245809899248
       },
       "provenance": {
         "generation_mode": "llm_refined",
@@ -162,15 +162,16 @@
           "status": "parsed",
           "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
           "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-          "raw_response_preview": "{ \"news_summary\": \"McDonald's and Shell beat earnings estimates amid challenging environment and Iran war; shipping giant warns of bigger impact ahead.\", \"brief_rationale\": \"Earnings beats are positive for individual stocks but the Iran war and shipping warnings introduce geopolitical risk, offsetting sentiment. The macro backdrop remains hawkish with no clear shift.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"MEDIUM\", \"key_tags\": [\"FED_HAWKISH\"] }",
+          "raw_response_preview": "{ \"news_summary\": \"Fed hawkish rhetoric persists; oil prices rise on Iran war; ADB invests in SE Asia; Dow edges higher; Kraken acquires stablecoin firm.\", \"brief_rationale\": \"Fed rate cut skepticism and stablecoin outflow reinforce risk-off; oil price spike adds inflation concern; Kraken acquisition shows crypto M&A activity.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\"] }",
           "parsed_response": {
-            "news_summary": "McDonald's and Shell beat earnings estimates amid challenging environment and Iran war; shipping giant warns of bigger impact ahead.",
-            "brief_rationale": "Earnings beats are positive for individual stocks but the Iran war and shipping warnings introduce geopolitical risk, offsetting sentiment. The macro backdrop remains hawkish with no clear shift.",
-            "market_impact": "MIXED",
-            "impact_horizon": "SWING",
-            "crypto_relevance": "MEDIUM",
+            "news_summary": "Fed hawkish rhetoric persists; oil prices rise on Iran war; ADB invests in SE Asia; Dow edges higher; Kraken acquires stablecoin firm.",
+            "brief_rationale": "Fed rate cut skepticism and stablecoin outflow reinforce risk-off; oil price spike adds inflation concern; Kraken acquisition shows crypto M&A activity.",
+            "market_impact": "RISK_OFF",
+            "impact_horizon": "MULTI_DAY",
+            "crypto_relevance": "HIGH",
             "key_tags": [
-              "FED_HAWKISH"
+              "FED_HAWKISH",
+              "LIQUIDITY_CONTRACTING"
             ]
           },
           "error": null
@@ -179,36 +180,38 @@
       "final_macro_decision": {
         "source": "llm_adjudicated",
         "selected_view": "blended",
-        "market_impact": "MIXED",
-        "impact_horizon": "SWING",
-        "crypto_relevance": "MEDIUM",
+        "market_impact": "RISK_OFF",
+        "impact_horizon": "MULTI_DAY",
+        "crypto_relevance": "HIGH",
         "key_tags": [
           "FED_HAWKISH",
-          "GEOPOLITICAL_RISK_RISING"
+          "LIQUIDITY_CONTRACTING"
         ],
         "confidence": "MEDIUM",
-        "reason": "Deterministic view is hawkish but ignores mixed signals from earnings beats and geopolitical risks. LLM view captures the mixed impact better. Blended conclusion uses FED_HAWKISH from deterministic and GEOPOLITICAL_RISK_RISING from LLM, with MIXED impact and SWING horizon.",
+        "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: stablecoin outflow (-$749M), VIX up 2.49% in 5 days, and USDJPY down 2.38% (yen relief but risk-off). Fed hawkish rhetoric and oil price spike reinforce the view. No contradictory evidence strong enough to shift to MIXED or NO_CLEAR_IMPACT.",
         "deterministic_view": {
-          "event_type": "MACRO_REGIME_UPDATE",
+          "event_type": "FED_LEADERSHIP",
           "policy_stance": "HAWKISH",
           "market_impact": "RISK_OFF",
-          "impact_horizon": "SWING",
+          "impact_horizon": "MULTI_DAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
-            "FED_HAWKISH"
+            "FED_HAWKISH",
+            "LIQUIDITY_CONTRACTING"
           ],
-          "news_summary": "McDonald's earnings top estimates despite 'challenging environment' | Shell tops profit estimates as Iran war boosts oil price, cuts share buybacks | Shipping giant boss warns Iran war will have bigger impact in coming months as customers face price hikes",
-          "brief_rationale": "Fed pricing remains restrictive. Classified as RISK_OFF with SWING horizon."
+          "news_summary": "There's 'no chance' Warsh will be able to get the Fed to cut rates, Paul Tudor Jones says | Shell tops profit estimates as Iran war boosts oil price, cuts share buybacks | Asian Development Bank's $70 billion energy and digital infra push puts Southeast Asia center stage",
+          "brief_rationale": "Fed pricing remains restrictive; stablecoin flow is $-749,879,627. Classified as RISK_OFF with MULTI_DAY horizon."
         },
         "llm_view": {
-          "market_impact": "MIXED",
-          "impact_horizon": "SWING",
-          "crypto_relevance": "MEDIUM",
+          "market_impact": "RISK_OFF",
+          "impact_horizon": "MULTI_DAY",
+          "crypto_relevance": "HIGH",
           "key_tags": [
-            "FED_HAWKISH"
+            "FED_HAWKISH",
+            "LIQUIDITY_CONTRACTING"
           ],
-          "news_summary": "McDonald's and Shell beat earnings estimates amid challenging environment and Iran war; shipping giant warns of bigger impact ahead.",
-          "brief_rationale": "Earnings beats are positive for individual stocks but the Iran war and shipping warnings introduce geopolitical risk, offsetting sentiment. The macro backdrop remains hawkish with no clear shift."
+          "news_summary": "Fed hawkish rhetoric persists; oil prices rise on Iran war; ADB invests in SE Asia; Dow edges higher; Kraken acquires stablecoin firm.",
+          "brief_rationale": "Fed rate cut skepticism and stablecoin outflow reinforce risk-off; oil price spike adds inflation concern; Kraken acquisition shows crypto M&A activity."
         },
         "adjudication_audit": {
           "enabled": true,
@@ -216,48 +219,48 @@
           "model": "deepseek-chat",
           "status": "parsed",
           "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"McDonald's earnings top estimates despite 'challenging environment'\", \"Shell tops profit estimates as Iran war boosts oil price, cuts share buybacks\", \"Shipping giant boss warns Iran war will have bigger impact in coming months as customers face price hikes\", \"Asian Development Bank's $70 billion energy and digital infra push pu...",
-          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"MEDIUM\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_RISING\"], \"confidence\": 0.7, \"reason\": \"Deterministic view is hawkish but ignores mixed signals from earnings beats and geopolitical risks. LLM view captures the mixed impact better. Blended conclusion uses FED_HAWKISH from deterministic and GEOPOLITICAL_RISK_RISING from LLM, with MIXED impact and SWING horizon.\" }",
+          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"There's 'no chance' Warsh will be able to get the Fed to cut rates, Paul Tudor Jones says\", \"Shell tops profit estimates as Iran war boosts oil price, cuts share buybacks\", \"Asian Development Bank's $70 billion energy and digital infra push puts Southeast Asia center stage\", \"Stock Market Today: Dow Edges Higher After Jobless Cl...",
+          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_OFF\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: stablecoin outflow (-$749M), VIX up 2.49% in 5 days, and USDJPY down 2.38% (yen relief but risk-off). Fed hawkish rhetoric and oil price spike reinforce the view. No contradictory evidence strong enough to shift to MIXED or NO_CLEAR_IMPACT.\" }",
           "parsed_response": {
             "selected_view": "blended",
-            "final_market_impact": "MIXED",
-            "final_impact_horizon": "SWING",
-            "final_crypto_relevance": "MEDIUM",
+            "final_market_impact": "RISK_OFF",
+            "final_impact_horizon": "MULTI_DAY",
+            "final_crypto_relevance": "HIGH",
             "final_key_tags": [
               "FED_HAWKISH",
-              "GEOPOLITICAL_RISK_RISING"
+              "LIQUIDITY_CONTRACTING"
             ],
-            "confidence": 0.7,
-            "reason": "Deterministic view is hawkish but ignores mixed signals from earnings beats and geopolitical risks. LLM view captures the mixed impact better. Blended conclusion uses FED_HAWKISH from deterministic and GEOPOLITICAL_RISK_RISING from LLM, with MIXED impact and SWING horizon."
+            "confidence": 0.85,
+            "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: stablecoin outflow (-$749M), VIX up 2.49% in 5 days, and USDJPY down 2.38% (yen relief but risk-off). Fed hawkish rhetoric and oil price spike reinforce the view. No contradictory evidence strong enough to shift to MIXED or NO_CLEAR_IMPACT."
           },
           "error": null
         }
       },
       "macro_decision_source": "llm_adjudicated",
       "macro_mode": "RISK_OFF",
-      "macro_horizon": "SWING",
+      "macro_horizon": "MULTI_DAY",
       "macro_permission": "ALLOW_SHORT",
-      "macro_impact_score": -7,
+      "macro_impact_score": -9,
       "macro_bias_tier": "STRONG_RISK_OFF",
       "fear_greed_index": 47.0,
       "fear_greed_state": "NEUTRAL",
       "fear_greed_change_5d": null,
-      "vix_level": 17.46,
-      "vix_change_1d_pct": 0.4,
-      "vix_change_5d_pct": 3.37,
-      "dxy_level": 97.91,
+      "vix_level": 17.31,
+      "vix_change_1d_pct": -0.46,
+      "vix_change_5d_pct": 2.49,
+      "dxy_level": 97.9,
       "dxy_trend": "FLAT",
-      "usdjpy_level": 156.371,
+      "usdjpy_level": 156.374,
       "usdjpy_trend": "DOWN",
       "fed_event_risk": "LOW",
       "macro_event_window": false,
       "risk_off_score": 0.85,
       "news_headlines": [
-        "McDonald's earnings top estimates despite 'challenging environment'",
+        "There's 'no chance' Warsh will be able to get the Fed to cut rates, Paul Tudor Jones says",
         "Shell tops profit estimates as Iran war boosts oil price, cuts share buybacks",
-        "Shipping giant boss warns Iran war will have bigger impact in coming months as customers face price hikes",
         "Asian Development Bank's $70 billion energy and digital infra push puts Southeast Asia center stage",
-        "HDFC Bank governance review finds no major lapses\u00a0\u2013 report"
+        "Stock Market Today: Dow Edges Higher After Jobless Claims; AI Stock Dives On Earnings (Live Coverage)",
+        "Kraken Parent Acquires Asian Stablecoin Firm Reap for $600 Million: Bloomberg"
       ]
     },
     "position_snapshot": {
@@ -272,14 +275,14 @@
     "decision_ready_features": {
       "regime_1d": "BEAR",
       "macro_mode": "RISK_OFF",
-      "macro_horizon": "SWING",
+      "macro_horizon": "MULTI_DAY",
       "macro_permission": "ALLOW_SHORT",
       "macro_bias_tier": "STRONG_RISK_OFF",
-      "macro_impact_score": -7.0,
+      "macro_impact_score": -9.0,
       "fear_greed_change_5d": null,
-      "vix_level": 17.46,
-      "vix_change_1d_pct": 0.4,
-      "vix_change_5d_pct": 3.37,
+      "vix_level": 17.31,
+      "vix_change_1d_pct": -0.46,
+      "vix_change_5d_pct": 2.49,
       "event_risk_active": false,
       "usd_strength_flag": false,
       "yen_stress_flag": false,
@@ -291,9 +294,9 @@
       "flow_signal_mixed": false,
       "flow_support_long": false,
       "flow_support_short": false,
-      "funding_rate": 5.70885999406e-05,
-      "funding_zscore": 0.56,
-      "oi_now": 124301098.90450007,
+      "funding_rate": 3.75122376608e-05,
+      "funding_zscore": 0.2,
+      "oi_now": 122043720.32150008,
       "delta_oi_24h_percent": 0.6609489869831913,
       "qlib_relative_score_8h": 0.0047,
       "qlib_percentile_8h": 1.0,
@@ -307,13 +310,13 @@
       "qlib_bottom_bucket": false,
       "range_regime": false,
       "grid_candidate_eligible": false,
-      "range_lower_bound": 0.1071,
+      "range_lower_bound": 0.1051,
       "range_upper_bound": 0.1167,
-      "range_width_pct": 0.0858,
-      "price_position_in_range": 0.4302,
+      "range_width_pct": 0.1046,
+      "price_position_in_range": 0.3543,
       "grid_mode": "ARITHMETIC",
-      "grid_count": 11,
-      "grid_spacing_pct": 0.0078,
+      "grid_count": 13,
+      "grid_spacing_pct": 0.008,
       "min_profitable_spacing_pct": 0.0034,
       "grid_spacing_profitable": true,
       "grid_bb_width": 0.0706,
@@ -329,12 +332,13 @@
       "grid_preflight_missing_fields": [],
       "grid_macro_trend_ok": false,
       "grid_macro_block_reasons": [
+        "bearish_liquidity_macro_cluster",
         "directional_swing_macro"
       ],
       "ma5_cross_up_ma10_1d": false,
       "ma5_cross_down_ma10_1d": false,
       "ma5_10_gap_pct_1d": 0.03085869499969994,
-      "max_profitable_grid_count": 25,
+      "max_profitable_grid_count": 30,
       "grid_review_after_hours": 36,
       "grid_extension_step_hours": 12,
       "grid_max_lifetime_hours": 60
@@ -346,7 +350,7 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-07_1200",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778156338,
+    "snapshot_timestamp": 1778163518,
     "candidate_proposals": [],
     "e_strategy_diagnostic": {
       "qlib_inputs": {
@@ -356,7 +360,7 @@
         "p_up_8h": 0.1189,
         "p_down_8h": 0.4881,
         "p_flat_8h": 0.393,
-        "funding_zscore": 0.56,
+        "funding_zscore": 0.2,
         "token_net_flow": 0.0,
         "stablecoin_net_flow": 0.0,
         "regime_1d": "BEAR",
@@ -474,14 +478,14 @@
     "history": [
       {
         "type": "EXECUTION_NOT_REQUESTED",
-        "at": "2026-05-07T12:19:33Z",
+        "at": "2026-05-07T14:19:14Z",
         "payload": {
           "review_note": "rule evaluation rejected or produced no approved candidates"
         }
       },
       {
         "type": "EXECUTION_SKIPPED",
-        "at": "2026-05-07T12:20:44Z",
+        "at": "2026-05-07T14:20:57Z",
         "payload": {
           "reason": "do_nothing",
           "execution_action": "DO_NOTHING"
@@ -533,10 +537,10 @@
       "execution_action": "DO_NOTHING"
     },
     "feedback_packets": [],
-    "generated_at": "2026-05-07T12:30:07Z"
+    "generated_at": "2026-05-07T14:37:28Z"
   },
-  "created_at": "2026-05-07T12:19:33Z",
-  "created_at_local": "2026-05-07T20:19:33+0800",
-  "updated_at": "2026-05-07T12:30:07Z",
-  "updated_at_local": "2026-05-07T20:20:44+0800"
+  "created_at": "2026-05-07T14:19:14Z",
+  "created_at_local": "2026-05-07T22:19:14+0800",
+  "updated_at": "2026-05-07T14:37:28Z",
+  "updated_at_local": "2026-05-07T22:20:57+0800"
 }
