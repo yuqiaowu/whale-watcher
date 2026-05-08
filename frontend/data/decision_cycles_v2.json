@@ -112514,8 +112514,8 @@
   },
   {
     "cycleId": "cycle_2026-05-08_1200",
-    "generated_at": "2026-05-08T12:20:19Z",
-    "generated_at_local": "2026-05-08T20:20:19+0800",
+    "generated_at": "2026-05-08T14:20:46Z",
+    "generated_at_local": "2026-05-08T22:20:46+0800",
     "cycle_local_time": "2026-05-08 20:00:00 CST",
     "local_timezone": "Asia/Shanghai",
     "timeframe": "4h",
@@ -112525,17 +112525,17 @@
         "symbol": "BTC-USDT",
         "cycleId": "cycle_2026-05-08_1200",
         "timeframe": "4h",
-        "snapshot_timestamp": 1778242031,
-        "snapshot_time": "2026-05-08T12:07:11Z",
-        "snapshot_time_local": "2026-05-08T20:07:11+0800",
+        "snapshot_timestamp": 1778249233,
+        "snapshot_time": "2026-05-08T14:07:13Z",
+        "snapshot_time_local": "2026-05-08T22:07:13+0800",
         "local_timezone": "Asia/Shanghai",
         "market_snapshot": {
-          "price": 80188.4,
-          "change_24h": 0.2615680076819937,
+          "price": 79914.3,
+          "change_24h": -0.08114609798546896,
           "rsi_4h": 49.7774149426352,
           "rsi_delta_4h": 4.836447278827656,
           "adx_14": 25.446516383461336,
-          "volume_ratio": 0.968840990718973,
+          "volume_ratio": 0.9974270843888902,
           "bb_width": 0.0390647400984803,
           "bb_pct_b": 0.2764016154233837,
           "bb_mid_slope_pct": -0.0008106937658532207,
@@ -112544,13 +112544,13 @@
           "range_edge_close_count": 3,
           "wick_ratio_lower": 2.21,
           "wick_ratio_upper": 16.41,
-          "funding_rate": -1.51630796772e-05,
-          "funding_zscore": -0.41,
-          "oi_now": 2690478654.82773,
+          "funding_rate": -1.62832341237e-05,
+          "funding_zscore": -0.44,
+          "oi_now": 2681282060.3167005,
           "delta_oi_24h_percent": -2.0327960007758645,
-          "natr_percent": 1.0549588985566805,
-          "whale_ls_ratio": 0.6127864897466828,
-          "whale_pos_ratio": 1.0508863785140712,
+          "natr_percent": 1.1405497460401712,
+          "whale_ls_ratio": 0.6303680981595092,
+          "whale_pos_ratio": 1.0531039885451656,
           "atr_14": 931.6285714285706,
           "trigger_candle_open": 79636.3,
           "trigger_candle_high": 80305.5,
@@ -112588,13 +112588,13 @@
           "flow_composite_semantic": "UNAVAILABLE",
           "flow_signal_mixed": false,
           "sentiment_score": 0.0,
-          "liquidation_long_usd": 13942626.156280003,
-          "liquidation_short_usd": 2177367.666860001,
-          "liquidation_long_to_volume_4h": 0.0140605940177768,
-          "liquidation_short_to_volume_4h": 0.002195790265621,
-          "funding_rate": -1.51630796772e-05,
-          "funding_zscore": -0.41,
-          "oi_now": 2690478654.82773,
+          "liquidation_long_usd": 9055528.98194999,
+          "liquidation_short_usd": 3238452.757009996,
+          "liquidation_long_to_volume_4h": 0.0091321473590584,
+          "liquidation_short_to_volume_4h": 0.003265853143567,
+          "funding_rate": -1.62832341237e-05,
+          "funding_zscore": -0.44,
+          "oi_now": 2681282060.3167005,
           "delta_oi_24h_percent": -2.0327960007758645,
           "qlib_relative_score_8h": 0.0044,
           "qlib_rank_8h": 2,
@@ -112608,81 +112608,67 @@
           "event_type": "FED_SPEECH",
           "policy_stance": "HAWKISH",
           "market_impact": "MIXED",
-          "impact_horizon": "INTRADAY",
+          "impact_horizon": "MULTI_DAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
             "FED_HAWKISH",
-            "GEOPOLITICAL_RISK_EASING"
+            "GEOPOLITICAL_RISK_EASING",
+            "VOL_PRESSURE_EASING"
           ],
-          "brief_rationale": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.",
-          "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
+          "brief_rationale": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.",
+          "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
           "classification_basis": {
             "fear_greed_index": 38.0,
             "fear_greed_state": "FEAR",
             "fear_greed_change_5d": null,
-            "fed_implied_rate": 3.637,
-            "fed_change_5d_bps": -0.5,
-            "usdjpy_level": 156.737,
-            "usdjpy_change_5d_pct": -0.15,
-            "dxy_level": 97.95,
-            "dxy_change_5d_pct": -0.26,
-            "vix_level": 17.09,
-            "vix_change_1d_pct": 0.06,
-            "vix_change_5d_pct": 0.59,
-            "us10y_level": 4.39,
-            "us10y_change_5d_pct": 0.05,
-            "global_stable_flow": 111864277.34510803,
-            "global_stable_market_cap": 268079107191.8815,
-            "global_stable_flow_ratio_pct": 0.04172808486154781
+            "fed_implied_rate": 3.632,
+            "fed_change_5d_bps": -1.0,
+            "usdjpy_level": 156.563,
+            "usdjpy_change_5d_pct": -0.26,
+            "dxy_level": 97.88,
+            "dxy_change_5d_pct": -0.33,
+            "vix_level": 16.91,
+            "vix_change_1d_pct": -1.0,
+            "vix_change_5d_pct": -0.47,
+            "us10y_level": 4.35,
+            "us10y_change_5d_pct": -0.64,
+            "global_stable_flow": -366250926.04403687,
+            "global_stable_market_cap": 267602689372.59613,
+            "global_stable_flow_ratio_pct": -0.13686369404684423
           },
           "key_events": [
             "FED_HAWKISH",
-            "GEOPOLITICAL_RISK_EASING"
+            "GEOPOLITICAL_RISK_EASING",
+            "VOL_PRESSURE_EASING"
           ],
           "event_facts": {
             "fear_greed_index": 38.0,
             "fear_greed_state": "FEAR",
             "fear_greed_change_5d": null,
-            "fed_implied_rate": 3.637,
-            "fed_change_5d_bps": -0.5,
-            "usdjpy_level": 156.737,
-            "usdjpy_change_5d_pct": -0.15,
-            "dxy_level": 97.95,
-            "dxy_change_5d_pct": -0.26,
-            "vix_level": 17.09,
-            "vix_change_1d_pct": 0.06,
-            "vix_change_5d_pct": 0.59,
-            "us10y_level": 4.39,
-            "us10y_change_5d_pct": 0.05,
-            "global_stable_flow": 111864277.34510803,
-            "global_stable_market_cap": 268079107191.8815,
-            "global_stable_flow_ratio_pct": 0.04172808486154781
+            "fed_implied_rate": 3.632,
+            "fed_change_5d_bps": -1.0,
+            "usdjpy_level": 156.563,
+            "usdjpy_change_5d_pct": -0.26,
+            "dxy_level": 97.88,
+            "dxy_change_5d_pct": -0.33,
+            "vix_level": 16.91,
+            "vix_change_1d_pct": -1.0,
+            "vix_change_5d_pct": -0.47,
+            "us10y_level": 4.35,
+            "us10y_change_5d_pct": -0.64,
+            "global_stable_flow": -366250926.04403687,
+            "global_stable_market_cap": 267602689372.59613,
+            "global_stable_flow_ratio_pct": -0.13686369404684423
           },
           "news_selection": {
             "selected": [
               {
-                "title": "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026",
-                "bucket": "general",
-                "score": 19,
-                "published": "Fri, 08 May 2026 07:30:26 +0000",
-                "source": "https://news.bitcoin.com/coinbase-buys-88-million-bitcoin-q1-2026/",
-                "sentiment": "Bullish"
-              },
-              {
-                "title": "Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink",
-                "bucket": "general",
-                "score": 18,
-                "published": "Thu, 07 May 2026 22:31:02 +0000",
-                "source": "https://decrypt.co/367154/solv-protocol-dump-layerzero-migrate-700m-tokenized-bitcoin-chainlink",
-                "sentiment": "Bearish"
-              },
-              {
-                "title": "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
-                "bucket": "general",
-                "score": 17,
-                "published": "Thu, 07 May 2026 22:01:03 +0000",
-                "source": "https://decrypt.co/367215/trump-sons-havent-abandoned-world-liberty-financial",
-                "sentiment": "Bearish"
+                "title": "The hottest ETF since bitcoin-mania just added $1 billion in a day",
+                "bucket": "macro",
+                "score": 16,
+                "published": "Fri, 08 May 2026 13:24:07 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/the-hottest-etf-since-bitcoin-mania-just-added-1-billion-in-a-day.html",
+                "sentiment": "Neutral"
               },
               {
                 "title": "[USD] FOMC Member Cook Speaks (Low)",
@@ -112733,12 +112719,12 @@
                 "sentiment": "Neutral"
               },
               {
-                "title": "Bitcoin exchange reserves fall to two-year low after $8B exodus",
-                "bucket": "bitcoin",
+                "title": "Most women are confident savers, survey finds \u2014 but where they stash their cash could be a problem",
+                "bucket": "macro",
                 "score": 14,
-                "published": "Thu, 07 May 2026 21:52:34 +0000",
-                "source": "https://cointelegraph.com/markets/8b-bitcoin-exodus-drains-exchange-reserves-to-multi-year-lows?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
-                "sentiment": "Bullish"
+                "published": "Fri, 08 May 2026 12:15:01 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/women-savings-lags-inflation.html",
+                "sentiment": "Neutral"
               },
               {
                 "title": "Coinbase posts steep first-quarter loss after slide in crypto prices; shares fall 4%",
@@ -112755,16 +112741,14 @@
                 "published": "2026-05-08 6:01am",
                 "source": "https://www.forexfactory.com/calendar/396-fr-bank-holiday",
                 "sentiment": "Bearish"
-              }
-            ],
-            "dropped": [
+              },
               {
-                "title": "Here's what to expect from Friday's release of the April jobs report",
+                "title": "Anthropic's Mythos set off a cybersecurity 'hysteria.' Experts say the threat was already here",
                 "bucket": "macro",
                 "score": 11,
-                "published": "Thu, 07 May 2026 19:20:55 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/heres-what-to-expect-from-fridays-release-of-the-april-jobs-report.html",
-                "sentiment": "Bullish"
+                "published": "Fri, 08 May 2026 14:04:22 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/anthropic-mythos-ai-cybersecurity-banks.html",
+                "sentiment": "Bearish"
               },
               {
                 "title": "Four signs that show Ethereum's rally is exhausted at $2.4K",
@@ -112773,13 +112757,31 @@
                 "published": "Fri, 08 May 2026 11:30:57 +0000",
                 "source": "https://cointelegraph.com/markets/four-signs-show-ethereum-eth-price-rally-exhausted-2-4k?utm_source=rss_feed&utm_medium=rss_tag_ethereum&utm_campaign=rss_partner_inbound",
                 "sentiment": "Neutral"
-              },
+              }
+            ],
+            "dropped": [
               {
-                "title": "The best 0% APR credit cards for May 2026: Pay no interest for up to 24 months",
+                "title": "China asks banks to pause new loans to US-sanctioned refiners, Bloomberg News reports",
                 "bucket": "macro",
                 "score": 11,
-                "published": "2026-05-06T21:44:56Z",
-                "source": "https://finance.yahoo.com/personal-finance/credit-cards/article/best-0-apr-credit-cards-214456977.html",
+                "published": "2026-05-07T02:55:32Z",
+                "source": "https://finance.yahoo.com/sectors/energy/articles/china-asks-banks-pause-loans-025532958.html",
+                "sentiment": "Bearish"
+              },
+              {
+                "title": "U.S. payrolls increased 115,000 in April, more than expected; unemployment at 4.3%",
+                "bucket": "macro",
+                "score": 10,
+                "published": "Fri, 08 May 2026 13:42:57 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/jobs-report-april-2026.html",
+                "sentiment": "Neutral"
+              },
+              {
+                "title": "Iowa Signs Crypto ATM Licensing and Oversight Bill Into Law",
+                "bucket": "general",
+                "score": 10,
+                "published": "Fri, 08 May 2026 13:12:32 +0000",
+                "source": "https://news.bitcoin.com/iowa-signs-crypto-atm-licensing-and-oversight-bill-into-law/",
                 "sentiment": "Bullish"
               },
               {
@@ -112799,7 +112801,7 @@
                 "sentiment": "Bullish"
               },
               {
-                "title": "Whale Potentially Linked to Erik Voorhees Spends Another $6.67M on ETH",
+                "title": "Mysterious Whale Buys $6.67M in ETH Following False Erik Voorhees Link",
                 "bucket": "general",
                 "score": 10,
                 "published": "Fri, 08 May 2026 10:30:56 +0000",
@@ -112821,14 +112823,6 @@
                 "published": "Fri, 08 May 2026 08:30:21 +0000",
                 "source": "https://news.bitcoin.com/crypto-clarity-act-us-close-robinhood-tenev-2026/",
                 "sentiment": "Bullish"
-              },
-              {
-                "title": "Billion-dollar bets: Global investors chase Indian Premier League to ride booming cricket economy",
-                "bucket": "macro",
-                "score": 10,
-                "published": "Fri, 08 May 2026 07:39:01 GMT",
-                "source": "https://www.cnbc.com/2026/05/08/sports-ipl-rcb-rajasthan-royals-cricket-investing.html",
-                "sentiment": "Neutral"
               },
               {
                 "title": "Ether tests $2.4K as accumulators add 246K ETH: How high can price go?",
@@ -112855,6 +112849,22 @@
                 "sentiment": "Bullish"
               },
               {
+                "title": "Zcash Targeting Post-Quantum Crypto Milestone by 2027",
+                "bucket": "general",
+                "score": 9,
+                "published": "Fri, 08 May 2026 13:15:24 +0000",
+                "source": "https://decrypt.co/367250/zcash-targeting-post-quantum-crypto-milestone-by-2027",
+                "sentiment": "Neutral"
+              },
+              {
+                "title": "Revolut users report Bitcoin price glitch showing BTC at 2 cents",
+                "bucket": "bitcoin",
+                "score": 9,
+                "published": "Fri, 08 May 2026 12:30:16 +0000",
+                "source": "https://cointelegraph.com/news/btc-flash-crash-alerts-at-revolut-users-report-extreme-price-glitches-in-multiple-assets?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
+                "sentiment": "Bearish"
+              },
+              {
                 "title": "Bitcoin eyes $80K reclaim as traders say these BTC price support levels must hold",
                 "bucket": "bitcoin",
                 "score": 9,
@@ -112871,6 +112881,14 @@
                 "sentiment": "Bearish"
               },
               {
+                "title": "XRP New Addresses, Active Supply Plunge Amid Shift to \u2018Institutional Rails\u2019",
+                "bucket": "general",
+                "score": 8,
+                "published": "Fri, 08 May 2026 13:34:29 +0000",
+                "source": "https://decrypt.co/367253/xrp-new-addresses-active-supply-plunge-amid-shift-to-institutional-rails",
+                "sentiment": "Bearish"
+              },
+              {
                 "title": "Block Inc rises 8% as Q1 gives \u2018earnings surprise\u2019 despite Bitcoin dip",
                 "bucket": "bitcoin",
                 "score": 8,
@@ -112879,18 +112897,18 @@
                 "sentiment": "Neutral"
               },
               {
-                "title": "Jim Cramer says the AI boom has 'the power to keep the country's economy humming'",
+                "title": "The rise of 'income stacking': Why Gen Z is juggling multiple jobs",
                 "bucket": "macro",
                 "score": 7,
-                "published": "Thu, 07 May 2026 22:58:55 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/jim-cramer-ai-boom-stock-market-impact.html",
+                "published": "Fri, 08 May 2026 12:51:44 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/income-stacking-why-gen-z-is-juggling-multiple-jobs.html",
                 "sentiment": "Bullish"
               },
               {
                 "title": "States crack down on tax break for wealthy investors",
                 "bucket": "macro",
                 "score": 7,
-                "published": "Fri, 08 May 2026 12:01:44 GMT",
+                "published": "Fri, 08 May 2026 12:33:10 GMT",
                 "source": "https://www.cnbc.com/2026/05/08/tax-break-wealthy-investors-qsbs.html",
                 "sentiment": "Bearish"
               },
@@ -112901,25 +112919,9 @@
                 "published": "Fri, 08 May 2026 07:32:28 GMT",
                 "source": "https://www.cnbc.com/2026/05/08/trump-tariffs-trade-eu-europe-deal.html",
                 "sentiment": "Bullish"
-              },
-              {
-                "title": "Toyota fourth-quarter profit misses by wide margin as U.S. tariffs drive 49% slump",
-                "bucket": "macro",
-                "score": 7,
-                "published": "Fri, 08 May 2026 07:29:03 GMT",
-                "source": "https://www.cnbc.com/2026/05/08/toyota-1q-2026-earnings.html",
-                "sentiment": "Bearish"
-              },
-              {
-                "title": "Cloudflare stock sinks 18% after earnings as company cuts 1,100 employees due to AI changes",
-                "bucket": "macro",
-                "score": 6,
-                "published": "Thu, 07 May 2026 22:19:17 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/cloudflare-net-q1-2026-stock-earnings-layoffs.html",
-                "sentiment": "Neutral"
               }
             ],
-            "candidate_count": 37
+            "candidate_count": 39
           },
           "provenance": {
             "generation_mode": "llm_refined",
@@ -112937,16 +112939,17 @@
               "status": "parsed",
               "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
               "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.\", \"brief_rationale\": \"Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\"] }",
+              "raw_response_preview": "{ \"news_summary\": \"Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.\", \"brief_rationale\": \"FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"VOL_PRESSURE_EASING\"] }",
               "parsed_response": {
-                "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
-                "brief_rationale": "Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment.",
+                "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
+                "brief_rationale": "FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact.",
                 "market_impact": "MIXED",
-                "impact_horizon": "INTRADAY",
+                "impact_horizon": "MULTI_DAY",
                 "crypto_relevance": "HIGH",
                 "key_tags": [
                   "FED_HAWKISH",
-                  "GEOPOLITICAL_RISK_EASING"
+                  "GEOPOLITICAL_RISK_EASING",
+                  "VOL_PRESSURE_EASING"
                 ]
               },
               "error": null
@@ -112956,37 +112959,40 @@
             "source": "llm_adjudicated",
             "selected_view": "blended",
             "market_impact": "MIXED",
-            "impact_horizon": "INTRADAY",
+            "impact_horizon": "MULTI_DAY",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "GEOPOLITICAL_RISK_EASING"
+              "GEOPOLITICAL_RISK_EASING",
+              "VOL_PRESSURE_EASING"
             ],
             "confidence": "MEDIUM",
-            "reason": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.",
+            "reason": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.",
             "deterministic_view": {
               "event_type": "FED_SPEECH",
               "policy_stance": "HAWKISH",
-              "market_impact": "RISK_OFF",
+              "market_impact": "MIXED",
               "impact_horizon": "MULTI_DAY",
               "crypto_relevance": "HIGH",
               "key_tags": [
                 "FED_HAWKISH",
-                "GEOPOLITICAL_RISK_EASING"
+                "GEOPOLITICAL_RISK_EASING",
+                "VOL_PRESSURE_EASING"
               ],
-              "news_summary": "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026 | Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink | Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
-              "brief_rationale": "Fed pricing remains restrictive; geopolitical risk is easing. Classified as RISK_OFF with MULTI_DAY horizon."
+              "news_summary": "The hottest ETF since bitcoin-mania just added $1 billion in a day | [USD] FOMC Member Cook Speaks (Low) | [USD] FOMC Member Goolsbee Speaks (Low)",
+              "brief_rationale": "Fed pricing remains restrictive; volatility pressure eased (VIX 16.91, -1.00%/1d); geopolitical risk is easing. Classified as MIXED with MULTI_DAY horizon."
             },
             "llm_view": {
               "market_impact": "MIXED",
-              "impact_horizon": "INTRADAY",
+              "impact_horizon": "MULTI_DAY",
               "crypto_relevance": "HIGH",
               "key_tags": [
                 "FED_HAWKISH",
-                "GEOPOLITICAL_RISK_EASING"
+                "GEOPOLITICAL_RISK_EASING",
+                "VOL_PRESSURE_EASING"
               ],
-              "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
-              "brief_rationale": "Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment."
+              "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
+              "brief_rationale": "FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact."
             },
             "adjudication_audit": {
               "enabled": true,
@@ -112994,55 +113000,56 @@
               "model": "deepseek-chat",
               "status": "parsed",
               "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-              "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026\", \"Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink\", \"Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists\", \"[USD] FOMC Member Cook Speaks (Low)\", \"[USD] FOMC Member Goolsbee Speaks (Low)\", \"Oil prices stable as Trump...",
-              "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"INTRADAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\"], \"confidence\": 0.7, \"reason\": \"Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.\" }",
+              "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"The hottest ETF since bitcoin-mania just added $1 billion in a day\", \"[USD] FOMC Member Cook Speaks (Low)\", \"[USD] FOMC Member Goolsbee Speaks (Low)\", \"Oil prices stable as Trump insists ceasefire still intact after U.S.-Iran exchange fire\", \"Metalpha Related Wallet Offloads $20M in ETH to Binance Amid Whale Sell-off\", \"Tether F...",
+              "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"VOL_PRESSURE_EASING\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.\" }",
               "parsed_response": {
                 "selected_view": "blended",
                 "final_market_impact": "MIXED",
-                "final_impact_horizon": "INTRADAY",
+                "final_impact_horizon": "MULTI_DAY",
                 "final_crypto_relevance": "HIGH",
                 "final_key_tags": [
                   "FED_HAWKISH",
-                  "GEOPOLITICAL_RISK_EASING"
+                  "GEOPOLITICAL_RISK_EASING",
+                  "VOL_PRESSURE_EASING"
                 ],
-                "confidence": 0.7,
-                "reason": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance."
+                "confidence": 0.85,
+                "reason": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge."
               },
               "error": null
             }
           },
           "macro_decision_source": "llm_adjudicated",
           "macro_mode": "MIXED",
-          "macro_horizon": "INTRADAY",
+          "macro_horizon": "MULTI_DAY",
           "macro_permission": "ALLOW_BOTH",
-          "macro_impact_score": -3,
-          "macro_bias_tier": "MILD_RISK_OFF",
+          "macro_impact_score": -1,
+          "macro_bias_tier": "NO_CLEAR_EDGE",
           "fear_greed_index": 38.0,
           "fear_greed_state": "FEAR",
           "fear_greed_change_5d": null,
-          "vix_level": 17.09,
-          "vix_change_1d_pct": 0.06,
-          "vix_change_5d_pct": 0.59,
-          "dxy_level": 97.95,
+          "vix_level": 16.91,
+          "vix_change_1d_pct": -1.0,
+          "vix_change_5d_pct": -0.47,
+          "dxy_level": 97.88,
           "dxy_trend": "DOWN",
-          "usdjpy_level": 156.737,
-          "usdjpy_trend": "FLAT",
+          "usdjpy_level": 156.563,
+          "usdjpy_trend": "DOWN",
           "fed_event_risk": "HIGH",
           "macro_event_window": true,
-          "risk_off_score": 0.65,
+          "risk_off_score": 0.5,
           "news_headlines": [
-            "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026",
-            "Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink",
-            "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
+            "The hottest ETF since bitcoin-mania just added $1 billion in a day",
             "[USD] FOMC Member Cook Speaks (Low)",
             "[USD] FOMC Member Goolsbee Speaks (Low)",
             "Oil prices stable as Trump insists ceasefire still intact after U.S.-Iran exchange fire",
             "Metalpha Related Wallet Offloads $20M in ETH to Binance Amid Whale Sell-off",
             "Tether Freezes $515 Million in USDT Across 371 Addresses in 30 Days",
             "[USD] Prelim UoM Inflation Expectations (Medium)",
-            "Bitcoin exchange reserves fall to two-year low after $8B exodus",
+            "Most women are confident savers, survey finds \u2014 but where they stash their cash could be a problem",
             "Coinbase posts steep first-quarter loss after slide in crypto prices; shares fall 4%",
-            "[EUR] French Bank Holiday (Holiday)"
+            "[EUR] French Bank Holiday (Holiday)",
+            "Anthropic's Mythos set off a cybersecurity 'hysteria.' Experts say the threat was already here",
+            "Four signs that show Ethereum's rally is exhausted at $2.4K"
           ]
         },
         "position_snapshot": {
@@ -113057,14 +113064,14 @@
         "decision_ready_features": {
           "regime_1d": "CHOP",
           "macro_mode": "MIXED",
-          "macro_horizon": "INTRADAY",
+          "macro_horizon": "MULTI_DAY",
           "macro_permission": "ALLOW_BOTH",
-          "macro_bias_tier": "MILD_RISK_OFF",
-          "macro_impact_score": -3.0,
+          "macro_bias_tier": "NO_CLEAR_EDGE",
+          "macro_impact_score": -1.0,
           "fear_greed_change_5d": null,
-          "vix_level": 17.09,
-          "vix_change_1d_pct": 0.06,
-          "vix_change_5d_pct": 0.59,
+          "vix_level": 16.91,
+          "vix_change_1d_pct": -1.0,
+          "vix_change_5d_pct": -0.47,
           "event_risk_active": true,
           "usd_strength_flag": false,
           "yen_stress_flag": false,
@@ -113076,9 +113083,9 @@
           "flow_signal_mixed": false,
           "flow_support_long": false,
           "flow_support_short": false,
-          "funding_rate": -1.51630796772e-05,
-          "funding_zscore": -0.41,
-          "oi_now": 2690478654.82773,
+          "funding_rate": -1.62832341237e-05,
+          "funding_zscore": -0.44,
+          "oi_now": 2681282060.3167005,
           "delta_oi_24h_percent": -2.0327960007758645,
           "qlib_relative_score_8h": 0.0044,
           "qlib_percentile_8h": 0.75,
@@ -113095,7 +113102,7 @@
           "range_lower_bound": 79640.7,
           "range_upper_bound": 82800.0,
           "range_width_pct": 0.0389,
-          "price_position_in_range": 0.1734,
+          "price_position_in_range": 0.0866,
           "grid_mode": "ARITHMETIC",
           "grid_count": 5,
           "grid_spacing_pct": 0.0078,
@@ -113130,17 +113137,17 @@
         "symbol": "ETH-USDT",
         "cycleId": "cycle_2026-05-08_1200",
         "timeframe": "4h",
-        "snapshot_timestamp": 1778242214,
-        "snapshot_time": "2026-05-08T12:10:14Z",
-        "snapshot_time_local": "2026-05-08T20:10:14+0800",
+        "snapshot_timestamp": 1778249426,
+        "snapshot_time": "2026-05-08T14:10:26Z",
+        "snapshot_time_local": "2026-05-08T22:10:26+0800",
         "local_timezone": "Asia/Shanghai",
         "market_snapshot": {
-          "price": 2292.42,
-          "change_24h": 0.0785813447887551,
+          "price": 2282.43,
+          "change_24h": -0.3575451187888019,
           "rsi_4h": 41.79913197334082,
           "rsi_delta_4h": 4.349788166902798,
           "adx_14": 23.000480973649115,
-          "volume_ratio": 0.9161449977514646,
+          "volume_ratio": 0.9163340685994061,
           "bb_width": 0.0679488581323796,
           "bb_pct_b": 0.2116357840056773,
           "bb_mid_slope_pct": -0.004907370969471417,
@@ -113149,13 +113156,13 @@
           "range_edge_close_count": 3,
           "wick_ratio_lower": 8.29,
           "wick_ratio_upper": 22.34,
-          "funding_rate": 2.69781789425e-05,
-          "funding_zscore": 0.16,
-          "oi_now": 1797354079.7269244,
+          "funding_rate": 4.11434324931e-05,
+          "funding_zscore": 0.47,
+          "oi_now": 1789521497.8891842,
           "delta_oi_24h_percent": 4.065158131777732,
-          "natr_percent": 1.2933491508849824,
-          "whale_ls_ratio": 1.5380631796996376,
-          "whale_pos_ratio": 0.8761496042637187,
+          "natr_percent": 1.3941737340715992,
+          "whale_ls_ratio": 1.576619273301738,
+          "whale_pos_ratio": 0.8744000201364632,
           "atr_14": 33.65642857142854,
           "trigger_candle_open": 2280.28,
           "trigger_candle_high": 2299.08,
@@ -113184,22 +113191,22 @@
           "structure_resistance_stop_short": 2440.5982
         },
         "onchain_snapshot": {
-          "token_net_flow": 1066098.418153251,
-          "stablecoin_net_flow": -10444391.242927179,
+          "token_net_flow": -242270.4619972511,
+          "stablecoin_net_flow": -10933680.504614908,
           "flow_data_available": true,
           "flow_schema_version": "flow_semantics_v1",
-          "token_flow_semantic": "ACCUMULATION_HINT",
+          "token_flow_semantic": "DISTRIBUTION_PRESSURE",
           "stablecoin_flow_semantic": "CAPITAL_WITHDRAWAL",
-          "flow_composite_semantic": "MIXED",
-          "flow_signal_mixed": true,
-          "sentiment_score": -0.02495202791395879,
-          "liquidation_long_usd": 10178740.047239995,
-          "liquidation_short_usd": 722437.41081,
-          "liquidation_long_to_volume_4h": 0.0104940849829295,
-          "liquidation_short_to_volume_4h": 0.0007448190590095,
-          "funding_rate": 2.69781789425e-05,
-          "funding_zscore": 0.16,
-          "oi_now": 1797354079.7269244,
+          "flow_composite_semantic": "SHORT_SUPPORT",
+          "flow_signal_mixed": false,
+          "sentiment_score": -0.03462225100186144,
+          "liquidation_long_usd": 9278114.208069986,
+          "liquidation_short_usd": 1434226.9792799994,
+          "liquidation_long_to_volume_4h": 0.0095655570855465,
+          "liquidation_short_to_volume_4h": 0.0014786603976054,
+          "funding_rate": 4.11434324931e-05,
+          "funding_zscore": 0.47,
+          "oi_now": 1789521497.8891842,
           "delta_oi_24h_percent": 4.065158131777732,
           "qlib_relative_score_8h": 0.0004,
           "qlib_rank_8h": 5,
@@ -113213,81 +113220,67 @@
           "event_type": "FED_SPEECH",
           "policy_stance": "HAWKISH",
           "market_impact": "MIXED",
-          "impact_horizon": "INTRADAY",
+          "impact_horizon": "MULTI_DAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
             "FED_HAWKISH",
-            "GEOPOLITICAL_RISK_EASING"
+            "GEOPOLITICAL_RISK_EASING",
+            "VOL_PRESSURE_EASING"
           ],
-          "brief_rationale": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.",
-          "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
+          "brief_rationale": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.",
+          "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
           "classification_basis": {
             "fear_greed_index": 38.0,
             "fear_greed_state": "FEAR",
             "fear_greed_change_5d": null,
-            "fed_implied_rate": 3.637,
-            "fed_change_5d_bps": -0.5,
-            "usdjpy_level": 156.737,
-            "usdjpy_change_5d_pct": -0.15,
-            "dxy_level": 97.95,
-            "dxy_change_5d_pct": -0.26,
-            "vix_level": 17.09,
-            "vix_change_1d_pct": 0.06,
-            "vix_change_5d_pct": 0.59,
-            "us10y_level": 4.39,
-            "us10y_change_5d_pct": 0.05,
-            "global_stable_flow": 111864277.34510803,
-            "global_stable_market_cap": 268079107191.8815,
-            "global_stable_flow_ratio_pct": 0.04172808486154781
+            "fed_implied_rate": 3.632,
+            "fed_change_5d_bps": -1.0,
+            "usdjpy_level": 156.563,
+            "usdjpy_change_5d_pct": -0.26,
+            "dxy_level": 97.88,
+            "dxy_change_5d_pct": -0.33,
+            "vix_level": 16.91,
+            "vix_change_1d_pct": -1.0,
+            "vix_change_5d_pct": -0.47,
+            "us10y_level": 4.35,
+            "us10y_change_5d_pct": -0.64,
+            "global_stable_flow": -366250926.04403687,
+            "global_stable_market_cap": 267602689372.59613,
+            "global_stable_flow_ratio_pct": -0.13686369404684423
           },
           "key_events": [
             "FED_HAWKISH",
-            "GEOPOLITICAL_RISK_EASING"
+            "GEOPOLITICAL_RISK_EASING",
+            "VOL_PRESSURE_EASING"
           ],
           "event_facts": {
             "fear_greed_index": 38.0,
             "fear_greed_state": "FEAR",
             "fear_greed_change_5d": null,
-            "fed_implied_rate": 3.637,
-            "fed_change_5d_bps": -0.5,
-            "usdjpy_level": 156.737,
-            "usdjpy_change_5d_pct": -0.15,
-            "dxy_level": 97.95,
-            "dxy_change_5d_pct": -0.26,
-            "vix_level": 17.09,
-            "vix_change_1d_pct": 0.06,
-            "vix_change_5d_pct": 0.59,
-            "us10y_level": 4.39,
-            "us10y_change_5d_pct": 0.05,
-            "global_stable_flow": 111864277.34510803,
-            "global_stable_market_cap": 268079107191.8815,
-            "global_stable_flow_ratio_pct": 0.04172808486154781
+            "fed_implied_rate": 3.632,
+            "fed_change_5d_bps": -1.0,
+            "usdjpy_level": 156.563,
+            "usdjpy_change_5d_pct": -0.26,
+            "dxy_level": 97.88,
+            "dxy_change_5d_pct": -0.33,
+            "vix_level": 16.91,
+            "vix_change_1d_pct": -1.0,
+            "vix_change_5d_pct": -0.47,
+            "us10y_level": 4.35,
+            "us10y_change_5d_pct": -0.64,
+            "global_stable_flow": -366250926.04403687,
+            "global_stable_market_cap": 267602689372.59613,
+            "global_stable_flow_ratio_pct": -0.13686369404684423
           },
           "news_selection": {
             "selected": [
               {
-                "title": "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026",
-                "bucket": "general",
-                "score": 19,
-                "published": "Fri, 08 May 2026 07:30:26 +0000",
-                "source": "https://news.bitcoin.com/coinbase-buys-88-million-bitcoin-q1-2026/",
-                "sentiment": "Bullish"
-              },
-              {
-                "title": "Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink",
-                "bucket": "general",
-                "score": 18,
-                "published": "Thu, 07 May 2026 22:31:02 +0000",
-                "source": "https://decrypt.co/367154/solv-protocol-dump-layerzero-migrate-700m-tokenized-bitcoin-chainlink",
-                "sentiment": "Bearish"
-              },
-              {
-                "title": "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
-                "bucket": "general",
-                "score": 17,
-                "published": "Thu, 07 May 2026 22:01:03 +0000",
-                "source": "https://decrypt.co/367215/trump-sons-havent-abandoned-world-liberty-financial",
-                "sentiment": "Bearish"
+                "title": "The hottest ETF since bitcoin-mania just added $1 billion in a day",
+                "bucket": "macro",
+                "score": 16,
+                "published": "Fri, 08 May 2026 13:24:07 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/the-hottest-etf-since-bitcoin-mania-just-added-1-billion-in-a-day.html",
+                "sentiment": "Neutral"
               },
               {
                 "title": "[USD] FOMC Member Cook Speaks (Low)",
@@ -113338,12 +113331,12 @@
                 "sentiment": "Neutral"
               },
               {
-                "title": "Bitcoin exchange reserves fall to two-year low after $8B exodus",
-                "bucket": "bitcoin",
+                "title": "Most women are confident savers, survey finds \u2014 but where they stash their cash could be a problem",
+                "bucket": "macro",
                 "score": 14,
-                "published": "Thu, 07 May 2026 21:52:34 +0000",
-                "source": "https://cointelegraph.com/markets/8b-bitcoin-exodus-drains-exchange-reserves-to-multi-year-lows?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
-                "sentiment": "Bullish"
+                "published": "Fri, 08 May 2026 12:15:01 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/women-savings-lags-inflation.html",
+                "sentiment": "Neutral"
               },
               {
                 "title": "Coinbase posts steep first-quarter loss after slide in crypto prices; shares fall 4%",
@@ -113360,16 +113353,14 @@
                 "published": "2026-05-08 6:01am",
                 "source": "https://www.forexfactory.com/calendar/396-fr-bank-holiday",
                 "sentiment": "Bearish"
-              }
-            ],
-            "dropped": [
+              },
               {
-                "title": "Here's what to expect from Friday's release of the April jobs report",
+                "title": "Anthropic's Mythos set off a cybersecurity 'hysteria.' Experts say the threat was already here",
                 "bucket": "macro",
                 "score": 11,
-                "published": "Thu, 07 May 2026 19:20:55 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/heres-what-to-expect-from-fridays-release-of-the-april-jobs-report.html",
-                "sentiment": "Bullish"
+                "published": "Fri, 08 May 2026 14:04:22 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/anthropic-mythos-ai-cybersecurity-banks.html",
+                "sentiment": "Bearish"
               },
               {
                 "title": "Four signs that show Ethereum's rally is exhausted at $2.4K",
@@ -113378,13 +113369,31 @@
                 "published": "Fri, 08 May 2026 11:30:57 +0000",
                 "source": "https://cointelegraph.com/markets/four-signs-show-ethereum-eth-price-rally-exhausted-2-4k?utm_source=rss_feed&utm_medium=rss_tag_ethereum&utm_campaign=rss_partner_inbound",
                 "sentiment": "Neutral"
-              },
+              }
+            ],
+            "dropped": [
               {
-                "title": "The best 0% APR credit cards for May 2026: Pay no interest for up to 24 months",
+                "title": "China asks banks to pause new loans to US-sanctioned refiners, Bloomberg News reports",
                 "bucket": "macro",
                 "score": 11,
-                "published": "2026-05-06T21:44:56Z",
-                "source": "https://finance.yahoo.com/personal-finance/credit-cards/article/best-0-apr-credit-cards-214456977.html",
+                "published": "2026-05-07T02:55:32Z",
+                "source": "https://finance.yahoo.com/sectors/energy/articles/china-asks-banks-pause-loans-025532958.html",
+                "sentiment": "Bearish"
+              },
+              {
+                "title": "U.S. payrolls increased 115,000 in April, more than expected; unemployment at 4.3%",
+                "bucket": "macro",
+                "score": 10,
+                "published": "Fri, 08 May 2026 13:42:57 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/jobs-report-april-2026.html",
+                "sentiment": "Neutral"
+              },
+              {
+                "title": "Iowa Signs Crypto ATM Licensing and Oversight Bill Into Law",
+                "bucket": "general",
+                "score": 10,
+                "published": "Fri, 08 May 2026 13:12:32 +0000",
+                "source": "https://news.bitcoin.com/iowa-signs-crypto-atm-licensing-and-oversight-bill-into-law/",
                 "sentiment": "Bullish"
               },
               {
@@ -113404,7 +113413,7 @@
                 "sentiment": "Bullish"
               },
               {
-                "title": "Whale Potentially Linked to Erik Voorhees Spends Another $6.67M on ETH",
+                "title": "Mysterious Whale Buys $6.67M in ETH Following False Erik Voorhees Link",
                 "bucket": "general",
                 "score": 10,
                 "published": "Fri, 08 May 2026 10:30:56 +0000",
@@ -113426,14 +113435,6 @@
                 "published": "Fri, 08 May 2026 08:30:21 +0000",
                 "source": "https://news.bitcoin.com/crypto-clarity-act-us-close-robinhood-tenev-2026/",
                 "sentiment": "Bullish"
-              },
-              {
-                "title": "Billion-dollar bets: Global investors chase Indian Premier League to ride booming cricket economy",
-                "bucket": "macro",
-                "score": 10,
-                "published": "Fri, 08 May 2026 07:39:01 GMT",
-                "source": "https://www.cnbc.com/2026/05/08/sports-ipl-rcb-rajasthan-royals-cricket-investing.html",
-                "sentiment": "Neutral"
               },
               {
                 "title": "Ether tests $2.4K as accumulators add 246K ETH: How high can price go?",
@@ -113460,6 +113461,22 @@
                 "sentiment": "Bullish"
               },
               {
+                "title": "Zcash Targeting Post-Quantum Crypto Milestone by 2027",
+                "bucket": "general",
+                "score": 9,
+                "published": "Fri, 08 May 2026 13:15:24 +0000",
+                "source": "https://decrypt.co/367250/zcash-targeting-post-quantum-crypto-milestone-by-2027",
+                "sentiment": "Neutral"
+              },
+              {
+                "title": "Revolut users report Bitcoin price glitch showing BTC at 2 cents",
+                "bucket": "bitcoin",
+                "score": 9,
+                "published": "Fri, 08 May 2026 12:30:16 +0000",
+                "source": "https://cointelegraph.com/news/btc-flash-crash-alerts-at-revolut-users-report-extreme-price-glitches-in-multiple-assets?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
+                "sentiment": "Bearish"
+              },
+              {
                 "title": "Bitcoin eyes $80K reclaim as traders say these BTC price support levels must hold",
                 "bucket": "bitcoin",
                 "score": 9,
@@ -113476,6 +113493,14 @@
                 "sentiment": "Bearish"
               },
               {
+                "title": "XRP New Addresses, Active Supply Plunge Amid Shift to \u2018Institutional Rails\u2019",
+                "bucket": "general",
+                "score": 8,
+                "published": "Fri, 08 May 2026 13:34:29 +0000",
+                "source": "https://decrypt.co/367253/xrp-new-addresses-active-supply-plunge-amid-shift-to-institutional-rails",
+                "sentiment": "Bearish"
+              },
+              {
                 "title": "Block Inc rises 8% as Q1 gives \u2018earnings surprise\u2019 despite Bitcoin dip",
                 "bucket": "bitcoin",
                 "score": 8,
@@ -113484,18 +113509,18 @@
                 "sentiment": "Neutral"
               },
               {
-                "title": "Jim Cramer says the AI boom has 'the power to keep the country's economy humming'",
+                "title": "The rise of 'income stacking': Why Gen Z is juggling multiple jobs",
                 "bucket": "macro",
                 "score": 7,
-                "published": "Thu, 07 May 2026 22:58:55 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/jim-cramer-ai-boom-stock-market-impact.html",
+                "published": "Fri, 08 May 2026 12:51:44 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/income-stacking-why-gen-z-is-juggling-multiple-jobs.html",
                 "sentiment": "Bullish"
               },
               {
                 "title": "States crack down on tax break for wealthy investors",
                 "bucket": "macro",
                 "score": 7,
-                "published": "Fri, 08 May 2026 12:01:44 GMT",
+                "published": "Fri, 08 May 2026 12:33:10 GMT",
                 "source": "https://www.cnbc.com/2026/05/08/tax-break-wealthy-investors-qsbs.html",
                 "sentiment": "Bearish"
               },
@@ -113506,25 +113531,9 @@
                 "published": "Fri, 08 May 2026 07:32:28 GMT",
                 "source": "https://www.cnbc.com/2026/05/08/trump-tariffs-trade-eu-europe-deal.html",
                 "sentiment": "Bullish"
-              },
-              {
-                "title": "Toyota fourth-quarter profit misses by wide margin as U.S. tariffs drive 49% slump",
-                "bucket": "macro",
-                "score": 7,
-                "published": "Fri, 08 May 2026 07:29:03 GMT",
-                "source": "https://www.cnbc.com/2026/05/08/toyota-1q-2026-earnings.html",
-                "sentiment": "Bearish"
-              },
-              {
-                "title": "Cloudflare stock sinks 18% after earnings as company cuts 1,100 employees due to AI changes",
-                "bucket": "macro",
-                "score": 6,
-                "published": "Thu, 07 May 2026 22:19:17 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/cloudflare-net-q1-2026-stock-earnings-layoffs.html",
-                "sentiment": "Neutral"
               }
             ],
-            "candidate_count": 37
+            "candidate_count": 39
           },
           "provenance": {
             "generation_mode": "llm_refined",
@@ -113542,16 +113551,17 @@
               "status": "parsed",
               "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
               "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.\", \"brief_rationale\": \"Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\"] }",
+              "raw_response_preview": "{ \"news_summary\": \"Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.\", \"brief_rationale\": \"FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"VOL_PRESSURE_EASING\"] }",
               "parsed_response": {
-                "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
-                "brief_rationale": "Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment.",
+                "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
+                "brief_rationale": "FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact.",
                 "market_impact": "MIXED",
-                "impact_horizon": "INTRADAY",
+                "impact_horizon": "MULTI_DAY",
                 "crypto_relevance": "HIGH",
                 "key_tags": [
                   "FED_HAWKISH",
-                  "GEOPOLITICAL_RISK_EASING"
+                  "GEOPOLITICAL_RISK_EASING",
+                  "VOL_PRESSURE_EASING"
                 ]
               },
               "error": null
@@ -113561,37 +113571,40 @@
             "source": "llm_adjudicated",
             "selected_view": "blended",
             "market_impact": "MIXED",
-            "impact_horizon": "INTRADAY",
+            "impact_horizon": "MULTI_DAY",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "GEOPOLITICAL_RISK_EASING"
+              "GEOPOLITICAL_RISK_EASING",
+              "VOL_PRESSURE_EASING"
             ],
             "confidence": "MEDIUM",
-            "reason": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.",
+            "reason": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.",
             "deterministic_view": {
               "event_type": "FED_SPEECH",
               "policy_stance": "HAWKISH",
-              "market_impact": "RISK_OFF",
+              "market_impact": "MIXED",
               "impact_horizon": "MULTI_DAY",
               "crypto_relevance": "HIGH",
               "key_tags": [
                 "FED_HAWKISH",
-                "GEOPOLITICAL_RISK_EASING"
+                "GEOPOLITICAL_RISK_EASING",
+                "VOL_PRESSURE_EASING"
               ],
-              "news_summary": "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026 | Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink | Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
-              "brief_rationale": "Fed pricing remains restrictive; geopolitical risk is easing. Classified as RISK_OFF with MULTI_DAY horizon."
+              "news_summary": "The hottest ETF since bitcoin-mania just added $1 billion in a day | [USD] FOMC Member Cook Speaks (Low) | [USD] FOMC Member Goolsbee Speaks (Low)",
+              "brief_rationale": "Fed pricing remains restrictive; volatility pressure eased (VIX 16.91, -1.00%/1d); geopolitical risk is easing. Classified as MIXED with MULTI_DAY horizon."
             },
             "llm_view": {
               "market_impact": "MIXED",
-              "impact_horizon": "INTRADAY",
+              "impact_horizon": "MULTI_DAY",
               "crypto_relevance": "HIGH",
               "key_tags": [
                 "FED_HAWKISH",
-                "GEOPOLITICAL_RISK_EASING"
+                "GEOPOLITICAL_RISK_EASING",
+                "VOL_PRESSURE_EASING"
               ],
-              "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
-              "brief_rationale": "Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment."
+              "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
+              "brief_rationale": "FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact."
             },
             "adjudication_audit": {
               "enabled": true,
@@ -113599,55 +113612,56 @@
               "model": "deepseek-chat",
               "status": "parsed",
               "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-              "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026\", \"Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink\", \"Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists\", \"[USD] FOMC Member Cook Speaks (Low)\", \"[USD] FOMC Member Goolsbee Speaks (Low)\", \"Oil prices stable as Trump...",
-              "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"INTRADAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\"], \"confidence\": 0.7, \"reason\": \"Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.\" }",
+              "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"The hottest ETF since bitcoin-mania just added $1 billion in a day\", \"[USD] FOMC Member Cook Speaks (Low)\", \"[USD] FOMC Member Goolsbee Speaks (Low)\", \"Oil prices stable as Trump insists ceasefire still intact after U.S.-Iran exchange fire\", \"Metalpha Related Wallet Offloads $20M in ETH to Binance Amid Whale Sell-off\", \"Tether F...",
+              "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"VOL_PRESSURE_EASING\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.\" }",
               "parsed_response": {
                 "selected_view": "blended",
                 "final_market_impact": "MIXED",
-                "final_impact_horizon": "INTRADAY",
+                "final_impact_horizon": "MULTI_DAY",
                 "final_crypto_relevance": "HIGH",
                 "final_key_tags": [
                   "FED_HAWKISH",
-                  "GEOPOLITICAL_RISK_EASING"
+                  "GEOPOLITICAL_RISK_EASING",
+                  "VOL_PRESSURE_EASING"
                 ],
-                "confidence": 0.7,
-                "reason": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance."
+                "confidence": 0.85,
+                "reason": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge."
               },
               "error": null
             }
           },
           "macro_decision_source": "llm_adjudicated",
           "macro_mode": "MIXED",
-          "macro_horizon": "INTRADAY",
+          "macro_horizon": "MULTI_DAY",
           "macro_permission": "ALLOW_BOTH",
-          "macro_impact_score": -3,
-          "macro_bias_tier": "MILD_RISK_OFF",
+          "macro_impact_score": -1,
+          "macro_bias_tier": "NO_CLEAR_EDGE",
           "fear_greed_index": 38.0,
           "fear_greed_state": "FEAR",
           "fear_greed_change_5d": null,
-          "vix_level": 17.09,
-          "vix_change_1d_pct": 0.06,
-          "vix_change_5d_pct": 0.59,
-          "dxy_level": 97.95,
+          "vix_level": 16.91,
+          "vix_change_1d_pct": -1.0,
+          "vix_change_5d_pct": -0.47,
+          "dxy_level": 97.88,
           "dxy_trend": "DOWN",
-          "usdjpy_level": 156.737,
-          "usdjpy_trend": "FLAT",
+          "usdjpy_level": 156.563,
+          "usdjpy_trend": "DOWN",
           "fed_event_risk": "HIGH",
           "macro_event_window": true,
-          "risk_off_score": 0.65,
+          "risk_off_score": 0.5,
           "news_headlines": [
-            "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026",
-            "Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink",
-            "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
+            "The hottest ETF since bitcoin-mania just added $1 billion in a day",
             "[USD] FOMC Member Cook Speaks (Low)",
             "[USD] FOMC Member Goolsbee Speaks (Low)",
             "Oil prices stable as Trump insists ceasefire still intact after U.S.-Iran exchange fire",
             "Metalpha Related Wallet Offloads $20M in ETH to Binance Amid Whale Sell-off",
             "Tether Freezes $515 Million in USDT Across 371 Addresses in 30 Days",
             "[USD] Prelim UoM Inflation Expectations (Medium)",
-            "Bitcoin exchange reserves fall to two-year low after $8B exodus",
+            "Most women are confident savers, survey finds \u2014 but where they stash their cash could be a problem",
             "Coinbase posts steep first-quarter loss after slide in crypto prices; shares fall 4%",
-            "[EUR] French Bank Holiday (Holiday)"
+            "[EUR] French Bank Holiday (Holiday)",
+            "Anthropic's Mythos set off a cybersecurity 'hysteria.' Experts say the threat was already here",
+            "Four signs that show Ethereum's rally is exhausted at $2.4K"
           ]
         },
         "position_snapshot": {
@@ -113662,28 +113676,28 @@
         "decision_ready_features": {
           "regime_1d": "BEAR",
           "macro_mode": "MIXED",
-          "macro_horizon": "INTRADAY",
+          "macro_horizon": "MULTI_DAY",
           "macro_permission": "ALLOW_BOTH",
-          "macro_bias_tier": "MILD_RISK_OFF",
-          "macro_impact_score": -3.0,
+          "macro_bias_tier": "NO_CLEAR_EDGE",
+          "macro_impact_score": -1.0,
           "fear_greed_change_5d": null,
-          "vix_level": 17.09,
-          "vix_change_1d_pct": 0.06,
-          "vix_change_5d_pct": 0.59,
+          "vix_level": 16.91,
+          "vix_change_1d_pct": -1.0,
+          "vix_change_5d_pct": -0.47,
           "event_risk_active": true,
           "usd_strength_flag": false,
           "yen_stress_flag": false,
           "flow_data_available": true,
           "flow_schema_version": "flow_semantics_v1",
-          "flow_token_semantic": "ACCUMULATION_HINT",
+          "flow_token_semantic": "DISTRIBUTION_PRESSURE",
           "flow_stablecoin_semantic": "CAPITAL_WITHDRAWAL",
-          "flow_composite_semantic": "MIXED",
-          "flow_signal_mixed": true,
+          "flow_composite_semantic": "SHORT_SUPPORT",
+          "flow_signal_mixed": false,
           "flow_support_long": false,
-          "flow_support_short": false,
-          "funding_rate": 2.69781789425e-05,
-          "funding_zscore": 0.16,
-          "oi_now": 1797354079.7269244,
+          "flow_support_short": true,
+          "funding_rate": 4.11434324931e-05,
+          "funding_zscore": 0.47,
+          "oi_now": 1789521497.8891842,
           "delta_oi_24h_percent": 4.065158131777732,
           "qlib_relative_score_8h": 0.0004,
           "qlib_percentile_8h": 0.0,
@@ -113697,13 +113711,13 @@
           "qlib_bottom_bucket": true,
           "range_regime": false,
           "grid_candidate_eligible": false,
-          "range_lower_bound": 2284.28,
+          "range_lower_bound": 2215.1171,
           "range_upper_bound": 2423.77,
-          "range_width_pct": 0.0593,
-          "price_position_in_range": 0.0584,
+          "range_width_pct": 0.09,
+          "price_position_in_range": 0.3226,
           "grid_mode": "ARITHMETIC",
-          "grid_count": 7,
-          "grid_spacing_pct": 0.0085,
+          "grid_count": 11,
+          "grid_spacing_pct": 0.0082,
           "min_profitable_spacing_pct": 0.0034,
           "grid_spacing_profitable": true,
           "grid_bb_width": 0.0679,
@@ -113722,7 +113736,7 @@
           "ma5_cross_up_ma10_1d": false,
           "ma5_cross_down_ma10_1d": false,
           "ma5_10_gap_pct_1d": 0.011984382944722725,
-          "max_profitable_grid_count": 17,
+          "max_profitable_grid_count": 26,
           "grid_review_after_hours": 24,
           "grid_extension_step_hours": 12,
           "grid_max_lifetime_hours": 48
@@ -113735,17 +113749,17 @@
         "symbol": "SOL-USDT",
         "cycleId": "cycle_2026-05-08_1200",
         "timeframe": "4h",
-        "snapshot_timestamp": 1778242351,
-        "snapshot_time": "2026-05-08T12:12:31Z",
-        "snapshot_time_local": "2026-05-08T20:12:31+0800",
+        "snapshot_timestamp": 1778249568,
+        "snapshot_time": "2026-05-08T14:12:48Z",
+        "snapshot_time_local": "2026-05-08T22:12:48+0800",
         "local_timezone": "Asia/Shanghai",
         "market_snapshot": {
-          "price": 88.56,
-          "change_24h": 0.1809954751131183,
+          "price": 88.68,
+          "change_24h": 0.31674208144796506,
           "rsi_4h": 58.554643190109,
           "rsi_delta_4h": 2.2044344771205147,
           "adx_14": 35.51945983016487,
-          "volume_ratio": 1.0388503683593748,
+          "volume_ratio": 0.9823347328571214,
           "bb_width": 0.0707746585760911,
           "bb_pct_b": 0.6168286441367202,
           "bb_mid_slope_pct": 0.006703579984862869,
@@ -113754,13 +113768,13 @@
           "range_edge_close_count": 0,
           "wick_ratio_lower": 28.95,
           "wick_ratio_upper": 17.11,
-          "funding_rate": 1.03435026761e-05,
-          "funding_zscore": -0.4,
-          "oi_now": 272702205.79200023,
+          "funding_rate": -4.9973185192e-06,
+          "funding_zscore": -0.67,
+          "oi_now": 273071720.97600025,
           "delta_oi_24h_percent": -0.6667080886946561,
-          "natr_percent": 1.358096195692735,
-          "whale_ls_ratio": 1.2127659574468086,
-          "whale_pos_ratio": 0.9156520634178278,
+          "natr_percent": 1.415862803070171,
+          "whale_ls_ratio": 1.1984962406015038,
+          "whale_pos_ratio": 0.9162169124727554,
           "atr_14": 1.5214285714285734,
           "trigger_candle_open": 88.18,
           "trigger_candle_high": 88.72,
@@ -113789,22 +113803,22 @@
           "structure_resistance_stop_short": 91.1507
         },
         "onchain_snapshot": {
-          "token_net_flow": -604964.2281009346,
-          "stablecoin_net_flow": -328774.6374914924,
+          "token_net_flow": -546905.7273703197,
+          "stablecoin_net_flow": -236961.92610130858,
           "flow_data_available": true,
           "flow_schema_version": "flow_semantics_v1",
           "token_flow_semantic": "DISTRIBUTION_PRESSURE",
           "stablecoin_flow_semantic": "CAPITAL_WITHDRAWAL",
           "flow_composite_semantic": "SHORT_SUPPORT",
           "flow_signal_mixed": false,
-          "sentiment_score": -0.24563902701907964,
-          "liquidation_long_usd": 667879.5148999998,
-          "liquidation_short_usd": 12574.581699999999,
-          "liquidation_long_to_volume_4h": 0.0059768327875234,
-          "liquidation_short_to_volume_4h": 0.0001125295364167,
-          "funding_rate": 1.03435026761e-05,
-          "funding_zscore": -0.4,
-          "oi_now": 272702205.79200023,
+          "sentiment_score": -0.1472368932731227,
+          "liquidation_long_usd": 598135.6598999999,
+          "liquidation_short_usd": 13918.7742,
+          "liquidation_long_to_volume_4h": 0.0053526972211635,
+          "liquidation_short_to_volume_4h": 0.0001245586728515,
+          "funding_rate": -4.9973185192e-06,
+          "funding_zscore": -0.67,
+          "oi_now": 273071720.97600025,
           "delta_oi_24h_percent": -0.6667080886946561,
           "qlib_relative_score_8h": 0.0034,
           "qlib_rank_8h": 3,
@@ -113818,81 +113832,67 @@
           "event_type": "FED_SPEECH",
           "policy_stance": "HAWKISH",
           "market_impact": "MIXED",
-          "impact_horizon": "INTRADAY",
+          "impact_horizon": "MULTI_DAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
             "FED_HAWKISH",
-            "GEOPOLITICAL_RISK_EASING"
+            "GEOPOLITICAL_RISK_EASING",
+            "VOL_PRESSURE_EASING"
           ],
-          "brief_rationale": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.",
-          "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
+          "brief_rationale": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.",
+          "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
           "classification_basis": {
             "fear_greed_index": 38.0,
             "fear_greed_state": "FEAR",
             "fear_greed_change_5d": null,
-            "fed_implied_rate": 3.637,
-            "fed_change_5d_bps": -0.5,
-            "usdjpy_level": 156.737,
-            "usdjpy_change_5d_pct": -0.15,
-            "dxy_level": 97.95,
-            "dxy_change_5d_pct": -0.26,
-            "vix_level": 17.09,
-            "vix_change_1d_pct": 0.06,
-            "vix_change_5d_pct": 0.59,
-            "us10y_level": 4.39,
-            "us10y_change_5d_pct": 0.05,
-            "global_stable_flow": 111864277.34510803,
-            "global_stable_market_cap": 268079107191.8815,
-            "global_stable_flow_ratio_pct": 0.04172808486154781
+            "fed_implied_rate": 3.632,
+            "fed_change_5d_bps": -1.0,
+            "usdjpy_level": 156.563,
+            "usdjpy_change_5d_pct": -0.26,
+            "dxy_level": 97.88,
+            "dxy_change_5d_pct": -0.33,
+            "vix_level": 16.91,
+            "vix_change_1d_pct": -1.0,
+            "vix_change_5d_pct": -0.47,
+            "us10y_level": 4.35,
+            "us10y_change_5d_pct": -0.64,
+            "global_stable_flow": -366250926.04403687,
+            "global_stable_market_cap": 267602689372.59613,
+            "global_stable_flow_ratio_pct": -0.13686369404684423
           },
           "key_events": [
             "FED_HAWKISH",
-            "GEOPOLITICAL_RISK_EASING"
+            "GEOPOLITICAL_RISK_EASING",
+            "VOL_PRESSURE_EASING"
           ],
           "event_facts": {
             "fear_greed_index": 38.0,
             "fear_greed_state": "FEAR",
             "fear_greed_change_5d": null,
-            "fed_implied_rate": 3.637,
-            "fed_change_5d_bps": -0.5,
-            "usdjpy_level": 156.737,
-            "usdjpy_change_5d_pct": -0.15,
-            "dxy_level": 97.95,
-            "dxy_change_5d_pct": -0.26,
-            "vix_level": 17.09,
-            "vix_change_1d_pct": 0.06,
-            "vix_change_5d_pct": 0.59,
-            "us10y_level": 4.39,
-            "us10y_change_5d_pct": 0.05,
-            "global_stable_flow": 111864277.34510803,
-            "global_stable_market_cap": 268079107191.8815,
-            "global_stable_flow_ratio_pct": 0.04172808486154781
+            "fed_implied_rate": 3.632,
+            "fed_change_5d_bps": -1.0,
+            "usdjpy_level": 156.563,
+            "usdjpy_change_5d_pct": -0.26,
+            "dxy_level": 97.88,
+            "dxy_change_5d_pct": -0.33,
+            "vix_level": 16.91,
+            "vix_change_1d_pct": -1.0,
+            "vix_change_5d_pct": -0.47,
+            "us10y_level": 4.35,
+            "us10y_change_5d_pct": -0.64,
+            "global_stable_flow": -366250926.04403687,
+            "global_stable_market_cap": 267602689372.59613,
+            "global_stable_flow_ratio_pct": -0.13686369404684423
           },
           "news_selection": {
             "selected": [
               {
-                "title": "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026",
-                "bucket": "general",
-                "score": 19,
-                "published": "Fri, 08 May 2026 07:30:26 +0000",
-                "source": "https://news.bitcoin.com/coinbase-buys-88-million-bitcoin-q1-2026/",
-                "sentiment": "Bullish"
-              },
-              {
-                "title": "Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink",
-                "bucket": "general",
-                "score": 18,
-                "published": "Thu, 07 May 2026 22:31:02 +0000",
-                "source": "https://decrypt.co/367154/solv-protocol-dump-layerzero-migrate-700m-tokenized-bitcoin-chainlink",
-                "sentiment": "Bearish"
-              },
-              {
-                "title": "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
-                "bucket": "general",
-                "score": 17,
-                "published": "Thu, 07 May 2026 22:01:03 +0000",
-                "source": "https://decrypt.co/367215/trump-sons-havent-abandoned-world-liberty-financial",
-                "sentiment": "Bearish"
+                "title": "The hottest ETF since bitcoin-mania just added $1 billion in a day",
+                "bucket": "macro",
+                "score": 16,
+                "published": "Fri, 08 May 2026 13:24:07 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/the-hottest-etf-since-bitcoin-mania-just-added-1-billion-in-a-day.html",
+                "sentiment": "Neutral"
               },
               {
                 "title": "[USD] FOMC Member Cook Speaks (Low)",
@@ -113943,12 +113943,12 @@
                 "sentiment": "Neutral"
               },
               {
-                "title": "Bitcoin exchange reserves fall to two-year low after $8B exodus",
-                "bucket": "bitcoin",
+                "title": "Most women are confident savers, survey finds \u2014 but where they stash their cash could be a problem",
+                "bucket": "macro",
                 "score": 14,
-                "published": "Thu, 07 May 2026 21:52:34 +0000",
-                "source": "https://cointelegraph.com/markets/8b-bitcoin-exodus-drains-exchange-reserves-to-multi-year-lows?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
-                "sentiment": "Bullish"
+                "published": "Fri, 08 May 2026 12:15:01 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/women-savings-lags-inflation.html",
+                "sentiment": "Neutral"
               },
               {
                 "title": "Coinbase posts steep first-quarter loss after slide in crypto prices; shares fall 4%",
@@ -113965,16 +113965,14 @@
                 "published": "2026-05-08 6:01am",
                 "source": "https://www.forexfactory.com/calendar/396-fr-bank-holiday",
                 "sentiment": "Bearish"
-              }
-            ],
-            "dropped": [
+              },
               {
-                "title": "Here's what to expect from Friday's release of the April jobs report",
+                "title": "Anthropic's Mythos set off a cybersecurity 'hysteria.' Experts say the threat was already here",
                 "bucket": "macro",
                 "score": 11,
-                "published": "Thu, 07 May 2026 19:20:55 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/heres-what-to-expect-from-fridays-release-of-the-april-jobs-report.html",
-                "sentiment": "Bullish"
+                "published": "Fri, 08 May 2026 14:04:22 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/anthropic-mythos-ai-cybersecurity-banks.html",
+                "sentiment": "Bearish"
               },
               {
                 "title": "Four signs that show Ethereum's rally is exhausted at $2.4K",
@@ -113983,13 +113981,31 @@
                 "published": "Fri, 08 May 2026 11:30:57 +0000",
                 "source": "https://cointelegraph.com/markets/four-signs-show-ethereum-eth-price-rally-exhausted-2-4k?utm_source=rss_feed&utm_medium=rss_tag_ethereum&utm_campaign=rss_partner_inbound",
                 "sentiment": "Neutral"
-              },
+              }
+            ],
+            "dropped": [
               {
-                "title": "The best 0% APR credit cards for May 2026: Pay no interest for up to 24 months",
+                "title": "China asks banks to pause new loans to US-sanctioned refiners, Bloomberg News reports",
                 "bucket": "macro",
                 "score": 11,
-                "published": "2026-05-06T21:44:56Z",
-                "source": "https://finance.yahoo.com/personal-finance/credit-cards/article/best-0-apr-credit-cards-214456977.html",
+                "published": "2026-05-07T02:55:32Z",
+                "source": "https://finance.yahoo.com/sectors/energy/articles/china-asks-banks-pause-loans-025532958.html",
+                "sentiment": "Bearish"
+              },
+              {
+                "title": "U.S. payrolls increased 115,000 in April, more than expected; unemployment at 4.3%",
+                "bucket": "macro",
+                "score": 10,
+                "published": "Fri, 08 May 2026 13:42:57 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/jobs-report-april-2026.html",
+                "sentiment": "Neutral"
+              },
+              {
+                "title": "Iowa Signs Crypto ATM Licensing and Oversight Bill Into Law",
+                "bucket": "general",
+                "score": 10,
+                "published": "Fri, 08 May 2026 13:12:32 +0000",
+                "source": "https://news.bitcoin.com/iowa-signs-crypto-atm-licensing-and-oversight-bill-into-law/",
                 "sentiment": "Bullish"
               },
               {
@@ -114009,7 +114025,7 @@
                 "sentiment": "Bullish"
               },
               {
-                "title": "Whale Potentially Linked to Erik Voorhees Spends Another $6.67M on ETH",
+                "title": "Mysterious Whale Buys $6.67M in ETH Following False Erik Voorhees Link",
                 "bucket": "general",
                 "score": 10,
                 "published": "Fri, 08 May 2026 10:30:56 +0000",
@@ -114031,14 +114047,6 @@
                 "published": "Fri, 08 May 2026 08:30:21 +0000",
                 "source": "https://news.bitcoin.com/crypto-clarity-act-us-close-robinhood-tenev-2026/",
                 "sentiment": "Bullish"
-              },
-              {
-                "title": "Billion-dollar bets: Global investors chase Indian Premier League to ride booming cricket economy",
-                "bucket": "macro",
-                "score": 10,
-                "published": "Fri, 08 May 2026 07:39:01 GMT",
-                "source": "https://www.cnbc.com/2026/05/08/sports-ipl-rcb-rajasthan-royals-cricket-investing.html",
-                "sentiment": "Neutral"
               },
               {
                 "title": "Ether tests $2.4K as accumulators add 246K ETH: How high can price go?",
@@ -114065,6 +114073,22 @@
                 "sentiment": "Bullish"
               },
               {
+                "title": "Zcash Targeting Post-Quantum Crypto Milestone by 2027",
+                "bucket": "general",
+                "score": 9,
+                "published": "Fri, 08 May 2026 13:15:24 +0000",
+                "source": "https://decrypt.co/367250/zcash-targeting-post-quantum-crypto-milestone-by-2027",
+                "sentiment": "Neutral"
+              },
+              {
+                "title": "Revolut users report Bitcoin price glitch showing BTC at 2 cents",
+                "bucket": "bitcoin",
+                "score": 9,
+                "published": "Fri, 08 May 2026 12:30:16 +0000",
+                "source": "https://cointelegraph.com/news/btc-flash-crash-alerts-at-revolut-users-report-extreme-price-glitches-in-multiple-assets?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
+                "sentiment": "Bearish"
+              },
+              {
                 "title": "Bitcoin eyes $80K reclaim as traders say these BTC price support levels must hold",
                 "bucket": "bitcoin",
                 "score": 9,
@@ -114081,6 +114105,14 @@
                 "sentiment": "Bearish"
               },
               {
+                "title": "XRP New Addresses, Active Supply Plunge Amid Shift to \u2018Institutional Rails\u2019",
+                "bucket": "general",
+                "score": 8,
+                "published": "Fri, 08 May 2026 13:34:29 +0000",
+                "source": "https://decrypt.co/367253/xrp-new-addresses-active-supply-plunge-amid-shift-to-institutional-rails",
+                "sentiment": "Bearish"
+              },
+              {
                 "title": "Block Inc rises 8% as Q1 gives \u2018earnings surprise\u2019 despite Bitcoin dip",
                 "bucket": "bitcoin",
                 "score": 8,
@@ -114089,18 +114121,18 @@
                 "sentiment": "Neutral"
               },
               {
-                "title": "Jim Cramer says the AI boom has 'the power to keep the country's economy humming'",
+                "title": "The rise of 'income stacking': Why Gen Z is juggling multiple jobs",
                 "bucket": "macro",
                 "score": 7,
-                "published": "Thu, 07 May 2026 22:58:55 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/jim-cramer-ai-boom-stock-market-impact.html",
+                "published": "Fri, 08 May 2026 12:51:44 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/income-stacking-why-gen-z-is-juggling-multiple-jobs.html",
                 "sentiment": "Bullish"
               },
               {
                 "title": "States crack down on tax break for wealthy investors",
                 "bucket": "macro",
                 "score": 7,
-                "published": "Fri, 08 May 2026 12:01:44 GMT",
+                "published": "Fri, 08 May 2026 12:33:10 GMT",
                 "source": "https://www.cnbc.com/2026/05/08/tax-break-wealthy-investors-qsbs.html",
                 "sentiment": "Bearish"
               },
@@ -114111,25 +114143,9 @@
                 "published": "Fri, 08 May 2026 07:32:28 GMT",
                 "source": "https://www.cnbc.com/2026/05/08/trump-tariffs-trade-eu-europe-deal.html",
                 "sentiment": "Bullish"
-              },
-              {
-                "title": "Toyota fourth-quarter profit misses by wide margin as U.S. tariffs drive 49% slump",
-                "bucket": "macro",
-                "score": 7,
-                "published": "Fri, 08 May 2026 07:29:03 GMT",
-                "source": "https://www.cnbc.com/2026/05/08/toyota-1q-2026-earnings.html",
-                "sentiment": "Bearish"
-              },
-              {
-                "title": "Cloudflare stock sinks 18% after earnings as company cuts 1,100 employees due to AI changes",
-                "bucket": "macro",
-                "score": 6,
-                "published": "Thu, 07 May 2026 22:19:17 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/cloudflare-net-q1-2026-stock-earnings-layoffs.html",
-                "sentiment": "Neutral"
               }
             ],
-            "candidate_count": 37
+            "candidate_count": 39
           },
           "provenance": {
             "generation_mode": "llm_refined",
@@ -114147,16 +114163,17 @@
               "status": "parsed",
               "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
               "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.\", \"brief_rationale\": \"Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\"] }",
+              "raw_response_preview": "{ \"news_summary\": \"Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.\", \"brief_rationale\": \"FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"VOL_PRESSURE_EASING\"] }",
               "parsed_response": {
-                "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
-                "brief_rationale": "Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment.",
+                "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
+                "brief_rationale": "FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact.",
                 "market_impact": "MIXED",
-                "impact_horizon": "INTRADAY",
+                "impact_horizon": "MULTI_DAY",
                 "crypto_relevance": "HIGH",
                 "key_tags": [
                   "FED_HAWKISH",
-                  "GEOPOLITICAL_RISK_EASING"
+                  "GEOPOLITICAL_RISK_EASING",
+                  "VOL_PRESSURE_EASING"
                 ]
               },
               "error": null
@@ -114166,37 +114183,40 @@
             "source": "llm_adjudicated",
             "selected_view": "blended",
             "market_impact": "MIXED",
-            "impact_horizon": "INTRADAY",
+            "impact_horizon": "MULTI_DAY",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "GEOPOLITICAL_RISK_EASING"
+              "GEOPOLITICAL_RISK_EASING",
+              "VOL_PRESSURE_EASING"
             ],
             "confidence": "MEDIUM",
-            "reason": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.",
+            "reason": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.",
             "deterministic_view": {
               "event_type": "FED_SPEECH",
               "policy_stance": "HAWKISH",
-              "market_impact": "RISK_OFF",
+              "market_impact": "MIXED",
               "impact_horizon": "MULTI_DAY",
               "crypto_relevance": "HIGH",
               "key_tags": [
                 "FED_HAWKISH",
-                "GEOPOLITICAL_RISK_EASING"
+                "GEOPOLITICAL_RISK_EASING",
+                "VOL_PRESSURE_EASING"
               ],
-              "news_summary": "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026 | Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink | Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
-              "brief_rationale": "Fed pricing remains restrictive; geopolitical risk is easing. Classified as RISK_OFF with MULTI_DAY horizon."
+              "news_summary": "The hottest ETF since bitcoin-mania just added $1 billion in a day | [USD] FOMC Member Cook Speaks (Low) | [USD] FOMC Member Goolsbee Speaks (Low)",
+              "brief_rationale": "Fed pricing remains restrictive; volatility pressure eased (VIX 16.91, -1.00%/1d); geopolitical risk is easing. Classified as MIXED with MULTI_DAY horizon."
             },
             "llm_view": {
               "market_impact": "MIXED",
-              "impact_horizon": "INTRADAY",
+              "impact_horizon": "MULTI_DAY",
               "crypto_relevance": "HIGH",
               "key_tags": [
                 "FED_HAWKISH",
-                "GEOPOLITICAL_RISK_EASING"
+                "GEOPOLITICAL_RISK_EASING",
+                "VOL_PRESSURE_EASING"
               ],
-              "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
-              "brief_rationale": "Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment."
+              "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
+              "brief_rationale": "FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact."
             },
             "adjudication_audit": {
               "enabled": true,
@@ -114204,55 +114224,56 @@
               "model": "deepseek-chat",
               "status": "parsed",
               "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-              "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026\", \"Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink\", \"Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists\", \"[USD] FOMC Member Cook Speaks (Low)\", \"[USD] FOMC Member Goolsbee Speaks (Low)\", \"Oil prices stable as Trump...",
-              "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"INTRADAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\"], \"confidence\": 0.7, \"reason\": \"Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.\" }",
+              "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"The hottest ETF since bitcoin-mania just added $1 billion in a day\", \"[USD] FOMC Member Cook Speaks (Low)\", \"[USD] FOMC Member Goolsbee Speaks (Low)\", \"Oil prices stable as Trump insists ceasefire still intact after U.S.-Iran exchange fire\", \"Metalpha Related Wallet Offloads $20M in ETH to Binance Amid Whale Sell-off\", \"Tether F...",
+              "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"VOL_PRESSURE_EASING\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.\" }",
               "parsed_response": {
                 "selected_view": "blended",
                 "final_market_impact": "MIXED",
-                "final_impact_horizon": "INTRADAY",
+                "final_impact_horizon": "MULTI_DAY",
                 "final_crypto_relevance": "HIGH",
                 "final_key_tags": [
                   "FED_HAWKISH",
-                  "GEOPOLITICAL_RISK_EASING"
+                  "GEOPOLITICAL_RISK_EASING",
+                  "VOL_PRESSURE_EASING"
                 ],
-                "confidence": 0.7,
-                "reason": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance."
+                "confidence": 0.85,
+                "reason": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge."
               },
               "error": null
             }
           },
           "macro_decision_source": "llm_adjudicated",
           "macro_mode": "MIXED",
-          "macro_horizon": "INTRADAY",
+          "macro_horizon": "MULTI_DAY",
           "macro_permission": "ALLOW_BOTH",
-          "macro_impact_score": -3,
-          "macro_bias_tier": "MILD_RISK_OFF",
+          "macro_impact_score": -1,
+          "macro_bias_tier": "NO_CLEAR_EDGE",
           "fear_greed_index": 38.0,
           "fear_greed_state": "FEAR",
           "fear_greed_change_5d": null,
-          "vix_level": 17.09,
-          "vix_change_1d_pct": 0.06,
-          "vix_change_5d_pct": 0.59,
-          "dxy_level": 97.95,
+          "vix_level": 16.91,
+          "vix_change_1d_pct": -1.0,
+          "vix_change_5d_pct": -0.47,
+          "dxy_level": 97.88,
           "dxy_trend": "DOWN",
-          "usdjpy_level": 156.737,
-          "usdjpy_trend": "FLAT",
+          "usdjpy_level": 156.563,
+          "usdjpy_trend": "DOWN",
           "fed_event_risk": "HIGH",
           "macro_event_window": true,
-          "risk_off_score": 0.65,
+          "risk_off_score": 0.5,
           "news_headlines": [
-            "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026",
-            "Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink",
-            "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
+            "The hottest ETF since bitcoin-mania just added $1 billion in a day",
             "[USD] FOMC Member Cook Speaks (Low)",
             "[USD] FOMC Member Goolsbee Speaks (Low)",
             "Oil prices stable as Trump insists ceasefire still intact after U.S.-Iran exchange fire",
             "Metalpha Related Wallet Offloads $20M in ETH to Binance Amid Whale Sell-off",
             "Tether Freezes $515 Million in USDT Across 371 Addresses in 30 Days",
             "[USD] Prelim UoM Inflation Expectations (Medium)",
-            "Bitcoin exchange reserves fall to two-year low after $8B exodus",
+            "Most women are confident savers, survey finds \u2014 but where they stash their cash could be a problem",
             "Coinbase posts steep first-quarter loss after slide in crypto prices; shares fall 4%",
-            "[EUR] French Bank Holiday (Holiday)"
+            "[EUR] French Bank Holiday (Holiday)",
+            "Anthropic's Mythos set off a cybersecurity 'hysteria.' Experts say the threat was already here",
+            "Four signs that show Ethereum's rally is exhausted at $2.4K"
           ]
         },
         "position_snapshot": {
@@ -114267,14 +114288,14 @@
         "decision_ready_features": {
           "regime_1d": "BULL",
           "macro_mode": "MIXED",
-          "macro_horizon": "INTRADAY",
+          "macro_horizon": "MULTI_DAY",
           "macro_permission": "ALLOW_BOTH",
-          "macro_bias_tier": "MILD_RISK_OFF",
-          "macro_impact_score": -3.0,
+          "macro_bias_tier": "NO_CLEAR_EDGE",
+          "macro_impact_score": -1.0,
           "fear_greed_change_5d": null,
-          "vix_level": 17.09,
-          "vix_change_1d_pct": 0.06,
-          "vix_change_5d_pct": 0.59,
+          "vix_level": 16.91,
+          "vix_change_1d_pct": -1.0,
+          "vix_change_5d_pct": -0.47,
           "event_risk_active": true,
           "usd_strength_flag": false,
           "yen_stress_flag": false,
@@ -114286,9 +114307,9 @@
           "flow_signal_mixed": false,
           "flow_support_long": false,
           "flow_support_short": true,
-          "funding_rate": 1.03435026761e-05,
-          "funding_zscore": -0.4,
-          "oi_now": 272702205.79200023,
+          "funding_rate": -4.9973185192e-06,
+          "funding_zscore": -0.67,
+          "oi_now": 273071720.97600025,
           "delta_oi_24h_percent": -0.6667080886946561,
           "qlib_relative_score_8h": 0.0034,
           "qlib_percentile_8h": 0.5,
@@ -114305,7 +114326,7 @@
           "range_lower_bound": 87.42,
           "range_upper_bound": 90.39,
           "range_width_pct": 0.0334,
-          "price_position_in_range": 0.3838,
+          "price_position_in_range": 0.4242,
           "grid_mode": "ARITHMETIC",
           "grid_count": 4,
           "grid_spacing_pct": 0.0084,
@@ -114340,9 +114361,9 @@
         "symbol": "BNB-USDT",
         "cycleId": "cycle_2026-05-08_1200",
         "timeframe": "4h",
-        "snapshot_timestamp": 1778242514,
-        "snapshot_time": "2026-05-08T12:15:14Z",
-        "snapshot_time_local": "2026-05-08T20:15:14+0800",
+        "snapshot_timestamp": 1778249737,
+        "snapshot_time": "2026-05-08T14:15:37Z",
+        "snapshot_time_local": "2026-05-08T22:15:37+0800",
         "local_timezone": "Asia/Shanghai",
         "market_snapshot": {
           "price": 640.3,
@@ -114350,7 +114371,7 @@
           "rsi_4h": 54.22673638109488,
           "rsi_delta_4h": 3.97655110383468,
           "adx_14": 36.95516022955701,
-          "volume_ratio": 1.0172018349082221,
+          "volume_ratio": 1.0126214341517035,
           "bb_width": 0.0496156623923181,
           "bb_pct_b": 0.5233055896946184,
           "bb_mid_slope_pct": 0.0032580161260079323,
@@ -114359,13 +114380,13 @@
           "range_edge_close_count": 1,
           "wick_ratio_lower": 17.86,
           "wick_ratio_upper": 7.14,
-          "funding_rate": 3.289791672e-06,
-          "funding_zscore": -0.91,
+          "funding_rate": 1.14687998114e-05,
+          "funding_zscore": -0.75,
           "oi_now": 50194813.794999994,
           "delta_oi_24h_percent": 0.6533063409952905,
-          "natr_percent": 1.0884334847562327,
-          "whale_ls_ratio": 0.8121546961325967,
-          "whale_pos_ratio": 0.8890815069505738,
+          "natr_percent": 1.1220751823148813,
+          "whale_ls_ratio": 0.8087431693989071,
+          "whale_pos_ratio": 0.8994337894642078,
           "atr_14": 9.207142857142856,
           "trigger_candle_open": 636.5,
           "trigger_candle_high": 641.1,
@@ -114403,12 +114424,12 @@
           "flow_composite_semantic": "UNAVAILABLE",
           "flow_signal_mixed": false,
           "sentiment_score": 0.0,
-          "liquidation_long_usd": 26871.793999999998,
+          "liquidation_long_usd": 17001.743,
           "liquidation_short_usd": 0.0,
-          "liquidation_long_to_volume_4h": 0.003793916398056,
+          "liquidation_long_to_volume_4h": 0.0024004051074235,
           "liquidation_short_to_volume_4h": 0.0,
-          "funding_rate": 3.289791672e-06,
-          "funding_zscore": -0.91,
+          "funding_rate": 1.14687998114e-05,
+          "funding_zscore": -0.75,
           "oi_now": 50194813.794999994,
           "delta_oi_24h_percent": 0.6533063409952905,
           "qlib_relative_score_8h": 0.0044,
@@ -114423,81 +114444,67 @@
           "event_type": "FED_SPEECH",
           "policy_stance": "HAWKISH",
           "market_impact": "MIXED",
-          "impact_horizon": "INTRADAY",
+          "impact_horizon": "MULTI_DAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
             "FED_HAWKISH",
-            "GEOPOLITICAL_RISK_EASING"
+            "GEOPOLITICAL_RISK_EASING",
+            "VOL_PRESSURE_EASING"
           ],
-          "brief_rationale": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.",
-          "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
+          "brief_rationale": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.",
+          "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
           "classification_basis": {
             "fear_greed_index": 38.0,
             "fear_greed_state": "FEAR",
             "fear_greed_change_5d": null,
-            "fed_implied_rate": 3.637,
-            "fed_change_5d_bps": -0.5,
-            "usdjpy_level": 156.737,
-            "usdjpy_change_5d_pct": -0.15,
-            "dxy_level": 97.95,
-            "dxy_change_5d_pct": -0.26,
-            "vix_level": 17.09,
-            "vix_change_1d_pct": 0.06,
-            "vix_change_5d_pct": 0.59,
-            "us10y_level": 4.39,
-            "us10y_change_5d_pct": 0.05,
-            "global_stable_flow": 111864277.34510803,
-            "global_stable_market_cap": 268079107191.8815,
-            "global_stable_flow_ratio_pct": 0.04172808486154781
+            "fed_implied_rate": 3.632,
+            "fed_change_5d_bps": -1.0,
+            "usdjpy_level": 156.563,
+            "usdjpy_change_5d_pct": -0.26,
+            "dxy_level": 97.88,
+            "dxy_change_5d_pct": -0.33,
+            "vix_level": 16.91,
+            "vix_change_1d_pct": -1.0,
+            "vix_change_5d_pct": -0.47,
+            "us10y_level": 4.35,
+            "us10y_change_5d_pct": -0.64,
+            "global_stable_flow": -366250926.04403687,
+            "global_stable_market_cap": 267602689372.59613,
+            "global_stable_flow_ratio_pct": -0.13686369404684423
           },
           "key_events": [
             "FED_HAWKISH",
-            "GEOPOLITICAL_RISK_EASING"
+            "GEOPOLITICAL_RISK_EASING",
+            "VOL_PRESSURE_EASING"
           ],
           "event_facts": {
             "fear_greed_index": 38.0,
             "fear_greed_state": "FEAR",
             "fear_greed_change_5d": null,
-            "fed_implied_rate": 3.637,
-            "fed_change_5d_bps": -0.5,
-            "usdjpy_level": 156.737,
-            "usdjpy_change_5d_pct": -0.15,
-            "dxy_level": 97.95,
-            "dxy_change_5d_pct": -0.26,
-            "vix_level": 17.09,
-            "vix_change_1d_pct": 0.06,
-            "vix_change_5d_pct": 0.59,
-            "us10y_level": 4.39,
-            "us10y_change_5d_pct": 0.05,
-            "global_stable_flow": 111864277.34510803,
-            "global_stable_market_cap": 268079107191.8815,
-            "global_stable_flow_ratio_pct": 0.04172808486154781
+            "fed_implied_rate": 3.632,
+            "fed_change_5d_bps": -1.0,
+            "usdjpy_level": 156.563,
+            "usdjpy_change_5d_pct": -0.26,
+            "dxy_level": 97.88,
+            "dxy_change_5d_pct": -0.33,
+            "vix_level": 16.91,
+            "vix_change_1d_pct": -1.0,
+            "vix_change_5d_pct": -0.47,
+            "us10y_level": 4.35,
+            "us10y_change_5d_pct": -0.64,
+            "global_stable_flow": -366250926.04403687,
+            "global_stable_market_cap": 267602689372.59613,
+            "global_stable_flow_ratio_pct": -0.13686369404684423
           },
           "news_selection": {
             "selected": [
               {
-                "title": "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026",
-                "bucket": "general",
-                "score": 19,
-                "published": "Fri, 08 May 2026 07:30:26 +0000",
-                "source": "https://news.bitcoin.com/coinbase-buys-88-million-bitcoin-q1-2026/",
-                "sentiment": "Bullish"
-              },
-              {
-                "title": "Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink",
-                "bucket": "general",
-                "score": 18,
-                "published": "Thu, 07 May 2026 22:31:02 +0000",
-                "source": "https://decrypt.co/367154/solv-protocol-dump-layerzero-migrate-700m-tokenized-bitcoin-chainlink",
-                "sentiment": "Bearish"
-              },
-              {
-                "title": "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
-                "bucket": "general",
-                "score": 17,
-                "published": "Thu, 07 May 2026 22:01:03 +0000",
-                "source": "https://decrypt.co/367215/trump-sons-havent-abandoned-world-liberty-financial",
-                "sentiment": "Bearish"
+                "title": "The hottest ETF since bitcoin-mania just added $1 billion in a day",
+                "bucket": "macro",
+                "score": 16,
+                "published": "Fri, 08 May 2026 13:24:07 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/the-hottest-etf-since-bitcoin-mania-just-added-1-billion-in-a-day.html",
+                "sentiment": "Neutral"
               },
               {
                 "title": "[USD] FOMC Member Cook Speaks (Low)",
@@ -114548,12 +114555,12 @@
                 "sentiment": "Neutral"
               },
               {
-                "title": "Bitcoin exchange reserves fall to two-year low after $8B exodus",
-                "bucket": "bitcoin",
+                "title": "Most women are confident savers, survey finds \u2014 but where they stash their cash could be a problem",
+                "bucket": "macro",
                 "score": 14,
-                "published": "Thu, 07 May 2026 21:52:34 +0000",
-                "source": "https://cointelegraph.com/markets/8b-bitcoin-exodus-drains-exchange-reserves-to-multi-year-lows?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
-                "sentiment": "Bullish"
+                "published": "Fri, 08 May 2026 12:15:01 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/women-savings-lags-inflation.html",
+                "sentiment": "Neutral"
               },
               {
                 "title": "Coinbase posts steep first-quarter loss after slide in crypto prices; shares fall 4%",
@@ -114570,16 +114577,14 @@
                 "published": "2026-05-08 6:01am",
                 "source": "https://www.forexfactory.com/calendar/396-fr-bank-holiday",
                 "sentiment": "Bearish"
-              }
-            ],
-            "dropped": [
+              },
               {
-                "title": "Here's what to expect from Friday's release of the April jobs report",
+                "title": "Anthropic's Mythos set off a cybersecurity 'hysteria.' Experts say the threat was already here",
                 "bucket": "macro",
                 "score": 11,
-                "published": "Thu, 07 May 2026 19:20:55 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/heres-what-to-expect-from-fridays-release-of-the-april-jobs-report.html",
-                "sentiment": "Bullish"
+                "published": "Fri, 08 May 2026 14:04:22 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/anthropic-mythos-ai-cybersecurity-banks.html",
+                "sentiment": "Bearish"
               },
               {
                 "title": "Four signs that show Ethereum's rally is exhausted at $2.4K",
@@ -114588,13 +114593,31 @@
                 "published": "Fri, 08 May 2026 11:30:57 +0000",
                 "source": "https://cointelegraph.com/markets/four-signs-show-ethereum-eth-price-rally-exhausted-2-4k?utm_source=rss_feed&utm_medium=rss_tag_ethereum&utm_campaign=rss_partner_inbound",
                 "sentiment": "Neutral"
-              },
+              }
+            ],
+            "dropped": [
               {
-                "title": "The best 0% APR credit cards for May 2026: Pay no interest for up to 24 months",
+                "title": "China asks banks to pause new loans to US-sanctioned refiners, Bloomberg News reports",
                 "bucket": "macro",
                 "score": 11,
-                "published": "2026-05-06T21:44:56Z",
-                "source": "https://finance.yahoo.com/personal-finance/credit-cards/article/best-0-apr-credit-cards-214456977.html",
+                "published": "2026-05-07T02:55:32Z",
+                "source": "https://finance.yahoo.com/sectors/energy/articles/china-asks-banks-pause-loans-025532958.html",
+                "sentiment": "Bearish"
+              },
+              {
+                "title": "U.S. payrolls increased 115,000 in April, more than expected; unemployment at 4.3%",
+                "bucket": "macro",
+                "score": 10,
+                "published": "Fri, 08 May 2026 13:42:57 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/jobs-report-april-2026.html",
+                "sentiment": "Neutral"
+              },
+              {
+                "title": "Iowa Signs Crypto ATM Licensing and Oversight Bill Into Law",
+                "bucket": "general",
+                "score": 10,
+                "published": "Fri, 08 May 2026 13:12:32 +0000",
+                "source": "https://news.bitcoin.com/iowa-signs-crypto-atm-licensing-and-oversight-bill-into-law/",
                 "sentiment": "Bullish"
               },
               {
@@ -114614,7 +114637,7 @@
                 "sentiment": "Bullish"
               },
               {
-                "title": "Whale Potentially Linked to Erik Voorhees Spends Another $6.67M on ETH",
+                "title": "Mysterious Whale Buys $6.67M in ETH Following False Erik Voorhees Link",
                 "bucket": "general",
                 "score": 10,
                 "published": "Fri, 08 May 2026 10:30:56 +0000",
@@ -114636,14 +114659,6 @@
                 "published": "Fri, 08 May 2026 08:30:21 +0000",
                 "source": "https://news.bitcoin.com/crypto-clarity-act-us-close-robinhood-tenev-2026/",
                 "sentiment": "Bullish"
-              },
-              {
-                "title": "Billion-dollar bets: Global investors chase Indian Premier League to ride booming cricket economy",
-                "bucket": "macro",
-                "score": 10,
-                "published": "Fri, 08 May 2026 07:39:01 GMT",
-                "source": "https://www.cnbc.com/2026/05/08/sports-ipl-rcb-rajasthan-royals-cricket-investing.html",
-                "sentiment": "Neutral"
               },
               {
                 "title": "Ether tests $2.4K as accumulators add 246K ETH: How high can price go?",
@@ -114670,6 +114685,22 @@
                 "sentiment": "Bullish"
               },
               {
+                "title": "Zcash Targeting Post-Quantum Crypto Milestone by 2027",
+                "bucket": "general",
+                "score": 9,
+                "published": "Fri, 08 May 2026 13:15:24 +0000",
+                "source": "https://decrypt.co/367250/zcash-targeting-post-quantum-crypto-milestone-by-2027",
+                "sentiment": "Neutral"
+              },
+              {
+                "title": "Revolut users report Bitcoin price glitch showing BTC at 2 cents",
+                "bucket": "bitcoin",
+                "score": 9,
+                "published": "Fri, 08 May 2026 12:30:16 +0000",
+                "source": "https://cointelegraph.com/news/btc-flash-crash-alerts-at-revolut-users-report-extreme-price-glitches-in-multiple-assets?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
+                "sentiment": "Bearish"
+              },
+              {
                 "title": "Bitcoin eyes $80K reclaim as traders say these BTC price support levels must hold",
                 "bucket": "bitcoin",
                 "score": 9,
@@ -114686,6 +114717,14 @@
                 "sentiment": "Bearish"
               },
               {
+                "title": "XRP New Addresses, Active Supply Plunge Amid Shift to \u2018Institutional Rails\u2019",
+                "bucket": "general",
+                "score": 8,
+                "published": "Fri, 08 May 2026 13:34:29 +0000",
+                "source": "https://decrypt.co/367253/xrp-new-addresses-active-supply-plunge-amid-shift-to-institutional-rails",
+                "sentiment": "Bearish"
+              },
+              {
                 "title": "Block Inc rises 8% as Q1 gives \u2018earnings surprise\u2019 despite Bitcoin dip",
                 "bucket": "bitcoin",
                 "score": 8,
@@ -114694,18 +114733,18 @@
                 "sentiment": "Neutral"
               },
               {
-                "title": "Jim Cramer says the AI boom has 'the power to keep the country's economy humming'",
+                "title": "The rise of 'income stacking': Why Gen Z is juggling multiple jobs",
                 "bucket": "macro",
                 "score": 7,
-                "published": "Thu, 07 May 2026 22:58:55 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/jim-cramer-ai-boom-stock-market-impact.html",
+                "published": "Fri, 08 May 2026 12:51:44 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/income-stacking-why-gen-z-is-juggling-multiple-jobs.html",
                 "sentiment": "Bullish"
               },
               {
                 "title": "States crack down on tax break for wealthy investors",
                 "bucket": "macro",
                 "score": 7,
-                "published": "Fri, 08 May 2026 12:01:44 GMT",
+                "published": "Fri, 08 May 2026 12:33:10 GMT",
                 "source": "https://www.cnbc.com/2026/05/08/tax-break-wealthy-investors-qsbs.html",
                 "sentiment": "Bearish"
               },
@@ -114716,25 +114755,9 @@
                 "published": "Fri, 08 May 2026 07:32:28 GMT",
                 "source": "https://www.cnbc.com/2026/05/08/trump-tariffs-trade-eu-europe-deal.html",
                 "sentiment": "Bullish"
-              },
-              {
-                "title": "Toyota fourth-quarter profit misses by wide margin as U.S. tariffs drive 49% slump",
-                "bucket": "macro",
-                "score": 7,
-                "published": "Fri, 08 May 2026 07:29:03 GMT",
-                "source": "https://www.cnbc.com/2026/05/08/toyota-1q-2026-earnings.html",
-                "sentiment": "Bearish"
-              },
-              {
-                "title": "Cloudflare stock sinks 18% after earnings as company cuts 1,100 employees due to AI changes",
-                "bucket": "macro",
-                "score": 6,
-                "published": "Thu, 07 May 2026 22:19:17 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/cloudflare-net-q1-2026-stock-earnings-layoffs.html",
-                "sentiment": "Neutral"
               }
             ],
-            "candidate_count": 37
+            "candidate_count": 39
           },
           "provenance": {
             "generation_mode": "llm_refined",
@@ -114752,16 +114775,17 @@
               "status": "parsed",
               "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
               "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.\", \"brief_rationale\": \"Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\"] }",
+              "raw_response_preview": "{ \"news_summary\": \"Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.\", \"brief_rationale\": \"FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"VOL_PRESSURE_EASING\"] }",
               "parsed_response": {
-                "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
-                "brief_rationale": "Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment.",
+                "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
+                "brief_rationale": "FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact.",
                 "market_impact": "MIXED",
-                "impact_horizon": "INTRADAY",
+                "impact_horizon": "MULTI_DAY",
                 "crypto_relevance": "HIGH",
                 "key_tags": [
                   "FED_HAWKISH",
-                  "GEOPOLITICAL_RISK_EASING"
+                  "GEOPOLITICAL_RISK_EASING",
+                  "VOL_PRESSURE_EASING"
                 ]
               },
               "error": null
@@ -114771,37 +114795,40 @@
             "source": "llm_adjudicated",
             "selected_view": "blended",
             "market_impact": "MIXED",
-            "impact_horizon": "INTRADAY",
+            "impact_horizon": "MULTI_DAY",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "GEOPOLITICAL_RISK_EASING"
+              "GEOPOLITICAL_RISK_EASING",
+              "VOL_PRESSURE_EASING"
             ],
             "confidence": "MEDIUM",
-            "reason": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.",
+            "reason": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.",
             "deterministic_view": {
               "event_type": "FED_SPEECH",
               "policy_stance": "HAWKISH",
-              "market_impact": "RISK_OFF",
+              "market_impact": "MIXED",
               "impact_horizon": "MULTI_DAY",
               "crypto_relevance": "HIGH",
               "key_tags": [
                 "FED_HAWKISH",
-                "GEOPOLITICAL_RISK_EASING"
+                "GEOPOLITICAL_RISK_EASING",
+                "VOL_PRESSURE_EASING"
               ],
-              "news_summary": "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026 | Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink | Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
-              "brief_rationale": "Fed pricing remains restrictive; geopolitical risk is easing. Classified as RISK_OFF with MULTI_DAY horizon."
+              "news_summary": "The hottest ETF since bitcoin-mania just added $1 billion in a day | [USD] FOMC Member Cook Speaks (Low) | [USD] FOMC Member Goolsbee Speaks (Low)",
+              "brief_rationale": "Fed pricing remains restrictive; volatility pressure eased (VIX 16.91, -1.00%/1d); geopolitical risk is easing. Classified as MIXED with MULTI_DAY horizon."
             },
             "llm_view": {
               "market_impact": "MIXED",
-              "impact_horizon": "INTRADAY",
+              "impact_horizon": "MULTI_DAY",
               "crypto_relevance": "HIGH",
               "key_tags": [
                 "FED_HAWKISH",
-                "GEOPOLITICAL_RISK_EASING"
+                "GEOPOLITICAL_RISK_EASING",
+                "VOL_PRESSURE_EASING"
               ],
-              "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
-              "brief_rationale": "Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment."
+              "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
+              "brief_rationale": "FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact."
             },
             "adjudication_audit": {
               "enabled": true,
@@ -114809,55 +114836,56 @@
               "model": "deepseek-chat",
               "status": "parsed",
               "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-              "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026\", \"Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink\", \"Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists\", \"[USD] FOMC Member Cook Speaks (Low)\", \"[USD] FOMC Member Goolsbee Speaks (Low)\", \"Oil prices stable as Trump...",
-              "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"INTRADAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\"], \"confidence\": 0.7, \"reason\": \"Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.\" }",
+              "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"The hottest ETF since bitcoin-mania just added $1 billion in a day\", \"[USD] FOMC Member Cook Speaks (Low)\", \"[USD] FOMC Member Goolsbee Speaks (Low)\", \"Oil prices stable as Trump insists ceasefire still intact after U.S.-Iran exchange fire\", \"Metalpha Related Wallet Offloads $20M in ETH to Binance Amid Whale Sell-off\", \"Tether F...",
+              "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"VOL_PRESSURE_EASING\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.\" }",
               "parsed_response": {
                 "selected_view": "blended",
                 "final_market_impact": "MIXED",
-                "final_impact_horizon": "INTRADAY",
+                "final_impact_horizon": "MULTI_DAY",
                 "final_crypto_relevance": "HIGH",
                 "final_key_tags": [
                   "FED_HAWKISH",
-                  "GEOPOLITICAL_RISK_EASING"
+                  "GEOPOLITICAL_RISK_EASING",
+                  "VOL_PRESSURE_EASING"
                 ],
-                "confidence": 0.7,
-                "reason": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance."
+                "confidence": 0.85,
+                "reason": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge."
               },
               "error": null
             }
           },
           "macro_decision_source": "llm_adjudicated",
           "macro_mode": "MIXED",
-          "macro_horizon": "INTRADAY",
+          "macro_horizon": "MULTI_DAY",
           "macro_permission": "ALLOW_BOTH",
-          "macro_impact_score": -3,
-          "macro_bias_tier": "MILD_RISK_OFF",
+          "macro_impact_score": -1,
+          "macro_bias_tier": "NO_CLEAR_EDGE",
           "fear_greed_index": 38.0,
           "fear_greed_state": "FEAR",
           "fear_greed_change_5d": null,
-          "vix_level": 17.09,
-          "vix_change_1d_pct": 0.06,
-          "vix_change_5d_pct": 0.59,
-          "dxy_level": 97.95,
+          "vix_level": 16.91,
+          "vix_change_1d_pct": -1.0,
+          "vix_change_5d_pct": -0.47,
+          "dxy_level": 97.88,
           "dxy_trend": "DOWN",
-          "usdjpy_level": 156.737,
-          "usdjpy_trend": "FLAT",
+          "usdjpy_level": 156.563,
+          "usdjpy_trend": "DOWN",
           "fed_event_risk": "HIGH",
           "macro_event_window": true,
-          "risk_off_score": 0.65,
+          "risk_off_score": 0.5,
           "news_headlines": [
-            "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026",
-            "Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink",
-            "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
+            "The hottest ETF since bitcoin-mania just added $1 billion in a day",
             "[USD] FOMC Member Cook Speaks (Low)",
             "[USD] FOMC Member Goolsbee Speaks (Low)",
             "Oil prices stable as Trump insists ceasefire still intact after U.S.-Iran exchange fire",
             "Metalpha Related Wallet Offloads $20M in ETH to Binance Amid Whale Sell-off",
             "Tether Freezes $515 Million in USDT Across 371 Addresses in 30 Days",
             "[USD] Prelim UoM Inflation Expectations (Medium)",
-            "Bitcoin exchange reserves fall to two-year low after $8B exodus",
+            "Most women are confident savers, survey finds \u2014 but where they stash their cash could be a problem",
             "Coinbase posts steep first-quarter loss after slide in crypto prices; shares fall 4%",
-            "[EUR] French Bank Holiday (Holiday)"
+            "[EUR] French Bank Holiday (Holiday)",
+            "Anthropic's Mythos set off a cybersecurity 'hysteria.' Experts say the threat was already here",
+            "Four signs that show Ethereum's rally is exhausted at $2.4K"
           ]
         },
         "position_snapshot": {
@@ -114872,14 +114900,14 @@
         "decision_ready_features": {
           "regime_1d": "CHOP",
           "macro_mode": "MIXED",
-          "macro_horizon": "INTRADAY",
+          "macro_horizon": "MULTI_DAY",
           "macro_permission": "ALLOW_BOTH",
-          "macro_bias_tier": "MILD_RISK_OFF",
-          "macro_impact_score": -3.0,
+          "macro_bias_tier": "NO_CLEAR_EDGE",
+          "macro_impact_score": -1.0,
           "fear_greed_change_5d": null,
-          "vix_level": 17.09,
-          "vix_change_1d_pct": 0.06,
-          "vix_change_5d_pct": 0.59,
+          "vix_level": 16.91,
+          "vix_change_1d_pct": -1.0,
+          "vix_change_5d_pct": -0.47,
           "event_risk_active": true,
           "usd_strength_flag": false,
           "yen_stress_flag": false,
@@ -114891,8 +114919,8 @@
           "flow_signal_mixed": false,
           "flow_support_long": false,
           "flow_support_short": false,
-          "funding_rate": 3.289791672e-06,
-          "funding_zscore": -0.91,
+          "funding_rate": 1.14687998114e-05,
+          "funding_zscore": -0.75,
           "oi_now": 50194813.794999994,
           "delta_oi_24h_percent": 0.6533063409952905,
           "qlib_relative_score_8h": 0.0044,
@@ -114945,17 +114973,17 @@
         "symbol": "DOGE-USDT",
         "cycleId": "cycle_2026-05-08_1200",
         "timeframe": "4h",
-        "snapshot_timestamp": 1778242678,
-        "snapshot_time": "2026-05-08T12:17:58Z",
-        "snapshot_time_local": "2026-05-08T20:17:58+0800",
+        "snapshot_timestamp": 1778249904,
+        "snapshot_time": "2026-05-08T14:18:24Z",
+        "snapshot_time_local": "2026-05-08T22:18:24+0800",
         "local_timezone": "Asia/Shanghai",
         "market_snapshot": {
-          "price": 0.10737,
-          "change_24h": -0.4265974218677567,
+          "price": 0.10728,
+          "change_24h": -0.510062134841876,
           "rsi_4h": 40.06994756841086,
           "rsi_delta_4h": 5.190455420667554,
           "adx_14": 33.15000299131155,
-          "volume_ratio": 0.8715294504503872,
+          "volume_ratio": 0.8046518463511168,
           "bb_width": 0.1146012589606448,
           "bb_pct_b": 0.1869190266036585,
           "bb_mid_slope_pct": -0.005276393192330437,
@@ -114964,13 +114992,13 @@
           "range_edge_close_count": 3,
           "wick_ratio_lower": 7.64,
           "wick_ratio_upper": 23.57,
-          "funding_rate": 2.9202745014e-05,
-          "funding_zscore": -0.12,
-          "oi_now": 112793908.28849997,
+          "funding_rate": 2.52558316242e-05,
+          "funding_zscore": -0.19,
+          "oi_now": 112699361.84399998,
           "delta_oi_24h_percent": -5.995279791311896,
-          "natr_percent": 1.7599110595747745,
-          "whale_ls_ratio": 1.2366255144032923,
-          "whale_pos_ratio": 0.8178093511532163,
+          "natr_percent": 1.841794624668679,
+          "whale_ls_ratio": 1.2515592515592515,
+          "whale_pos_ratio": 0.8202188885395202,
           "atr_14": 0.0020521428571428,
           "trigger_candle_open": 0.10627,
           "trigger_candle_high": 0.10772,
@@ -115008,13 +115036,13 @@
           "flow_composite_semantic": "UNAVAILABLE",
           "flow_signal_mixed": false,
           "sentiment_score": 0.0,
-          "liquidation_long_usd": 3605267.5858999994,
-          "liquidation_short_usd": 72126.9381,
-          "liquidation_long_to_volume_4h": 0.0490413052181336,
-          "liquidation_short_to_volume_4h": 0.0009811197370329,
-          "funding_rate": 2.9202745014e-05,
-          "funding_zscore": -0.12,
-          "oi_now": 112793908.28849997,
+          "liquidation_long_usd": 2002959.9274000009,
+          "liquidation_short_usd": 70961.4325,
+          "liquidation_long_to_volume_4h": 0.0272456251301505,
+          "liquidation_short_to_volume_4h": 0.0009652657360465,
+          "funding_rate": 2.52558316242e-05,
+          "funding_zscore": -0.19,
+          "oi_now": 112699361.84399998,
           "delta_oi_24h_percent": -5.995279791311896,
           "qlib_relative_score_8h": 0.0018,
           "qlib_rank_8h": 4,
@@ -115028,81 +115056,67 @@
           "event_type": "FED_SPEECH",
           "policy_stance": "HAWKISH",
           "market_impact": "MIXED",
-          "impact_horizon": "INTRADAY",
+          "impact_horizon": "MULTI_DAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
             "FED_HAWKISH",
-            "GEOPOLITICAL_RISK_EASING"
+            "GEOPOLITICAL_RISK_EASING",
+            "VOL_PRESSURE_EASING"
           ],
-          "brief_rationale": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.",
-          "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
+          "brief_rationale": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.",
+          "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
           "classification_basis": {
             "fear_greed_index": 38.0,
             "fear_greed_state": "FEAR",
             "fear_greed_change_5d": null,
-            "fed_implied_rate": 3.637,
-            "fed_change_5d_bps": -0.5,
-            "usdjpy_level": 156.737,
-            "usdjpy_change_5d_pct": -0.15,
-            "dxy_level": 97.95,
-            "dxy_change_5d_pct": -0.26,
-            "vix_level": 17.09,
-            "vix_change_1d_pct": 0.06,
-            "vix_change_5d_pct": 0.59,
-            "us10y_level": 4.39,
-            "us10y_change_5d_pct": 0.05,
-            "global_stable_flow": 111864277.34510803,
-            "global_stable_market_cap": 268079107191.8815,
-            "global_stable_flow_ratio_pct": 0.04172808486154781
+            "fed_implied_rate": 3.632,
+            "fed_change_5d_bps": -1.0,
+            "usdjpy_level": 156.563,
+            "usdjpy_change_5d_pct": -0.26,
+            "dxy_level": 97.88,
+            "dxy_change_5d_pct": -0.33,
+            "vix_level": 16.91,
+            "vix_change_1d_pct": -1.0,
+            "vix_change_5d_pct": -0.47,
+            "us10y_level": 4.35,
+            "us10y_change_5d_pct": -0.64,
+            "global_stable_flow": -366250926.04403687,
+            "global_stable_market_cap": 267602689372.59613,
+            "global_stable_flow_ratio_pct": -0.13686369404684423
           },
           "key_events": [
             "FED_HAWKISH",
-            "GEOPOLITICAL_RISK_EASING"
+            "GEOPOLITICAL_RISK_EASING",
+            "VOL_PRESSURE_EASING"
           ],
           "event_facts": {
             "fear_greed_index": 38.0,
             "fear_greed_state": "FEAR",
             "fear_greed_change_5d": null,
-            "fed_implied_rate": 3.637,
-            "fed_change_5d_bps": -0.5,
-            "usdjpy_level": 156.737,
-            "usdjpy_change_5d_pct": -0.15,
-            "dxy_level": 97.95,
-            "dxy_change_5d_pct": -0.26,
-            "vix_level": 17.09,
-            "vix_change_1d_pct": 0.06,
-            "vix_change_5d_pct": 0.59,
-            "us10y_level": 4.39,
-            "us10y_change_5d_pct": 0.05,
-            "global_stable_flow": 111864277.34510803,
-            "global_stable_market_cap": 268079107191.8815,
-            "global_stable_flow_ratio_pct": 0.04172808486154781
+            "fed_implied_rate": 3.632,
+            "fed_change_5d_bps": -1.0,
+            "usdjpy_level": 156.563,
+            "usdjpy_change_5d_pct": -0.26,
+            "dxy_level": 97.88,
+            "dxy_change_5d_pct": -0.33,
+            "vix_level": 16.91,
+            "vix_change_1d_pct": -1.0,
+            "vix_change_5d_pct": -0.47,
+            "us10y_level": 4.35,
+            "us10y_change_5d_pct": -0.64,
+            "global_stable_flow": -366250926.04403687,
+            "global_stable_market_cap": 267602689372.59613,
+            "global_stable_flow_ratio_pct": -0.13686369404684423
           },
           "news_selection": {
             "selected": [
               {
-                "title": "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026",
-                "bucket": "general",
-                "score": 19,
-                "published": "Fri, 08 May 2026 07:30:26 +0000",
-                "source": "https://news.bitcoin.com/coinbase-buys-88-million-bitcoin-q1-2026/",
-                "sentiment": "Bullish"
-              },
-              {
-                "title": "Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink",
-                "bucket": "general",
-                "score": 18,
-                "published": "Thu, 07 May 2026 22:31:02 +0000",
-                "source": "https://decrypt.co/367154/solv-protocol-dump-layerzero-migrate-700m-tokenized-bitcoin-chainlink",
-                "sentiment": "Bearish"
-              },
-              {
-                "title": "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
-                "bucket": "general",
-                "score": 17,
-                "published": "Thu, 07 May 2026 22:01:03 +0000",
-                "source": "https://decrypt.co/367215/trump-sons-havent-abandoned-world-liberty-financial",
-                "sentiment": "Bearish"
+                "title": "The hottest ETF since bitcoin-mania just added $1 billion in a day",
+                "bucket": "macro",
+                "score": 16,
+                "published": "Fri, 08 May 2026 13:24:07 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/the-hottest-etf-since-bitcoin-mania-just-added-1-billion-in-a-day.html",
+                "sentiment": "Neutral"
               },
               {
                 "title": "[USD] FOMC Member Cook Speaks (Low)",
@@ -115153,12 +115167,12 @@
                 "sentiment": "Neutral"
               },
               {
-                "title": "Bitcoin exchange reserves fall to two-year low after $8B exodus",
-                "bucket": "bitcoin",
+                "title": "Most women are confident savers, survey finds \u2014 but where they stash their cash could be a problem",
+                "bucket": "macro",
                 "score": 14,
-                "published": "Thu, 07 May 2026 21:52:34 +0000",
-                "source": "https://cointelegraph.com/markets/8b-bitcoin-exodus-drains-exchange-reserves-to-multi-year-lows?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
-                "sentiment": "Bullish"
+                "published": "Fri, 08 May 2026 12:15:01 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/women-savings-lags-inflation.html",
+                "sentiment": "Neutral"
               },
               {
                 "title": "Coinbase posts steep first-quarter loss after slide in crypto prices; shares fall 4%",
@@ -115175,16 +115189,14 @@
                 "published": "2026-05-08 6:01am",
                 "source": "https://www.forexfactory.com/calendar/396-fr-bank-holiday",
                 "sentiment": "Bearish"
-              }
-            ],
-            "dropped": [
+              },
               {
-                "title": "Here's what to expect from Friday's release of the April jobs report",
+                "title": "Anthropic's Mythos set off a cybersecurity 'hysteria.' Experts say the threat was already here",
                 "bucket": "macro",
                 "score": 11,
-                "published": "Thu, 07 May 2026 19:20:55 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/heres-what-to-expect-from-fridays-release-of-the-april-jobs-report.html",
-                "sentiment": "Bullish"
+                "published": "Fri, 08 May 2026 14:04:22 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/anthropic-mythos-ai-cybersecurity-banks.html",
+                "sentiment": "Bearish"
               },
               {
                 "title": "Four signs that show Ethereum's rally is exhausted at $2.4K",
@@ -115193,13 +115205,31 @@
                 "published": "Fri, 08 May 2026 11:30:57 +0000",
                 "source": "https://cointelegraph.com/markets/four-signs-show-ethereum-eth-price-rally-exhausted-2-4k?utm_source=rss_feed&utm_medium=rss_tag_ethereum&utm_campaign=rss_partner_inbound",
                 "sentiment": "Neutral"
-              },
+              }
+            ],
+            "dropped": [
               {
-                "title": "The best 0% APR credit cards for May 2026: Pay no interest for up to 24 months",
+                "title": "China asks banks to pause new loans to US-sanctioned refiners, Bloomberg News reports",
                 "bucket": "macro",
                 "score": 11,
-                "published": "2026-05-06T21:44:56Z",
-                "source": "https://finance.yahoo.com/personal-finance/credit-cards/article/best-0-apr-credit-cards-214456977.html",
+                "published": "2026-05-07T02:55:32Z",
+                "source": "https://finance.yahoo.com/sectors/energy/articles/china-asks-banks-pause-loans-025532958.html",
+                "sentiment": "Bearish"
+              },
+              {
+                "title": "U.S. payrolls increased 115,000 in April, more than expected; unemployment at 4.3%",
+                "bucket": "macro",
+                "score": 10,
+                "published": "Fri, 08 May 2026 13:42:57 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/jobs-report-april-2026.html",
+                "sentiment": "Neutral"
+              },
+              {
+                "title": "Iowa Signs Crypto ATM Licensing and Oversight Bill Into Law",
+                "bucket": "general",
+                "score": 10,
+                "published": "Fri, 08 May 2026 13:12:32 +0000",
+                "source": "https://news.bitcoin.com/iowa-signs-crypto-atm-licensing-and-oversight-bill-into-law/",
                 "sentiment": "Bullish"
               },
               {
@@ -115219,7 +115249,7 @@
                 "sentiment": "Bullish"
               },
               {
-                "title": "Whale Potentially Linked to Erik Voorhees Spends Another $6.67M on ETH",
+                "title": "Mysterious Whale Buys $6.67M in ETH Following False Erik Voorhees Link",
                 "bucket": "general",
                 "score": 10,
                 "published": "Fri, 08 May 2026 10:30:56 +0000",
@@ -115241,14 +115271,6 @@
                 "published": "Fri, 08 May 2026 08:30:21 +0000",
                 "source": "https://news.bitcoin.com/crypto-clarity-act-us-close-robinhood-tenev-2026/",
                 "sentiment": "Bullish"
-              },
-              {
-                "title": "Billion-dollar bets: Global investors chase Indian Premier League to ride booming cricket economy",
-                "bucket": "macro",
-                "score": 10,
-                "published": "Fri, 08 May 2026 07:39:01 GMT",
-                "source": "https://www.cnbc.com/2026/05/08/sports-ipl-rcb-rajasthan-royals-cricket-investing.html",
-                "sentiment": "Neutral"
               },
               {
                 "title": "Ether tests $2.4K as accumulators add 246K ETH: How high can price go?",
@@ -115275,6 +115297,22 @@
                 "sentiment": "Bullish"
               },
               {
+                "title": "Zcash Targeting Post-Quantum Crypto Milestone by 2027",
+                "bucket": "general",
+                "score": 9,
+                "published": "Fri, 08 May 2026 13:15:24 +0000",
+                "source": "https://decrypt.co/367250/zcash-targeting-post-quantum-crypto-milestone-by-2027",
+                "sentiment": "Neutral"
+              },
+              {
+                "title": "Revolut users report Bitcoin price glitch showing BTC at 2 cents",
+                "bucket": "bitcoin",
+                "score": 9,
+                "published": "Fri, 08 May 2026 12:30:16 +0000",
+                "source": "https://cointelegraph.com/news/btc-flash-crash-alerts-at-revolut-users-report-extreme-price-glitches-in-multiple-assets?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
+                "sentiment": "Bearish"
+              },
+              {
                 "title": "Bitcoin eyes $80K reclaim as traders say these BTC price support levels must hold",
                 "bucket": "bitcoin",
                 "score": 9,
@@ -115291,6 +115329,14 @@
                 "sentiment": "Bearish"
               },
               {
+                "title": "XRP New Addresses, Active Supply Plunge Amid Shift to \u2018Institutional Rails\u2019",
+                "bucket": "general",
+                "score": 8,
+                "published": "Fri, 08 May 2026 13:34:29 +0000",
+                "source": "https://decrypt.co/367253/xrp-new-addresses-active-supply-plunge-amid-shift-to-institutional-rails",
+                "sentiment": "Bearish"
+              },
+              {
                 "title": "Block Inc rises 8% as Q1 gives \u2018earnings surprise\u2019 despite Bitcoin dip",
                 "bucket": "bitcoin",
                 "score": 8,
@@ -115299,18 +115345,18 @@
                 "sentiment": "Neutral"
               },
               {
-                "title": "Jim Cramer says the AI boom has 'the power to keep the country's economy humming'",
+                "title": "The rise of 'income stacking': Why Gen Z is juggling multiple jobs",
                 "bucket": "macro",
                 "score": 7,
-                "published": "Thu, 07 May 2026 22:58:55 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/jim-cramer-ai-boom-stock-market-impact.html",
+                "published": "Fri, 08 May 2026 12:51:44 GMT",
+                "source": "https://www.cnbc.com/2026/05/08/income-stacking-why-gen-z-is-juggling-multiple-jobs.html",
                 "sentiment": "Bullish"
               },
               {
                 "title": "States crack down on tax break for wealthy investors",
                 "bucket": "macro",
                 "score": 7,
-                "published": "Fri, 08 May 2026 12:01:44 GMT",
+                "published": "Fri, 08 May 2026 12:33:10 GMT",
                 "source": "https://www.cnbc.com/2026/05/08/tax-break-wealthy-investors-qsbs.html",
                 "sentiment": "Bearish"
               },
@@ -115321,25 +115367,9 @@
                 "published": "Fri, 08 May 2026 07:32:28 GMT",
                 "source": "https://www.cnbc.com/2026/05/08/trump-tariffs-trade-eu-europe-deal.html",
                 "sentiment": "Bullish"
-              },
-              {
-                "title": "Toyota fourth-quarter profit misses by wide margin as U.S. tariffs drive 49% slump",
-                "bucket": "macro",
-                "score": 7,
-                "published": "Fri, 08 May 2026 07:29:03 GMT",
-                "source": "https://www.cnbc.com/2026/05/08/toyota-1q-2026-earnings.html",
-                "sentiment": "Bearish"
-              },
-              {
-                "title": "Cloudflare stock sinks 18% after earnings as company cuts 1,100 employees due to AI changes",
-                "bucket": "macro",
-                "score": 6,
-                "published": "Thu, 07 May 2026 22:19:17 GMT",
-                "source": "https://www.cnbc.com/2026/05/07/cloudflare-net-q1-2026-stock-earnings-layoffs.html",
-                "sentiment": "Neutral"
               }
             ],
-            "candidate_count": 37
+            "candidate_count": 39
           },
           "provenance": {
             "generation_mode": "llm_refined",
@@ -115357,16 +115387,17 @@
               "status": "parsed",
               "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
               "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-              "raw_response_preview": "{ \"news_summary\": \"Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.\", \"brief_rationale\": \"Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\"] }",
+              "raw_response_preview": "{ \"news_summary\": \"Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.\", \"brief_rationale\": \"FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"VOL_PRESSURE_EASING\"] }",
               "parsed_response": {
-                "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
-                "brief_rationale": "Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment.",
+                "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
+                "brief_rationale": "FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact.",
                 "market_impact": "MIXED",
-                "impact_horizon": "INTRADAY",
+                "impact_horizon": "MULTI_DAY",
                 "crypto_relevance": "HIGH",
                 "key_tags": [
                   "FED_HAWKISH",
-                  "GEOPOLITICAL_RISK_EASING"
+                  "GEOPOLITICAL_RISK_EASING",
+                  "VOL_PRESSURE_EASING"
                 ]
               },
               "error": null
@@ -115376,37 +115407,40 @@
             "source": "llm_adjudicated",
             "selected_view": "blended",
             "market_impact": "MIXED",
-            "impact_horizon": "INTRADAY",
+            "impact_horizon": "MULTI_DAY",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "GEOPOLITICAL_RISK_EASING"
+              "GEOPOLITICAL_RISK_EASING",
+              "VOL_PRESSURE_EASING"
             ],
             "confidence": "MEDIUM",
-            "reason": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.",
+            "reason": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.",
             "deterministic_view": {
               "event_type": "FED_SPEECH",
               "policy_stance": "HAWKISH",
-              "market_impact": "RISK_OFF",
+              "market_impact": "MIXED",
               "impact_horizon": "MULTI_DAY",
               "crypto_relevance": "HIGH",
               "key_tags": [
                 "FED_HAWKISH",
-                "GEOPOLITICAL_RISK_EASING"
+                "GEOPOLITICAL_RISK_EASING",
+                "VOL_PRESSURE_EASING"
               ],
-              "news_summary": "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026 | Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink | Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
-              "brief_rationale": "Fed pricing remains restrictive; geopolitical risk is easing. Classified as RISK_OFF with MULTI_DAY horizon."
+              "news_summary": "The hottest ETF since bitcoin-mania just added $1 billion in a day | [USD] FOMC Member Cook Speaks (Low) | [USD] FOMC Member Goolsbee Speaks (Low)",
+              "brief_rationale": "Fed pricing remains restrictive; volatility pressure eased (VIX 16.91, -1.00%/1d); geopolitical risk is easing. Classified as MIXED with MULTI_DAY horizon."
             },
             "llm_view": {
               "market_impact": "MIXED",
-              "impact_horizon": "INTRADAY",
+              "impact_horizon": "MULTI_DAY",
               "crypto_relevance": "HIGH",
               "key_tags": [
                 "FED_HAWKISH",
-                "GEOPOLITICAL_RISK_EASING"
+                "GEOPOLITICAL_RISK_EASING",
+                "VOL_PRESSURE_EASING"
               ],
-              "news_summary": "Mixed crypto headlines: Coinbase buys $88M BTC, but Solv Protocol migration and whale sell-offs weigh; Fed speeches and stable oil prices add macro noise.",
-              "brief_rationale": "Crypto-specific news is mixed with both bullish (Coinbase BTC purchase, falling exchange reserves) and bearish (Solv migration, whale sell-offs, Coinbase loss) signals. Macro events are low-impact Fed speeches and stable oil prices, providing no clear directional catalyst. Fear & Greed at 38 (Fear) and VIX elevated suggest cautious sentiment."
+              "news_summary": "Fed speeches and hawkish pricing dominate, but geopolitical easing and lower VIX offset some risk-off sentiment.",
+              "brief_rationale": "FOMC speakers maintain hawkish stance, but oil stability and falling VIX suggest reduced geopolitical and volatility pressure, leading to mixed market impact."
             },
             "adjudication_audit": {
               "enabled": true,
@@ -115414,64 +115448,65 @@
               "model": "deepseek-chat",
               "status": "parsed",
               "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-              "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026\", \"Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink\", \"Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists\", \"[USD] FOMC Member Cook Speaks (Low)\", \"[USD] FOMC Member Goolsbee Speaks (Low)\", \"Oil prices stable as Trump...",
-              "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"INTRADAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\"], \"confidence\": 0.7, \"reason\": \"Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance.\" }",
+              "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"The hottest ETF since bitcoin-mania just added $1 billion in a day\", \"[USD] FOMC Member Cook Speaks (Low)\", \"[USD] FOMC Member Goolsbee Speaks (Low)\", \"Oil prices stable as Trump insists ceasefire still intact after U.S.-Iran exchange fire\", \"Metalpha Related Wallet Offloads $20M in ETH to Binance Amid Whale Sell-off\", \"Tether F...",
+              "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"VOL_PRESSURE_EASING\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge.\" }",
               "parsed_response": {
                 "selected_view": "blended",
                 "final_market_impact": "MIXED",
-                "final_impact_horizon": "INTRADAY",
+                "final_impact_horizon": "MULTI_DAY",
                 "final_crypto_relevance": "HIGH",
                 "final_key_tags": [
                   "FED_HAWKISH",
-                  "GEOPOLITICAL_RISK_EASING"
+                  "GEOPOLITICAL_RISK_EASING",
+                  "VOL_PRESSURE_EASING"
                 ],
-                "confidence": 0.7,
-                "reason": "Deterministic view overemphasizes hawkish Fed stance despite minimal rate change (-0.5bps) and low-impact speeches. LLM view correctly captures mixed crypto-specific signals (Coinbase BTC purchase vs. Solv migration, whale sell-offs) and macro noise. Fear & Greed at 38 (Fear) and VIX elevated support cautious but not strongly directional stance. Blended conclusion: MIXED impact, INTRADAY horizon, HIGH crypto relevance."
+                "confidence": 0.85,
+                "reason": "Both deterministic and LLM views agree on MIXED impact, MULTI_DAY horizon, and HIGH crypto relevance. Key tags are consistent. The structured facts support this: VIX down 5d (-0.47%), DXY down (-0.33%), US10Y down (-0.64%), and stablecoin outflows (-0.14% of market cap) indicate mixed signals. Fed hawkishness is offset by easing geopolitical and volatility pressures. Blended view is appropriate as both sources converge."
               },
               "error": null
             }
           },
           "macro_decision_source": "llm_adjudicated",
           "macro_mode": "MIXED",
-          "macro_horizon": "INTRADAY",
+          "macro_horizon": "MULTI_DAY",
           "macro_permission": "ALLOW_BOTH",
-          "macro_impact_score": -3,
-          "macro_bias_tier": "MILD_RISK_OFF",
+          "macro_impact_score": -1,
+          "macro_bias_tier": "NO_CLEAR_EDGE",
           "fear_greed_index": 38.0,
           "fear_greed_state": "FEAR",
           "fear_greed_change_5d": null,
-          "vix_level": 17.09,
-          "vix_change_1d_pct": 0.06,
-          "vix_change_5d_pct": 0.59,
-          "dxy_level": 97.95,
+          "vix_level": 16.91,
+          "vix_change_1d_pct": -1.0,
+          "vix_change_5d_pct": -0.47,
+          "dxy_level": 97.88,
           "dxy_trend": "DOWN",
-          "usdjpy_level": 156.737,
-          "usdjpy_trend": "FLAT",
+          "usdjpy_level": 156.563,
+          "usdjpy_trend": "DOWN",
           "fed_event_risk": "HIGH",
           "macro_event_window": true,
-          "risk_off_score": 0.65,
+          "risk_off_score": 0.5,
           "news_headlines": [
-            "Coinbase Buys $88 Million Worth of Bitcoin in Q1 2026",
-            "Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink",
-            "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
+            "The hottest ETF since bitcoin-mania just added $1 billion in a day",
             "[USD] FOMC Member Cook Speaks (Low)",
             "[USD] FOMC Member Goolsbee Speaks (Low)",
             "Oil prices stable as Trump insists ceasefire still intact after U.S.-Iran exchange fire",
             "Metalpha Related Wallet Offloads $20M in ETH to Binance Amid Whale Sell-off",
             "Tether Freezes $515 Million in USDT Across 371 Addresses in 30 Days",
             "[USD] Prelim UoM Inflation Expectations (Medium)",
-            "Bitcoin exchange reserves fall to two-year low after $8B exodus",
+            "Most women are confident savers, survey finds \u2014 but where they stash their cash could be a problem",
             "Coinbase posts steep first-quarter loss after slide in crypto prices; shares fall 4%",
-            "[EUR] French Bank Holiday (Holiday)"
+            "[EUR] French Bank Holiday (Holiday)",
+            "Anthropic's Mythos set off a cybersecurity 'hysteria.' Experts say the threat was already here",
+            "Four signs that show Ethereum's rally is exhausted at $2.4K"
           ]
         },
         "position_snapshot": {
           "position_side": "SHORT",
           "position_size_usd": 138.98,
           "entry_price": 0.10811,
-          "current_price": 0.10736,
-          "unrealized_pnl_pct": 0.0139,
-          "distance_to_liq": 0.493,
+          "current_price": 0.10666,
+          "unrealized_pnl_pct": 0.0268,
+          "distance_to_liq": 0.4864,
           "open_positions": [
             {
               "symbol": "DOGE",
@@ -115479,9 +115514,9 @@
               "leverage": 2,
               "type": "short",
               "entryPrice": 0.10811,
-              "currentPrice": 0.10736,
-              "pnl": 1.9275000000000015,
-              "pnlPercent": 1.39,
+              "currentPrice": 0.10666,
+              "pnl": 3.726499999999982,
+              "pnlPercent": 2.68,
               "amount": "2570.0",
               "margin": 69.488185565,
               "stopLoss": 0.113,
@@ -115493,14 +115528,14 @@
         "decision_ready_features": {
           "regime_1d": "BEAR",
           "macro_mode": "MIXED",
-          "macro_horizon": "INTRADAY",
+          "macro_horizon": "MULTI_DAY",
           "macro_permission": "ALLOW_BOTH",
-          "macro_bias_tier": "MILD_RISK_OFF",
-          "macro_impact_score": -3.0,
+          "macro_bias_tier": "NO_CLEAR_EDGE",
+          "macro_impact_score": -1.0,
           "fear_greed_change_5d": null,
-          "vix_level": 17.09,
-          "vix_change_1d_pct": 0.06,
-          "vix_change_5d_pct": 0.59,
+          "vix_level": 16.91,
+          "vix_change_1d_pct": -1.0,
+          "vix_change_5d_pct": -0.47,
           "event_risk_active": true,
           "usd_strength_flag": false,
           "yen_stress_flag": false,
@@ -115512,9 +115547,9 @@
           "flow_signal_mixed": false,
           "flow_support_long": false,
           "flow_support_short": false,
-          "funding_rate": 2.9202745014e-05,
-          "funding_zscore": -0.12,
-          "oi_now": 112793908.28849997,
+          "funding_rate": 2.52558316242e-05,
+          "funding_zscore": -0.19,
+          "oi_now": 112699361.84399998,
           "delta_oi_24h_percent": -5.995279791311896,
           "qlib_relative_score_8h": 0.0018,
           "qlib_percentile_8h": 0.25,
@@ -115531,7 +115566,7 @@
           "range_lower_bound": 0.1066,
           "range_upper_bound": 0.1167,
           "range_width_pct": 0.0905,
-          "price_position_in_range": 0.0762,
+          "price_position_in_range": 0.0673,
           "grid_mode": "ARITHMETIC",
           "grid_count": 11,
           "grid_spacing_pct": 0.0082,
@@ -115567,7 +115602,7 @@
         "symbol": "BTC-USDT",
         "cycleId": "cycle_2026-05-08_1200",
         "timeframe": "4h",
-        "snapshot_timestamp": 1778242031,
+        "snapshot_timestamp": 1778249233,
         "candidate_proposals": [],
         "e_strategy_diagnostic": {
           "qlib_inputs": {
@@ -115577,7 +115612,7 @@
             "p_up_8h": 0.1305,
             "p_down_8h": 0.2362,
             "p_flat_8h": 0.6333,
-            "funding_zscore": -0.41,
+            "funding_zscore": -0.44,
             "token_net_flow": 0.0,
             "stablecoin_net_flow": 0.0,
             "regime_1d": "CHOP",
@@ -115637,7 +115672,7 @@
         "symbol": "ETH-USDT",
         "cycleId": "cycle_2026-05-08_1200",
         "timeframe": "4h",
-        "snapshot_timestamp": 1778242214,
+        "snapshot_timestamp": 1778249426,
         "candidate_proposals": [],
         "e_strategy_diagnostic": {
           "qlib_inputs": {
@@ -115647,9 +115682,9 @@
             "p_up_8h": 0.0958,
             "p_down_8h": 0.3389,
             "p_flat_8h": 0.5653,
-            "funding_zscore": 0.16,
-            "token_net_flow": 1066098.418153251,
-            "stablecoin_net_flow": -10444391.242927179,
+            "funding_zscore": 0.47,
+            "token_net_flow": -242270.4619972511,
+            "stablecoin_net_flow": -10933680.504614908,
             "regime_1d": "BEAR",
             "whale_bias": "strong_outflow",
             "is_overheated": false,
@@ -115708,7 +115743,7 @@
         "symbol": "SOL-USDT",
         "cycleId": "cycle_2026-05-08_1200",
         "timeframe": "4h",
-        "snapshot_timestamp": 1778242351,
+        "snapshot_timestamp": 1778249568,
         "candidate_proposals": [],
         "e_strategy_diagnostic": {
           "qlib_inputs": {
@@ -115718,9 +115753,9 @@
             "p_up_8h": 0.1311,
             "p_down_8h": 0.298,
             "p_flat_8h": 0.5709,
-            "funding_zscore": -0.4,
-            "token_net_flow": -604964.2281009346,
-            "stablecoin_net_flow": -328774.6374914924,
+            "funding_zscore": -0.67,
+            "token_net_flow": -546905.7273703197,
+            "stablecoin_net_flow": -236961.92610130858,
             "regime_1d": "BULL",
             "whale_bias": "neutral",
             "is_overheated": false,
@@ -115777,7 +115812,7 @@
         "symbol": "BNB-USDT",
         "cycleId": "cycle_2026-05-08_1200",
         "timeframe": "4h",
-        "snapshot_timestamp": 1778242514,
+        "snapshot_timestamp": 1778249737,
         "candidate_proposals": [],
         "e_strategy_diagnostic": {
           "qlib_inputs": {
@@ -115787,7 +115822,7 @@
             "p_up_8h": 0.1124,
             "p_down_8h": 0.2331,
             "p_flat_8h": 0.6546,
-            "funding_zscore": -0.91,
+            "funding_zscore": -0.75,
             "token_net_flow": 0.0,
             "stablecoin_net_flow": 0.0,
             "regime_1d": "CHOP",
@@ -115847,7 +115882,7 @@
         "symbol": "DOGE-USDT",
         "cycleId": "cycle_2026-05-08_1200",
         "timeframe": "4h",
-        "snapshot_timestamp": 1778242678,
+        "snapshot_timestamp": 1778249904,
         "candidate_proposals": [],
         "e_strategy_diagnostic": {
           "qlib_inputs": {
@@ -115857,7 +115892,7 @@
             "p_up_8h": 0.2061,
             "p_down_8h": 0.3905,
             "p_flat_8h": 0.4034,
-            "funding_zscore": -0.12,
+            "funding_zscore": -0.19,
             "token_net_flow": 0.0,
             "stablecoin_net_flow": 0.0,
             "regime_1d": "BEAR",
@@ -116173,14 +116208,14 @@
         "history": [
           {
             "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-05-08T12:08:01Z",
+            "at": "2026-05-08T14:08:07Z",
             "payload": {
               "review_note": "rule evaluation rejected or produced no approved candidates"
             }
           },
           {
             "type": "EXECUTION_SKIPPED",
-            "at": "2026-05-08T12:09:20Z",
+            "at": "2026-05-08T14:09:29Z",
             "payload": {
               "reason": "do_nothing",
               "execution_action": "DO_NOTHING"
@@ -116206,14 +116241,14 @@
         "history": [
           {
             "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-05-08T12:10:41Z",
+            "at": "2026-05-08T14:10:54Z",
             "payload": {
               "review_note": "rule evaluation rejected or produced no approved candidates"
             }
           },
           {
             "type": "EXECUTION_SKIPPED",
-            "at": "2026-05-08T12:11:36Z",
+            "at": "2026-05-08T14:11:51Z",
             "payload": {
               "reason": "do_nothing",
               "execution_action": "DO_NOTHING"
@@ -116239,14 +116274,14 @@
         "history": [
           {
             "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-05-08T12:12:58Z",
+            "at": "2026-05-08T14:13:16Z",
             "payload": {
               "review_note": "rule evaluation rejected or produced no approved candidates"
             }
           },
           {
             "type": "EXECUTION_SKIPPED",
-            "at": "2026-05-08T12:13:54Z",
+            "at": "2026-05-08T14:14:14Z",
             "payload": {
               "reason": "do_nothing",
               "execution_action": "DO_NOTHING"
@@ -116272,14 +116307,14 @@
         "history": [
           {
             "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-05-08T12:15:41Z",
+            "at": "2026-05-08T14:16:05Z",
             "payload": {
               "review_note": "rule evaluation rejected or produced no approved candidates"
             }
           },
           {
             "type": "EXECUTION_SKIPPED",
-            "at": "2026-05-08T12:17:02Z",
+            "at": "2026-05-08T14:17:27Z",
             "payload": {
               "reason": "do_nothing",
               "execution_action": "DO_NOTHING"
@@ -116305,14 +116340,14 @@
         "history": [
           {
             "type": "EXECUTION_NOT_REQUESTED",
-            "at": "2026-05-08T12:18:26Z",
+            "at": "2026-05-08T14:18:52Z",
             "payload": {
               "review_note": "rule evaluation rejected or produced no approved candidates"
             }
           },
           {
             "type": "EXECUTION_SKIPPED",
-            "at": "2026-05-08T12:19:23Z",
+            "at": "2026-05-08T14:19:49Z",
             "payload": {
               "reason": "do_nothing",
               "execution_action": "DO_NOTHING"
