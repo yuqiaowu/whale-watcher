@@ -294,6 +294,26 @@ def _holding_bars(record: Dict[str, Any], live_position: Dict[str, Any]) -> Opti
     return None
 
 
+def _position_is_profitable(live_position: Dict[str, Any], side: str) -> bool:
+    pnl_pct = _safe_float(live_position.get("pnlPercent"))
+    if pnl_pct > 0:
+        return True
+
+    pnl = _safe_float(live_position.get("pnl"))
+    if pnl > 0:
+        return True
+
+    entry_price = _safe_float(live_position.get("entryPrice"))
+    current_price = _safe_float(live_position.get("currentPrice"))
+    if entry_price <= 0 or current_price <= 0:
+        return False
+    if side == "LONG":
+        return current_price > entry_price
+    if side == "SHORT":
+        return current_price < entry_price
+    return False
+
+
 def _thesis_weakened(record: Dict[str, Any], snapshot: Dict[str, Any], live_position: Dict[str, Any], side: str) -> Tuple[bool, str]:
     research = record.get("researchOutput") or {}
     if research.get("thesis_change") == "WEAKENED":
@@ -610,44 +630,61 @@ def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str,
             actions.append({"decisionId": record.get("decisionId"), "action": "CLOSE_POSITION"})
             changed = True
         elif not runtime_action_taken and max_holding_bars > 0 and held_bars is not None and held_bars >= max_holding_bars:
-            review_passed, new_max_holding_bars, review_reason = _review_expired_position(
-                record,
-                snapshot,
-                live_position,
-                side,
-            )
-            if review_passed:
-                risk_review["max_holding_bars"] = new_max_holding_bars
-                execution["runtime_action"] = "EXTEND_HOLDING"
-                execution["runtime_reason"] = "max_holding_review_passed"
-                execution["holding_window_started_at"] = _iso_now()
-                execution["holding_review_count"] = int(execution.get("holding_review_count") or 0) + 1
-                record["positionState"] = "entered"
-                _append_execution_event(record, "MAX_HOLDING_REVIEW_EXTENDED", {
-                    "held_bars": held_bars,
-                    "previous_max_holding_bars": max_holding_bars,
-                    "new_max_holding_bars": new_max_holding_bars,
-                    "reason": review_reason,
-                })
-                actions.append({"decisionId": record.get("decisionId"), "action": "EXTEND_HOLDING"})
-                changed = True
-            else:
+            if _position_is_profitable(live_position, side):
                 close_order_id = _apply_close(executor, symbol, side, live_position)
                 execution["runtime_action"] = "CLOSE_POSITION"
                 execution["last_runtime_order_id"] = close_order_id
-                execution["runtime_reason"] = "max_holding_review_rejected"
+                execution["runtime_reason"] = "max_holding_profit_take"
                 record["positionState"] = "exit_pending"
-                _append_execution_event(record, "MAX_HOLDING_REVIEW_REJECTED", {
+                _append_execution_event(record, "MAX_HOLDING_PROFIT_TAKE_TRIGGERED", {
                     "held_bars": held_bars,
                     "max_holding_bars": max_holding_bars,
-                    "reason": review_reason,
+                    "pnl": live_position.get("pnl"),
+                    "pnlPercent": live_position.get("pnlPercent"),
+                    "entry_price": entry_price,
+                    "current_price": current_price,
                     "order_id": close_order_id,
                 })
                 actions.append({"decisionId": record.get("decisionId"), "action": "CLOSE_POSITION"})
                 changed = True
-        # Profit alone does not move protective orders. Open directional
-        # positions continue until thesis/rule invalidation, review rejection,
-        # liquidation-risk controls, or the original exchange SL/TP handles them.
+            else:
+                review_passed, new_max_holding_bars, review_reason = _review_expired_position(
+                    record,
+                    snapshot,
+                    live_position,
+                    side,
+                )
+                if review_passed:
+                    risk_review["max_holding_bars"] = new_max_holding_bars
+                    execution["runtime_action"] = "EXTEND_HOLDING"
+                    execution["runtime_reason"] = "max_holding_review_passed"
+                    execution["holding_window_started_at"] = _iso_now()
+                    execution["holding_review_count"] = int(execution.get("holding_review_count") or 0) + 1
+                    record["positionState"] = "entered"
+                    _append_execution_event(record, "MAX_HOLDING_REVIEW_EXTENDED", {
+                        "held_bars": held_bars,
+                        "previous_max_holding_bars": max_holding_bars,
+                        "new_max_holding_bars": new_max_holding_bars,
+                        "reason": review_reason,
+                    })
+                    actions.append({"decisionId": record.get("decisionId"), "action": "EXTEND_HOLDING"})
+                    changed = True
+                else:
+                    close_order_id = _apply_close(executor, symbol, side, live_position)
+                    execution["runtime_action"] = "CLOSE_POSITION"
+                    execution["last_runtime_order_id"] = close_order_id
+                    execution["runtime_reason"] = "max_holding_review_rejected"
+                    record["positionState"] = "exit_pending"
+                    _append_execution_event(record, "MAX_HOLDING_REVIEW_REJECTED", {
+                        "held_bars": held_bars,
+                        "max_holding_bars": max_holding_bars,
+                        "reason": review_reason,
+                        "order_id": close_order_id,
+                    })
+                    actions.append({"decisionId": record.get("decisionId"), "action": "CLOSE_POSITION"})
+                    changed = True
+        # Profit alone does not move protective orders before expiry. Once the
+        # max holding window expires, profitable positions are closed first.
 
         if changed:
             record["execution"] = execution
