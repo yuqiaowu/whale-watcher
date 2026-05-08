@@ -3,9 +3,9 @@
   "cycleId": "cycle_2026-05-08_0000",
   "symbol": "DOGE-USDT",
   "timeframe": "4h",
-  "snapshot_timestamp": 1778199962,
-  "snapshot_time": "2026-05-08T00:26:02Z",
-  "snapshot_time_local": "2026-05-08T08:26:02+0800",
+  "snapshot_timestamp": 1778206715,
+  "snapshot_time": "2026-05-08T02:18:35Z",
+  "snapshot_time_local": "2026-05-08T10:18:35+0800",
   "local_timezone": "Asia/Shanghai",
   "positionState": "candidate",
   "snapshot": {
@@ -13,17 +13,17 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-08_0000",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778199962,
-    "snapshot_time": "2026-05-08T00:26:02Z",
-    "snapshot_time_local": "2026-05-08T08:26:02+0800",
+    "snapshot_timestamp": 1778206715,
+    "snapshot_time": "2026-05-08T02:18:35Z",
+    "snapshot_time_local": "2026-05-08T10:18:35+0800",
     "local_timezone": "Asia/Shanghai",
     "market_snapshot": {
-      "price": 0.10794,
-      "change_24h": 0.10201242696837522,
+      "price": 0.10635,
+      "change_24h": -1.3725308355745112,
       "rsi_4h": 39.10884518514613,
       "rsi_delta_4h": -0.2809759235952427,
       "adx_14": 32.33161263410145,
-      "volume_ratio": 0.9399559832088823,
+      "volume_ratio": 0.9314697802348656,
       "bb_width": 0.090750763213957,
       "bb_pct_b": 0.0961295300058005,
       "bb_mid_slope_pct": -0.004109619636834593,
@@ -34,11 +34,11 @@
       "wick_ratio_upper": 47.71,
       "funding_rate": 0.0001,
       "funding_zscore": 1.2,
-      "oi_now": 113392702.43699996,
+      "oi_now": 111722381.91749997,
       "delta_oi_24h_percent": -5.995279791311896,
-      "natr_percent": 1.8377860101387162,
-      "whale_ls_ratio": 1.1869918699186992,
-      "whale_pos_ratio": 0.829033090840526,
+      "natr_percent": 1.981268943131966,
+      "whale_ls_ratio": 1.2125,
+      "whale_pos_ratio": 0.8399754279479587,
       "atr_14": 0.0023214285714285,
       "trigger_candle_open": 0.10793,
       "trigger_candle_high": 0.10845,
@@ -76,13 +76,13 @@
       "flow_composite_semantic": "UNAVAILABLE",
       "flow_signal_mixed": false,
       "sentiment_score": 0.0,
-      "liquidation_long_usd": 3428008.073899998,
+      "liquidation_long_usd": 3450514.8514999994,
       "liquidation_short_usd": 202054.7732,
-      "liquidation_long_to_volume_4h": 0.1030799939364899,
+      "liquidation_long_to_volume_4h": 0.103756771367734,
       "liquidation_short_to_volume_4h": 0.0060757747202734,
       "funding_rate": 0.0001,
       "funding_zscore": 1.2,
-      "oi_now": 113392702.43699996,
+      "oi_now": 111722381.91749997,
       "delta_oi_24h_percent": -5.995279791311896,
       "qlib_relative_score_8h": 0.0011,
       "qlib_rank_8h": 3,
@@ -95,24 +95,25 @@
     "macro_snapshot": {
       "event_type": "FED_SPEECH",
       "policy_stance": "HAWKISH",
-      "market_impact": "RISK_OFF",
-      "impact_horizon": "MULTI_DAY",
+      "market_impact": "MIXED",
+      "impact_horizon": "INTRADAY",
       "crypto_relevance": "HIGH",
       "key_tags": [
         "FED_HAWKISH",
+        "GEOPOLITICAL_RISK_EASING",
         "LIQUIDITY_CONTRACTING",
         "VOL_PRESSURE_EASING"
       ],
-      "brief_rationale": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: VIX at 17.08 with 5-day increase, stablecoin outflow of -$770M, and restrictive Fed pricing. Crypto-specific news is mixed but macro risk-off dominates. Blended conclusion maintains consistency.",
-      "news_summary": "CLARITY Act draft circulates; Solv Protocol migrates to Chainlink; Trump sons deny abandoning WLFI; Bitcoin falls under $80K but ETF inflows rise; Coinbase layoffs and Q1 loss; FOMC Cook speaks; unemployment rate and UoM inflation expectations upcoming.",
+      "brief_rationale": "Deterministic view is RISK_OFF based on hawkish Fed and stablecoin outflows, but LLM view correctly notes mixed signals: VIX easing and ETF inflows counterbalance geopolitical tensions and Coinbase loss. Blended MIXED with INTRADAY horizon captures near-term uncertainty. Tags from both views are consistent.",
+      "news_summary": "CLARITY Act draft circulates; Solv Protocol migrates $700M tokenized Bitcoin tech; Oil rallies on U.S.-Iran tensions; Bitcoin falls under $80K but ETF inflows rise; Coinbase reports $394M Q1 loss; FOMC Cook speaks; Unemployment Rate and UoM inflation expectations due.",
       "classification_basis": {
         "fear_greed_index": 38.0,
         "fear_greed_state": "FEAR",
         "fear_greed_change_5d": null,
         "fed_implied_rate": 3.637,
         "fed_change_5d_bps": -0.3,
-        "usdjpy_level": 156.879,
-        "usdjpy_change_5d_pct": -0.06,
+        "usdjpy_level": 156.917,
+        "usdjpy_change_5d_pct": -0.04,
         "dxy_level": 98.22,
         "dxy_change_5d_pct": 0.15,
         "vix_level": 17.08,
@@ -120,12 +121,13 @@
         "vix_change_5d_pct": 1.12,
         "us10y_level": 4.39,
         "us10y_change_5d_pct": 0.05,
-        "global_stable_flow": -770902702.4413605,
-        "global_stable_market_cap": 268058884856.56693,
-        "global_stable_flow_ratio_pct": -0.2875870735841699
+        "global_stable_flow": -803377726.532074,
+        "global_stable_market_cap": 268021834260.25934,
+        "global_stable_flow_ratio_pct": -0.29974338797784805
       },
       "key_events": [
         "FED_HAWKISH",
+        "GEOPOLITICAL_RISK_EASING",
         "LIQUIDITY_CONTRACTING",
         "VOL_PRESSURE_EASING"
       ],
@@ -135,8 +137,8 @@
         "fear_greed_change_5d": null,
         "fed_implied_rate": 3.637,
         "fed_change_5d_bps": -0.3,
-        "usdjpy_level": 156.879,
-        "usdjpy_change_5d_pct": -0.06,
+        "usdjpy_level": 156.917,
+        "usdjpy_change_5d_pct": -0.04,
         "dxy_level": 98.22,
         "dxy_change_5d_pct": 0.15,
         "vix_level": 17.08,
@@ -144,9 +146,9 @@
         "vix_change_5d_pct": 1.12,
         "us10y_level": 4.39,
         "us10y_change_5d_pct": 0.05,
-        "global_stable_flow": -770902702.4413605,
-        "global_stable_market_cap": 268058884856.56693,
-        "global_stable_flow_ratio_pct": -0.2875870735841699
+        "global_stable_flow": -803377726.532074,
+        "global_stable_market_cap": 268021834260.25934,
+        "global_stable_flow_ratio_pct": -0.29974338797784805
       },
       "news_selection": {
         "selected": [
@@ -165,6 +167,14 @@
             "published": "Thu, 07 May 2026 22:31:02 +0000",
             "source": "https://decrypt.co/367154/solv-protocol-dump-layerzero-migrate-700m-tokenized-bitcoin-chainlink",
             "sentiment": "Bearish"
+          },
+          {
+            "title": "Oil resumes rally as U.S.-Iran fire exchange rattles fragile Hormuz ceasefire",
+            "bucket": "macro",
+            "score": 18,
+            "published": "Fri, 08 May 2026 00:56:07 GMT",
+            "source": "https://www.cnbc.com/2026/05/08/oil-prices-today-wti-brent-us-iran-fire-war-hormuz-ceasefire.html",
+            "sentiment": "Bullish"
           },
           {
             "title": "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
@@ -197,14 +207,6 @@
             "published": "2026-05-08 12:30pm",
             "source": "https://www.forexfactory.com/calendar/56-us-unemployment-rate",
             "sentiment": "Bullish"
-          },
-          {
-            "title": "Coinbase to lay off 14% of workers as CEO Brian Armstrong restructures crypto exchange for AI efficiency",
-            "bucket": "macro",
-            "score": 16,
-            "published": "2026-05-05T11:47:36Z",
-            "source": "https://finance.yahoo.com/markets/crypto/article/coinbase-to-lay-off-700-workers-as-ceo-brian-armstrong-restructures-crypto-exchange-for-ai-efficiency-114736268.html",
-            "sentiment": "Neutral"
           },
           {
             "title": "Coinbase Shares Slide as Crypto Giant Reports $394 Million Q1 Loss",
@@ -273,6 +275,22 @@
             "sentiment": "Bullish"
           },
           {
+            "title": "Investor group urges SEC to scrutinize SpaceX IPO filing, avoid conflicts",
+            "bucket": "macro",
+            "score": 12,
+            "published": "2026-05-06T14:02:30Z",
+            "source": "https://finance.yahoo.com/news/investor-group-urges-sec-scrutinize-140230816.html",
+            "sentiment": "Bullish"
+          },
+          {
+            "title": "Bitcoin and ethereum prices today, Wednesday, May 6, 2026: Prices up; bitcoin at highest level since January",
+            "bucket": "macro",
+            "score": 12,
+            "published": "2026-05-06T11:21:12Z",
+            "source": "https://finance.yahoo.com/personal-finance/investing/article/bitcoin-and-ethereum-prices-today-wednesday-may-6-2026-prices-up-bitcoin-at-highest-level-since-january-112112979.html",
+            "sentiment": "Bullish"
+          },
+          {
             "title": "Here's what to expect from Friday's release of the April jobs report",
             "bucket": "macro",
             "score": 11,
@@ -287,14 +305,6 @@
             "published": "Thu, 07 May 2026 16:55:23 GMT",
             "source": "https://www.cnbc.com/2026/05/07/ryan-cohens-mysterious-bank-letter-backing-his-ebay-bid-reveals-a-big-issue.html",
             "sentiment": "Bearish"
-          },
-          {
-            "title": "Bigger Isn't Always Better: Why This Small-Cap ETF Is a Top Play for a Go-Go Stock Market",
-            "bucket": "macro",
-            "score": 11,
-            "published": "2026-05-06T16:27:16Z",
-            "source": "https://finance.yahoo.com/markets/stocks/articles/bigger-isnt-always-better-why-162716065.html",
-            "sentiment": "Neutral"
           },
           {
             "title": "Coinbase Reports 8.6% Record Market Share and $200 Million Derivatives Revenue",
@@ -321,11 +331,11 @@
             "sentiment": "Bullish"
           },
           {
-            "title": "Eric Trump at Consensus 2026: Why Big Finance\u2019s Crypto Shift is Just the Beginning",
+            "title": "Genius Sports Absorbs key iGaming Affiliates as Q2 Forecast Doubles EBITDA",
             "bucket": "general",
             "score": 10,
-            "published": "Thu, 07 May 2026 19:05:21 +0000",
-            "source": "https://news.bitcoin.com/eric-trump-at-consensus-2026-why-big-finances-crypto-shift-is-just-the-beginning/",
+            "published": "Fri, 08 May 2026 01:30:50 +0000",
+            "source": "https://news.bitcoin.com/genius-sports-absorbs-key-igaming-affiliates-as-q2-forecast-doubles-ebitda/",
             "sentiment": "Bullish"
           },
           {
@@ -345,6 +355,14 @@
             "sentiment": "Bullish"
           },
           {
+            "title": "Bitcoin bulls target $115K by December: Does data back the expectation?",
+            "bucket": "bitcoin",
+            "score": 9,
+            "published": "Thu, 07 May 2026 23:56:15 +0000",
+            "source": "https://cointelegraph.com/markets/bitcoin-bulls-target-115k-by-december-does-data-back-the-expectation?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
+            "sentiment": "Bullish"
+          },
+          {
             "title": "Core Scientific posts $347M loss as AI hosting overtakes Bitcoin mining",
             "bucket": "bitcoin",
             "score": 9,
@@ -358,14 +376,6 @@
             "score": 8,
             "published": "Thu, 07 May 2026 12:51:19 +0000",
             "source": "https://cointelegraph.com/news/bitcoin-1-million-five-years-vaneck-prediction?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
-            "sentiment": "Neutral"
-          },
-          {
-            "title": "Bitcoin analysts say this level must break for BTC price to confirm bottom",
-            "bucket": "bitcoin",
-            "score": 8,
-            "published": "Thu, 07 May 2026 12:26:09 +0000",
-            "source": "https://cointelegraph.com/markets/bitcoin-analysts-say-this-level-must-break-btc-price-confirm-bottom?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
             "sentiment": "Neutral"
           },
           {
@@ -385,31 +395,23 @@
             "sentiment": "Bearish"
           },
           {
+            "title": "Best CD rates today, May 6, 2026 (Earn up to 4% APY)",
+            "bucket": "macro",
+            "score": 7,
+            "published": "2026-05-06T10:00:00Z",
+            "source": "https://finance.yahoo.com/personal-finance/banking/article/best-cd-rates-today-wednesday-may-6-2026-100000487.html",
+            "sentiment": "Bullish"
+          },
+          {
             "title": "Cloudflare stock sinks 18% after earnings as company cuts 1,100 employees due to AI changes",
             "bucket": "macro",
             "score": 6,
             "published": "Thu, 07 May 2026 22:19:17 GMT",
             "source": "https://www.cnbc.com/2026/05/07/cloudflare-net-q1-2026-stock-earnings-layoffs.html",
             "sentiment": "Neutral"
-          },
-          {
-            "title": "McDonald's CEO says consumer spending could be 'getting a little bit worse'",
-            "bucket": "macro",
-            "score": 6,
-            "published": "Thu, 07 May 2026 14:26:07 GMT",
-            "source": "https://www.cnbc.com/2026/05/07/mcdonalds-mcd-q1-2026-earnings.html",
-            "sentiment": "Neutral"
-          },
-          {
-            "title": "Jim Cramer on Amazon: \u201cIt\u2019s at the Heart of the Computer-Driven Economy\u201d",
-            "bucket": "macro",
-            "score": 6,
-            "published": "2026-05-06T16:52:37Z",
-            "source": "https://finance.yahoo.com/markets/stocks/articles/jim-cramer-amazon-heart-computer-165237590.html",
-            "sentiment": "Neutral"
           }
         ],
-        "candidate_count": 36
+        "candidate_count": 38
       },
       "provenance": {
         "generation_mode": "llm_refined",
@@ -427,15 +429,16 @@
           "status": "parsed",
           "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
           "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-          "raw_response_preview": "{ \"news_summary\": \"CLARITY Act draft circulates; Solv Protocol migrates to Chainlink; Trump sons deny abandoning WLFI; Bitcoin falls under $80K but ETF inflows rise; Coinbase layoffs and Q1 loss; FOMC Cook speaks; unemployment rate and UoM inflation expectations upcoming.\", \"brief_rationale\": \"Fed remains hawkish with restrictive pricing, stablecoin outflows, and VIX easing. Crypto-specific news mixed: regulatory progress (CLARITY Act) vs. negative corporate earnings and price decline. Overall macro risk-off dominates.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"VOL_PRESSURE_EASING\"] }",
+          "raw_response_preview": "{ \"news_summary\": \"CLARITY Act draft circulates; Solv Protocol migrates $700M tokenized Bitcoin tech; Oil rallies on U.S.-Iran tensions; Bitcoin falls under $80K but ETF inflows rise; Coinbase reports $394M Q1 loss; FOMC Cook speaks; Unemployment Rate and UoM inflation expectations due.\", \"brief_rationale\": \"Mixed signals: geopolitical risk from U.S.-Iran fire exchange is RISK_OFF, but easing VIX and stablecoin outflows suggest some risk reduction. Fed remains hawkish, but upcoming data could shift sentiment. Crypto-specific news is bearish (Coinbase loss, Bitcoin drop) but ETF inflows provide support.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"LIQUIDITY_CONTRACTING\", \"VOL_PRESSURE_EASING\"] }",
           "parsed_response": {
-            "news_summary": "CLARITY Act draft circulates; Solv Protocol migrates to Chainlink; Trump sons deny abandoning WLFI; Bitcoin falls under $80K but ETF inflows rise; Coinbase layoffs and Q1 loss; FOMC Cook speaks; unemployment rate and UoM inflation expectations upcoming.",
-            "brief_rationale": "Fed remains hawkish with restrictive pricing, stablecoin outflows, and VIX easing. Crypto-specific news mixed: regulatory progress (CLARITY Act) vs. negative corporate earnings and price decline. Overall macro risk-off dominates.",
-            "market_impact": "RISK_OFF",
-            "impact_horizon": "MULTI_DAY",
+            "news_summary": "CLARITY Act draft circulates; Solv Protocol migrates $700M tokenized Bitcoin tech; Oil rallies on U.S.-Iran tensions; Bitcoin falls under $80K but ETF inflows rise; Coinbase reports $394M Q1 loss; FOMC Cook speaks; Unemployment Rate and UoM inflation expectations due.",
+            "brief_rationale": "Mixed signals: geopolitical risk from U.S.-Iran fire exchange is RISK_OFF, but easing VIX and stablecoin outflows suggest some risk reduction. Fed remains hawkish, but upcoming data could shift sentiment. Crypto-specific news is bearish (Coinbase loss, Bitcoin drop) but ETF inflows provide support.",
+            "market_impact": "MIXED",
+            "impact_horizon": "INTRADAY",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
+              "GEOPOLITICAL_RISK_EASING",
               "LIQUIDITY_CONTRACTING",
               "VOL_PRESSURE_EASING"
             ]
@@ -446,16 +449,17 @@
       "final_macro_decision": {
         "source": "llm_adjudicated",
         "selected_view": "blended",
-        "market_impact": "RISK_OFF",
-        "impact_horizon": "MULTI_DAY",
+        "market_impact": "MIXED",
+        "impact_horizon": "INTRADAY",
         "crypto_relevance": "HIGH",
         "key_tags": [
           "FED_HAWKISH",
+          "GEOPOLITICAL_RISK_EASING",
           "LIQUIDITY_CONTRACTING",
           "VOL_PRESSURE_EASING"
         ],
         "confidence": "MEDIUM",
-        "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: VIX at 17.08 with 5-day increase, stablecoin outflow of -$770M, and restrictive Fed pricing. Crypto-specific news is mixed but macro risk-off dominates. Blended conclusion maintains consistency.",
+        "reason": "Deterministic view is RISK_OFF based on hawkish Fed and stablecoin outflows, but LLM view correctly notes mixed signals: VIX easing and ETF inflows counterbalance geopolitical tensions and Coinbase loss. Blended MIXED with INTRADAY horizon captures near-term uncertainty. Tags from both views are consistent.",
         "deterministic_view": {
           "event_type": "FED_SPEECH",
           "policy_stance": "HAWKISH",
@@ -464,23 +468,25 @@
           "crypto_relevance": "HIGH",
           "key_tags": [
             "FED_HAWKISH",
+            "GEOPOLITICAL_RISK_EASING",
             "LIQUIDITY_CONTRACTING",
             "VOL_PRESSURE_EASING"
           ],
-          "news_summary": "CLARITY Act Draft Circulates Ahead of Potential Senate Vote, Report | Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink | Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
-          "brief_rationale": "Fed pricing remains restrictive; volatility pressure eased (VIX 17.08, -1.78%/1d); stablecoin flow is $-770,902,702. Classified as RISK_OFF with MULTI_DAY horizon."
+          "news_summary": "CLARITY Act Draft Circulates Ahead of Potential Senate Vote, Report | Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink | Oil resumes rally as U.S.-Iran fire exchange rattles fragile Hormuz ceasefire",
+          "brief_rationale": "Fed pricing remains restrictive; volatility pressure eased (VIX 17.08, -1.78%/1d); geopolitical risk is easing; stablecoin flow is $-803,377,727. Classified as RISK_OFF with MULTI_DAY horizon."
         },
         "llm_view": {
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "MULTI_DAY",
+          "market_impact": "MIXED",
+          "impact_horizon": "INTRADAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
             "FED_HAWKISH",
+            "GEOPOLITICAL_RISK_EASING",
             "LIQUIDITY_CONTRACTING",
             "VOL_PRESSURE_EASING"
           ],
-          "news_summary": "CLARITY Act draft circulates; Solv Protocol migrates to Chainlink; Trump sons deny abandoning WLFI; Bitcoin falls under $80K but ETF inflows rise; Coinbase layoffs and Q1 loss; FOMC Cook speaks; unemployment rate and UoM inflation expectations upcoming.",
-          "brief_rationale": "Fed remains hawkish with restrictive pricing, stablecoin outflows, and VIX easing. Crypto-specific news mixed: regulatory progress (CLARITY Act) vs. negative corporate earnings and price decline. Overall macro risk-off dominates."
+          "news_summary": "CLARITY Act draft circulates; Solv Protocol migrates $700M tokenized Bitcoin tech; Oil rallies on U.S.-Iran tensions; Bitcoin falls under $80K but ETF inflows rise; Coinbase reports $394M Q1 loss; FOMC Cook speaks; Unemployment Rate and UoM inflation expectations due.",
+          "brief_rationale": "Mixed signals: geopolitical risk from U.S.-Iran fire exchange is RISK_OFF, but easing VIX and stablecoin outflows suggest some risk reduction. Fed remains hawkish, but upcoming data could shift sentiment. Crypto-specific news is bearish (Coinbase loss, Bitcoin drop) but ETF inflows provide support."
         },
         "adjudication_audit": {
           "enabled": true,
@@ -488,30 +494,31 @@
           "model": "deepseek-chat",
           "status": "parsed",
           "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"CLARITY Act Draft Circulates Ahead of Potential Senate Vote, Report\", \"Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink\", \"Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists\", \"Bitcoin falls under $80K but four-month high in weekly BTC ETF inflows may curb selling\", \"[US...",
-          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_OFF\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"VOL_PRESSURE_EASING\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: VIX at 17.08 with 5-day increase, stablecoin outflow of -$770M, and restrictive Fed pricing. Crypto-specific news is mixed but macro risk-off dominates. Blended conclusion maintains consistency.\" }",
+          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"CLARITY Act Draft Circulates Ahead of Potential Senate Vote, Report\", \"Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink\", \"Oil resumes rally as U.S.-Iran fire exchange rattles fragile Hormuz ceasefire\", \"Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists\", \"Bitcoin falls...",
+          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"INTRADAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"GEOPOLITICAL_RISK_EASING\", \"LIQUIDITY_CONTRACTING\", \"VOL_PRESSURE_EASING\"], \"confidence\": 0.7, \"reason\": \"Deterministic view is RISK_OFF based on hawkish Fed and stablecoin outflows, but LLM view correctly notes mixed signals: VIX easing and ETF inflows counterbalance geopolitical tensions and Coinbase loss. Blended MIXED with INTRADAY horizon captures near-term uncertainty. Tags from both views are consistent.\" }",
           "parsed_response": {
             "selected_view": "blended",
-            "final_market_impact": "RISK_OFF",
-            "final_impact_horizon": "MULTI_DAY",
+            "final_market_impact": "MIXED",
+            "final_impact_horizon": "INTRADAY",
             "final_crypto_relevance": "HIGH",
             "final_key_tags": [
               "FED_HAWKISH",
+              "GEOPOLITICAL_RISK_EASING",
               "LIQUIDITY_CONTRACTING",
               "VOL_PRESSURE_EASING"
             ],
-            "confidence": 0.85,
-            "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: VIX at 17.08 with 5-day increase, stablecoin outflow of -$770M, and restrictive Fed pricing. Crypto-specific news is mixed but macro risk-off dominates. Blended conclusion maintains consistency."
+            "confidence": 0.7,
+            "reason": "Deterministic view is RISK_OFF based on hawkish Fed and stablecoin outflows, but LLM view correctly notes mixed signals: VIX easing and ETF inflows counterbalance geopolitical tensions and Coinbase loss. Blended MIXED with INTRADAY horizon captures near-term uncertainty. Tags from both views are consistent."
           },
           "error": null
         }
       },
       "macro_decision_source": "llm_adjudicated",
-      "macro_mode": "RISK_OFF",
-      "macro_horizon": "MULTI_DAY",
-      "macro_permission": "ALLOW_SHORT",
-      "macro_impact_score": -7,
-      "macro_bias_tier": "STRONG_RISK_OFF",
+      "macro_mode": "MIXED",
+      "macro_horizon": "INTRADAY",
+      "macro_permission": "ALLOW_BOTH",
+      "macro_impact_score": -5,
+      "macro_bias_tier": "MILD_RISK_OFF",
       "fear_greed_index": 38.0,
       "fear_greed_state": "FEAR",
       "fear_greed_change_5d": null,
@@ -520,19 +527,19 @@
       "vix_change_5d_pct": 1.12,
       "dxy_level": 98.22,
       "dxy_trend": "FLAT",
-      "usdjpy_level": 156.879,
+      "usdjpy_level": 156.917,
       "usdjpy_trend": "FLAT",
       "fed_event_risk": "HIGH",
       "macro_event_window": true,
-      "risk_off_score": 0.85,
+      "risk_off_score": 0.65,
       "news_headlines": [
         "CLARITY Act Draft Circulates Ahead of Potential Senate Vote, Report",
         "Solv Protocol Will Dump LayerZero, Migrate $700M Tokenized Bitcoin Tech to Chainlink",
+        "Oil resumes rally as U.S.-Iran fire exchange rattles fragile Hormuz ceasefire",
         "Trump Sons Haven't Abandoned World Liberty Financial, Crypto Firm Insists",
         "Bitcoin falls under $80K but four-month high in weekly BTC ETF inflows may curb selling",
         "[USD] FOMC Member Cook Speaks (Low)",
         "[USD] Unemployment Rate (High)",
-        "Coinbase to lay off 14% of workers as CEO Brian Armstrong restructures crypto exchange for AI efficiency",
         "Coinbase Shares Slide as Crypto Giant Reports $394 Million Q1 Loss",
         "[USD] Prelim UoM Inflation Expectations (Medium)",
         "Tom Lee Says BitMine May Slow Ethereum Buys After Amassing Nearly $12 Billion of ETH",
@@ -542,11 +549,11 @@
     },
     "position_snapshot": {
       "position_side": "SHORT",
-      "position_size_usd": 138.92,
+      "position_size_usd": 138.95,
       "entry_price": 0.10811,
-      "current_price": 0.1077,
-      "unrealized_pnl_pct": 0.0076,
-      "distance_to_liq": 0.4962,
+      "current_price": 0.1066,
+      "unrealized_pnl_pct": 0.0279,
+      "distance_to_liq": 0.4858,
       "open_positions": [
         {
           "symbol": "DOGE",
@@ -554,11 +561,11 @@
           "leverage": 2,
           "type": "short",
           "entryPrice": 0.10811,
-          "currentPrice": 0.1077,
-          "pnl": 1.0536999999999836,
-          "pnlPercent": 0.76,
+          "currentPrice": 0.1066,
+          "pnl": 3.8806999999999934,
+          "pnlPercent": 2.79,
           "amount": "2570.0",
-          "margin": 69.460675,
+          "margin": 69.47452987,
           "stopLoss": 0.113,
           "takeProfit": 0.0989,
           "name": "DOGE"
@@ -567,11 +574,11 @@
     },
     "decision_ready_features": {
       "regime_1d": "BEAR",
-      "macro_mode": "RISK_OFF",
-      "macro_horizon": "MULTI_DAY",
-      "macro_permission": "ALLOW_SHORT",
-      "macro_bias_tier": "STRONG_RISK_OFF",
-      "macro_impact_score": -7.0,
+      "macro_mode": "MIXED",
+      "macro_horizon": "INTRADAY",
+      "macro_permission": "ALLOW_BOTH",
+      "macro_bias_tier": "MILD_RISK_OFF",
+      "macro_impact_score": -5.0,
       "fear_greed_change_5d": null,
       "vix_level": 17.08,
       "vix_change_1d_pct": -1.78,
@@ -589,7 +596,7 @@
       "flow_support_short": false,
       "funding_rate": 0.0001,
       "funding_zscore": 1.2,
-      "oi_now": 113392702.43699996,
+      "oi_now": 111722381.91749997,
       "delta_oi_24h_percent": -5.995279791311896,
       "qlib_relative_score_8h": 0.0011,
       "qlib_percentile_8h": 0.5,
@@ -603,13 +610,13 @@
       "qlib_bottom_bucket": true,
       "range_regime": false,
       "grid_candidate_eligible": false,
-      "range_lower_bound": 0.1066,
+      "range_lower_bound": 0.1017,
       "range_upper_bound": 0.1167,
-      "range_width_pct": 0.0905,
-      "price_position_in_range": 0.1327,
+      "range_width_pct": 0.1374,
+      "price_position_in_range": 0.31,
       "grid_mode": "ARITHMETIC",
-      "grid_count": 11,
-      "grid_spacing_pct": 0.0082,
+      "grid_count": 17,
+      "grid_spacing_pct": 0.0081,
       "min_profitable_spacing_pct": 0.0034,
       "grid_spacing_profitable": true,
       "grid_bb_width": 0.0908,
@@ -625,13 +632,12 @@
       "grid_preflight_missing_fields": [],
       "grid_macro_trend_ok": false,
       "grid_macro_block_reasons": [
-        "bearish_liquidity_macro_cluster",
-        "directional_swing_macro"
+        "bearish_liquidity_macro_cluster"
       ],
       "ma5_cross_up_ma10_1d": false,
       "ma5_cross_down_ma10_1d": false,
       "ma5_10_gap_pct_1d": 0.0265355961544407,
-      "max_profitable_grid_count": 26,
+      "max_profitable_grid_count": 40,
       "grid_review_after_hours": 36,
       "grid_extension_step_hours": 12,
       "grid_max_lifetime_hours": 60
@@ -643,7 +649,7 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-08_0000",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778199962,
+    "snapshot_timestamp": 1778206715,
     "candidate_proposals": [
       {
         "strategy_family": "DIRECTIONAL",
@@ -651,9 +657,9 @@
         "trigger_source": "Blueprint_E2",
         "rationale": "qlib bottom-rank directional short with sufficient downside probability",
         "entry_type": "MARKET",
-        "proposed_entry_price": 0.1079,
-        "proposed_sl_price": 0.1126,
-        "proposed_tp_price": 0.0986,
+        "proposed_entry_price": 0.1064,
+        "proposed_sl_price": 0.111,
+        "proposed_tp_price": 0.097,
         "reference_values": {
           "qlib_rank_8h": 3,
           "qlib_percentile_8h": 0.5,
@@ -817,14 +823,14 @@
     "history": [
       {
         "type": "EXECUTION_NOT_REQUESTED",
-        "at": "2026-05-08T00:26:41Z",
+        "at": "2026-05-08T02:19:15Z",
         "payload": {
           "review_note": "rule evaluation rejected or produced no approved candidates"
         }
       },
       {
         "type": "EXECUTION_SKIPPED",
-        "at": "2026-05-08T00:28:00Z",
+        "at": "2026-05-08T02:20:34Z",
         "payload": {
           "reason": "do_nothing",
           "execution_action": "DO_NOTHING"
@@ -888,10 +894,10 @@
         "message": "review pre-trade or in-position threshold sensitivity"
       }
     ],
-    "generated_at": "2026-05-08T01:00:45Z"
+    "generated_at": "2026-05-08T02:28:30Z"
   },
-  "created_at": "2026-05-08T00:26:41Z",
-  "created_at_local": "2026-05-08T08:26:41+0800",
-  "updated_at": "2026-05-08T01:00:45Z",
-  "updated_at_local": "2026-05-08T08:28:00+0800"
+  "created_at": "2026-05-08T02:19:15Z",
+  "created_at_local": "2026-05-08T10:19:15+0800",
+  "updated_at": "2026-05-08T02:28:30Z",
+  "updated_at_local": "2026-05-08T10:20:34+0800"
 }
