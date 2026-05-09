@@ -80,6 +80,8 @@ def _news_relevance_score(bucket_name: str, item: Dict[str, Any]) -> int:
     score += 4 * sum(1 for pattern in macro_patterns if _word_hit(text, pattern))
     score += 5 * sum(1 for pattern in crypto_patterns if _word_hit(text, pattern))
     score += 3 * sum(1 for pattern in risk_event_patterns if _word_hit(text, pattern))
+    if _has_labor_context(text):
+        score += 8
 
     sentiment = str(item.get("sentiment") or "").upper()
     if sentiment in {"BULLISH", "BEARISH"}:
@@ -180,6 +182,21 @@ def _headline_text(headlines: List[str]) -> str:
     return " ".join(headlines).lower()
 
 
+def _has_labor_context(text: str) -> bool:
+    return any(token in text for token in [
+        "nonfarm",
+        "non-farm",
+        "nfp",
+        "us payroll",
+        "u.s. payroll",
+        "payrolls",
+        "jobs report",
+        "unemployment rate",
+        "jobless rate",
+        "labor market",
+    ])
+
+
 def _has_us_core_macro_event(text: str) -> bool:
     fed_policy_context = any(token in text for token in [
         "fomc",
@@ -217,15 +234,7 @@ def _has_us_core_macro_event(text: str) -> bool:
         "core pce",
         "pce report",
     ])
-    us_labor_context = any(token in text for token in [
-        "nonfarm",
-        "non-farm",
-        "nfp",
-        "us payroll",
-        "u.s. payroll",
-        "payrolls report",
-        "jobs report",
-    ])
+    us_labor_context = _has_labor_context(text)
     return fed_policy_context or powell_policy_context or us_inflation_context or us_labor_context
 
 
@@ -419,6 +428,38 @@ def _key_tags(facts: Dict[str, Any], macro_data: Dict[str, Any], headlines: List
         tags.append("CPI_HOT")
     elif "cpi" in joined and any(token in joined for token in ["cool", "below expectations", "softer"]):
         tags.append("CPI_COOL")
+    if _has_labor_context(joined):
+        labor_resilient = any(token in joined for token in [
+            "payrolls jump",
+            "payrolls rose",
+            "payroll employment edged up",
+            "jobs beat",
+            "beat expectations",
+            "more than expected",
+            "above expectations",
+            "unemployment rate unchanged",
+            "unemployment held",
+            "labor market remains steady",
+        ])
+        labor_weak = any(token in joined for token in [
+            "payrolls miss",
+            "jobs miss",
+            "below expectations",
+            "less than expected",
+            "unemployment rate rose",
+            "unemployment rises",
+            "jobless rate rose",
+            "jobless rate rises",
+            "layoffs",
+            "job cuts",
+            "federal government employment continued to decline",
+            "labor market slowdown",
+            "labor market cooling",
+        ])
+        if labor_resilient:
+            tags.append("LABOR_RESILIENT")
+        if labor_weak:
+            tags.append("LABOR_WEAKNESS")
 
     if not tags:
         tags.append("MACRO_NOISE")
@@ -446,6 +487,8 @@ MACRO_TAG_WEIGHTS = {
     "LIQUIDITY_EXPANDING": 4,
     "CPI_HOT": -4,
     "CPI_COOL": 4,
+    "LABOR_RESILIENT": 3,
+    "LABOR_WEAKNESS": -4,
 }
 ALLOWED_MACRO_TAGS = set(MACRO_TAG_WEIGHTS) | {"MACRO_NOISE"}
 
@@ -607,6 +650,10 @@ def _brief_rationale(tags: List[str], facts: Dict[str, Any], market_impact: str,
         parts.append("geopolitical risk is rising")
     if "LIQUIDITY_EXPANDING" in tags or "LIQUIDITY_CONTRACTING" in tags:
         parts.append(f"stablecoin flow is ${facts['global_stable_flow']:,.0f}")
+    if "LABOR_RESILIENT" in tags:
+        parts.append("labor data lowers recession risk")
+    if "LABOR_WEAKNESS" in tags:
+        parts.append("labor data raises recession risk")
     if not parts:
         parts.append("macro inputs are mixed and lack a dominant directional signal")
     return f"{'; '.join(parts)}. Classified as {market_impact} with {impact_horizon} horizon."

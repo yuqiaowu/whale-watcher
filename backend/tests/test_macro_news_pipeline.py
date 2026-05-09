@@ -250,6 +250,61 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertIn("Bitcoin drops as ETF outflows and liquidations hit crypto markets", headlines)
         self.assertIn("Stablecoin regulation bill advances after exchange probe", headlines)
 
+    def test_labor_resilience_offsets_hawkish_risk_off_pressure(self):
+        whale_analysis = {
+            "fear_greed": {"value": 38, "value_classification": "Fear"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": 0, "trend": "restrictive"},
+                "japan_macro": {"price": 156.6, "change_5d_pct": -0.23},
+                "liquidity_monitor": {
+                    "dxy": {"price": 97.84, "change_5d_pct": -0.38},
+                    "vix": {"price": 17.19, "change_1d_pct": 0.64, "change_5d_pct": 1.18},
+                    "us10y": {"price": 4.36, "change_5d_pct": -0.32},
+                },
+                "global_stable_flow": -508_870_394,
+                "global_stable_market_cap": 268_599_075_693,
+            },
+            "news": {
+                "macro": {
+                    "items": [
+                        {"title": "The Federal Reserve is quickly running out of reasons to cut interest rates"},
+                        {"title": "U.S. payrolls jump more than expected, but the report had several red flags for the economy", "sentiment": "Bullish"},
+                    ]
+                },
+                "bitcoin": {
+                    "items": [
+                        {"title": "Bitcoin stalls as BTC ETF outflows hit $268M", "sentiment": "Bearish"},
+                    ]
+                },
+            },
+        }
+
+        result = build_macro_news_snapshot(whale_analysis)
+
+        self.assertIn("LABOR_RESILIENT", result["key_tags"])
+        self.assertIn("LIQUIDITY_CONTRACTING", result["key_tags"])
+        self.assertEqual(-4, result["macro_impact_score"])
+        self.assertEqual("MILD_RISK_OFF", result["macro_bias_tier"])
+        self.assertEqual("ALLOW_BOTH", result["macro_permission"])
+
+    def test_labor_news_is_selected_ahead_of_lower_value_macro_chatter(self):
+        news_obj = {
+            "macro": {
+                "items": [
+                    {"title": f"Routine macro commentary item {idx}", "summary": "market discussion"}
+                    for idx in range(10)
+                ] + [
+                    {"title": "U.S. payrolls jump more than expected as unemployment rate unchanged", "sentiment": "Bullish"}
+                ]
+            },
+            "general": {"items": []},
+            "bitcoin": {"items": []},
+        }
+
+        headlines = _event_headlines(news_obj, limit=3)
+
+        self.assertIn("U.S. payrolls jump more than expected as unemployment rate unchanged", headlines)
+
     def test_fear_greed_cooling_from_greed_registers_mild_risk_off(self):
         whale_analysis = {
             "fear_greed": {"value": 58, "value_classification": "Neutral"},
