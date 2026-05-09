@@ -41,15 +41,36 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             "price": 651.5,
             "sma5_1d": 638.11,
             "sma10_1d": 628.025,
+            "sma200_1d": 700.0,
             "rsi_4h": 64.54,
         }
 
         self.assertEqual("BULL", dp._derive_regime_1d(macro_snapshot, market_snapshot))
+        self.assertEqual(
+            {
+                "major_trend_1d": "BEAR",
+                "major_trend_source": "PRICE_VS_SMA200",
+                "sma200_distance_pct": -6.9286,
+                "short_term_major_trend_alignment": "CONFLICT",
+            },
+            dp._derive_major_trend_context(market_snapshot, "BULL"),
+        )
 
     def test_regime_1d_falls_back_to_rsi_when_trend_averages_missing(self):
         self.assertEqual(
             "BEAR",
             dp._derive_regime_1d({"macro_mode": "RISK_ON"}, {"rsi_4h": 42.0}),
+        )
+
+    def test_major_trend_context_is_unknown_without_sma200(self):
+        self.assertEqual(
+            {
+                "major_trend_1d": "UNKNOWN",
+                "major_trend_source": "SMA200_UNAVAILABLE",
+                "sma200_distance_pct": None,
+                "short_term_major_trend_alignment": "UNKNOWN",
+            },
+            dp._derive_major_trend_context({"price": 100.0, "sma5_1d": 101.0, "sma10_1d": 99.0}, "BULL"),
         )
 
     def test_yen_stress_flag_uses_macro_tag_not_usdjpy_trend_alone(self):
@@ -825,6 +846,55 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(50.0, risk_review["approved_position_size_usd"])
         self.assertEqual(2.0, risk_review["leverage"])
         self.assertIn("macro conflict reduced size", risk_review["review_note"])
+
+    def test_major_trend_conflict_reduces_risk_without_blocking_candidate(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "timeframe": "4h",
+            "snapshot_timestamp": 1712743200,
+            "is_decision_eligible": True,
+            "position_snapshot": {"position_side": "NONE"},
+            "decision_ready_features": {
+                "macro_mode": "MIXED",
+                "macro_permission": "ALLOW_BOTH",
+                "major_trend_1d": "BEAR",
+            },
+        }
+        candidate = {
+            "strategy_family": "DIRECTIONAL",
+            "decision_intent": "LONG",
+            "trigger_source": "Blueprint_F1",
+            "entry_type": "MARKET",
+            "rationale": "short-term technical long",
+            "proposed_entry_price": 100,
+            "proposed_sl_price": 95,
+            "proposed_tp_price": 112,
+            "reference_values": {},
+            "invalidation_basis": "long invalid",
+            "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+        }
+        rule_evaluation = dp._evaluate_rules(snapshot, {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "candidate_proposals": [candidate],
+        })
+
+        self.assertTrue(rule_evaluation["passed"])
+        self.assertEqual("LONG", rule_evaluation["approved_candidates"][0]["decision_intent"])
+        self.assertIn(
+            "MAJOR_TREND_SIZING_CONTEXT",
+            [trace["rule"] for trace in rule_evaluation["rule_trace"]],
+        )
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertTrue(risk_review["approved"])
+        self.assertEqual(75.0, risk_review["approved_position_size_usd"])
+        self.assertEqual(2.5, risk_review["leverage"])
+        self.assertEqual(4, risk_review["max_holding_bars"])
+        self.assertIn("major trend conflict lightly reduced size", risk_review["review_note"])
 
     def test_risk_review_caps_max_loss_at_two_percent_of_equity_and_uses_three_x_default_leverage(self):
         snapshot = {

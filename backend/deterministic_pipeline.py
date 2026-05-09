@@ -235,6 +235,14 @@ def _optional_float(value: Any) -> Optional[float]:
         return None
 
 
+def _positive_optional_float(*values: Any) -> Optional[float]:
+    for value in values:
+        parsed = _optional_float(value)
+        if parsed is not None and not pd.isna(parsed) and parsed > 0:
+            return parsed
+    return None
+
+
 def _token_flow_semantic(token_flow: float, flow_data_available: bool) -> str:
     if not flow_data_available:
         return "UNAVAILABLE"
@@ -430,6 +438,8 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
         frame["recent_close_drift_pct"] = (frame["close"] - frame["close"].shift(6)) / close_mean_7.replace(0, pd.NA)
         frame["sma5_1d"] = frame["close"].rolling(30, min_periods=30).mean()
         frame["sma10_1d"] = frame["close"].rolling(60, min_periods=60).mean()
+        frame["sma50_1d"] = frame["close"].rolling(300, min_periods=300).mean()
+        frame["sma200_1d"] = frame["close"].rolling(1200, min_periods=1200).mean()
         ma_diff = frame["sma5_1d"] - frame["sma10_1d"]
         prev_ma_diff = ma_diff.shift(1)
         frame["ma5_cross_up_ma10_1d"] = (ma_diff > 0) & (prev_ma_diff <= 0)
@@ -508,6 +518,8 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
             "range_edge_close_count": int(_safe_float(latest.get("range_edge_close_count"))),
             "sma5_1d": _safe_float(latest.get("sma5_1d")),
             "sma10_1d": _safe_float(latest.get("sma10_1d")),
+            "sma50_1d": _safe_float(latest.get("sma50_1d")),
+            "sma200_1d": _safe_float(latest.get("sma200_1d")),
             "ma5_cross_up_ma10_1d": bool(latest.get("ma5_cross_up_ma10_1d")),
             "ma5_cross_down_ma10_1d": bool(latest.get("ma5_cross_down_ma10_1d")),
             "ma5_10_gap_pct_1d": _safe_float(latest.get("ma5_10_gap_pct_1d")),
@@ -714,6 +726,8 @@ def _build_decision_snapshot(
         "sma50_4h": _safe_float(chart_context.get("sma50_4h")),
         "sma5_1d": _safe_float(chart_context.get("sma5_1d"), _safe_float(market.get("sma5_1d"))),
         "sma10_1d": _safe_float(chart_context.get("sma10_1d"), _safe_float(market.get("sma10_1d"))),
+        "sma50_1d": _positive_optional_float(chart_context.get("sma50_1d"), market.get("sma50_1d")),
+        "sma200_1d": _positive_optional_float(chart_context.get("sma200_1d"), market.get("sma200_1d")),
         "ma5_cross_up_ma10_1d": bool(chart_context.get("ma5_cross_up_ma10_1d", market.get("ma5_cross_up_ma10_1d"))),
         "ma5_cross_down_ma10_1d": bool(chart_context.get("ma5_cross_down_ma10_1d", market.get("ma5_cross_down_ma10_1d"))),
         "ma5_10_gap_pct_1d": _safe_float(chart_context.get("ma5_10_gap_pct_1d"), _safe_float(market.get("ma5_10_gap_pct_1d"))),
@@ -764,6 +778,7 @@ def _build_decision_snapshot(
         qlib_direction = "SHORT"
 
     regime_1d = _derive_regime_1d(macro_snapshot, market_snapshot)
+    major_trend_context = _derive_major_trend_context(market_snapshot, regime_1d)
     grid_setup = _derive_grid_setup(
         symbol=f"{symbol}-USDT",
         price=market_snapshot["price"],
@@ -791,6 +806,7 @@ def _build_decision_snapshot(
     )
     decision_ready_features = {
         "regime_1d": regime_1d,
+        **major_trend_context,
         "macro_mode": macro_snapshot["macro_mode"],
         "macro_horizon": macro_snapshot["macro_horizon"],
         "macro_permission": macro_snapshot["macro_permission"],
@@ -898,15 +914,6 @@ def _build_decision_snapshot(
 
 def _derive_regime_1d(macro_snapshot: Dict[str, Any], market_snapshot: Dict[str, Any]) -> str:
     del macro_snapshot
-    sma50 = _safe_float(market_snapshot.get("sma50_1d"))
-    sma200 = _safe_float(market_snapshot.get("sma200_1d"))
-    price = _safe_float(market_snapshot.get("price"))
-    if sma200 > 0 and price > 0:
-        if price > sma200:
-            return "BULL"
-        if price < sma200:
-            return "BEAR"
-
     sma5 = _safe_float(market_snapshot.get("sma5_1d"))
     sma10 = _safe_float(market_snapshot.get("sma10_1d"))
     if sma5 > 0 and sma10 > 0:
@@ -921,6 +928,30 @@ def _derive_regime_1d(macro_snapshot: Dict[str, Any], market_snapshot: Dict[str,
     if rsi <= 45:
         return "BEAR"
     return "CHOP"
+
+
+def _derive_major_trend_context(market_snapshot: Dict[str, Any], regime_1d: str) -> Dict[str, Any]:
+    price = _safe_float(market_snapshot.get("price"))
+    sma200 = _safe_float(market_snapshot.get("sma200_1d"))
+    if price <= 0 or sma200 <= 0:
+        return {
+            "major_trend_1d": "UNKNOWN",
+            "major_trend_source": "SMA200_UNAVAILABLE",
+            "sma200_distance_pct": None,
+            "short_term_major_trend_alignment": "UNKNOWN",
+        }
+
+    major_trend = "BULL" if price > sma200 else "BEAR" if price < sma200 else "CHOP"
+    if regime_1d in {"BULL", "BEAR"} and major_trend in {"BULL", "BEAR"}:
+        alignment = "ALIGNED" if regime_1d == major_trend else "CONFLICT"
+    else:
+        alignment = "UNKNOWN"
+    return {
+        "major_trend_1d": major_trend,
+        "major_trend_source": "PRICE_VS_SMA200",
+        "sma200_distance_pct": round((price - sma200) / sma200 * 100, 4),
+        "short_term_major_trend_alignment": alignment,
+    }
 
 
 def _quality_score(market_snapshot: Dict[str, Any], onchain_snapshot: Dict[str, Any], macro_snapshot: Dict[str, Any]) -> float:
@@ -1997,6 +2028,23 @@ def _evaluate_rules(snapshot: Dict[str, Any], candidate_batch: Dict[str, Any]) -
                     "effect": "risk_sizing_only",
                 },
             })
+        major_trend = snapshot["decision_ready_features"].get("major_trend_1d", "UNKNOWN")
+        if (
+            intent != "GRID_NEUTRAL"
+            and (
+                (major_trend == "BEAR" and intent == "LONG")
+                or (major_trend == "BULL" and intent == "SHORT")
+            )
+        ):
+            rule_trace.append({
+                "rule": "MAJOR_TREND_SIZING_CONTEXT",
+                "passed": True,
+                "detail": {
+                    "major_trend_1d": major_trend,
+                    "candidate_intent": intent,
+                    "effect": "risk_sizing_only",
+                },
+            })
 
         leverage_target = GLOBAL_CONFIG["grid_leverage_default"] if intent == "GRID_NEUTRAL" else 3.0
         leverage = min(GLOBAL_CONFIG["global_leverage_max"], max(GLOBAL_CONFIG["global_leverage_min"], leverage_target))
@@ -2177,6 +2225,19 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
         leverage = min(leverage, 2.0)
         max_holding_bars = min(max_holding_bars, 3)
         review_note = f"{review_note}; macro conflict reduced size and leverage"
+
+    major_trend = snapshot["decision_ready_features"].get("major_trend_1d", "UNKNOWN")
+    if (
+        not is_grid_candidate
+        and (
+            (major_trend == "BEAR" and intent == "LONG")
+            or (major_trend == "BULL" and intent == "SHORT")
+        )
+    ):
+        approved_position_size_usd *= 0.75
+        leverage = min(leverage, 2.5)
+        max_holding_bars = min(max_holding_bars, 4)
+        review_note = f"{review_note}; major trend conflict lightly reduced size and duration"
 
     resonance_bonus = _safe_float(candidate.get("resonance_bonus"), 0.0)
     if candidate_structure.get("overall_state") == "same_direction_resonance" and resonance_bonus > 0:
