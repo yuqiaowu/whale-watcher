@@ -897,12 +897,25 @@ def _build_decision_snapshot(
 
 
 def _derive_regime_1d(macro_snapshot: Dict[str, Any], market_snapshot: Dict[str, Any]) -> str:
-    macro_mode = macro_snapshot.get("macro_mode")
+    del macro_snapshot
+    sma50 = _safe_float(market_snapshot.get("sma50_1d"))
+    sma200 = _safe_float(market_snapshot.get("sma200_1d"))
+    price = _safe_float(market_snapshot.get("price"))
+    if sma200 > 0 and price > 0:
+        if price > sma200:
+            return "BULL"
+        if price < sma200:
+            return "BEAR"
+
+    sma5 = _safe_float(market_snapshot.get("sma5_1d"))
+    sma10 = _safe_float(market_snapshot.get("sma10_1d"))
+    if sma5 > 0 and sma10 > 0:
+        if sma5 > sma10:
+            return "BULL"
+        if sma5 < sma10:
+            return "BEAR"
+
     rsi = _safe_float(market_snapshot.get("rsi_4h"), 50.0)
-    if macro_mode == "RISK_OFF":
-        return "BEAR"
-    if macro_mode == "RISK_ON":
-        return "BULL"
     if rsi >= 55:
         return "BULL"
     if rsi <= 45:
@@ -1971,16 +1984,19 @@ def _evaluate_rules(snapshot: Dict[str, Any], candidate_batch: Dict[str, Any]) -
             rule_trace.append({"rule": "POSITION_CONFLICT_CHECK", "passed": False, "detail": "existing_short"})
             continue
 
-        if macro_permission == "ALLOW_SHORT" and intent == "LONG":
-            passed = False
-            reason_codes.append("BEAR_MARKET_LONG_BLOCKED")
-            rule_trace.append({"rule": "REGIME_PERMISSION_CHECK", "passed": False, "detail": "macro_short_only"})
-            continue
-        if macro_permission == "ALLOW_LONG" and intent == "SHORT":
-            passed = False
-            reason_codes.append("NO_CONFIRMATION")
-            rule_trace.append({"rule": "REGIME_PERMISSION_CHECK", "passed": False, "detail": "macro_long_only"})
-            continue
+        if (
+            (macro_permission == "ALLOW_SHORT" and intent == "LONG")
+            or (macro_permission == "ALLOW_LONG" and intent == "SHORT")
+        ):
+            rule_trace.append({
+                "rule": "MACRO_PERMISSION_SIZING_CONTEXT",
+                "passed": True,
+                "detail": {
+                    "macro_permission": macro_permission,
+                    "candidate_intent": intent,
+                    "effect": "risk_sizing_only",
+                },
+            })
 
         leverage_target = GLOBAL_CONFIG["grid_leverage_default"] if intent == "GRID_NEUTRAL" else 3.0
         leverage = min(GLOBAL_CONFIG["global_leverage_max"], max(GLOBAL_CONFIG["global_leverage_min"], leverage_target))
@@ -2147,6 +2163,20 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
 
         if research_output.get("holding_horizon") == "SHORT":
             max_holding_bars = min(max_holding_bars, 3)
+
+    macro_permission = snapshot["decision_ready_features"].get("macro_permission", "ALLOW_BOTH")
+    intent = candidate.get("decision_intent")
+    if (
+        not is_grid_candidate
+        and (
+            (macro_permission == "ALLOW_SHORT" and intent == "LONG")
+            or (macro_permission == "ALLOW_LONG" and intent == "SHORT")
+        )
+    ):
+        approved_position_size_usd *= 0.5
+        leverage = min(leverage, 2.0)
+        max_holding_bars = min(max_holding_bars, 3)
+        review_note = f"{review_note}; macro conflict reduced size and leverage"
 
     resonance_bonus = _safe_float(candidate.get("resonance_bonus"), 0.0)
     if candidate_structure.get("overall_state") == "same_direction_resonance" and resonance_bonus > 0:
