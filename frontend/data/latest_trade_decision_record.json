@@ -3,9 +3,9 @@
   "cycleId": "cycle_2026-05-10_1200",
   "symbol": "DOGE-USDT",
   "timeframe": "4h",
-  "snapshot_timestamp": 1778414858,
-  "snapshot_time": "2026-05-10T12:07:38Z",
-  "snapshot_time_local": "2026-05-10T20:07:38+0800",
+  "snapshot_timestamp": 1778422073,
+  "snapshot_time": "2026-05-10T14:07:53Z",
+  "snapshot_time_local": "2026-05-10T22:07:53+0800",
   "local_timezone": "Asia/Shanghai",
   "positionState": "candidate",
   "snapshot": {
@@ -13,17 +13,17 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-10_1200",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778414858,
-    "snapshot_time": "2026-05-10T12:07:38Z",
-    "snapshot_time_local": "2026-05-10T20:07:38+0800",
+    "snapshot_timestamp": 1778422073,
+    "snapshot_time": "2026-05-10T14:07:53Z",
+    "snapshot_time_local": "2026-05-10T22:07:53+0800",
     "local_timezone": "Asia/Shanghai",
     "market_snapshot": {
-      "price": 0.10795,
-      "change_24h": -0.6899724011039564,
+      "price": 0.10825,
+      "change_24h": -0.41398344066237897,
       "rsi_4h": 43.93346507541951,
       "rsi_delta_4h": -1.3464620946668546,
       "adx_14": 19.78000882983925,
-      "volume_ratio": 0.5067089782137908,
+      "volume_ratio": 0.5053432737935856,
       "bb_width": 0.0514805926313209,
       "bb_pct_b": 0.3963915618048918,
       "bb_mid_slope_pct": -0.004855618907485881,
@@ -34,11 +34,11 @@
       "wick_ratio_upper": 48.48,
       "funding_rate": 0.0001,
       "funding_zscore": 0.95,
-      "oi_now": 111202871.38349988,
+      "oi_now": 111511911.32249987,
       "delta_oi_24h_percent": 3.1806575813048186,
-      "natr_percent": 1.4294936377871088,
-      "whale_ls_ratio": 1.3419354838709676,
-      "whale_pos_ratio": 0.8057159850026656,
+      "natr_percent": 1.4383319763064302,
+      "whale_ls_ratio": 1.3934782608695653,
+      "whale_pos_ratio": 0.797255712775539,
       "atr_14": 0.0014107142857142,
       "trigger_candle_open": 0.10847,
       "trigger_candle_high": 0.10911,
@@ -78,13 +78,13 @@
       "flow_composite_semantic": "UNAVAILABLE",
       "flow_signal_mixed": false,
       "sentiment_score": 0.0,
-      "liquidation_long_usd": 402575.6506000002,
+      "liquidation_long_usd": 266506.8563000001,
       "liquidation_short_usd": 4615.6444,
-      "liquidation_long_to_volume_4h": 0.0056979767915429,
+      "liquidation_long_to_volume_4h": 0.0037720857675351,
       "liquidation_short_to_volume_4h": 6.532892545790491e-05,
       "funding_rate": 0.0001,
       "funding_zscore": 0.95,
-      "oi_now": 111202871.38349988,
+      "oi_now": 111511911.32249987,
       "delta_oi_24h_percent": 3.1806575813048186,
       "qlib_relative_score_8h": 0.0037,
       "qlib_rank_8h": 1,
@@ -106,8 +106,8 @@
         "LIQUIDITY_CONTRACTING",
         "USD_WEAKNESS"
       ],
-      "brief_rationale": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: stablecoin outflows (-$1.45B), VIX rising (1.18% 5d), and DXY weakening (-0.38% 5d) despite hawkish Fed. The blended view consolidates the consensus.",
-      "news_summary": "Fed hawkishness persists with no rate cuts in sight, labor data resilient but with red flags, stablecoin outflows signal liquidity contraction, and crypto sentiment mixed with bullish talk rising.",
+      "brief_rationale": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support hawkish Fed (rate cut expectations fading), resilient labor (payrolls beat), liquidity contraction (stablecoin outflow), and USD weakness (DXY down). No strong contradiction; blended conclusion reinforces consensus.",
+      "news_summary": "Fed running out of reasons to cut rates, AI concerns rising, payrolls beat but with red flags, crypto bill vote upcoming, and mixed crypto sentiment.",
       "classification_basis": {
         "fear_greed_index": 47.0,
         "fear_greed_state": "NEUTRAL",
@@ -179,6 +179,14 @@
             "sentiment": "Bullish"
           },
           {
+            "title": "SEC delay on prediction markets ETFs echoes a long-fought bitcoin fund battle",
+            "bucket": "macro",
+            "score": 20,
+            "published": "Sun, 10 May 2026 12:22:02 GMT",
+            "source": "https://www.cnbc.com/2026/05/10/sec-prediction-markets-etfs-trading-launch-delay.html",
+            "sentiment": "Bullish"
+          },
+          {
             "title": "Bitcoin price may dip toward $70K as Fed estimates hotter inflation print",
             "bucket": "bitcoin",
             "score": 19,
@@ -227,14 +235,6 @@
             "sentiment": "Bearish"
           },
           {
-            "title": "Ripple\u2019s RLUSD Grant Results Show How $25M Reached US Classrooms",
-            "bucket": "general",
-            "score": 15,
-            "published": "Sun, 10 May 2026 02:30:26 +0000",
-            "source": "https://news.bitcoin.com/ripples-rlusd-grant-results-show-how-25m-reached-us-classrooms/",
-            "sentiment": "Bullish"
-          },
-          {
             "title": "Court lets Arbitrum DAO transfer $71M in ETH tied to North Korea hack to Aave",
             "bucket": "ethereum",
             "score": 13,
@@ -277,14 +277,6 @@
             "sentiment": "Bearish"
           },
           {
-            "title": "Anthropic's Mythos set off a cybersecurity 'hysteria.' Experts say the threat was already here",
-            "bucket": "macro",
-            "score": 11,
-            "published": "Fri, 08 May 2026 20:01:44 GMT",
-            "source": "https://www.cnbc.com/2026/05/08/anthropic-mythos-ai-cybersecurity-banks.html",
-            "sentiment": "Bearish"
-          },
-          {
             "title": "Four signs that show Ethereum's rally is exhausted at $2.4K",
             "bucket": "ethereum",
             "score": 11,
@@ -293,11 +285,19 @@
             "sentiment": "Neutral"
           },
           {
-            "title": "Best high-yield savings interest rates today, May 9, 2026 (Earn up to 4.1% APY)",
+            "title": "Trump has quietly bought up to $337 million in bonds \u2014 and his Fed pick Kevin Warsh could send their value soaring",
             "bucket": "macro",
             "score": 11,
-            "published": "2026-05-09T10:00:00Z",
-            "source": "https://finance.yahoo.com/personal-finance/banking/article/best-high-yield-savings-interest-rates-today-saturday-may-9-2026-100000422.html",
+            "published": "2026-05-09T13:00:00Z",
+            "source": "https://finance.yahoo.com/economy/policy/articles/trump-quietly-bought-337-million-130000030.html",
+            "sentiment": "Bullish"
+          },
+          {
+            "title": "Bitcoin Price Prospect: BTC Holds $80K While Momentum Starts Heating Up",
+            "bucket": "general",
+            "score": 10,
+            "published": "Sun, 10 May 2026 13:05:30 +0000",
+            "source": "https://news.bitcoin.com/bitcoin-price-prospect-btc-holds-80k-while-momentum-starts-heating-up/",
             "sentiment": "Bullish"
           },
           {
@@ -330,6 +330,14 @@
             "score": 10,
             "published": "Fri, 08 May 2026 20:29:14 +0000",
             "source": "https://decrypt.co/367309/terawulfs-ai-compute-revenue-outpaces-bitcoin-mining-amid-427-million-loss",
+            "sentiment": "Bearish"
+          },
+          {
+            "title": "'You never see numbers like this': Trump's economy approval with independents plunges 79 points",
+            "bucket": "macro",
+            "score": 10,
+            "published": "2026-05-09T13:25:00Z",
+            "source": "https://finance.yahoo.com/economy/policy/articles/never-see-numbers-trumps-economy-132500588.html",
             "sentiment": "Bearish"
           },
           {
@@ -373,11 +381,11 @@
             "sentiment": "Neutral"
           },
           {
-            "title": "Mortgage and refinance interest rates today, May 9, 2026: 30- and 15-year rates move back up",
+            "title": "Used car prices fall for the first time this year and EV interest rises as gas prices spike",
             "bucket": "macro",
             "score": 7,
-            "published": "2026-05-09T10:00:00Z",
-            "source": "https://finance.yahoo.com/personal-finance/mortgages/article/mortgage-refinance-interest-rates-today-saturday-may-9-2026-100000903.html",
+            "published": "Thu, 07 May 2026 16:31:01 GMT",
+            "source": "https://www.cnbc.com/2026/05/07/used-car-prices-gas.html",
             "sentiment": "Bullish"
           },
           {
@@ -403,14 +411,6 @@
             "published": "Fri, 08 May 2026 18:54:00 GMT",
             "source": "https://www.cnbc.com/2026/05/08/michael-burry-says-the-market-today-feels-like-the-last-months-of-the-1999-2000-bubble.html",
             "sentiment": "Neutral"
-          },
-          {
-            "title": "Iran focus at Trump-Xi summit may delay progress on tariffs, rare earths",
-            "bucket": "macro",
-            "score": 6,
-            "published": "Fri, 08 May 2026 18:44:26 GMT",
-            "source": "https://www.cnbc.com/2026/05/08/iran-focus-at-trump-xi-summit-may-delay-progress-on-tariffs-rare-earths.html",
-            "sentiment": "Neutral"
           }
         ],
         "candidate_count": 37
@@ -431,10 +431,10 @@
           "status": "parsed",
           "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
           "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-          "raw_response_preview": "{ \"news_summary\": \"Fed hawkishness persists with no rate cuts in sight, labor data resilient but with red flags, stablecoin outflows signal liquidity contraction, and crypto sentiment mixed with bullish talk rising.\", \"brief_rationale\": \"Fed rhetoric remains restrictive, labor market strong but with underlying weaknesses, stablecoin outflows indicate risk-off, and crypto bullish sentiment may be contrarian. Overall macro environment is risk-off with multi-day horizon.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"LABOR_RESILIENT\", \"LIQUIDITY_CONTRACTING\", \"USD_WEAKNESS\"] }",
+          "raw_response_preview": "{ \"news_summary\": \"Fed running out of reasons to cut rates, AI concerns rising, payrolls beat but with red flags, crypto bill vote upcoming, and mixed crypto sentiment.\", \"brief_rationale\": \"Hawkish Fed stance and resilient labor data support RISK_OFF, but USD weakness and stablecoin outflow suggest caution. Crypto-specific news is mixed with regulatory progress and bullish sentiment.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"LABOR_RESILIENT\", \"LIQUIDITY_CONTRACTING\", \"USD_WEAKNESS\"] }",
           "parsed_response": {
-            "news_summary": "Fed hawkishness persists with no rate cuts in sight, labor data resilient but with red flags, stablecoin outflows signal liquidity contraction, and crypto sentiment mixed with bullish talk rising.",
-            "brief_rationale": "Fed rhetoric remains restrictive, labor market strong but with underlying weaknesses, stablecoin outflows indicate risk-off, and crypto bullish sentiment may be contrarian. Overall macro environment is risk-off with multi-day horizon.",
+            "news_summary": "Fed running out of reasons to cut rates, AI concerns rising, payrolls beat but with red flags, crypto bill vote upcoming, and mixed crypto sentiment.",
+            "brief_rationale": "Hawkish Fed stance and resilient labor data support RISK_OFF, but USD weakness and stablecoin outflow suggest caution. Crypto-specific news is mixed with regulatory progress and bullish sentiment.",
             "market_impact": "RISK_OFF",
             "impact_horizon": "MULTI_DAY",
             "crypto_relevance": "HIGH",
@@ -461,7 +461,7 @@
           "USD_WEAKNESS"
         ],
         "confidence": "MEDIUM",
-        "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: stablecoin outflows (-$1.45B), VIX rising (1.18% 5d), and DXY weakening (-0.38% 5d) despite hawkish Fed. The blended view consolidates the consensus.",
+        "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support hawkish Fed (rate cut expectations fading), resilient labor (payrolls beat), liquidity contraction (stablecoin outflow), and USD weakness (DXY down). No strong contradiction; blended conclusion reinforces consensus.",
         "deterministic_view": {
           "event_type": "FED_SPEECH",
           "policy_stance": "HAWKISH",
@@ -487,8 +487,8 @@
             "LIQUIDITY_CONTRACTING",
             "USD_WEAKNESS"
           ],
-          "news_summary": "Fed hawkishness persists with no rate cuts in sight, labor data resilient but with red flags, stablecoin outflows signal liquidity contraction, and crypto sentiment mixed with bullish talk rising.",
-          "brief_rationale": "Fed rhetoric remains restrictive, labor market strong but with underlying weaknesses, stablecoin outflows indicate risk-off, and crypto bullish sentiment may be contrarian. Overall macro environment is risk-off with multi-day horizon."
+          "news_summary": "Fed running out of reasons to cut rates, AI concerns rising, payrolls beat but with red flags, crypto bill vote upcoming, and mixed crypto sentiment.",
+          "brief_rationale": "Hawkish Fed stance and resilient labor data support RISK_OFF, but USD weakness and stablecoin outflow suggest caution. Crypto-specific news is mixed with regulatory progress and bullish sentiment."
         },
         "adjudication_audit": {
           "enabled": true,
@@ -496,8 +496,8 @@
           "model": "deepseek-chat",
           "status": "parsed",
           "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"The Federal Reserve is quickly running out of reasons to cut interest rates\", \"Fed Survey Shows AI Concerns Rising Across Markets, Credit and Jobs\", \"Privacy Narrative Makes Comeback, Ton Jumps, Clarity Comes Into View, and More \u2013 Week in Review\", \"Bitcoin price may dip toward $70K as Fed estimates hotter inflation print\", \"Bank...",
-          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_OFF\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"LABOR_RESILIENT\", \"LIQUIDITY_CONTRACTING\", \"USD_WEAKNESS\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: stablecoin outflows (-$1.45B), VIX rising (1.18% 5d), and DXY weakening (-0.38% 5d) despite hawkish Fed. The blended view consolidates the consensus.\" }",
+          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"The Federal Reserve is quickly running out of reasons to cut interest rates\", \"Fed Survey Shows AI Concerns Rising Across Markets, Credit and Jobs\", \"Privacy Narrative Makes Comeback, Ton Jumps, Clarity Comes Into View, and More \u2013 Week in Review\", \"SEC delay on prediction markets ETFs echoes a long-fought bitcoin fund battle\", \"...",
+          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_OFF\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"LABOR_RESILIENT\", \"LIQUIDITY_CONTRACTING\", \"USD_WEAKNESS\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support hawkish Fed (rate cut expectations fading), resilient labor (payrolls beat), liquidity contraction (stablecoin outflow), and USD weakness (DXY down). No strong contradiction; blended conclusion reinforces consensus.\" }",
           "parsed_response": {
             "selected_view": "blended",
             "final_market_impact": "RISK_OFF",
@@ -510,7 +510,7 @@
               "USD_WEAKNESS"
             ],
             "confidence": 0.85,
-            "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: stablecoin outflows (-$1.45B), VIX rising (1.18% 5d), and DXY weakening (-0.38% 5d) despite hawkish Fed. The blended view consolidates the consensus."
+            "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support hawkish Fed (rate cut expectations fading), resilient labor (payrolls beat), liquidity contraction (stablecoin outflow), and USD weakness (DXY down). No strong contradiction; blended conclusion reinforces consensus."
           },
           "error": null
         }
@@ -538,13 +538,13 @@
         "The Federal Reserve is quickly running out of reasons to cut interest rates",
         "Fed Survey Shows AI Concerns Rising Across Markets, Credit and Jobs",
         "Privacy Narrative Makes Comeback, Ton Jumps, Clarity Comes Into View, and More \u2013 Week in Review",
+        "SEC delay on prediction markets ETFs echoes a long-fought bitcoin fund battle",
         "Bitcoin price may dip toward $70K as Fed estimates hotter inflation print",
         "Banking Industry Says Clarity Act Stablecoin Proposal Would Enable 'Evasion'",
         "U.S. payrolls jump more than expected, but the report had several red flags for the economy",
         "Major crypto bill slated for May 14 Senate Banking Committee vote",
         "[USD] FOMC Member Williams Speaks (Low)",
         "[USD] FOMC Member Barr Speaks (Low)",
-        "Ripple\u2019s RLUSD Grant Results Show How $25M Reached US Classrooms",
         "Court lets Arbitrum DAO transfer $71M in ETH tied to North Korea hack to Aave",
         "Santiment flags risk as crypto bullish talk spikes while BTC holds $80K"
       ]
@@ -562,7 +562,7 @@
       "regime_1d": "BULL",
       "major_trend_1d": "BEAR",
       "major_trend_source": "PRICE_VS_SMA200",
-      "sma200_distance_pct": -12.3798,
+      "sma200_distance_pct": -12.1363,
       "short_term_major_trend_alignment": "CONFLICT",
       "macro_mode": "MIXED",
       "macro_horizon": "MULTI_DAY",
@@ -586,7 +586,7 @@
       "flow_support_short": false,
       "funding_rate": 0.0001,
       "funding_zscore": 0.95,
-      "oi_now": 111202871.38349988,
+      "oi_now": 111511911.32249987,
       "delta_oi_24h_percent": 3.1806575813048186,
       "qlib_relative_score_8h": 0.0037,
       "qlib_percentile_8h": 1.0,
@@ -603,7 +603,7 @@
       "range_lower_bound": 0.1061,
       "range_upper_bound": 0.1113,
       "range_width_pct": 0.0472,
-      "price_position_in_range": 0.3509,
+      "price_position_in_range": 0.4094,
       "grid_mode": "ARITHMETIC",
       "grid_count": 6,
       "grid_spacing_pct": 0.0079,
@@ -639,7 +639,7 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-10_1200",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778414858,
+    "snapshot_timestamp": 1778422073,
     "candidate_proposals": [],
     "e_strategy_diagnostic": {
       "qlib_inputs": {
@@ -767,14 +767,14 @@
     "history": [
       {
         "type": "EXECUTION_NOT_REQUESTED",
-        "at": "2026-05-10T12:07:40Z",
+        "at": "2026-05-10T14:07:55Z",
         "payload": {
           "review_note": "rule evaluation rejected or produced no approved candidates"
         }
       },
       {
         "type": "EXECUTION_SKIPPED",
-        "at": "2026-05-10T12:07:44Z",
+        "at": "2026-05-10T14:07:59Z",
         "payload": {
           "reason": "do_nothing",
           "execution_action": "DO_NOTHING"
@@ -826,10 +826,10 @@
       "execution_action": "DO_NOTHING"
     },
     "feedback_packets": [],
-    "generated_at": "2026-05-10T12:08:16Z"
+    "generated_at": "2026-05-10T14:08:39Z"
   },
-  "created_at": "2026-05-10T12:07:40Z",
-  "created_at_local": "2026-05-10T20:07:40+0800",
-  "updated_at": "2026-05-10T12:08:16Z",
-  "updated_at_local": "2026-05-10T20:07:44+0800"
+  "created_at": "2026-05-10T14:07:55Z",
+  "created_at_local": "2026-05-10T22:07:55+0800",
+  "updated_at": "2026-05-10T14:08:39Z",
+  "updated_at_local": "2026-05-10T22:07:59+0800"
 }
