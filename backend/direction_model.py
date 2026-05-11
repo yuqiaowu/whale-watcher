@@ -1,4 +1,6 @@
+import json
 import pickle
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -45,11 +47,14 @@ def train_direction_model() -> Dict[str, object]:
     df = df.dropna(subset=["direction_label_8h"]).copy()
 
     feature_cols = [col for col in QLIB_FEATURES if col in df.columns]
-    train_end = df["datetime"].quantile(0.80)
-    valid_end = df["datetime"].quantile(0.90)
+    now_dt = datetime.now()
+    train_start = pd.Timestamp("2025-01-01")
+    train_end = pd.Timestamp((now_dt - timedelta(days=3)).strftime("%Y-%m-%d"))
+    valid_start = pd.Timestamp((now_dt - timedelta(days=2)).strftime("%Y-%m-%d"))
+    valid_end = pd.Timestamp((now_dt - timedelta(days=1)).strftime("%Y-%m-%d"))
 
-    train_df = df[df["datetime"] <= train_end]
-    valid_df = df[(df["datetime"] > train_end) & (df["datetime"] <= valid_end)]
+    train_df = df[(df["datetime"] >= train_start) & (df["datetime"] <= train_end)]
+    valid_df = df[(df["datetime"] >= valid_start) & (df["datetime"] <= valid_end)]
     test_df = df[df["datetime"] > valid_end]
 
     X_train = train_df[feature_cols].fillna(0.0)
@@ -82,7 +87,13 @@ def train_direction_model() -> Dict[str, object]:
         "feature_cols": feature_cols,
         "labels": LABELS,
         "meta": {
+            "trained_at": datetime.now().isoformat(timespec="seconds"),
             "target": "future_8h_direction",
+            "train_start": train_start.strftime("%Y-%m-%d"),
+            "train_end": train_end.strftime("%Y-%m-%d"),
+            "valid_start": valid_start.strftime("%Y-%m-%d"),
+            "valid_end": valid_end.strftime("%Y-%m-%d"),
+            "data_latest_datetime": pd.Timestamp(df["datetime"].max()).strftime("%Y-%m-%d %H:%M:%S"),
             "up_threshold": 0.012,
             "down_threshold": -0.012,
             "train_rows": int(len(train_df)),
@@ -128,6 +139,10 @@ def predict_direction_probabilities(feature_frame: pd.DataFrame) -> Dict[str, Di
             "confidence_8h": round(float(max(p_up, p_down)), 4),
         }
     return result
+
+
+if __name__ == "__main__":
+    print(json.dumps(train_direction_model(), ensure_ascii=False, indent=2))
 
 
 def heuristic_direction_probabilities(feature_frame: pd.DataFrame, score_series: pd.Series) -> Dict[str, Dict[str, float]]:

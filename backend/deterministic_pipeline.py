@@ -13,6 +13,7 @@ import pandas as pd
 
 from db_client import db
 from macro_news_pipeline import build_macro_news_snapshot
+from model_decision_agent import build_market_state, build_model_decision
 from okx_executor import OKXExecutor
 from post_trade_review import run_post_trade_review
 from research_agent import build_research_output
@@ -70,6 +71,8 @@ GRID_SYMBOL_CONFIG = {
 FLOW_SCHEMA_VERSION = "flow_semantics_v1"
 STRATEGY_FAMILY_DIRECTIONAL = "DIRECTIONAL"
 STRATEGY_FAMILY_GRID = "GRID"
+MODEL_DECISION_TRIGGER_SOURCE = "ModelDecision_LLM"
+QLIB_DEPENDENT_TRIGGER_SOURCES = {"Blueprint_E1", "Blueprint_E2", "Blueprint_G1", MODEL_DECISION_TRIGGER_SOURCE}
 
 GLOBAL_CONFIG = {
     "timeframe": "4h",
@@ -200,6 +203,10 @@ def _current_4h_bar_start_utc(dt: Optional[datetime] = None) -> pd.Timestamp:
     return pd.Timestamp(aligned.replace(tzinfo=None))
 
 
+def _expected_completed_4h_bar_utc(dt: Optional[datetime] = None) -> pd.Timestamp:
+    return _current_4h_bar_start_utc(dt) - pd.Timedelta(hours=4)
+
+
 def _aligned_cycle_local(dt: Optional[datetime] = None) -> str:
     dt = (dt or _now_utc()).astimezone(LOCAL_TZ)
     block_hour = (dt.hour // 4) * 4
@@ -229,8 +236,12 @@ def _optional_float(value: Any) -> Optional[float]:
             cleaned = value.replace("%", "").replace(",", "").strip()
             if cleaned == "":
                 return None
-            return float(cleaned)
-        return float(value)
+            parsed = float(cleaned)
+        else:
+            parsed = float(value)
+        if pd.isna(parsed):
+            return None
+        return parsed
     except Exception:
         return None
 
@@ -241,6 +252,22 @@ def _positive_optional_float(*values: Any) -> Optional[float]:
         if parsed is not None and not pd.isna(parsed) and parsed > 0:
             return parsed
     return None
+
+
+def _select_snapshot_price(market: Dict[str, Any], market_data: Dict[str, Any], chart_context: Dict[str, Any]) -> Tuple[float, str, bool]:
+    market_price = _optional_float(market.get("price"))
+    chart_close = _optional_float(chart_context.get("trigger_candle_close"))
+    qlib_close = _optional_float(market_data.get("close"))
+    reference_close = chart_close or qlib_close
+    if market_price is not None and reference_close is not None and reference_close > 0:
+        drift = abs(market_price - reference_close) / reference_close
+        if drift > 0.03:
+            return reference_close, "chart_or_qlib_close_stale_market_price", True
+    if market_price is not None:
+        return market_price, "market_price", False
+    if reference_close is not None:
+        return reference_close, "chart_or_qlib_close", False
+    return 0.0, "missing", False
 
 
 def _token_flow_semantic(token_flow: float, flow_data_available: bool) -> str:
@@ -426,6 +453,12 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
         frame["bb_mid_20"] = frame["close"].rolling(20, min_periods=20).mean()
         frame["bb_mid_slope_pct"] = (frame["bb_mid_20"] - frame["bb_mid_20"].shift(3)) / frame["bb_mid_20"].replace(0, pd.NA)
         frame["rsi_delta_4h"] = pd.to_numeric(frame["rsi_14"], errors="coerce") - pd.to_numeric(frame["rsi_14"], errors="coerce").shift(1)
+        high_14 = pd.to_numeric(frame["high"], errors="coerce").rolling(14, min_periods=14).max()
+        low_14 = pd.to_numeric(frame["low"], errors="coerce").rolling(14, min_periods=14).min()
+        williams_range_14 = (high_14 - low_14).replace(0, pd.NA)
+        frame["williams_r14"] = -100.0 * (high_14 - pd.to_numeric(frame["close"], errors="coerce")) / williams_range_14
+        peak_120d = pd.to_numeric(frame["close"], errors="coerce").rolling(120 * 6, min_periods=120 * 6).max()
+        frame["drawdown_120d_pct"] = (pd.to_numeric(frame["close"], errors="coerce") / peak_120d.replace(0, pd.NA) - 1.0) * 100.0
         if "adx_14" not in frame.columns or frame["adx_14"].isna().all():
             frame["adx_14"] = _compute_adx_series(frame)
         else:
@@ -500,6 +533,8 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
             "macd_hist_4h": _safe_float(latest.get("macd_hist")),
             "rsi_4h": _safe_float(latest.get("rsi_14")),
             "rsi_delta_4h": _safe_float(latest.get("rsi_delta_4h")),
+            "williams_r14": _optional_float(latest.get("williams_r14")),
+            "drawdown_120d_pct": _optional_float(latest.get("drawdown_120d_pct")),
             "adx_14_4h": _safe_float(latest.get("adx_14")),
             "atr_14": atr,
             "trigger_candle_open": latest_open,
@@ -658,6 +693,82 @@ def _qlib_coin_map(qlib_payload: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
     return result
 
 
+def _parse_qlib_time(value: Any) -> Optional[pd.Timestamp]:
+    if not value:
+        return None
+    try:
+        parsed = pd.to_datetime(value)
+    except Exception:
+        return None
+    if pd.isna(parsed):
+        return None
+    if getattr(parsed, "tzinfo", None) is not None:
+        parsed = parsed.tz_convert("UTC").tz_localize(None)
+    return pd.Timestamp(parsed).floor("s")
+
+
+def _qlib_freshness_report(
+    qlib_payload: Dict[str, Any],
+    qlib_map: Dict[str, Dict[str, Any]],
+    chart_context_map: Dict[str, Dict[str, Any]],
+    expected_bar: Optional[pd.Timestamp] = None,
+) -> Dict[str, Any]:
+    expected_bar = expected_bar or _expected_completed_4h_bar_utc()
+    payload_as_of = _parse_qlib_time(
+        qlib_payload.get("as_of")
+        or qlib_payload.get("data_as_of")
+        or qlib_payload.get("latest_datetime")
+    )
+    payload_symbols = sorted(str(symbol).upper() for symbol in qlib_map.keys())
+    missing_payload_symbols = sorted(set(TRACKED_SYMBOLS) - set(payload_symbols))
+    payload_fresh = payload_as_of is not None and payload_as_of >= expected_bar
+
+    csv_latest_by_symbol: Dict[str, Optional[str]] = {}
+    stale_csv_symbols: List[str] = []
+    for symbol in TRACKED_SYMBOLS:
+        context = chart_context_map.get(symbol) or {}
+        latest = _parse_qlib_time(context.get("chart_context_bar_time"))
+        csv_latest_by_symbol[symbol] = latest.strftime("%Y-%m-%d %H:%M:%S") if latest is not None else None
+        if latest is None or latest < expected_bar:
+            stale_csv_symbols.append(symbol)
+    stale_csv_symbols = sorted(stale_csv_symbols)
+
+    reasons: List[str] = []
+    if payload_as_of is None:
+        reasons.append("payload_as_of_missing")
+    elif not payload_fresh:
+        reasons.append("payload_as_of_stale")
+    if missing_payload_symbols:
+        reasons.append("payload_symbols_missing")
+    if stale_csv_symbols:
+        reasons.append("feature_csv_stale")
+
+    model_meta = qlib_payload.get("model_meta") if isinstance(qlib_payload.get("model_meta"), dict) else {}
+    model_is_fresh = model_meta.get("model_is_fresh")
+    if model_is_fresh is False:
+        reasons.append("model_train_stale")
+
+    fresh = payload_fresh and not missing_payload_symbols and not stale_csv_symbols and model_is_fresh is not False
+    return {
+        "fresh": fresh,
+        "expected_completed_bar": expected_bar.strftime("%Y-%m-%d %H:%M:%S"),
+        "payload_as_of": payload_as_of.strftime("%Y-%m-%d %H:%M:%S") if payload_as_of is not None else None,
+        "model_trained_at": model_meta.get("model_trained_at") or model_meta.get("last_trained"),
+        "model_train_end": model_meta.get("model_train_end"),
+        "model_is_fresh": model_is_fresh,
+        "model_freshness_reason": model_meta.get("model_freshness_reason"),
+        "payload_symbols": payload_symbols,
+        "missing_payload_symbols": missing_payload_symbols,
+        "csv_latest_by_symbol": csv_latest_by_symbol,
+        "stale_csv_symbols": stale_csv_symbols,
+        "reasons": reasons,
+    }
+
+
+def _proposal_requires_fresh_qlib(proposal: Dict[str, Any]) -> bool:
+    return str(proposal.get("trigger_source") or "") in QLIB_DEPENDENT_TRIGGER_SOURCES
+
+
 def _build_decision_snapshot(
     symbol: str,
     whale_analysis: Dict[str, Any],
@@ -666,6 +777,7 @@ def _build_decision_snapshot(
     cycle_id: str,
     chart_context: Optional[Dict[str, Any]] = None,
     macro_snapshot: Optional[Dict[str, Any]] = None,
+    qlib_freshness: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     sym_key = symbol.lower()
     coin_root = whale_analysis.get(sym_key, {}) if isinstance(whale_analysis.get(sym_key), dict) else {}
@@ -675,6 +787,8 @@ def _build_decision_snapshot(
     macro_snapshot = deepcopy(macro_snapshot) if macro_snapshot is not None else _build_macro_snapshot(whale_analysis)
     market_data = qlib_coin.get("market_data", {})
     chart_context = chart_context or {}
+    qlib_freshness = deepcopy(qlib_freshness) if isinstance(qlib_freshness, dict) else {}
+    qlib_data_fresh = qlib_freshness.get("fresh", True) is True
 
     funding_rate = _safe_float(market.get("funding_rate"), _safe_float(market_data.get("funding_rate")))
     funding_zscore = _safe_float(market.get("funding_zscore"), _safe_float(market_data.get("funding_rate_zscore")) / 100.0)
@@ -690,9 +804,14 @@ def _build_decision_snapshot(
     p_down_8h = _safe_float(qlib_coin.get("p_down_8h"))
     p_flat_8h = _safe_float(qlib_coin.get("p_flat_8h"))
     confidence_8h = _safe_float(qlib_coin.get("confidence_8h"), max(p_up_8h, p_down_8h))
+    selected_price, selected_price_source, stale_market_price_replaced = _select_snapshot_price(market, market_data, chart_context)
 
     market_snapshot = {
-        "price": _safe_float(market.get("price"), _safe_float(market_data.get("close"))),
+        "price": selected_price,
+        "price_source": selected_price_source,
+        "stale_market_price_replaced": stale_market_price_replaced,
+        "raw_market_price": _optional_float(market.get("price")),
+        "reference_close_price": _optional_float(chart_context.get("trigger_candle_close")) or _optional_float(market_data.get("close")),
         "change_24h": _safe_float(market.get("change_24h")),
         "rsi_4h": _safe_float(chart_context.get("rsi_4h"), _safe_float(market.get("rsi_4h"), _safe_float(market.get("rsi_14"), _safe_float(market_data.get("rsi_14"))))),
         "rsi_delta_4h": _safe_float(chart_context.get("rsi_delta_4h"), _safe_float(market.get("rsi_delta_4h"))),
@@ -701,6 +820,8 @@ def _build_decision_snapshot(
         "bb_width": _safe_float(chart_context.get("bb_width"), _safe_float(market.get("bb_width"), _safe_float(market_data.get("bb_width_20")))),
         "bb_pct_b": _safe_float(chart_context.get("bb_pct_b"), _safe_float(market.get("bb_pct_b"), _safe_float(market_data.get("bb_pos_20"), 0.5))),
         "bb_mid_slope_pct": _safe_float(chart_context.get("bb_mid_slope_pct"), _safe_float(market.get("bb_mid_slope_pct"))),
+        "williams_r14": _optional_float(chart_context.get("williams_r14")) if chart_context.get("williams_r14") is not None else _optional_float(market.get("williams_r14")),
+        "drawdown_120d_pct": _optional_float(chart_context.get("drawdown_120d_pct")) if chart_context.get("drawdown_120d_pct") is not None else _optional_float(market.get("drawdown_120d_pct")),
         "adx_delta": _safe_float(chart_context.get("adx_delta"), _safe_float(market.get("adx_delta"))),
         "recent_close_drift_pct": _safe_float(chart_context.get("recent_close_drift_pct"), _safe_float(market.get("recent_close_drift_pct"))),
         "range_edge_close_count": int(_safe_float(chart_context.get("range_edge_close_count"), _safe_float(market.get("range_edge_close_count")))),
@@ -767,6 +888,8 @@ def _build_decision_snapshot(
         "p_down_8h": p_down_8h,
         "p_flat_8h": p_flat_8h,
         "confidence_8h": confidence_8h,
+        "qlib_data_fresh": qlib_data_fresh,
+        "qlib_freshness_reasons": qlib_freshness.get("reasons") or [],
     }
 
     qlib_direction = "NONE"
@@ -856,6 +979,9 @@ def _build_decision_snapshot(
         "confidence_8h": confidence_8h,
         "qlib_direction": qlib_direction,
         "qlib_direction_confident": max(p_up_8h, p_down_8h) >= GLOBAL_CONFIG["qlib_prob_threshold"],
+        "qlib_data_fresh": qlib_data_fresh,
+        "qlib_freshness_reasons": qlib_freshness.get("reasons") or [],
+        "drawdown_120d_pct": market_snapshot["drawdown_120d_pct"],
         "qlib_top_bucket": bool((qlib_coin.get("rank") or 999) <= GLOBAL_CONFIG["qlib_rank_bucket_size"]),
         "qlib_bottom_bucket": bool((qlib_coin.get("rank") or 0) >= len(TRACKED_SYMBOLS) - GLOBAL_CONFIG["qlib_rank_bucket_size"] + 1),
         "range_regime": grid_setup["range_regime"],
@@ -904,6 +1030,7 @@ def _build_decision_snapshot(
         "market_snapshot": market_snapshot,
         "onchain_snapshot": onchain_snapshot,
         "macro_snapshot": macro_snapshot,
+        "qlib_freshness": qlib_freshness,
         "position_snapshot": position_snapshot,
         "decision_ready_features": decision_ready_features,
         "quality_score": _quality_score(market_snapshot, onchain_snapshot, macro_snapshot),
@@ -987,6 +1114,10 @@ def _entry_type_for_blueprint(blueprint: str) -> str:
     if blueprint in {"Blueprint_A1", "Blueprint_A2"}:
         return "MARKET"
     return "MARKET"
+
+
+def _env_flag_enabled(name: str, default: str = "0") -> bool:
+    return os.getenv(name, default).lower() in {"1", "true", "yes"}
 
 
 def _strategy_family_for_intent(intent: str) -> str:
@@ -1723,6 +1854,7 @@ def _build_candidate_proposals(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         "timeframe": snapshot["timeframe"],
         "snapshot_timestamp": snapshot["snapshot_timestamp"],
         "candidate_proposals": proposals,
+        "qlib_freshness": snapshot.get("qlib_freshness") or {},
         "e_strategy_diagnostic": diagnostic,
     }
 
@@ -1751,6 +1883,263 @@ def _validate_candidate_schema(proposal: Dict[str, Any]) -> Tuple[bool, Optional
     if proposal["entry_type"] not in {"MARKET", "LIMIT", "STOP", "GRID_BOT"}:
         return False, "invalid_entry_type"
     return True, None
+
+
+MODEL_INVALIDATION_ALLOWED_FIELDS = {
+    "price",
+    "macro_permission",
+    "macro_mode",
+    "p_up_8h",
+    "p_down_8h",
+    "p_flat_8h",
+    "qlib_data_fresh",
+}
+MODEL_INVALIDATION_ALLOWED_VALUE_REFS = {
+    "model_stop_price",
+    "recent_swing_high",
+    "recent_swing_low",
+    "sma50_4h",
+    "sma200_1d",
+    "structure_resistance_12bar_volume_confirmed",
+    "structure_support_12bar_volume_confirmed",
+    "structure_resistance_stop_short",
+    "structure_support_stop_long",
+}
+MODEL_INVALIDATION_ALLOWED_OPS = {">=", ">", "<=", "<", "==", "!="}
+
+
+def _model_rule_reference_values(snapshot: Dict[str, Any], sl: float) -> Dict[str, Any]:
+    market = snapshot.get("market_snapshot") or {}
+    features = snapshot.get("decision_ready_features") or {}
+    return {
+        "model_stop_price": round(sl, 8),
+        "recent_swing_high": _optional_float(market.get("structure_resistance_12bar_volume_confirmed") or market.get("swing_high_4h")),
+        "recent_swing_low": _optional_float(market.get("structure_support_12bar_volume_confirmed") or market.get("swing_low_4h")),
+        "sma50_4h": _optional_float(market.get("sma50_4h")),
+        "sma200_1d": _optional_float(market.get("sma200_1d") or features.get("sma200_1d")),
+        "structure_resistance_12bar_volume_confirmed": _optional_float(market.get("structure_resistance_12bar_volume_confirmed")),
+        "structure_support_12bar_volume_confirmed": _optional_float(market.get("structure_support_12bar_volume_confirmed")),
+        "structure_resistance_stop_short": _optional_float(market.get("structure_resistance_stop_short")),
+        "structure_support_stop_long": _optional_float(market.get("structure_support_stop_long")),
+    }
+
+
+def _validate_model_invalidation_rules(
+    snapshot: Dict[str, Any],
+    intent: str,
+    model_rules: Any,
+    reference_values: Dict[str, Any],
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    approved: List[Dict[str, Any]] = []
+    rejected: List[Dict[str, Any]] = []
+    if not isinstance(model_rules, list):
+        return approved, rejected
+
+    for raw_rule in model_rules:
+        if not isinstance(raw_rule, dict):
+            rejected.append({"rule": raw_rule, "reason": "rule_not_object"})
+            continue
+        field = str(raw_rule.get("field") or "").strip()
+        op = str(raw_rule.get("op") or "").strip()
+        reason = str(raw_rule.get("reason") or "model_invalidation_rule")[:160]
+        if field not in MODEL_INVALIDATION_ALLOWED_FIELDS:
+            rejected.append({"rule": raw_rule, "reason": "field_not_allowed"})
+            continue
+        if op not in MODEL_INVALIDATION_ALLOWED_OPS:
+            rejected.append({"rule": raw_rule, "reason": "op_not_allowed"})
+            continue
+        rule: Dict[str, Any] = {"field": field, "op": op, "reason": reason}
+        if raw_rule.get("value_ref") is not None:
+            value_ref = str(raw_rule.get("value_ref") or "").strip()
+            if value_ref not in MODEL_INVALIDATION_ALLOWED_VALUE_REFS and value_ref not in MODEL_INVALIDATION_ALLOWED_FIELDS:
+                rejected.append({"rule": raw_rule, "reason": "value_ref_not_allowed"})
+                continue
+            if value_ref in MODEL_INVALIDATION_ALLOWED_VALUE_REFS and reference_values.get(value_ref) is None:
+                rejected.append({"rule": raw_rule, "reason": "value_ref_unavailable"})
+                continue
+            rule["value_ref"] = value_ref
+        elif raw_rule.get("value") is not None:
+            rule["value"] = raw_rule.get("value")
+        else:
+            rejected.append({"rule": raw_rule, "reason": "missing_value"})
+            continue
+
+        if intent == "LONG" and field == "price" and op not in {"<=", "<"}:
+            rejected.append({"rule": raw_rule, "reason": "long_price_rule_wrong_direction"})
+            continue
+        if intent == "SHORT" and field == "price" and op not in {">=", ">"}:
+            rejected.append({"rule": raw_rule, "reason": "short_price_rule_wrong_direction"})
+            continue
+        if field == "macro_permission":
+            opposite = "ALLOW_SHORT" if intent == "LONG" else "ALLOW_LONG"
+            if not (op == "==" and raw_rule.get("value") == opposite):
+                rejected.append({"rule": raw_rule, "reason": "macro_permission_rule_wrong_direction"})
+                continue
+        if intent == "LONG" and field == "p_up_8h" and op not in {"<", "<="}:
+            rejected.append({"rule": raw_rule, "reason": "long_qlib_rule_wrong_direction"})
+            continue
+        if intent == "SHORT" and field == "p_down_8h" and op not in {"<", "<="}:
+            rejected.append({"rule": raw_rule, "reason": "short_qlib_rule_wrong_direction"})
+            continue
+
+        try:
+            rule["persistence"] = max(1, min(6, int(raw_rule.get("persistence") or 1)))
+        except (TypeError, ValueError):
+            rule["persistence"] = 1
+        approved.append(rule)
+    return approved, rejected
+
+
+def _build_model_decision_candidate_batch(
+    snapshot: Dict[str, Any],
+    market_state: Dict[str, Any],
+    model_decision: Dict[str, Any],
+) -> Dict[str, Any]:
+    symbol = snapshot["symbol"]
+    technical = market_state.get("technical") or {}
+    price = _safe_float(technical.get("current_price") or snapshot.get("market_snapshot", {}).get("price"))
+    action = str(model_decision.get("action") or "WAIT").upper()
+    direction = str(model_decision.get("direction") or "FLAT").upper()
+    confidence = _safe_float(model_decision.get("confidence"), 0.0)
+    min_confidence = _safe_float(os.getenv("MODEL_DECISION_MIN_CONFIDENCE"), 0.55)
+    proposals: List[Dict[str, Any]] = []
+    diagnostic: Dict[str, Any] = {
+        "generation_mode": "model_decision",
+        "action": action,
+        "direction": direction,
+        "confidence": confidence,
+        "min_confidence": min_confidence,
+        "reason": None,
+    }
+
+    if action == "BUY" and direction == "LONG":
+        intent = "LONG"
+    elif action == "SELL" and direction == "SHORT":
+        intent = "SHORT"
+    else:
+        diagnostic["reason"] = "model_requested_no_new_directional_trade"
+        intent = None
+
+    if intent and confidence < min_confidence:
+        diagnostic["reason"] = "model_confidence_below_threshold"
+        intent = None
+
+    if intent and price <= 0:
+        diagnostic["reason"] = "missing_current_price"
+        intent = None
+
+    if intent:
+        atr = _safe_float(technical.get("atr14") or snapshot.get("market_snapshot", {}).get("atr_14"), 0.0)
+        risk_distance = max(atr * 2.0 if atr > 0 else 0.0, price * 0.02)
+        if intent == "LONG":
+            sl = max(price - risk_distance, price * 0.01)
+            tp = price + risk_distance * 2.0
+            invalidation_rules = [{"field": "price", "op": "<=", "value_ref": "model_stop_price"}]
+        else:
+            sl = price + risk_distance
+            tp = max(price - risk_distance * 2.0, price * 0.01)
+            invalidation_rules = [{"field": "price", "op": ">=", "value_ref": "model_stop_price"}]
+        model_rule_refs = _model_rule_reference_values(snapshot, sl)
+        model_approved_rules, model_rejected_rules = _validate_model_invalidation_rules(
+            snapshot,
+            intent,
+            model_decision.get("invalidation_rules") or [],
+            model_rule_refs,
+        )
+        invalidation_rules = [*invalidation_rules, *model_approved_rules]
+
+        proposals.append(
+            {
+                "strategy_family": STRATEGY_FAMILY_DIRECTIONAL,
+                "decision_intent": intent,
+                "trigger_source": MODEL_DECISION_TRIGGER_SOURCE,
+                "rationale": model_decision.get("summary") or "model directional decision",
+                "entry_type": "MARKET",
+                "proposed_entry_price": round(price, 8),
+                "proposed_sl_price": round(sl, 8),
+                "proposed_tp_price": round(tp, 8),
+                "reference_values": {
+                    "model_action": action,
+                    "model_direction": direction,
+                    "model_confidence": confidence,
+                    "model_setup_type": model_decision.get("setup_type"),
+                    "model_risk_level": model_decision.get("risk_level"),
+                    "model_horizon": model_decision.get("horizon"),
+                    "model_reason_codes": model_decision.get("reason_codes") or [],
+                    "model_invalid_if": model_decision.get("invalid_if") or [],
+                    "model_approved_invalidation_rules": model_approved_rules,
+                    "model_rejected_invalidation_rules": model_rejected_rules,
+                    "model_stop_price": round(sl, 8),
+                    "risk_distance": round(risk_distance, 8),
+                    "current_price": round(price, 8),
+                    **{k: v for k, v in model_rule_refs.items() if v is not None},
+                },
+                "invalidation_basis": "programmatic_stop_and_approved_model_rules",
+                "invalidation_conditions": {
+                    "operator": "OR",
+                    "rules": invalidation_rules,
+                    "persistence": 1,
+                },
+            }
+        )
+        diagnostic["reason"] = "candidate_created_from_model_decision"
+
+    return {
+        "symbol": symbol,
+        "cycleId": snapshot["cycleId"],
+        "timeframe": snapshot["timeframe"],
+        "snapshot_timestamp": snapshot["snapshot_timestamp"],
+        "generation_mode": "model_decision",
+        "market_state": market_state,
+        "model_decision": model_decision,
+        "qlib_freshness": snapshot.get("qlib_freshness") or {},
+        "candidate_proposals": proposals,
+        "model_decision_diagnostic": diagnostic,
+    }
+
+
+def _research_output_from_model_decision(
+    snapshot: Dict[str, Any],
+    rule_evaluation: Dict[str, Any],
+    model_decision: Dict[str, Any],
+) -> Optional[Dict[str, Any]]:
+    if not rule_evaluation.get("passed") or not rule_evaluation.get("approved_candidates"):
+        return None
+    direction = str(model_decision.get("direction") or "FLAT").upper()
+    if direction not in {"LONG", "SHORT"}:
+        return None
+
+    confidence = _safe_float(model_decision.get("confidence"), 0.0)
+    risk_level = str(model_decision.get("risk_level") or "HIGH").upper()
+    if risk_level == "HIGH" or confidence < 0.65:
+        thesis_strength = "LOW"
+    elif risk_level == "MEDIUM" or confidence < 0.8:
+        thesis_strength = "MEDIUM"
+    else:
+        thesis_strength = "HIGH"
+
+    horizon = str(model_decision.get("horizon") or "SHORT").upper()
+    if horizon not in {"SHORT", "SWING", "MULTI_DAY"}:
+        horizon = "SHORT"
+
+    return {
+        "symbol": snapshot["symbol"],
+        "cycleId": snapshot["cycleId"],
+        "selected_intent": direction,
+        "selected_trigger_sources": [MODEL_DECISION_TRIGGER_SOURCE],
+        "scenario_label": model_decision.get("setup_type") or "model_decision",
+        "flow_alignment": "MODEL_DECISION",
+        "flow_data_available": True,
+        "thesis_strength": thesis_strength,
+        "holding_horizon": horizon,
+        "thesis_change": "INITIAL",
+        "change_reason": "model decision layer selected the directional setup",
+        "risk_note": f"model risk={risk_level}, confidence={confidence}; program controls sizing and execution",
+        "summary": model_decision.get("summary") or "model decision candidate approved by deterministic filters",
+        "generation_mode": "model_decision",
+        "model_reason_codes": model_decision.get("reason_codes") or [],
+        "model_invalid_if": model_decision.get("invalid_if") or [],
+    }
 
 
 def _summarize_candidate_structure(proposals: List[Dict[str, Any]], approved_candidates: Optional[List[Dict[str, Any]]] = None) -> Dict[str, Any]:
@@ -1823,6 +2212,23 @@ def _snapshot_field_value(snapshot: Dict[str, Any], field: Any) -> Optional[floa
     return None
 
 
+def _snapshot_raw_field_value(snapshot: Dict[str, Any], field: Any) -> Any:
+    if not field:
+        return None
+    key = str(field)
+    for section in (
+        "market_snapshot",
+        "decision_ready_features",
+        "onchain_snapshot",
+        "macro_snapshot",
+        "position_snapshot",
+    ):
+        source = snapshot.get(section) or {}
+        if key in source:
+            return source.get(key)
+    return None
+
+
 def _proposal_reference_value(proposal: Dict[str, Any], value_ref: Any) -> Optional[float]:
     if not value_ref:
         return None
@@ -1847,6 +2253,19 @@ def _compare_numeric_rule(left: float, op: Any, right: float) -> bool:
     return False
 
 
+def _compare_rule_values(left: Any, op: Any, right: Any) -> bool:
+    operator = str(op or "").strip()
+    left_num = _optional_float(left)
+    right_num = _optional_float(right)
+    if left_num is not None and right_num is not None:
+        return _compare_numeric_rule(left_num, operator, right_num)
+    if operator == "==":
+        return str(left) == str(right)
+    if operator == "!=":
+        return str(left) != str(right)
+    return False
+
+
 def _candidate_invalidation_triggered(snapshot: Dict[str, Any], proposal: Dict[str, Any]) -> Tuple[bool, Optional[Dict[str, Any]]]:
     conditions = proposal.get("invalidation_conditions") or {}
     rules = conditions.get("rules") or []
@@ -1858,19 +2277,22 @@ def _candidate_invalidation_triggered(snapshot: Dict[str, Any], proposal: Dict[s
     for rule in rules:
         if not isinstance(rule, dict):
             continue
-        left = _snapshot_field_value(snapshot, rule.get("field"))
+        left_raw = _snapshot_raw_field_value(snapshot, rule.get("field"))
+        left = _optional_float(left_raw)
         if "value" in rule:
-            right = _optional_float(rule.get("value"))
+            right_raw = rule.get("value")
         else:
-            right = _proposal_reference_value(proposal, rule.get("value_ref"))
-        if left is None or right is None:
+            refs = proposal.get("reference_values") or {}
+            value_ref = str(rule.get("value_ref") or "")
+            right_raw = refs.get(value_ref) if value_ref in refs else _snapshot_raw_field_value(snapshot, value_ref)
+        if left_raw is None or right_raw is None:
             continue
-        matched = _compare_numeric_rule(left, rule.get("op"), right)
+        matched = _compare_rule_values(left_raw, rule.get("op"), right_raw)
         evaluated.append({
             "field": rule.get("field"),
             "op": rule.get("op"),
-            "left": left,
-            "right": right,
+            "left": left if left is not None else left_raw,
+            "right": _optional_float(right_raw) if _optional_float(right_raw) is not None else right_raw,
             "matched": matched,
         })
 
@@ -1921,6 +2343,19 @@ def _evaluate_rules(snapshot: Dict[str, Any], candidate_batch: Dict[str, Any]) -
         })
 
     for proposal in proposals:
+        if not snapshot.get("qlib_freshness", {}).get("fresh", True) and _proposal_requires_fresh_qlib(proposal):
+            passed = False
+            reason_codes.append("QLIB_STALE")
+            rule_trace.append({
+                "rule": "QLIB_FRESHNESS_CHECK",
+                "passed": False,
+                "detail": {
+                    "trigger_source": proposal.get("trigger_source"),
+                    "qlib_freshness": snapshot.get("qlib_freshness") or {},
+                },
+            })
+            continue
+
         schema_ok, schema_err = _validate_candidate_schema(proposal)
         if not schema_ok:
             passed = False
@@ -2351,7 +2786,16 @@ def _build_execution_request(snapshot: Dict[str, Any], risk_review: Dict[str, An
     }
 
 
-def _make_trade_record(snapshot: Dict[str, Any], candidate_batch: Dict[str, Any], rule_evaluation: Dict[str, Any], research_output: Optional[Dict[str, Any]], risk_review: Dict[str, Any], execution: Dict[str, Any]) -> Dict[str, Any]:
+def _make_trade_record(
+    snapshot: Dict[str, Any],
+    candidate_batch: Dict[str, Any],
+    rule_evaluation: Dict[str, Any],
+    research_output: Optional[Dict[str, Any]],
+    risk_review: Dict[str, Any],
+    execution: Dict[str, Any],
+    market_state: Optional[Dict[str, Any]] = None,
+    model_decision: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     now_iso = _iso_now()
     now_local = _iso_now_local()
     return {
@@ -2365,6 +2809,8 @@ def _make_trade_record(snapshot: Dict[str, Any], candidate_batch: Dict[str, Any]
         "local_timezone": LOCAL_TZ_NAME,
         "positionState": risk_review.get("next_position_state", "candidate"),
         "snapshot": snapshot,
+        "marketState": market_state,
+        "modelDecision": model_decision,
         "candidate": candidate_batch,
         "ruleEvaluation": rule_evaluation,
         "researchOutput": research_output,
@@ -2661,6 +3107,8 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
     cycle_id = _aligned_cycle_id()
     qlib_map = _qlib_coin_map(qlib_payload)
     chart_context_map = _load_chart_feature_context_map()
+    qlib_freshness = _qlib_freshness_report(qlib_payload, qlib_map, chart_context_map)
+    qlib_map_for_decision = qlib_map if qlib_freshness.get("fresh") else {}
     macro_snapshot = _build_macro_snapshot(whale_analysis)
 
     snapshots: List[Dict[str, Any]] = []
@@ -2670,23 +3118,44 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
     risk_reviews: List[Dict[str, Any]] = []
     executions: List[Dict[str, Any]] = []
     records: List[Dict[str, Any]] = []
+    model_decision_mode = _env_flag_enabled("MODEL_DECISION_MODE")
 
     for symbol in TRACKED_SYMBOLS:
         snapshot = _build_decision_snapshot(
             symbol,
             whale_analysis,
-            qlib_map.get(symbol, {}),
+            qlib_map_for_decision.get(symbol, {}),
             portfolio_state,
             cycle_id,
             chart_context=chart_context_map.get(symbol, {}),
             macro_snapshot=macro_snapshot,
+            qlib_freshness=qlib_freshness,
         )
-        candidate_batch = _build_candidate_proposals(snapshot)
+        market_state = None
+        model_decision = None
+        if model_decision_mode:
+            market_state = build_market_state(snapshot)
+            model_decision = build_model_decision(market_state)
+            candidate_batch = _build_model_decision_candidate_batch(snapshot, market_state, model_decision)
+        else:
+            candidate_batch = _build_candidate_proposals(snapshot)
         rule_evaluation = _evaluate_rules(snapshot, candidate_batch)
-        research_output = build_research_output(snapshot, candidate_batch, rule_evaluation)
+        if model_decision_mode:
+            research_output = _research_output_from_model_decision(snapshot, rule_evaluation, model_decision or {})
+        else:
+            research_output = build_research_output(snapshot, candidate_batch, rule_evaluation)
         risk_review = _build_risk_review_with_research(snapshot, rule_evaluation, research_output)
         execution = _build_execution_request(snapshot, risk_review)
-        record = _make_trade_record(snapshot, candidate_batch, rule_evaluation, research_output, risk_review, execution)
+        record = _make_trade_record(
+            snapshot,
+            candidate_batch,
+            rule_evaluation,
+            research_output,
+            risk_review,
+            execution,
+            market_state=market_state,
+            model_decision=model_decision,
+        )
         _append_trade_record(record)
         execution = _execute_if_enabled(executor, execution, risk_review)
         record["execution"] = execution
@@ -2709,6 +3178,8 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
         "cycle_local_time": _aligned_cycle_local(),
         "local_timezone": LOCAL_TZ_NAME,
         "timeframe": GLOBAL_CONFIG["timeframe"],
+        "decision_mode": "model_decision" if model_decision_mode else "candidate_blueprint",
+        "qlib_freshness": qlib_freshness,
         "snapshots": snapshots,
         "candidate_batches": candidate_batches,
         "rule_evaluations": rule_evaluations,

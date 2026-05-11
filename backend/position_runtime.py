@@ -48,6 +48,15 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
         return default
 
 
+def _optional_float(value: Any) -> Optional[float]:
+    try:
+        if value is None:
+            return None
+        return float(value)
+    except Exception:
+        return None
+
+
 def _normalize_symbol(value: Any) -> str:
     return str(value or "").replace("-USDT", "").replace("-SWAP", "").upper()
 
@@ -187,23 +196,34 @@ def _evaluate_invalidation(record: Dict[str, Any], snapshot: Dict[str, Any], liv
         op = rule.get("op")
         left = _resolve_runtime_field(field, snapshot, live_position, reference_values)
         if "value_ref" in rule:
-            right = reference_values.get(rule.get("value_ref"))
+            value_ref = str(rule.get("value_ref") or "")
+            right = reference_values.get(value_ref) if value_ref in reference_values else _resolve_runtime_field(value_ref, snapshot, live_position, reference_values)
         else:
             right = rule.get("value")
         if left is None or right is None:
             results.append(False)
             continue
         try:
-            if op == "<=":
-                results.append(float(left) <= float(right))
-            elif op == ">=":
-                results.append(float(left) >= float(right))
-            elif op == "==":
+            left_num = _optional_float(left)
+            right_num = _optional_float(right)
+            if op == "==" and (left_num is None or right_num is None):
                 results.append(str(left) == str(right))
+            elif op == "!=" and (left_num is None or right_num is None):
+                results.append(str(left) != str(right))
+            elif left_num is None or right_num is None:
+                results.append(False)
+            elif op == "<=":
+                results.append(left_num <= right_num)
+            elif op == ">=":
+                results.append(left_num >= right_num)
+            elif op == "==":
+                results.append(left_num == right_num)
             elif op == "<":
-                results.append(float(left) < float(right))
+                results.append(left_num < right_num)
             elif op == ">":
-                results.append(float(left) > float(right))
+                results.append(left_num > right_num)
+            elif op == "!=":
+                results.append(left_num != right_num)
             else:
                 results.append(False)
         except Exception:

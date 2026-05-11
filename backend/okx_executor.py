@@ -549,47 +549,52 @@ class OKXExecutor:
         
         # Smart Handling for Close & Reduce Actions: Fetch current full position size
         if "close" in action or "reduce_" in action:
-             percent_to_close = 1.0
-             if "reduce_25" in action: percent_to_close = 0.25
-             elif "reduce_50" in action: percent_to_close = 0.50
-             elif "reduce_75" in action: percent_to_close = 0.75
+            percent_to_close = 1.0
+            if "reduce_25" in action:
+                percent_to_close = 0.25
+            elif "reduce_50" in action:
+                percent_to_close = 0.50
+            elif "reduce_75" in action:
+                percent_to_close = 0.75
 
-             if self.shadow_mode:
-                 state = self._load_shadow_state()
-                 for p in state["positions"]:
-                     if p["symbol"] == symbol and (target_pos_side == "net" or p["type"] == target_pos_side):
-                           full_sz = float(p["size"])
-                           if percent_to_close == 1.0:
-                               sz = full_sz
-                           else:
-                               # Round to Lot Size if possible, otherwise use truncation with precision
-                               info = self.get_instrument_info(instId)
-                               lotSz = info["lotSz"] if info else 1
-                               sz = self.round_step_size(full_sz * percent_to_close, lotSz)
-                           
-                           target_pos_side = p["type"]
-                           print(f"🔍 [SHADOW] Auto-detected position size for {action}: {sz} out of {full_sz} contracts")
-                           break
-             else:
-                  # Real Mode: Fetch actual position from OKX to ensure full/partial closure
-                 raw_res = self._request("GET", f"/api/v5/account/positions?instId={instId}")
-                 if raw_res.get("code") == "0" and raw_res.get("data"):
-                       for p in raw_res["data"]:
-                            # Match by position side (long/short/net) AND ensure it has a size > 0
-                            if p.get("posSide") == target_pos_side or target_pos_side == "net":
-                                if float(p.get("pos", 0)) != 0:
-                                    full_sz = abs(float(p["pos"]))
-                                    
-                                    if percent_to_close == 1.0:
-                                        sz = full_sz
-                                    else:
-                                        info = self.get_instrument_info(instId)
-                                        lotSz = info["lotSz"] if info else 1
-                                        sz = self.round_step_size(full_sz * percent_to_close, lotSz)
-                                        
-                                    target_pos_side = p.get("posSide")
-                                    print(f"🔍 [REAL] Auto-detected position size for {action}: {sz} out of {full_sz} contracts ({target_pos_side})")
-                                    break
+            if self.shadow_mode:
+                state = self._load_shadow_state()
+                for p in state["positions"]:
+                    if p["symbol"] == symbol and (target_pos_side == "net" or p["type"] == target_pos_side):
+                        full_sz = abs(float(p.get("size") or p.get("sz") or p.get("pos") or p.get("amount") or 0))
+                        if full_sz <= 0:
+                            continue
+                        if percent_to_close == 1.0:
+                            sz = full_sz
+                        else:
+                            # Round to Lot Size if possible, otherwise use truncation with precision
+                            info = self.get_instrument_info(instId)
+                            lotSz = info["lotSz"] if info else 1
+                            sz = self.round_step_size(full_sz * percent_to_close, lotSz)
+
+                        target_pos_side = p["type"]
+                        print(f"🔍 [SHADOW] Auto-detected position size for {action}: {sz} out of {full_sz} contracts")
+                        break
+            else:
+                # Real Mode: Fetch actual position from OKX to ensure full/partial closure
+                raw_res = self._request("GET", f"/api/v5/account/positions?instId={instId}")
+                if raw_res.get("code") == "0" and raw_res.get("data"):
+                    for p in raw_res["data"]:
+                        # Match by position side (long/short/net) AND ensure it has a size > 0
+                        if p.get("posSide") == target_pos_side or target_pos_side == "net":
+                            if float(p.get("pos", 0)) != 0:
+                                full_sz = abs(float(p["pos"]))
+
+                                if percent_to_close == 1.0:
+                                    sz = full_sz
+                                else:
+                                    info = self.get_instrument_info(instId)
+                                    lotSz = info["lotSz"] if info else 1
+                                    sz = self.round_step_size(full_sz * percent_to_close, lotSz)
+
+                                target_pos_side = p.get("posSide")
+                                print(f"🔍 [REAL] Auto-detected position size for {action}: {sz} out of {full_sz} contracts ({target_pos_side})")
+                                break
 
         if sz <= 0:
             print(f"⚠️ Calculated size is 0 for ${amount_usd}. Minimum not met?")
@@ -658,9 +663,15 @@ class OKXExecutor:
                     info = self.get_instrument_info(instId)
                     ctVal = float(info["ctVal"]) if info else 0.01 # Fallback
                     
-                    entry_price = float(pos["entry_price"])
-                    leverage_val = float(pos["leverage"])
-                    pos_size = float(pos["size"])
+                    entry_price = float(
+                        pos.get("entry_price")
+                        or pos.get("entryPrice")
+                        or pos.get("avgPx")
+                        or pos.get("currentPrice")
+                        or limit_px
+                    )
+                    leverage_val = float(pos.get("leverage") or pos.get("lever") or leverage or 1)
+                    pos_size = float(pos.get("size") or pos.get("amount") or pos.get("sz") or 0)
                     sz_to_close = float(sz)
                     
                     if pos["type"] == "long":
@@ -705,6 +716,7 @@ class OKXExecutor:
 
                     if "reduce_" in action:
                         pos["size"] = pos_size - sz_to_close
+                        pos["amount"] = pos["size"]
                         pos["margin"] = float(pos["margin"]) - margin_reduced
                     else:
                         state["positions"].pop(pos_idx)

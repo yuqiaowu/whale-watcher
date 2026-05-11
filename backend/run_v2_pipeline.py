@@ -1,27 +1,15 @@
 import json
-import os
-import subprocess
-import sys
 
 from deterministic_pipeline import run_deterministic_cycle
 from execution_reconciliation import run_execution_reconciliation
 from okx_executor import OKXExecutor
 from position_runtime import run_in_position_runtime
-
-
-def _run_script(script_name: str) -> None:
-    backend_dir = os.path.dirname(os.path.abspath(__file__))
-    script_path = os.path.join(backend_dir, script_name)
-    subprocess.run([sys.executable, script_path], check=True, cwd=backend_dir)
+from qlib_maintenance import refresh_qlib_before_decision
 
 
 def _refresh_qlib_if_enabled() -> bool:
-    refresh_enabled = os.getenv("REFRESH_QLIB_BEFORE_V2", "1").lower() in {"1", "true", "yes"}
-    if not refresh_enabled:
-        return False
-    _run_script("update_qlib_data.py")
-    _run_script("inference_qlib_model.py")
-    return True
+    report = refresh_qlib_before_decision()
+    return bool(report.get("enabled") and report.get("inference_ok"))
 
 
 if __name__ == "__main__":

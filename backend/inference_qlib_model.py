@@ -9,13 +9,14 @@ Features:
 """
 
 import json
+import os
 import pickle
 import pandas as pd
 import numpy as np
 from pathlib import Path
 from typing import List
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from qlib_config import QLIB_FEATURES, FEATURE_EXPRESSIONS, FIT_START_TIME
 from direction_model import (
@@ -96,8 +97,44 @@ CSV_PATH = QLIB_DATA_DIR / "multi_coin_features.csv"
 MODEL_PATH = QLIB_DATA_DIR / "model_latest.pkl"
 HANDLER_PATH = QLIB_DATA_DIR / "handler_latest.pkl"
 PAYLOAD_PATH = QLIB_DATA_DIR / "deepseek_payload.json"
+MODEL_META_PATH = QLIB_DATA_DIR / "model_training_meta.json"
 LOCAL_TZ_NAME = "Asia/Shanghai"
 LOCAL_TZ = ZoneInfo(LOCAL_TZ_NAME)
+
+
+def _load_model_training_meta():
+    if not MODEL_META_PATH.exists():
+        return {}
+    try:
+        with open(MODEL_META_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _model_freshness(model_meta, as_of_value):
+    try:
+        max_lag_days = int(os.getenv("QLIB_MODEL_MAX_TRAIN_LAG_DAYS", "7"))
+    except (TypeError, ValueError):
+        max_lag_days = 7
+    train_end = model_meta.get("train_end")
+    try:
+        train_end_ts = pd.Timestamp(train_end)
+        as_of_ts = pd.Timestamp(as_of_value)
+    except Exception:
+        return {
+            "model_is_fresh": False,
+            "model_freshness_reason": "train_end_missing_or_invalid",
+            "max_train_lag_days": max_lag_days,
+        }
+    lag_days = max((as_of_ts.normalize() - train_end_ts.normalize()).days, 0)
+    return {
+        "model_is_fresh": lag_days <= max_lag_days,
+        "model_freshness_reason": "ok" if lag_days <= max_lag_days else "train_end_too_old",
+        "train_lag_days": lag_days,
+        "max_train_lag_days": max_lag_days,
+    }
 
 # Initialize Qlib (only if available)
 if HAS_QLIB:
@@ -255,10 +292,11 @@ def predict_and_export():
     result = pred_reset[['score']].join(current_feats, how='left')
     result = result.sort_values("score", ascending=False)
 
+    direction_bundle = load_direction_model()
+    direction_model_meta = (direction_bundle or {}).get("meta") if isinstance(direction_bundle, dict) else None
     direction_probs = predict_direction_probabilities(current_feats)
-    direction_model_meta = None
     if not direction_probs:
-        if not load_direction_model():
+        if not direction_bundle:
             try:
                 direction_model_meta = train_direction_model()
                 direction_probs = predict_direction_probabilities(current_feats)
@@ -324,20 +362,29 @@ def predict_and_export():
             as_of_local = pd.Timestamp(as_of_value).tz_convert(LOCAL_TZ).strftime("%Y-%m-%d %H:%M:%S %Z")
         except Exception:
             as_of_local = as_of_value
+    training_meta = _load_model_training_meta()
+    model_mtime = datetime.fromtimestamp(MODEL_PATH.stat().st_mtime)
+    model_freshness = _model_freshness(training_meta, as_of_value)
 
     payload = {
         "as_of": as_of_value,
+        "data_as_of": as_of_value,
         "as_of_local": as_of_local,
         "local_timezone": LOCAL_TZ_NAME,
         "strategy": "Multi-Coin Relative Strength",
         
         # --- Suggestion A: Model Meta ---
         "model_meta": {
-            "last_trained": datetime.fromtimestamp(MODEL_PATH.stat().st_mtime).strftime('%Y-%m-%d %H:%M'),
+            "last_trained": model_mtime.strftime('%Y-%m-%d %H:%M'),
+            "model_trained_at": training_meta.get("trained_at") or model_mtime.isoformat(timespec="seconds"),
+            "model_train_start": training_meta.get("train_start"),
+            "model_train_end": training_meta.get("train_end"),
+            "model_data_latest_datetime": training_meta.get("data_latest_datetime"),
+            **model_freshness,
             "target": "next_24h_relative_return",
             "feature_count": len(QLIB_FEATURES),
             "model_type": "LightGBM Ranker",
-            "status": "up-to-date",
+            "status": "up-to-date" if model_freshness.get("model_is_fresh") else "stale",
             "direction_target": "future_8h_direction",
             "direction_model_type": "LightGBM Multiclass" if load_direction_model() else "heuristic_proxy",
             "direction_model_meta": direction_model_meta,

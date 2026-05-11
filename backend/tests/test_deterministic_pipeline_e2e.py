@@ -14,6 +14,8 @@ if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
 import deterministic_pipeline as dp
+import llm_client
+import model_decision_agent
 
 
 class FakeDB:
@@ -35,6 +37,18 @@ class FakeExecutor:
 
 
 class DeterministicPipelineE2ETests(unittest.TestCase):
+    def _fresh_qlib_report(self):
+        return {
+            "fresh": True,
+            "expected_completed_bar": "2026-05-11 00:00:00",
+            "payload_as_of": "2026-05-11 00:00:00",
+            "payload_symbols": sorted(dp.TRACKED_SYMBOLS),
+            "missing_payload_symbols": [],
+            "csv_latest_by_symbol": {symbol: "2026-05-11 00:00:00" for symbol in dp.TRACKED_SYMBOLS},
+            "stale_csv_symbols": [],
+            "reasons": [],
+        }
+
     def test_regime_1d_uses_technical_structure_not_macro_mode(self):
         macro_snapshot = {"macro_mode": "RISK_OFF"}
         market_snapshot = {
@@ -72,6 +86,376 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             },
             dp._derive_major_trend_context({"price": 100.0, "sma5_1d": 101.0, "sma10_1d": 99.0}, "BULL"),
         )
+
+    def test_model_decision_candidate_keeps_model_out_of_sizing(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-05-11T00:00:00Z",
+            "market_snapshot": {"price": 2500.0, "atr_14": 60.0, "structure_support_12bar_volume_confirmed": 2440.0, "sma50_4h": 2475.0},
+            "decision_ready_features": {"macro_permission": "ALLOW_BOTH", "major_trend_1d": "BULL"},
+            "position_snapshot": {"position_side": None},
+            "is_decision_eligible": True,
+        }
+        market_state = {
+            "technical": {"current_price": 2500.0, "atr14": 60.0},
+        }
+        model_decision = {
+            "action": "BUY",
+            "direction": "LONG",
+            "confidence": 0.82,
+            "setup_type": "bottom_reversal",
+            "risk_level": "LOW",
+            "horizon": "SWING",
+            "reason_codes": ["vix_panic", "rsi_repair"],
+            "invalid_if": ["close below reversal low"],
+            "invalidation_rules": [
+                {"field": "price", "op": "<=", "value_ref": "recent_swing_low", "persistence": 1, "reason": "reversal low lost"},
+                {"field": "macro_permission", "op": "==", "value": "ALLOW_SHORT", "persistence": 1, "reason": "macro turned short-only"},
+                {"field": "price", "op": ">=", "value": 2600.0, "reason": "wrong direction should reject"},
+            ],
+            "summary": "panic washout repaired",
+        }
+
+        batch = dp._build_model_decision_candidate_batch(snapshot, market_state, model_decision)
+        evaluation = dp._evaluate_rules(snapshot, batch)
+        research = dp._research_output_from_model_decision(snapshot, evaluation, model_decision)
+
+        self.assertEqual("model_decision", batch["generation_mode"])
+        self.assertEqual(1, len(batch["candidate_proposals"]))
+        candidate = batch["candidate_proposals"][0]
+        self.assertEqual("LONG", candidate["decision_intent"])
+        self.assertEqual(dp.MODEL_DECISION_TRIGGER_SOURCE, candidate["trigger_source"])
+        rules = candidate["invalidation_conditions"]["rules"]
+        self.assertIn({"field": "price", "op": "<=", "value_ref": "model_stop_price"}, rules)
+        self.assertIn({"field": "price", "op": "<=", "value_ref": "recent_swing_low", "reason": "reversal low lost", "persistence": 1}, rules)
+        self.assertIn({"field": "macro_permission", "op": "==", "value": "ALLOW_SHORT", "reason": "macro turned short-only", "persistence": 1}, rules)
+        self.assertEqual(
+            "long_price_rule_wrong_direction",
+            candidate["reference_values"]["model_rejected_invalidation_rules"][0]["reason"],
+        )
+        self.assertGreater(candidate["proposed_tp_price"], candidate["proposed_entry_price"])
+        self.assertLess(candidate["proposed_sl_price"], candidate["proposed_entry_price"])
+        self.assertTrue(evaluation["passed"])
+        self.assertEqual("LONG", research["selected_intent"])
+        self.assertEqual("HIGH", research["thesis_strength"])
+
+    def test_model_decision_low_confidence_creates_no_candidate(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-05-11T00:00:00Z",
+            "market_snapshot": {"price": 2500.0, "atr_14": 60.0},
+            "decision_ready_features": {"macro_permission": "ALLOW_BOTH", "major_trend_1d": "BULL"},
+            "position_snapshot": {"position_side": None},
+            "is_decision_eligible": True,
+        }
+        batch = dp._build_model_decision_candidate_batch(
+            snapshot,
+            {"technical": {"current_price": 2500.0, "atr14": 60.0}},
+            {"action": "BUY", "direction": "LONG", "confidence": 0.2},
+        )
+
+        self.assertEqual([], batch["candidate_proposals"])
+        self.assertEqual("model_confidence_below_threshold", batch["model_decision_diagnostic"]["reason"])
+
+    def test_model_market_state_carries_qlib_and_macro_fields(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-05-11T00:00:00Z",
+            "market_snapshot": {
+                "price": 2500.0,
+                "rsi_4h": 61.0,
+                "bb_pct_b": 0.72,
+                "sma50_1d": 2400.0,
+                "sma200_1d": 2100.0,
+                "volume_ratio": 1.4,
+            },
+            "onchain_snapshot": {
+                "qlib_rank_8h": 2,
+                "qlib_percentile_8h": 0.8,
+                "p_up_8h": 0.62,
+                "p_down_8h": 0.18,
+                "p_flat_8h": 0.2,
+                "qlib_relative_score_8h": 0.44,
+                "flow_data_available": True,
+                "token_net_flow": 7868172.45,
+                "stablecoin_net_flow": 882425.49,
+                "token_flow_semantic": "ACCUMULATION_HINT",
+                "stablecoin_flow_semantic": "BUYING_POWER",
+                "flow_composite_semantic": "LONG_SUPPORT",
+                "flow_signal_mixed": False,
+                "liquidation_long_to_volume_4h": 0.023,
+                "liquidation_short_to_volume_4h": 0.019,
+                "oi_now": 1525790534.8,
+                "delta_oi_24h_percent": -4.55,
+            },
+            "decision_ready_features": {
+                "qlib_direction": "LONG",
+                "qlib_direction_confident": True,
+                "vix_level": 18.5,
+                "major_trend_1d": "BULL",
+                "regime_1d": "BULL",
+            },
+            "macro_snapshot": {
+                "macro_mode": "RISK_ON",
+                "macro_permission": "ALLOW_BOTH",
+                "macro_bias_tier": "MILD_RISK_ON",
+            },
+            "position_snapshot": {},
+        }
+
+        state = dp.build_market_state(snapshot)
+
+        self.assertEqual(0.62, state["qlib"]["p_up_8h"])
+        self.assertEqual("LONG", state["qlib"]["direction"])
+        self.assertEqual(18.5, state["technical"]["vix"])
+        self.assertEqual(19.0476, state["technical"]["relative_sma200_pct"])
+        self.assertTrue(state["onchain"]["flow_data_available"])
+        self.assertEqual(7868172.45, state["onchain"]["token_net_flow"])
+        self.assertEqual(882425.49, state["onchain"]["stablecoin_net_flow"])
+        self.assertEqual("LONG_SUPPORT", state["onchain"]["flow_composite_semantic"])
+        self.assertEqual(0.023, state["onchain"]["liquidation_long_to_volume_4h"])
+        self.assertEqual(1525790534.8, state["onchain"]["open_interest"])
+        self.assertTrue(state["data_availability"]["has_vix"])
+        self.assertTrue(state["data_availability"]["has_onchain_flow_data"])
+        self.assertTrue(state["data_availability"]["has_flow_semantics"])
+
+    def test_model_market_state_preserves_zero_values(self):
+        snapshot = {
+            "symbol": "BNB-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-05-11T00:00:00Z",
+            "market_snapshot": {
+                "price": 600.0,
+                "volume_ratio": 0.0,
+                "drawdown_120d_pct": 0.0,
+            },
+            "qlib_snapshot": {
+                "rank": 5,
+                "qlib_percentile": 0.0,
+                "p_up_8h": 0.0,
+                "p_down_8h": 0.7,
+                "p_flat_8h": 0.3,
+                "qlib_relative_score_8h": 0.0,
+            },
+            "onchain_snapshot": {
+                "qlib_percentile_8h": 0.9,
+                "p_up_8h": 0.6,
+            },
+            "decision_ready_features": {},
+            "macro_snapshot": {},
+            "position_snapshot": {},
+        }
+
+        state = dp.build_market_state(snapshot)
+
+        self.assertEqual(0.0, state["qlib"]["qlib_percentile"])
+        self.assertEqual(0.0, state["qlib"]["p_up_8h"])
+        self.assertEqual(0.0, state["qlib"]["relative_score_8h"])
+        self.assertEqual(0.0, state["technical"]["relative_volume_20"])
+        self.assertEqual(0.0, state["technical"]["prior_120d_drawdown_pct"])
+        self.assertTrue(state["data_availability"]["has_prior_120d_drawdown"])
+
+    def test_qlib_freshness_report_flags_stale_payload_and_csv(self):
+        qlib_payload = {
+            "as_of": "2026-05-10 20:00:00",
+            "coins": [{"symbol": symbol, "rank": idx + 1} for idx, symbol in enumerate(dp.TRACKED_SYMBOLS)],
+        }
+        qlib_map = dp._qlib_coin_map(qlib_payload)
+        chart_context_map = {
+            symbol: {"chart_context_bar_time": "2026-05-10 20:00:00"}
+            for symbol in dp.TRACKED_SYMBOLS
+        }
+
+        report = dp._qlib_freshness_report(
+            qlib_payload,
+            qlib_map,
+            chart_context_map,
+            expected_bar=pd.Timestamp("2026-05-11 00:00:00"),
+        )
+
+        self.assertFalse(report["fresh"])
+        self.assertEqual("2026-05-11 00:00:00", report["expected_completed_bar"])
+        self.assertIn("payload_as_of_stale", report["reasons"])
+        self.assertIn("feature_csv_stale", report["reasons"])
+        self.assertEqual(sorted(dp.TRACKED_SYMBOLS), report["stale_csv_symbols"])
+
+    def test_qlib_stale_blocks_qlib_dependent_candidate(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-05-11T00:00:00Z",
+            "market_snapshot": {},
+            "decision_ready_features": {"macro_permission": "ALLOW_BOTH"},
+            "position_snapshot": {"position_side": "NONE"},
+            "is_decision_eligible": True,
+            "qlib_freshness": {
+                "fresh": False,
+                "expected_completed_bar": "2026-05-11 00:00:00",
+                "payload_as_of": "2026-05-10 20:00:00",
+                "reasons": ["payload_as_of_stale"],
+            },
+        }
+        candidate_batch = {
+            "candidate_proposals": [
+                {"trigger_source": "Blueprint_E1"}
+            ]
+        }
+
+        result = dp._evaluate_rules(snapshot, candidate_batch)
+
+        self.assertFalse(result["passed"])
+        self.assertEqual(["QLIB_STALE"], result["reason_codes"])
+        self.assertIn("QLIB_FRESHNESS_CHECK", [trace["rule"] for trace in result["rule_trace"]])
+
+    def test_inconsistent_model_decision_falls_back_to_wait_flat(self):
+        with (
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_text_with_audit",
+                return_value=("bullish evidence but formatter will contradict it", {"status": "parsed"}),
+            ),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_json_with_audit",
+                return_value=({"action": "BUY", "direction": "SHORT", "confidence": 0.9}, {"status": "parsed"}),
+            ),
+        ):
+            decision = model_decision_agent.build_model_decision({"symbol": "ETH-USDT"})
+
+        self.assertEqual("WAIT", decision["action"])
+        self.assertEqual("FLAT", decision["direction"])
+        self.assertEqual(["inconsistent_action_direction_BUY_SHORT"], decision["reason_codes"])
+        self.assertEqual("reasoner_then_json_formatter", decision["llm_audit"]["pipeline"])
+
+    def test_model_decision_reasoner_failure_is_wait_flat(self):
+        with patch.object(
+            model_decision_agent,
+            "call_deepseek_text_with_audit",
+            return_value=(None, {"status": "http_error"}),
+        ):
+            decision = model_decision_agent.build_model_decision({"symbol": "ETH-USDT"})
+
+        self.assertEqual("WAIT", decision["action"])
+        self.assertEqual("FLAT", decision["direction"])
+        self.assertEqual(["reasoner_http_error"], decision["reason_codes"])
+
+    def test_deepseek_text_retries_transient_failure(self):
+        class Response:
+            status_code = 200
+            text = "{}"
+
+            def json(self):
+                return {"choices": [{"message": {"content": "WAIT because evidence conflicts"}}]}
+
+        calls = {"count": 0}
+
+        def flaky_post(*args, **kwargs):
+            calls["count"] += 1
+            if calls["count"] == 1:
+                raise RuntimeError("transient chunk failure")
+            return Response()
+
+        with (
+            patch.dict(os.environ, {"DEEPSEEK_API_KEY": "test", "DEEPSEEK_RETRY_ATTEMPTS": "2", "DEEPSEEK_RETRY_DELAY_SECONDS": "0"}),
+            patch.object(llm_client.requests, "post", side_effect=flaky_post),
+        ):
+            content, audit = llm_client.call_deepseek_text_with_audit(
+                "prompt",
+                system_prompt="system",
+            )
+
+        self.assertEqual("WAIT because evidence conflicts", content)
+        self.assertEqual(2, calls["count"])
+        self.assertEqual(2, audit["attempt_count"])
+        self.assertEqual("exception", audit["attempts"][0]["status"])
+        self.assertEqual("parsed", audit["status"])
+
+    def test_model_decision_keeps_structured_invalidation_rules(self):
+        formatter_decision = {
+            "action": "SELL",
+            "direction": "SHORT",
+            "confidence": 0.72,
+            "setup_type": "trend_breakdown",
+            "risk_level": "MEDIUM",
+            "horizon": "SWING",
+            "reason_codes": ["trend_breakdown"],
+            "invalid_if": ["price reclaims swing high"],
+            "invalidation_rules": [
+                {"field": "price", "op": ">=", "value_ref": "recent_swing_high", "persistence": 2, "reason": "swing high reclaimed"},
+                {"field": "", "op": ">=", "value": 1},
+            ],
+            "summary": "short setup",
+        }
+        with (
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_text_with_audit",
+                return_value=("short evidence exists", {"status": "parsed"}),
+            ),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_json_with_audit",
+                return_value=(formatter_decision, {"status": "parsed"}),
+            ),
+        ):
+            decision = model_decision_agent.build_model_decision({"symbol": "BTC-USDT"})
+
+        self.assertEqual("SELL", decision["action"])
+        self.assertEqual(
+            [{"field": "price", "op": ">=", "reason": "swing high reclaimed", "value_ref": "recent_swing_high", "persistence": 2}],
+            decision["invalidation_rules"],
+        )
+
+    def test_model_decision_verifier_veto_falls_back_to_wait_flat(self):
+        formatter_decision = {
+            "action": "BUY",
+            "direction": "LONG",
+            "confidence": 0.88,
+            "setup_type": "trend_following",
+            "risk_level": "MEDIUM",
+            "horizon": "SWING",
+            "reason_codes": ["qlib_upside", "trend_support"],
+            "invalid_if": ["trend fails"],
+            "summary": "upside setup",
+        }
+        verifier_veto = {
+            "veto": True,
+            "veto_reasons": ["qlib_stale", "macro_conflict"],
+            "missing_data": ["fresh_qlib"],
+            "risk_notes": ["evidence conflicts"],
+        }
+
+        with (
+            patch.dict(os.environ, {"ENABLE_MODEL_DECISION_VERIFIER": "1"}, clear=False),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_text_with_audit",
+                return_value=("long evidence exists, but needs verification", {"status": "parsed"}),
+            ),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_json_with_audit",
+                side_effect=[
+                    (formatter_decision, {"status": "parsed", "model": "deepseek-chat"}),
+                    (verifier_veto, {"status": "parsed", "model": "deepseek-chat"}),
+                ],
+            ) as json_mock,
+        ):
+            decision = model_decision_agent.build_model_decision({"symbol": "ETH-USDT"})
+
+        self.assertEqual(2, json_mock.call_count)
+        self.assertEqual("WAIT", decision["action"])
+        self.assertEqual("FLAT", decision["direction"])
+        self.assertEqual(["verifier_veto", "qlib_stale", "macro_conflict"], decision["reason_codes"])
+        self.assertEqual("reasoner_then_json_formatter_then_verifier", decision["llm_audit"]["pipeline"])
 
     def test_yen_stress_flag_uses_macro_tag_not_usdjpy_trend_alone(self):
         macro_snapshot = {
@@ -154,6 +538,46 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual([], eth_context["grid_preflight_missing_fields"])
         self.assertGreater(eth_context["adx_14_4h"], 0)
         self.assertIsInstance(eth_context["adx_delta"], float)
+        self.assertIsNone(eth_context["drawdown_120d_pct"])
+
+    def test_chart_feature_context_computes_model_decision_features(self):
+        rows = []
+        base_time = pd.Timestamp("2025-01-01 00:00:00")
+        for idx in range(730):
+            close = 100 + idx
+            rows.append(
+                {
+                    "datetime": base_time + pd.Timedelta(hours=4 * idx),
+                    "instrument": "ETH",
+                    "open": close - 2,
+                    "high": close + 10,
+                    "low": close - 10,
+                    "close": close,
+                    "volume": 1000000 + idx * 1000,
+                    "macd": 0.1,
+                    "macd_signal": 0.05,
+                    "macd_hist": 0.05,
+                    "atr_14": 35,
+                    "bb_width_20": 0.06,
+                    "bb_pos_20": 0.5,
+                    "rsi_14": 50,
+                    "volume_usd_4h": 1000000 + idx * 1000,
+                }
+            )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            csv_path = Path(tmpdir) / "multi_coin_features.csv"
+            pd.DataFrame(rows).to_csv(csv_path, index=False)
+
+            with (
+                patch.object(dp, "QLOB_FEATURES_PATH", csv_path),
+                patch.object(dp, "_current_4h_bar_start_utc", return_value=base_time + pd.Timedelta(hours=4 * 730)),
+            ):
+                context = dp._load_chart_feature_context_map()
+
+        eth_context = context["ETH"]
+        self.assertAlmostEqual(-30.303, eth_context["williams_r14"], places=3)
+        self.assertEqual(0.0, eth_context["drawdown_120d_pct"])
 
     def test_chart_feature_context_ignores_current_unfinished_4h_bar(self):
         rows = []
@@ -481,6 +905,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
 
         with patch.object(dp, "db", fake_db), \
              patch.object(dp, "_load_qlib_payload", return_value=qlib_payload), \
+             patch.object(dp, "_qlib_freshness_report", return_value=self._fresh_qlib_report()), \
              patch.object(dp, "run_post_trade_review", return_value={"evaluated_count": 0, "record_count": 0}), \
              patch.dict(os.environ, {"ENABLE_V2_EXECUTION": "1"}, clear=False):
             result = dp.run_deterministic_cycle(executor=FakeExecutor())
@@ -536,6 +961,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
 
         with patch.object(dp, "db", fake_db), \
              patch.object(dp, "_load_qlib_payload", return_value=qlib_payload), \
+             patch.object(dp, "_qlib_freshness_report", return_value=self._fresh_qlib_report()), \
              patch.object(dp, "_build_macro_snapshot", return_value=macro_snapshot) as macro_mock, \
              patch.object(dp, "run_post_trade_review", return_value={"evaluated_count": 0, "record_count": 0}):
             result = dp.run_deterministic_cycle(executor=FakeExecutor())
@@ -1347,6 +1773,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
 
         with patch.object(dp, "db", fake_db), \
              patch.object(dp, "_load_qlib_payload", return_value=qlib_payload), \
+             patch.object(dp, "_qlib_freshness_report", return_value=self._fresh_qlib_report()), \
              patch.object(dp, "run_post_trade_review", return_value={"evaluated_count": 0, "record_count": 0}), \
              patch.dict(os.environ, {"ENABLE_V2_EXECUTION": "0"}, clear=False):
             result = dp.run_deterministic_cycle(executor=FakeExecutor())

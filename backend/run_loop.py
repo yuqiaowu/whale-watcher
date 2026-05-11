@@ -16,6 +16,7 @@ from deterministic_pipeline import run_deterministic_cycle
 from execution_reconciliation import run_execution_reconciliation
 from post_trade_review import run_post_trade_review
 from position_runtime import run_in_position_runtime
+from qlib_maintenance import qlib_retrain_needed
 
 # Load environment variables
 env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
@@ -677,26 +678,6 @@ def main():
         print(f"\n🔄 --- Starting Cycle: {cycle_start.strftime('%Y-%m-%d %H:%M:%S')} (v{VERSION}) ---")
         write_status("RUNNING", f"Analyzing market (v{VERSION})...")
         
-        # 0. Monday Auto-Retrain Logic (Weekly Evolution)
-        if cycle_start.weekday() == 0: # 0 = Monday
-            print("📅 [MONDAY] Qlib Evolution Check...")
-            model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "qlib_data", "model_latest.pkl")
-            needs_train = False
-            
-            if not os.path.exists(model_path):
-                print("⚠️  Qlib Brain missing! Starting initial training...")
-                needs_train = True
-            else:
-                last_mod = datetime.fromtimestamp(os.path.getmtime(model_path))
-                if last_mod.date() < cycle_start.date():
-                    print(f"🧠 Current brain is from {last_mod.date()}. Needs Monday refresh!")
-                    needs_train = True
-            
-            if needs_train:
-                write_status("TRAINING", "Weekly Qlib model retraining in progress...")
-                run_script("train_local_brain.py")
-                print("✅ [MONDAY] Qlib Evolution Complete!")
-
         # 1. Update Market Reality (crypto_brain)
         print(">> Step 1: Updating Market Reality (crypto_brain)...")
         success_data = run_script("crypto_brain.py")
@@ -707,6 +688,23 @@ def main():
             print(">> Step 1.25: Updating Qlib Database...")
             # We don't fail the loop if this fails, we just try our best to keep data fresh
             run_script("update_qlib_data.py")
+
+            print(">> Step 1.35: Checking Qlib model retrain freshness...")
+            retrain_report = qlib_retrain_needed(cycle_start)
+            run_entry["qlib_retrain"] = retrain_report
+            if retrain_report.get("needed"):
+                print(f"🧠 Qlib retrain needed: {retrain_report.get('reasons')}")
+                write_status("TRAINING", "Qlib model retraining in progress...")
+                if run_script("train_local_brain.py"):
+                    run_script("direction_model.py")
+                    run_entry["qlib_retrained"] = True
+                    print("✅ Qlib model retrain complete.")
+                else:
+                    run_entry["qlib_retrained"] = False
+                    print("⚠️ Qlib model retrain failed; inference will use the existing model.")
+            else:
+                run_entry["qlib_retrained"] = False
+                print(f"✅ Qlib model retrain not needed: policy={retrain_report.get('policy')}")
         
         # 1.5 Run Qlib Strategy Ranking
         if success_data:

@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 import certifi
 from urllib.parse import urlparse
 
-load_dotenv()
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
 
 SINGLETON_COLLECTIONS = {
     "portfolio_state",
@@ -28,7 +29,14 @@ class DBClient:
         if self.uri and "mongodb+srv://<" not in self.uri and "<password>" not in self.uri:
             try:
                 # Disable SSL warnings for local dev sometimes, but SRV needs it
-                self.client = MongoClient(self.uri, serverSelectionTimeoutMS=5000, tlsCAFile=certifi.where())
+                self.client = MongoClient(
+                    self.uri,
+                    serverSelectionTimeoutMS=5000,
+                    connectTimeoutMS=5000,
+                    socketTimeoutMS=15000,
+                    timeoutMS=20000,
+                    tlsCAFile=certifi.where(),
+                )
                 # Verify connection
                 self.client.admin.command('ping')
                 self.db = self.client[self.db_name]

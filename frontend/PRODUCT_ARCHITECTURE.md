@@ -68,12 +68,23 @@ graph TD
 #### A1. Candidate / Rule Contract
 *   **Candidate Layer** 只负责输出可审计候选，不负责最终批准开仓。
 *   结构型候选必须携带 `reference_values` 与 `invalidation_conditions`。例如 `Blueprint_A2` 的上影线反抽空单必须优先使用真实已完成 4H K 线高点 `trigger_candle_high`，而不是用 `price + ATR` 合成高点。
+*   Qlib 依赖候选必须携带 `qlib_freshness`。系统按最近已完成 4H bar 检查 Qlib payload 与特征 CSV，同时检查 `model_train_end / model_is_fresh`；若数据或模型过期，`Blueprint_E1` / `Blueprint_E2` / `Blueprint_G1` / `ModelDecision_LLM` 必须返回 `QLIB_STALE`，不得开仓或启动网格。
 *   **Rule Engine** 批准开仓前必须按顺序执行：
-    1. schema 校验；
-    2. `PRE_TRADE_INVALIDATION_CHECK`：若当前价已经触发 `invalidation_conditions`，返回 `INVALIDATION_TRIGGERED`，不得开仓；
-    3. `MIN_RRR_CHECK`：使用候选最终 `entry / SL / TP` 计算 RRR，低于阈值返回 `LOW_RRR`，不得开仓；
-    4. 仓位冲突、宏观权限、强平距离与风险预算检查。
+    1. `QLIB_FRESHNESS_CHECK`：Qlib 过期时返回 `QLIB_STALE`；
+    2. schema 校验；
+    3. `PRE_TRADE_INVALIDATION_CHECK`：若当前价已经触发 `invalidation_conditions`，返回 `INVALIDATION_TRIGGERED`，不得开仓；
+    4. `MIN_RRR_CHECK`：使用候选最终 `entry / SL / TP` 计算 RRR，低于阈值返回 `LOW_RRR`，不得开仓；
+    5. 仓位冲突、宏观权限、强平距离与风险预算检查。
 *   这保证模型、研究层与执行层看到的是同一套结构依据：A2 若因真实上影线顶部被突破而失效，不能继续作为可执行 candidate；若真实结构止损导致 RRR 不达标，也不能开仓。
+
+#### A2. Model Decision Layer
+*   默认仍走旧 candidate 蓝本。只有 `MODEL_DECISION_MODE=1` 时，才进入模型决策路径，并使用 `ModelDecision_LLM` 作为候选来源。
+*   模型决策只负责方向判断，合法输出限定为 `BUY` / `SELL` / `HOLD` / `WAIT`、`LONG` / `SHORT` / `FLAT`、置信度、风险等级、理由和失效条件。仓位、杠杆、止损、止盈和执行动作仍由程序控制。
+*   模型输入统一为 `marketState`，包含技术指标、Qlib、链上、宏观、持仓状态与 `data_availability`。`williams_r14` 和 `drawdown_120d_pct` 可为空，但必须显式标记数据是否可用。
+*   模型链路仅使用 DeepSeek：`deepseek-reasoner` 先按 self-criticism 检查多空、空仓、缺失数据、失效条件与冲突，再由 `deepseek-chat` 输出结构化 JSON；`ENABLE_MODEL_DECISION_VERIFIER=1` 时可再由 verifier 复核高置信方向单。
+*   模型可以输出 `invalidation_rules[]` 程序规则草案；程序只采纳字段、操作符和方向均通过白名单审核的规则，审核通过后写入 `candidate.invalidation_conditions`，审核失败写入 `model_rejected_invalidation_rules`。
+*   任何模型未启用、接口失败、JSON 无效、方向不一致或 verifier 否决，都会保守降级为 `WAIT` / `FLAT`，不会误下单。
+*   持久化字段包括 `qlib_freshness`、`marketState`、`modelDecision`，用于前端解释、审计和回放。
 
 #### B. 情报中心 (Intelligence Center)
 *   **来源**: `news_analyse` + `crypto_signal_lab`
@@ -117,6 +128,6 @@ graph TD
 
 *   **前端**: React 19, Vite, TailwindCSS, Motion (现有)
 *   **后端**: Python 3.10+, Flask
-*   **AI 模型**: DeepSeek-V3 (API 调用), Qlib (本地 LightGBM 模型)
+*   **AI 模型**: DeepSeek reasoner/chat (API 调用), Qlib (本地 LightGBM 模型)
 *   **数据源**: OKX API (行情), Etherscan (链上), CryptoCompare (新闻)
 *   **部署**: Vercel (前端) + Railway/VPS (后端 Python 服务)
