@@ -445,6 +445,89 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(old_record["execution"]["order_status"], "CLOSED")
         self.assertEqual(old_record["execution"]["history"], [])
 
+    def test_new_same_side_live_position_does_not_reuse_closed_origin_record(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "cycle_2026-05-12_1200_SOL",
+                    "cycleId": "cycle_2026-05-12_1200",
+                    "symbol": "SOL-USDT",
+                    "created_at": "2026-05-12T13:07:32Z",
+                    "positionState": "defensive",
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "SHORT",
+                        "max_holding_bars": 4,
+                        "approved_candidate": {
+                            "proposed_entry_price": 95.23,
+                            "invalidation_conditions": {
+                                "operator": "OR",
+                                "rules": [{"field": "price", "op": ">=", "value_ref": "model_stop_price"}],
+                            },
+                            "reference_values": {"model_stop_price": 98.92714286},
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "avg_fill_price": 95.29,
+                        "filled_size": 2.92,
+                        "executed_at": "2026-05-12T13:08:42Z",
+                        "runtime_action": "REDUCE_25",
+                        "history": [],
+                    },
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "SOL",
+                        "instId": "SOL-USDT-SWAP",
+                        "type": "short",
+                        "entryPrice": 94.47,
+                        "currentPrice": 94.49,
+                        "amount": 2.95,
+                        "leverage": 2,
+                        "stopLoss": 98.05,
+                        "takeProfit": 86.31,
+                        "positionOpenedAt": "2026-05-12T17:20:16Z",
+                    }
+                ]
+            },
+            "trade_history": [
+                {
+                    "id": "3560230204500877312",
+                    "symbol": "SOL",
+                    "type": "short",
+                    "entryPrice": 95.29,
+                    "exitPrice": 94.06,
+                    "amount": 2.19,
+                    "leverage": 2,
+                    "pnl": 2.69,
+                    "pnlPercent": 2.58,
+                    "entryTime": "2026-05-12 13:08:42",
+                    "exitTime": "2026-05-12 17:05:28",
+                    "reason": "OKX Real Trade",
+                }
+            ],
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db):
+            result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 2)
+        records = fake_db.store["trade_decision_records"]
+        adopted = records[0]
+        old_record = next(record for record in records if record["decisionId"] == "cycle_2026-05-12_1200_SOL")
+        self.assertTrue(adopted["provenance"]["adopted_live_position"])
+        self.assertEqual(adopted["symbol"], "SOL-USDT")
+        self.assertEqual(adopted["execution"]["avg_fill_price"], 94.47)
+        self.assertEqual(adopted["execution"]["executed_at"], "2026-05-12T17:20:16Z")
+        self.assertEqual(old_record["positionState"], "closed")
+        self.assertEqual(old_record["execution"]["order_status"], "CLOSED")
+        self.assertEqual(old_record["execution"]["closed_trade_id"], "3560230204500877312")
+
     def test_marks_closed_trade_as_closed(self):
         store = {
             "trade_decision_records": [

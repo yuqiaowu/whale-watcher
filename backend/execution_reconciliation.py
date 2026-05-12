@@ -131,8 +131,47 @@ def _match_live_position(record: Dict[str, Any], positions: List[Dict[str, Any]]
             continue
         if final_intent and _normalize_side(position.get("type")) != final_intent:
             continue
+        if not _record_position_identity_matches(record, position):
+            continue
         return position
     return None
+
+
+def _record_position_identity_matches(record: Dict[str, Any], position: Dict[str, Any]) -> bool:
+    execution = record.get("execution") or {}
+    order_status = str(execution.get("order_status") or "").upper()
+    sync_status = str(execution.get("sync_status") or "").upper()
+    has_fill_identity = bool(
+        execution.get("avg_fill_price") is not None
+        or execution.get("filled_size") is not None
+        or execution.get("executed_at")
+        or execution.get("exchange_order_id")
+        or execution.get("client_order_id")
+    )
+    provenance = record.get("provenance") or {}
+    if provenance.get("adopted_live_position") and not (
+        execution.get("avg_fill_price") is not None
+        or execution.get("filled_size") is not None
+        or execution.get("exchange_order_id")
+        or execution.get("client_order_id")
+    ):
+        return True
+    if order_status not in {"FILLED", "OPEN"} and sync_status not in {"FILLED", "OPEN"} and not has_fill_identity:
+        return True
+
+    record_time = execution.get("executed_at") or execution.get("position_opened_at") or record.get("created_at")
+    position_time, timestamp_source = _position_open_timestamp(position)
+    if timestamp_source != "adoption_time" and record_time and not _time_close(record_time, position_time):
+        return False
+
+    record_price = execution.get("avg_fill_price") or execution.get("proposed_entry_price") or (
+        (record.get("riskReview") or {}).get("approved_candidate") or {}
+    ).get("proposed_entry_price")
+    position_price = position.get("entryPrice")
+    if record_price is not None and position_price is not None and not _price_close(record_price, position_price, tolerance_pct=0.003):
+        return False
+
+    return True
 
 
 def _okx_order_time(order: Dict[str, Any]) -> Optional[str]:
@@ -232,6 +271,8 @@ def _open_order_matches_position(order: Dict[str, Any], position: Dict[str, Any]
 def _record_matches_open_order(record: Dict[str, Any], order: Dict[str, Any], position: Dict[str, Any]) -> bool:
     execution = record.get("execution") or {}
     risk_review = record.get("riskReview") or {}
+    if record.get("positionState") == "closed" or execution.get("order_status") == "CLOSED":
+        return False
     if _normalize_symbol(record.get("symbol")) != _normalize_symbol(position.get("symbol") or position.get("instId")):
         return False
     if _normalize_side(risk_review.get("final_intent")) != _normalize_side(position.get("type") or position.get("posSide")):
@@ -316,10 +357,12 @@ def _has_potential_origin_record(position: Dict[str, Any], records: List[Dict[st
             continue
         if _normalize_symbol(record.get("symbol")) != symbol:
             continue
+        execution = record.get("execution") or {}
+        if record.get("positionState") == "closed" or execution.get("order_status") == "CLOSED":
+            continue
         risk_review = record.get("riskReview") or {}
         if side and _normalize_side(risk_review.get("final_intent")) not in {side, ""}:
             continue
-        execution = record.get("execution") or {}
         if execution.get("execution_action") in {"OPEN_LONG", "OPEN_SHORT"}:
             return True
         if execution.get("client_order_id") or execution.get("exchange_order_id"):
