@@ -1424,10 +1424,10 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertTrue(risk_review["approved"])
         self.assertEqual(75.0, risk_review["approved_position_size_usd"])
         self.assertEqual(2.5, risk_review["leverage"])
-        self.assertEqual(4, risk_review["max_holding_bars"])
+        self.assertEqual(3, risk_review["max_holding_bars"])
         self.assertIn("major trend conflict lightly reduced size", risk_review["review_note"])
 
-    def test_risk_review_caps_max_loss_at_two_percent_of_equity_and_uses_three_x_default_leverage(self):
+    def test_risk_review_caps_max_loss_at_two_percent_of_equity_and_uses_five_x_default_leverage(self):
         snapshot = {
             "symbol": "ETH-USDT",
             "cycleId": "cycle_test",
@@ -1465,7 +1465,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
 
         self.assertTrue(risk_review["approved"])
         self.assertEqual(risk_review["approved_risk_fraction"], 0.02)
-        self.assertEqual(risk_review["leverage"], 3.0)
+        self.assertEqual(risk_review["leverage"], 5.0)
         self.assertEqual(risk_review["approved_position_size_usd"], 40.0)
         self.assertEqual(abs(100 - 150) / 100 * risk_review["approved_position_size_usd"], 20.0)
 
@@ -1515,9 +1515,9 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
                 {"selected_intent": "SHORT", "thesis_strength": "LOW"},
             )
 
-        self.assertEqual(4, default_review["max_holding_bars"])
-        self.assertEqual(3, medium_review["max_holding_bars"])
-        self.assertEqual(2, low_review["max_holding_bars"])
+        self.assertEqual(3, default_review["max_holding_bars"])
+        self.assertEqual(2, medium_review["max_holding_bars"])
+        self.assertEqual(1, low_review["max_holding_bars"])
 
     def test_e2_uses_percentile_not_raw_small_score_scale(self):
         snapshot = {
@@ -1810,6 +1810,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         snapshot = {
             "symbol": "ETH-USDT",
             "cycleId": "cycle_test",
+            "decision_id": "cycle_test_ETH",
             "timeframe": "4h",
             "snapshot_timestamp": 1712743200,
             "decision_ready_features": {"macro_mode": "MIXED"},
