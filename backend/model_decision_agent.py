@@ -19,6 +19,48 @@ ALLOWED_SETUP_TYPES = {
 ALLOWED_RISK_LEVELS = {"LOW", "MEDIUM", "HIGH"}
 ALLOWED_HORIZONS = {"SHORT", "SWING", "MULTI_DAY"}
 
+OPTIONAL_ONCHAIN_MISSING_TERMS = (
+    "onchain",
+    "on-chain",
+    "chain flow",
+    "flow data",
+    "exchange netflow",
+    "exchange_netflow",
+    "large transfer",
+    "large_transfer",
+    "whale bias",
+    "whale_bias",
+    "flow bias",
+    "flow_bias",
+    "token flow",
+    "token_net_flow",
+    "stablecoin",
+    "stablecoin_net_flow",
+)
+OPTIONAL_MISSING_WORDS = (
+    "missing",
+    "unavailable",
+    "absent",
+    "incomplete",
+    "lack",
+    "lacks",
+    "null",
+    "none",
+    "not available",
+    "not provided",
+)
+REQUIRED_DATA_TERMS = (
+    "qlib",
+    "price",
+    "technical",
+    "rsi",
+    "williams",
+    "sma",
+    "atr",
+    "volume",
+    "freshness",
+)
+
 
 def _safe_float(value: Any) -> Optional[float]:
     try:
@@ -272,6 +314,48 @@ def _decision_needs_verifier(decision: Dict[str, Any]) -> bool:
     )
 
 
+def _is_optional_onchain_missing_reason(reason: str) -> bool:
+    text = str(reason or "").strip().lower()
+    if not text:
+        return False
+    if not any(term in text for term in OPTIONAL_MISSING_WORDS):
+        return False
+    if not any(term in text for term in OPTIONAL_ONCHAIN_MISSING_TERMS):
+        return False
+    return not any(term in text for term in REQUIRED_DATA_TERMS)
+
+
+def _normalize_verifier_result(verifier_raw: Dict[str, Any]) -> Dict[str, Any]:
+    veto_reasons = _compact_list(verifier_raw.get("veto_reasons"), limit=6)
+    missing_data = _compact_list(verifier_raw.get("missing_data"), limit=6)
+    risk_notes = _compact_list(verifier_raw.get("risk_notes"), limit=6)
+
+    hard_veto_reasons: List[str] = []
+    optional_missing_reasons: List[str] = []
+    for reason in veto_reasons:
+        if _is_optional_onchain_missing_reason(reason):
+            optional_missing_reasons.append(reason)
+        else:
+            hard_veto_reasons.append(reason)
+
+    for reason in optional_missing_reasons:
+        if reason not in missing_data and len(missing_data) < 6:
+            missing_data.append(reason)
+
+    veto = bool(verifier_raw.get("veto")) and bool(hard_veto_reasons)
+    if bool(verifier_raw.get("veto")) and optional_missing_reasons and not hard_veto_reasons:
+        note = "optional_onchain_missing_data_downgraded"
+        if note not in risk_notes and len(risk_notes) < 6:
+            risk_notes.append(note)
+
+    return {
+        "veto": veto,
+        "veto_reasons": hard_veto_reasons[:6],
+        "missing_data": missing_data[:6],
+        "risk_notes": risk_notes[:6],
+    }
+
+
 def _verify_model_decision(
     market_state: Dict[str, Any],
     decision: Dict[str, Any],
@@ -283,9 +367,13 @@ def _verify_model_decision(
     )
     verifier_prompt = (
         "Review the proposed model decision against the market state. Be skeptical. Veto if evidence is "
-        "contradictory, data is stale/missing, direction conflicts with technical context, or confidence is not "
-        "well supported. If there is no clear rejection reason, set veto=false. Output only JSON matching this "
-        "contract.\n\n"
+        "contradictory, required data is stale/missing, direction conflicts with technical context, or confidence "
+        "is not well supported. Do not veto solely because optional onchain fields are unavailable. For symbols "
+        "where market_state.onchain.flow_data_available=false or flow_composite_semantic=UNAVAILABLE, absence of "
+        "exchange_netflow_24h, large_transfer_count_24h, whale_bias, flow_bias, token flow, or stablecoin flow is "
+        "expected coverage limitation; put it in missing_data or risk_notes, not veto_reasons. Treat Qlib freshness, "
+        "current price, technical indicators, and risk/invalidation facts as required data. If there is no clear "
+        "non-missing-data rejection reason, set veto=false. Output only JSON matching this contract.\n\n"
         f"contract={json.dumps(_verifier_contract(), ensure_ascii=False, sort_keys=True)}\n\n"
         f"market_state={json.dumps(market_state, ensure_ascii=False, sort_keys=True)}\n\n"
         f"proposed_decision={json.dumps(decision, ensure_ascii=False, sort_keys=True)}"
@@ -422,19 +510,14 @@ def build_model_decision(market_state: Dict[str, Any]) -> Dict[str, Any]:
         status = str((verifier_audit or {}).get("status") or "verifier_unavailable")
         return _fallback_decision(market_state, audit, f"verifier_{status}")
 
-    veto = bool(verifier_raw.get("veto"))
-    if veto:
-        veto_reasons = _compact_list(verifier_raw.get("veto_reasons"), limit=6)
+    verifier_result = _normalize_verifier_result(verifier_raw)
+    if verifier_result["veto"]:
         fallback = _fallback_decision(market_state, audit, "verifier_veto")
-        fallback["reason_codes"] = ["verifier_veto", *veto_reasons][:8]
+        fallback["reason_codes"] = ["verifier_veto", *verifier_result["veto_reasons"]][:8]
         fallback["summary"] = "model decision vetoed by conservative verifier"
+        fallback["verifier"] = verifier_result
         return fallback
 
     decision["llm_audit"] = audit
-    decision["verifier"] = {
-        "veto": False,
-        "veto_reasons": _compact_list(verifier_raw.get("veto_reasons"), limit=6),
-        "missing_data": _compact_list(verifier_raw.get("missing_data"), limit=6),
-        "risk_notes": _compact_list(verifier_raw.get("risk_notes"), limit=6),
-    }
+    decision["verifier"] = verifier_result
     return decision

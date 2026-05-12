@@ -457,6 +457,111 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(["verifier_veto", "qlib_stale", "macro_conflict"], decision["reason_codes"])
         self.assertEqual("reasoner_then_json_formatter_then_verifier", decision["llm_audit"]["pipeline"])
 
+    def test_model_decision_verifier_downgrades_optional_onchain_missing_veto(self):
+        formatter_decision = {
+            "action": "SELL",
+            "direction": "SHORT",
+            "confidence": 0.82,
+            "setup_type": "trend_breakdown",
+            "risk_level": "MEDIUM",
+            "horizon": "SWING",
+            "reason_codes": ["qlib_downside", "trend_breakdown"],
+            "invalid_if": ["breakdown fails"],
+            "summary": "downside setup",
+        }
+        verifier_veto = {
+            "veto": True,
+            "veto_reasons": [
+                "Missing exchange netflow, large transfer count, whale bias, and stablecoin flow weaken onchain confirmation"
+            ],
+            "missing_data": [],
+            "risk_notes": [],
+        }
+
+        with (
+            patch.dict(os.environ, {"ENABLE_MODEL_DECISION_VERIFIER": "1"}, clear=False),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_text_with_audit",
+                return_value=("short evidence exists, but onchain coverage is unavailable", {"status": "parsed"}),
+            ),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_json_with_audit",
+                side_effect=[
+                    (formatter_decision, {"status": "parsed", "model": "deepseek-chat"}),
+                    (verifier_veto, {"status": "parsed", "model": "deepseek-chat"}),
+                ],
+            ),
+        ):
+            decision = model_decision_agent.build_model_decision(
+                {
+                    "symbol": "DOGE-USDT",
+                    "onchain": {"flow_data_available": False, "flow_composite_semantic": "UNAVAILABLE"},
+                }
+            )
+
+        self.assertEqual("SELL", decision["action"])
+        self.assertEqual("SHORT", decision["direction"])
+        self.assertFalse(decision["verifier"]["veto"])
+        self.assertEqual([], decision["verifier"]["veto_reasons"])
+        self.assertEqual(verifier_veto["veto_reasons"], decision["verifier"]["missing_data"])
+        self.assertIn("optional_onchain_missing_data_downgraded", decision["verifier"]["risk_notes"])
+
+    def test_model_decision_verifier_keeps_real_veto_after_filtering_missing_data(self):
+        formatter_decision = {
+            "action": "SELL",
+            "direction": "SHORT",
+            "confidence": 0.86,
+            "setup_type": "trend_breakdown",
+            "risk_level": "MEDIUM",
+            "horizon": "SWING",
+            "reason_codes": ["qlib_downside"],
+            "invalid_if": ["momentum reverses"],
+            "summary": "downside setup",
+        }
+        verifier_veto = {
+            "veto": True,
+            "veto_reasons": [
+                "Missing exchange netflow and large transfer count weaken onchain confirmation",
+                "Williams %R oversold condition contradicts new short entry",
+            ],
+            "missing_data": [],
+            "risk_notes": [],
+        }
+
+        with (
+            patch.dict(os.environ, {"ENABLE_MODEL_DECISION_VERIFIER": "1"}, clear=False),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_text_with_audit",
+                return_value=("short evidence exists, but verifier must check conflicts", {"status": "parsed"}),
+            ),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_json_with_audit",
+                side_effect=[
+                    (formatter_decision, {"status": "parsed", "model": "deepseek-chat"}),
+                    (verifier_veto, {"status": "parsed", "model": "deepseek-chat"}),
+                ],
+            ),
+        ):
+            decision = model_decision_agent.build_model_decision(
+                {
+                    "symbol": "ETH-USDT",
+                    "onchain": {"flow_data_available": True, "flow_composite_semantic": "SHORT_SUPPORT"},
+                }
+            )
+
+        self.assertEqual("WAIT", decision["action"])
+        self.assertEqual("FLAT", decision["direction"])
+        self.assertEqual(
+            ["verifier_veto", "Williams %R oversold condition contradicts new short entry"],
+            decision["reason_codes"],
+        )
+        self.assertEqual(["Williams %R oversold condition contradicts new short entry"], decision["verifier"]["veto_reasons"])
+        self.assertEqual([verifier_veto["veto_reasons"][0]], decision["verifier"]["missing_data"])
+
     def test_yen_stress_flag_uses_macro_tag_not_usdjpy_trend_alone(self):
         macro_snapshot = {
             "macro_mode": "MIXED",
