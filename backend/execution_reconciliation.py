@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from db_client import db
 from okx_executor import OKXExecutor
@@ -39,6 +39,22 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
         return float(value)
     except Exception:
         return default
+
+
+def _trade_time_iso(value: Any) -> Optional[str]:
+    dt = _parse_dt(value)
+    if dt is None:
+        return None
+    return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _ms_to_iso(value: Any) -> Optional[str]:
+    try:
+        if value is None or value == "":
+            return None
+        return datetime.fromtimestamp(int(value) / 1000, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    except Exception:
+        return None
 
 
 def _normalize_symbol(value: Any) -> str:
@@ -95,6 +111,18 @@ def _position_key(position: Dict[str, Any]) -> tuple:
     )
 
 
+def _position_open_timestamp(position: Dict[str, Any]) -> Tuple[str, str]:
+    for field in ("positionOpenedAt", "openTime", "opened_at", "timestamp"):
+        iso_value = _trade_time_iso(position.get(field))
+        if iso_value:
+            return iso_value, field
+    for field in ("rawPositionCreatedTime", "cTime", "posCtime"):
+        iso_value = _ms_to_iso(position.get(field))
+        if iso_value:
+            return iso_value, field
+    return _iso_now(), "adoption_time"
+
+
 def _match_live_position(record: Dict[str, Any], positions: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     symbol = _normalize_symbol(record.get("symbol"))
     final_intent = _normalize_side((record.get("riskReview") or {}).get("final_intent"))
@@ -136,6 +164,217 @@ def _match_closed_trade(record: Dict[str, Any], trade_history: List[Dict[str, An
         return None
     candidates.sort(key=lambda item: _parse_dt(item.get("exitTime")) or datetime.max.replace(tzinfo=timezone.utc))
     return candidates[0]
+
+
+def _closed_reason_from_execution(execution: Dict[str, Any]) -> Tuple[str, str]:
+    runtime_reason = str(execution.get("runtime_reason") or "").strip()
+    if runtime_reason:
+        return runtime_reason, "position_runtime"
+    failure_reason = str(execution.get("failure_reason") or "").strip()
+    if failure_reason:
+        return failure_reason, "execution_failure"
+    if execution.get("runtime_action") == "CLOSE_POSITION":
+        return "runtime_close_without_reason", "position_runtime"
+    return "exchange_or_external_close", "trade_history_reconciliation"
+
+
+def _maybe_backfill_position_open_time(record: Dict[str, Any], live_position: Dict[str, Any]) -> bool:
+    timestamp, timestamp_source = _position_open_timestamp(live_position)
+    if timestamp_source == "adoption_time":
+        return False
+
+    execution = record.setdefault("execution", {})
+    current_executed_at = execution.get("executed_at")
+    detected_at = execution.get("live_position_detected_at")
+    created_at = record.get("created_at")
+    if current_executed_at == timestamp and created_at == timestamp:
+        return False
+    if current_executed_at and current_executed_at != detected_at and current_executed_at != created_at:
+        return False
+
+    execution["executed_at"] = timestamp
+    record["created_at"] = timestamp
+    provenance = record.setdefault("provenance", {})
+    provenance["position_open_time_source"] = timestamp_source
+    _append_execution_event(record, "POSITION_OPEN_TIME_BACKFILLED", {
+        "executed_at": timestamp,
+        "source": timestamp_source,
+        "previous_executed_at": current_executed_at,
+        "previous_created_at": created_at,
+    })
+    return True
+
+
+def _trade_id_set(records: List[Dict[str, Any]]) -> Set[str]:
+    trade_ids: Set[str] = set()
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        execution = record.get("execution") or {}
+        for key in ("closed_trade_id", "exchange_order_id"):
+            value = execution.get(key)
+            if value:
+                trade_ids.add(str(value))
+        for event in execution.get("history", []) or []:
+            payload = event.get("payload") or {}
+            value = payload.get("trade_id")
+            if value:
+                trade_ids.add(str(value))
+    return trade_ids
+
+
+def _recent_unmatched_closed_trade(trade: Dict[str, Any], now: Optional[datetime] = None) -> bool:
+    exit_dt = _parse_dt(trade.get("exitTime"))
+    if exit_dt is None:
+        return False
+    now = now or datetime.now(timezone.utc)
+    return 0 <= (now - exit_dt).total_seconds() <= 72 * 3600
+
+
+def _record_sort_dt(record: Dict[str, Any]) -> datetime:
+    return (
+        _parse_dt(record.get("created_at"))
+        or _parse_dt((record.get("execution") or {}).get("executed_at"))
+        or _parse_dt((record.get("execution") or {}).get("closed_at"))
+        or datetime.min.replace(tzinfo=timezone.utc)
+    )
+
+
+def _closed_trade_decision_id(trade: Dict[str, Any]) -> str:
+    trade_id = str(trade.get("id") or "unknown")
+    symbol = _normalize_symbol(trade.get("symbol"))
+    side = _normalize_side(trade.get("type")).lower() or "unknown"
+    return f"unmatched_closed_{symbol}_{side}_{trade_id}"
+
+
+def _adopt_closed_trade(trade: Dict[str, Any]) -> Dict[str, Any]:
+    symbol_base = _normalize_symbol(trade.get("symbol"))
+    side = _normalize_side(trade.get("type"))
+    symbol = f"{symbol_base}-USDT"
+    entry_time = _trade_time_iso(trade.get("entryTime")) or _trade_time_iso(trade.get("exitTime")) or _iso_now()
+    exit_time = _trade_time_iso(trade.get("exitTime")) or trade.get("exitTime")
+    entry_price = _safe_float(trade.get("entryPrice"))
+    exit_price = _safe_float(trade.get("exitPrice"))
+    amount = _safe_float(trade.get("amount"))
+    trade_id = str(trade.get("id") or "")
+    execution_action = "OPEN_LONG" if side == "LONG" else "OPEN_SHORT"
+    close_reason = "unmatched_okx_closed_trade"
+    return {
+        "decisionId": _closed_trade_decision_id(trade),
+        "cycleId": "unmatched_closed_trade",
+        "symbol": symbol,
+        "timeframe": "4h",
+        "snapshot_timestamp": None,
+        "positionState": "closed",
+        "snapshot": {
+            "symbol": symbol,
+            "cycleId": "unmatched_closed_trade",
+            "timeframe": "4h",
+            "market_snapshot": {"price": exit_price},
+            "position_snapshot": {"position_side": side},
+        },
+        "candidate": {
+            "symbol": symbol,
+            "cycleId": "unmatched_closed_trade",
+            "timeframe": "4h",
+            "candidate_proposals": [{
+                "strategy_family": "DIRECTIONAL",
+                "decision_intent": side,
+                "trigger_source": "UNMATCHED_CLOSED_TRADE",
+                "rationale": "OKX closed trade reconciled without a matching local decision record",
+                "entry_type": "MARKET",
+                "proposed_entry_price": entry_price,
+                "proposed_sl_price": None,
+                "proposed_tp_price": None,
+                "reference_values": {},
+                "invalidation_basis": "historical closed trade; original decision record unavailable",
+                "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+            }],
+        },
+        "ruleEvaluation": {
+            "symbol": symbol,
+            "cycleId": "unmatched_closed_trade",
+            "stage": "closed_trade_reconciliation",
+            "passed": True,
+            "reason_codes": ["UNMATCHED_CLOSED_TRADE"],
+            "approved_candidates": [],
+            "rule_trace": [{"rule": "UNMATCHED_CLOSED_TRADE", "passed": True}],
+        },
+        "researchOutput": {
+            "symbol": symbol,
+            "cycleId": "unmatched_closed_trade",
+            "strategy_family": "DIRECTIONAL",
+            "selected_intent": side,
+            "selected_trigger_sources": ["UNMATCHED_CLOSED_TRADE"],
+            "thesis_strength": "UNKNOWN",
+            "holding_horizon": "UNKNOWN",
+            "thesis_change": "UNKNOWN",
+            "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
+            "provenance": {
+                "generation_mode": "closed_trade_reconciliation",
+                "llm_enabled": False,
+                "llm_attempted": False,
+                "llm_applied": False,
+            },
+        },
+        "riskReview": {
+            "symbol": symbol,
+            "cycleId": "unmatched_closed_trade",
+            "strategy_family": "DIRECTIONAL",
+            "approved": True,
+            "final_intent": side,
+            "approved_risk_fraction": 0.0,
+            "approved_position_size_usd": round(entry_price * amount, 2) if entry_price and amount else 0.0,
+            "leverage": _safe_float(trade.get("leverage"), 1.0),
+            "max_holding_bars": 0,
+            "execution_action": execution_action,
+            "next_position_state": "closed",
+            "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
+        },
+        "execution": {
+            "symbol": symbol,
+            "cycleId": "unmatched_closed_trade",
+            "strategy_family": "DIRECTIONAL",
+            "execution_action": execution_action,
+            "order_status": "CLOSED",
+            "sync_status": "CLOSED",
+            "closed_trade_id": trade_id,
+            "entry_type": "MARKET",
+            "proposed_entry_price": entry_price,
+            "avg_fill_price": entry_price,
+            "avg_exit_price": exit_price,
+            "filled_size": amount,
+            "requested_leverage": _safe_float(trade.get("leverage"), 1.0),
+            "executed_at": entry_time,
+            "closed_at": exit_time,
+            "realized_pnl": round(_safe_float(trade.get("pnl")), 2),
+            "realized_pnl_percent": round(_safe_float(trade.get("pnlPercent")), 2),
+            "position_side": side,
+            "protection_status": "CLOSED",
+            "runtime_reason": close_reason,
+            "close_reason": close_reason,
+            "close_reason_source": "unmatched_trade_history",
+            "history": [{
+                "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
+                "at": _iso_now(),
+                "payload": {
+                    "trade_id": trade_id,
+                    "reason": close_reason,
+                    "source": trade.get("reason") or "OKX trade_history",
+                    "entry_time": trade.get("entryTime"),
+                    "exit_time": trade.get("exitTime"),
+                    "entry_price": entry_price,
+                    "exit_price": exit_price,
+                    "pnl": round(_safe_float(trade.get("pnl")), 2),
+                    "pnl_percent": round(_safe_float(trade.get("pnlPercent")), 2),
+                },
+            }],
+        },
+        "evaluation": None,
+        "created_at": entry_time,
+        "updated_at": _iso_now(),
+        "provenance": {"source": "execution_reconciliation", "unmatched_closed_trade": True},
+    }
 
 
 def _normalize_grid_state(value: Any) -> str:
@@ -242,7 +481,7 @@ def _adopt_live_position(position: Dict[str, Any]) -> Dict[str, Any]:
     current_price = _safe_float(position.get("currentPrice"), entry_price)
     amount = _safe_float(position.get("amount") or position.get("pos") or position.get("size"))
     leverage = max(_safe_float(position.get("leverage"), 1.0), 1.0)
-    timestamp = position.get("timestamp") or now_iso
+    timestamp, timestamp_source = _position_open_timestamp(position)
     snapshot = _latest_snapshot_for_symbol(symbol)
     if not snapshot:
         snapshot = {
@@ -374,13 +613,18 @@ def _adopt_live_position(position: Dict[str, Any]) -> Dict[str, Any]:
                     "entry_price": entry_price,
                     "amount": amount,
                     "source": "portfolio_state.positions",
+                    "position_open_time_source": timestamp_source,
                 },
             }],
         },
         "evaluation": None,
         "created_at": timestamp,
         "updated_at": now_iso,
-        "provenance": {"source": "execution_reconciliation", "adopted_live_position": True},
+        "provenance": {
+            "source": "execution_reconciliation",
+            "adopted_live_position": True,
+            "position_open_time_source": timestamp_source,
+        },
     }
 
 
@@ -449,6 +693,8 @@ def run_execution_reconciliation() -> Dict[str, Any]:
 
         if live_position:
             managed_position_keys.add(_position_key(live_position))
+            if _maybe_backfill_position_open_time(record, live_position):
+                execution = record.get("execution") or execution
             if execution.get("order_status") != "FILLED":
                 execution["order_status"] = "FILLED"
                 execution["sync_status"] = "FILLED"
@@ -484,6 +730,7 @@ def run_execution_reconciliation() -> Dict[str, Any]:
             trade_id = str(closed_trade.get("id", ""))
             used_trade_ids.add(trade_id)
             if execution.get("closed_trade_id") != trade_id or execution.get("order_status") != "CLOSED":
+                close_reason, close_reason_source = _closed_reason_from_execution(execution)
                 execution["order_status"] = "CLOSED"
                 execution["sync_status"] = "CLOSED"
                 execution["closed_trade_id"] = trade_id
@@ -492,11 +739,17 @@ def run_execution_reconciliation() -> Dict[str, Any]:
                 execution["realized_pnl_percent"] = round(_safe_float(closed_trade.get("pnlPercent")), 2)
                 execution["avg_exit_price"] = _safe_float(closed_trade.get("exitPrice"), None)
                 execution["protection_status"] = "CLOSED"
+                execution["close_reason"] = close_reason
+                execution["close_reason_source"] = close_reason_source
                 record["positionState"] = "closed"
                 _append_execution_event(record, "EXECUTION_CLOSED_RECONCILED", {
                     "trade_id": trade_id,
                     "pnl": execution.get("realized_pnl"),
                     "pnl_percent": execution.get("realized_pnl_percent"),
+                    "reason": close_reason,
+                    "reason_source": close_reason_source,
+                    "runtime_action": execution.get("runtime_action"),
+                    "okx_reason": closed_trade.get("reason"),
                 })
 
         elif execution.get("order_status") == "FILLED":
@@ -547,7 +800,40 @@ def run_execution_reconciliation() -> Dict[str, Any]:
         records = adopted_records + records
         updated_count += len(adopted_records)
 
+    existing_trade_ids = _trade_id_set(records).union(used_trade_ids)
+    unmatched_closed_records: List[Dict[str, Any]] = []
+    existing_decision_ids = {str(record.get("decisionId") or "") for record in records if isinstance(record, dict)}
+    for trade in trade_history:
+        trade_id = str(trade.get("id") or "")
+        if not trade_id or trade_id in existing_trade_ids:
+            continue
+        if not _recent_unmatched_closed_trade(trade):
+            continue
+        unmatched = _adopt_closed_trade(trade)
+        decision_id = str(unmatched.get("decisionId") or "")
+        if decision_id in existing_decision_ids:
+            continue
+        unmatched_closed_records.append(unmatched)
+        existing_trade_ids.add(trade_id)
+        existing_decision_ids.add(decision_id)
+        actions.append({
+            "decisionId": unmatched.get("decisionId"),
+            "symbol": unmatched.get("symbol"),
+            "before": {"order_status": None, "sync_status": None},
+            "after": {
+                "order_status": "CLOSED",
+                "sync_status": "CLOSED",
+                "closed_trade_id": trade_id,
+                "unmatched_closed_trade": True,
+            },
+        })
+
+    if unmatched_closed_records:
+        records = unmatched_closed_records + records
+        updated_count += len(unmatched_closed_records)
+
     if records:
+        records = sorted(records, key=_record_sort_dt, reverse=True)
         db.save_data("trade_decision_records", records)
         db.save_data("latest_trade_decision_record", records[0])
     return {

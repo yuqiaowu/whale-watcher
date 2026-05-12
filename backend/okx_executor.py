@@ -15,6 +15,15 @@ load_dotenv()
 HTTP_TIMEOUT = (5, 10) # Default timeout for all API requests
 
 
+def _okx_ms_to_iso(value):
+    try:
+        if not value:
+            return None
+        return datetime.datetime.fromtimestamp(int(value) / 1000, datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    except Exception:
+        return None
+
+
 class OKXExecutor:
     """
     Handles execution of trades on OKX V5 API.
@@ -878,6 +887,8 @@ class OKXExecutor:
                     "margin": p.get("margin", 0),
                     "stopLoss": p.get("stop_loss"),    # Return None if missing, Frontend handles '---'
                     "takeProfit": p.get("take_profit"), # Return None if missing
+                    "timestamp": p.get("timestamp"),
+                    "positionOpenedAt": p.get("timestamp"),
                     "name": p["symbol"] # Simple fallback
                 })
             return mapped
@@ -933,6 +944,8 @@ class OKXExecutor:
                 # Retrieve SL/TP from Algo Map
                 sl = algo_map.get(pos["instId"], {}).get("sl")
                 tp = algo_map.get(pos["instId"], {}).get("tp")
+                opened_at = _okx_ms_to_iso(pos.get("cTime"))
+                updated_at = _okx_ms_to_iso(pos.get("uTime"))
 
                 mapped_real.append({
                     "symbol": sym,
@@ -947,6 +960,11 @@ class OKXExecutor:
                     "margin": float(pos.get("margin", 0) or pos.get("notionalUsd", 0)) / float(pos.get("lever", 1)), # Approx
                     "stopLoss": sl,
                     "takeProfit": tp,
+                    "timestamp": opened_at,
+                    "positionOpenedAt": opened_at,
+                    "positionUpdatedAt": updated_at,
+                    "rawPositionCreatedTime": pos.get("cTime"),
+                    "rawPositionUpdatedTime": pos.get("uTime"),
                     "name": sym # Simple Name
                 })
         return mapped_real

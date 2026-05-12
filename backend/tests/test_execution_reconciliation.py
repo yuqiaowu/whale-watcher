@@ -89,7 +89,36 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(record["execution"]["execution_action"], "OPEN_SHORT")
         self.assertEqual(record["execution"]["order_status"], "FILLED")
         self.assertEqual(record["execution"]["sync_status"], "OPEN")
+        self.assertEqual(record["execution"]["executed_at"], "2026-04-30T10:00:00Z")
+        self.assertEqual(record["provenance"]["position_open_time_source"], "timestamp")
         self.assertTrue(any(event["type"] == "LIVE_POSITION_ADOPTED" for event in record["execution"]["history"]))
+
+    def test_adopts_live_position_using_raw_exchange_created_time(self):
+        store = {
+            "trade_decision_records": [],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "ETH",
+                        "type": "short",
+                        "entryPrice": 2333.38,
+                        "currentPrice": 2311.68,
+                        "amount": 0.119,
+                        "leverage": 2,
+                        "rawPositionCreatedTime": "1778496000000",
+                    }
+                ]
+            },
+            "trade_history": [],
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db):
+            er.run_execution_reconciliation()
+
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["execution"]["executed_at"], "2026-05-11T10:40:00Z")
+        self.assertEqual(record["created_at"], "2026-05-11T10:40:00Z")
+        self.assertEqual(record["provenance"]["position_open_time_source"], "rawPositionCreatedTime")
 
     def test_does_not_adopt_live_position_already_managed_by_open_record(self):
         store = {
@@ -130,6 +159,51 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(result["record_count"], 1)
         self.assertEqual(len(fake_db.store["trade_decision_records"]), 1)
         self.assertEqual(fake_db.store["trade_decision_records"][0]["decisionId"], "d1")
+
+    def test_backfills_existing_adopted_record_open_time_from_live_position(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "adopted_eth",
+                    "cycleId": "cycle_1",
+                    "symbol": "ETH-USDT",
+                    "created_at": "2026-05-12T04:23:44Z",
+                    "positionState": "entered",
+                    "riskReview": {"approved": True, "final_intent": "SHORT"},
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "executed_at": "2026-05-12T04:23:44Z",
+                        "live_position_detected_at": "2026-05-12T04:23:44Z",
+                        "history": [],
+                    },
+                    "provenance": {"adopted_live_position": True},
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "ETH",
+                        "type": "short",
+                        "entryPrice": 2333.38,
+                        "amount": 0.119,
+                        "rawPositionCreatedTime": "1778496000000",
+                    }
+                ]
+            },
+            "trade_history": [],
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db):
+            result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 1)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["created_at"], "2026-05-11T10:40:00Z")
+        self.assertEqual(record["execution"]["executed_at"], "2026-05-11T10:40:00Z")
+        self.assertEqual(record["provenance"]["position_open_time_source"], "rawPositionCreatedTime")
+        self.assertTrue(any(event["type"] == "POSITION_OPEN_TIME_BACKFILLED" for event in record["execution"]["history"]))
 
     def test_marks_grid_bot_as_running(self):
         store = {
@@ -326,7 +400,86 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(record["execution"]["sync_status"], "CLOSED")
         self.assertEqual(record["execution"]["closed_trade_id"], "t1")
         self.assertEqual(record["execution"]["realized_pnl"], 125.0)
+        self.assertEqual(record["execution"]["close_reason"], "exchange_or_external_close")
+        self.assertEqual(record["execution"]["close_reason_source"], "trade_history_reconciliation")
+        self.assertEqual(record["execution"]["history"][-1]["payload"]["reason"], "exchange_or_external_close")
         self.assertEqual(record["positionState"], "closed")
+
+    def test_closed_trade_reconciliation_preserves_runtime_reason(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "d3",
+                    "cycleId": "cycle_1",
+                    "symbol": "ETH-USDT",
+                    "created_at": "2026-04-13T08:00:00Z",
+                    "riskReview": {"approved": True, "final_intent": "SHORT"},
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "runtime_action": "CLOSE_POSITION",
+                        "runtime_reason": "max_holding_profit_take",
+                        "history": [],
+                    },
+                }
+            ],
+            "portfolio_state": {"positions": []},
+            "trade_history": [
+                {
+                    "id": "t2",
+                    "symbol": "ETH",
+                    "type": "short",
+                    "pnl": 10.0,
+                    "pnlPercent": 1.0,
+                    "exitPrice": 2300.0,
+                    "exitTime": "2026-04-13 12:00:00",
+                    "reason": "OKX Real Trade",
+                }
+            ],
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db):
+            er.run_execution_reconciliation()
+
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["execution"]["close_reason"], "max_holding_profit_take")
+        self.assertEqual(record["execution"]["close_reason_source"], "position_runtime")
+        self.assertEqual(record["execution"]["history"][-1]["payload"]["okx_reason"], "OKX Real Trade")
+
+    def test_recent_unmatched_closed_trade_gets_audit_record(self):
+        with patch.object(er, "_iso_now", return_value="2026-05-12T05:00:00Z"):
+            store = {
+                "trade_decision_records": [],
+                "portfolio_state": {"positions": []},
+                "trade_history": [
+                    {
+                        "id": "recent_t1",
+                        "symbol": "DOGE",
+                        "type": "short",
+                        "entryPrice": 0.11,
+                        "exitPrice": 0.1099,
+                        "amount": 2500,
+                        "leverage": 2,
+                        "pnl": 3.25,
+                        "pnlPercent": 2.34,
+                        "entryTime": "2026-05-11 16:08:17",
+                        "exitTime": "2026-05-12 04:11:23",
+                        "reason": "OKX Real Trade",
+                    }
+                ],
+            }
+            fake_db = FakeDB(store)
+            with patch.object(er, "db", fake_db):
+                result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 1)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["decisionId"], "unmatched_closed_DOGE_short_recent_t1")
+        self.assertEqual(record["positionState"], "closed")
+        self.assertEqual(record["execution"]["closed_trade_id"], "recent_t1")
+        self.assertEqual(record["execution"]["close_reason"], "unmatched_okx_closed_trade")
+        self.assertTrue(record["provenance"]["unmatched_closed_trade"])
 
 
 if __name__ == "__main__":
