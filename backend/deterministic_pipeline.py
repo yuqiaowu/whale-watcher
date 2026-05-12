@@ -2637,12 +2637,12 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
     if research_output:
         if research_output.get("thesis_strength") == "LOW":
             approved_position_size_usd *= 0.5
-            leverage = 1.0 if not is_grid_candidate else min(leverage, 2.0)
+            leverage = 2.0 if not is_grid_candidate else min(leverage, 2.0)
             max_holding_bars = min(max_holding_bars, 1)
             review_note = "research flagged low thesis strength; reduced size and leverage"
         elif research_output.get("thesis_strength") == "MEDIUM":
             approved_position_size_usd *= 0.75
-            leverage = 2.0 if not is_grid_candidate else min(leverage, 2.5)
+            leverage = 3.0 if not is_grid_candidate else min(leverage, 2.5)
             max_holding_bars = min(max_holding_bars, 2)
             review_note = "research flagged medium thesis strength; reduced size and duration"
 

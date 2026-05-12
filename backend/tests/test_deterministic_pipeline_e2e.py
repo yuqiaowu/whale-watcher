@@ -1518,6 +1518,9 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(3, default_review["max_holding_bars"])
         self.assertEqual(2, medium_review["max_holding_bars"])
         self.assertEqual(1, low_review["max_holding_bars"])
+        self.assertEqual(5.0, default_review["leverage"])
+        self.assertEqual(3.0, medium_review["leverage"])
+        self.assertEqual(2.0, low_review["leverage"])
 
     def test_e2_uses_percentile_not_raw_small_score_scale(self):
         snapshot = {
