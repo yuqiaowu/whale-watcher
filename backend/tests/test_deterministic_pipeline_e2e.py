@@ -1469,6 +1469,56 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(risk_review["approved_position_size_usd"], 40.0)
         self.assertEqual(abs(100 - 150) / 100 * risk_review["approved_position_size_usd"], 20.0)
 
+    def test_directional_holding_bars_are_capped_by_thesis_strength(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "decision_ready_features": {"macro_mode": "MIXED"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {
+                "overall_state": "single_signal",
+                "has_directional_conflict": False,
+                "long_count": 0,
+                "short_count": 1,
+                "resonance_groups": {"LONG": [], "SHORT": ["ModelDecision_LLM"]},
+                "approved_groups": {"LONG": [], "SHORT": ["ModelDecision_LLM"]},
+                "approved_resonance_strength": 1,
+            },
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "model short",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 105,
+                    "proposed_tp_price": 90,
+                    "reference_values": {},
+                    "invalidation_basis": "invalid",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                },
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
+            default_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+            medium_review = dp._build_risk_review_with_research(
+                snapshot,
+                rule_evaluation,
+                {"selected_intent": "SHORT", "thesis_strength": "MEDIUM"},
+            )
+            low_review = dp._build_risk_review_with_research(
+                snapshot,
+                rule_evaluation,
+                {"selected_intent": "SHORT", "thesis_strength": "LOW"},
+            )
+
+        self.assertEqual(4, default_review["max_holding_bars"])
+        self.assertEqual(3, medium_review["max_holding_bars"])
+        self.assertEqual(2, low_review["max_holding_bars"])
+
     def test_e2_uses_percentile_not_raw_small_score_scale(self):
         snapshot = {
             "symbol": "ETH-USDT",

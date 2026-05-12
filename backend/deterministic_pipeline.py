@@ -2607,7 +2607,7 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
             requested_size_usd=approved_position_size_usd,
         )
         leverage = 3.0
-        max_holding_bars = 3 if snapshot["decision_ready_features"].get("macro_mode") == "EVENT_DRIVEN" else 6
+        max_holding_bars = 3 if snapshot["decision_ready_features"].get("macro_mode") == "EVENT_DRIVEN" else 4
     review_note = (
         f"approved from {candidate['trigger_source']} with deterministic risk defaults; "
         f"max loss capped at {round(approved_risk_fraction * 100, 1)}% of equity"
@@ -2643,7 +2643,7 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
         elif research_output.get("thesis_strength") == "MEDIUM":
             approved_position_size_usd *= 0.75
             leverage = 2.0 if not is_grid_candidate else min(leverage, 2.5)
-            max_holding_bars = min(max_holding_bars, 4)
+            max_holding_bars = min(max_holding_bars, 3)
             review_note = "research flagged medium thesis strength; reduced size and duration"
 
         if research_output.get("holding_horizon") == "SHORT":
