@@ -3,9 +3,9 @@
   "cycleId": "cycle_2026-05-12_1600",
   "symbol": "BNB-USDT",
   "timeframe": "4h",
-  "snapshot_timestamp": 1778608020,
-  "snapshot_time": "2026-05-12T17:47:00Z",
-  "snapshot_time_local": "2026-05-13T01:47:00+0800",
+  "snapshot_timestamp": 1778609552,
+  "snapshot_time": "2026-05-12T18:12:32Z",
+  "snapshot_time_local": "2026-05-13T02:12:32+0800",
   "local_timezone": "Asia/Shanghai",
   "positionState": "candidate",
   "snapshot": {
@@ -13,21 +13,21 @@
     "symbol": "BNB-USDT",
     "cycleId": "cycle_2026-05-12_1600",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778608020,
-    "snapshot_time": "2026-05-12T17:47:00Z",
-    "snapshot_time_local": "2026-05-13T01:47:00+0800",
+    "snapshot_timestamp": 1778609552,
+    "snapshot_time": "2026-05-12T18:12:32Z",
+    "snapshot_time_local": "2026-05-13T02:12:32+0800",
     "local_timezone": "Asia/Shanghai",
     "market_snapshot": {
-      "price": 654.8,
+      "price": 656.5,
       "price_source": "market_price",
       "stale_market_price_replaced": false,
-      "raw_market_price": 654.8,
+      "raw_market_price": 656.5,
       "reference_close_price": 651.9,
-      "change_24h": -2.283241307267582,
+      "change_24h": -2.0295478286822894,
       "rsi_4h": 48.92602568210908,
       "rsi_delta_4h": -9.889766327785509,
       "adx_14": 35.81988021948494,
-      "volume_ratio": 1.3265808818021756,
+      "volume_ratio": 1.3405325245619808,
       "bb_width": 0.0413695549625841,
       "bb_pct_b": 0.3731148151190182,
       "bb_mid_slope_pct": 0.0016403698843347452,
@@ -38,13 +38,13 @@
       "range_edge_close_count": 0,
       "wick_ratio_lower": 13.19,
       "wick_ratio_upper": 9.03,
-      "funding_rate": 4.14354051484e-05,
-      "funding_zscore": -0.95,
-      "oi_now": 54586046.56399999,
+      "funding_rate": 5.01887333456e-05,
+      "funding_zscore": -0.7,
+      "oi_now": 54727763.544999994,
       "delta_oi_24h_percent": 5.09465498496251,
-      "natr_percent": 1.2157077361904545,
-      "whale_ls_ratio": 0.8631578947368421,
-      "whale_pos_ratio": 0.9335940351368698,
+      "natr_percent": 1.2310560286372687,
+      "whale_ls_ratio": 0.893048128342246,
+      "whale_pos_ratio": 0.9352595777559872,
       "atr_14": 9.292857142857152,
       "trigger_candle_open": 663.1,
       "trigger_candle_high": 664.4,
@@ -88,56 +88,58 @@
       "liquidation_short_usd": 29162.962999999996,
       "liquidation_long_to_volume_4h": 0.0042529537713928,
       "liquidation_short_to_volume_4h": 0.0015809003853806,
-      "funding_rate": 4.14354051484e-05,
-      "funding_zscore": -0.95,
-      "oi_now": 54586046.56399999,
+      "funding_rate": 5.01887333456e-05,
+      "funding_zscore": -0.7,
+      "oi_now": 54727763.544999994,
       "delta_oi_24h_percent": 5.09465498496251,
-      "qlib_relative_score_8h": 0.029,
+      "qlib_relative_score_8h": 0.0583,
       "qlib_rank_8h": 2,
       "qlib_percentile_8h": 0.75,
-      "p_up_8h": 0.4963,
-      "p_down_8h": 0.4561,
+      "p_up_8h": 0.5139,
+      "p_down_8h": 0.4385,
       "p_flat_8h": 0.0476,
-      "confidence_8h": 0.4963,
+      "confidence_8h": 0.5139,
       "qlib_data_fresh": true,
       "qlib_freshness_reasons": []
     },
     "macro_snapshot": {
       "event_type": "FED_SPEECH",
       "policy_stance": "HAWKISH",
-      "market_impact": "RISK_OFF",
+      "market_impact": "MIXED",
       "impact_horizon": "MULTI_DAY",
       "crypto_relevance": "HIGH",
       "key_tags": [
-        "CPI_HOT",
         "FED_HAWKISH",
-        "LIQUIDITY_CONTRACTING"
+        "LIQUIDITY_CONTRACTING",
+        "RISK_OFF_NEWS",
+        "RISK_ON_NEWS"
       ],
-      "brief_rationale": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: hot CPI, hawkish Fed speeches, negative stablecoin flow, and rising rate hike expectations. No contradictory evidence; blended conclusion reinforces consensus.",
-      "news_summary": "Hot CPI and hawkish Fed speeches dominate, with stablecoin outflows and rising rate hike expectations pressuring risk assets.",
+      "brief_rationale": "Both deterministic and LLM views agree on hawkish Fed and liquidity contraction, but the LLM highlights offsetting crypto-positive news (CLARITY Act, institutional adoption). The structured facts show mixed signals: VIX up 5.29% over 5 days (risk-off), but DXY down and stablecoin flow negative but small relative to market cap. The student loan default headline adds to risk-off sentiment, while crypto-specific developments provide a counterbalance. Thus, a blended MIXED impact is most appropriate.",
+      "news_summary": "Student loan defaults and high CPI data reinforce hawkish Fed expectations, while CLARITY Act and crypto adoption news provide mixed signals.",
       "classification_basis": {
         "fear_greed_index": 49.0,
         "fear_greed_state": "NEUTRAL",
         "fear_greed_change_5d": null,
         "fed_implied_rate": 3.62,
         "fed_change_5d_bps": -2.0,
-        "usdjpy_level": 157.691,
+        "usdjpy_level": 157.703,
         "usdjpy_change_5d_pct": 0.32,
-        "dxy_level": 98.38,
-        "dxy_change_5d_pct": -0.1,
-        "vix_level": 18.29,
-        "vix_change_1d_pct": -0.49,
-        "vix_change_5d_pct": 5.24,
-        "us10y_level": 4.45,
-        "us10y_change_5d_pct": 0.88,
+        "dxy_level": 98.36,
+        "dxy_change_5d_pct": -0.12,
+        "vix_level": 18.3,
+        "vix_change_1d_pct": -0.44,
+        "vix_change_5d_pct": 5.29,
+        "us10y_level": 4.46,
+        "us10y_change_5d_pct": 0.93,
         "global_stable_flow": -516541410.1139221,
         "global_stable_market_cap": 267027396648.3628,
         "global_stable_flow_ratio_pct": -0.19344135343315874
       },
       "key_events": [
-        "CPI_HOT",
         "FED_HAWKISH",
-        "LIQUIDITY_CONTRACTING"
+        "LIQUIDITY_CONTRACTING",
+        "RISK_OFF_NEWS",
+        "RISK_ON_NEWS"
       ],
       "event_facts": {
         "fear_greed_index": 49.0,
@@ -145,15 +147,15 @@
         "fear_greed_change_5d": null,
         "fed_implied_rate": 3.62,
         "fed_change_5d_bps": -2.0,
-        "usdjpy_level": 157.691,
+        "usdjpy_level": 157.703,
         "usdjpy_change_5d_pct": 0.32,
-        "dxy_level": 98.38,
-        "dxy_change_5d_pct": -0.1,
-        "vix_level": 18.29,
-        "vix_change_1d_pct": -0.49,
-        "vix_change_5d_pct": 5.24,
-        "us10y_level": 4.45,
-        "us10y_change_5d_pct": 0.88,
+        "dxy_level": 98.36,
+        "dxy_change_5d_pct": -0.12,
+        "vix_level": 18.3,
+        "vix_change_1d_pct": -0.44,
+        "vix_change_5d_pct": 5.29,
+        "us10y_level": 4.46,
+        "us10y_change_5d_pct": 0.93,
         "global_stable_flow": -516541410.1139221,
         "global_stable_market_cap": 267027396648.3628,
         "global_stable_flow_ratio_pct": -0.19344135343315874
@@ -199,14 +201,6 @@
             "published": "2026-05-12T15:58:25Z",
             "source": "https://www.investors.com/news/clarity-act-text-senate-banking-committee-markup-hearing/?src=A00220&yptr=yahoo",
             "sentiment": "Neutral"
-          },
-          {
-            "title": "Markets raise chances for a Fed rate hike following hot inflation report",
-            "bucket": "macro",
-            "score": 15,
-            "published": "Tue, 12 May 2026 17:33:45 GMT",
-            "source": "https://www.cnbc.com/2026/05/12/markets-raise-chances-for-a-fed-rate-hike-following-hot-inflation-report.html",
-            "sentiment": "Bearish"
           },
           {
             "title": "AI super rally has retail investors acting the most aggressive since trading frenzy during Covid",
@@ -255,9 +249,7 @@
             "published": "Mon, 11 May 2026 22:17:27 +0000",
             "source": "https://cointelegraph.com/markets/key-reasons-ether-is-stuck-below-24k?utm_source=rss_feed&utm_medium=rss_tag_ethereum&utm_campaign=rss_partner_inbound",
             "sentiment": "Bearish"
-          }
-        ],
-        "dropped": [
+          },
           {
             "title": "What Is Strategy (MSTR)? The Bitcoin Treasury Company",
             "bucket": "general",
@@ -265,7 +257,9 @@
             "published": "Tue, 12 May 2026 17:04:02 +0000",
             "source": "https://decrypt.co/resources/what-is-strategy-microstrategy-mstr-the-bitcoin-treasury-company",
             "sentiment": "Neutral"
-          },
+          }
+        ],
+        "dropped": [
           {
             "title": "Four signs that Bitcoin has recovered to \u2018full\u2019 bullish momentum",
             "bucket": "bitcoin",
@@ -417,6 +411,14 @@
             "published": "Tue, 12 May 2026 13:56:05 +0000",
             "source": "https://cointelegraph.com/markets/bitcoin-bear-down-13m-btc-short-analysts-predict-new-bull-market?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
             "sentiment": "Bearish"
+          },
+          {
+            "title": "Ethereum Foundation hits \u2018Glamsterdam\u2019 milestones, names new protocol leads",
+            "bucket": "ethereum",
+            "score": 9,
+            "published": "Tue, 12 May 2026 07:06:20 +0000",
+            "source": "https://cointelegraph.com/news/ethereum-foundation-hits-glamsterdam-milestones-names-new-protocol-leads?utm_source=rss_feed&utm_medium=rss_tag_ethereum&utm_campaign=rss_partner_inbound",
+            "sentiment": "Bullish"
           }
         ],
         "candidate_count": 40
@@ -437,15 +439,14 @@
           "status": "parsed",
           "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
           "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-          "raw_response_preview": "{ \"news_summary\": \"Hot CPI and hawkish Fed speeches dominate, with stablecoin outflows and rising rate hike expectations pressuring risk assets.\", \"brief_rationale\": \"CPI hot, Fed speakers hawkish, stablecoin flow negative, and markets pricing rate hikes all point to risk-off sentiment.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"CPI_HOT\", \"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\"] }",
+          "raw_response_preview": "{ \"news_summary\": \"Student loan defaults and high CPI data reinforce hawkish Fed expectations, while CLARITY Act and crypto adoption news provide mixed signals.\", \"brief_rationale\": \"Dominant macro news (student loan defaults, high CPI) and upcoming FOMC speeches point to continued hawkish Fed stance, which is negative for risk assets. However, positive crypto regulatory developments (CLARITY Act) and institutional adoption (Elliptic, MSTR) partially offset. Overall, the macro headwinds outweigh the crypto-specific positives.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\"] }",
           "parsed_response": {
-            "news_summary": "Hot CPI and hawkish Fed speeches dominate, with stablecoin outflows and rising rate hike expectations pressuring risk assets.",
-            "brief_rationale": "CPI hot, Fed speakers hawkish, stablecoin flow negative, and markets pricing rate hikes all point to risk-off sentiment.",
+            "news_summary": "Student loan defaults and high CPI data reinforce hawkish Fed expectations, while CLARITY Act and crypto adoption news provide mixed signals.",
+            "brief_rationale": "Dominant macro news (student loan defaults, high CPI) and upcoming FOMC speeches point to continued hawkish Fed stance, which is negative for risk assets. However, positive crypto regulatory developments (CLARITY Act) and institutional adoption (Elliptic, MSTR) partially offset. Overall, the macro headwinds outweigh the crypto-specific positives.",
             "market_impact": "RISK_OFF",
             "impact_horizon": "MULTI_DAY",
             "crypto_relevance": "HIGH",
             "key_tags": [
-              "CPI_HOT",
               "FED_HAWKISH",
               "LIQUIDITY_CONTRACTING"
             ]
@@ -456,16 +457,17 @@
       "final_macro_decision": {
         "source": "llm_adjudicated",
         "selected_view": "blended",
-        "market_impact": "RISK_OFF",
+        "market_impact": "MIXED",
         "impact_horizon": "MULTI_DAY",
         "crypto_relevance": "HIGH",
         "key_tags": [
-          "CPI_HOT",
           "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING"
+          "LIQUIDITY_CONTRACTING",
+          "RISK_OFF_NEWS",
+          "RISK_ON_NEWS"
         ],
         "confidence": "MEDIUM",
-        "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: hot CPI, hawkish Fed speeches, negative stablecoin flow, and rising rate hike expectations. No contradictory evidence; blended conclusion reinforces consensus.",
+        "reason": "Both deterministic and LLM views agree on hawkish Fed and liquidity contraction, but the LLM highlights offsetting crypto-positive news (CLARITY Act, institutional adoption). The structured facts show mixed signals: VIX up 5.29% over 5 days (risk-off), but DXY down and stablecoin flow negative but small relative to market cap. The student loan default headline adds to risk-off sentiment, while crypto-specific developments provide a counterbalance. Thus, a blended MIXED impact is most appropriate.",
         "deterministic_view": {
           "event_type": "FED_SPEECH",
           "policy_stance": "HAWKISH",
@@ -473,7 +475,6 @@
           "impact_horizon": "MULTI_DAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
-            "CPI_HOT",
             "FED_HAWKISH",
             "LIQUIDITY_CONTRACTING"
           ],
@@ -485,12 +486,11 @@
           "impact_horizon": "MULTI_DAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
-            "CPI_HOT",
             "FED_HAWKISH",
             "LIQUIDITY_CONTRACTING"
           ],
-          "news_summary": "Hot CPI and hawkish Fed speeches dominate, with stablecoin outflows and rising rate hike expectations pressuring risk assets.",
-          "brief_rationale": "CPI hot, Fed speakers hawkish, stablecoin flow negative, and markets pricing rate hikes all point to risk-off sentiment."
+          "news_summary": "Student loan defaults and high CPI data reinforce hawkish Fed expectations, while CLARITY Act and crypto adoption news provide mixed signals.",
+          "brief_rationale": "Dominant macro news (student loan defaults, high CPI) and upcoming FOMC speeches point to continued hawkish Fed stance, which is negative for risk assets. However, positive crypto regulatory developments (CLARITY Act) and institutional adoption (Elliptic, MSTR) partially offset. Overall, the macro headwinds outweigh the crypto-specific positives."
         },
         "adjudication_audit": {
           "enabled": true,
@@ -498,20 +498,21 @@
           "model": "deepseek-chat",
           "status": "parsed",
           "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"2.6 million student loan borrowers fell into default in early 2026: New York Fed\", \"Bitcoin digests highest US CPI since 2023 as Fed rate hike woes return\", \"[USD] FOMC Member Williams Speaks (Low)\", \"[USD] FOMC Member Hammack Speaks (Low)\", \"Clarity Act Text Reveals Stablecoin Rules, Crypto Provisions Ahead Of Hearing\", \"Market...",
-          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_OFF\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"CPI_HOT\", \"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: hot CPI, hawkish Fed speeches, negative stablecoin flow, and rising rate hike expectations. No contradictory evidence; blended conclusion reinforces consensus.\" }",
+          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"2.6 million student loan borrowers fell into default in early 2026: New York Fed\", \"Bitcoin digests highest US CPI since 2023 as Fed rate hike woes return\", \"[USD] FOMC Member Williams Speaks (Low)\", \"[USD] FOMC Member Hammack Speaks (Low)\", \"Clarity Act Text Reveals Stablecoin Rules, Crypto Provisions Ahead Of Hearing\", \"AI sup...",
+          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"RISK_OFF_NEWS\", \"RISK_ON_NEWS\"], \"confidence\": 0.7, \"reason\": \"Both deterministic and LLM views agree on hawkish Fed and liquidity contraction, but the LLM highlights offsetting crypto-positive news (CLARITY Act, institutional adoption). The structured facts show mixed signals: VIX up 5.29% over 5 days (risk-off), but DXY down and stablecoin flow negative but small relative to market cap. The student loan default headline adds to risk-off sentiment, while crypto-specific developments provide a counterbalance. Thus, a blended MIXED impact is most appropriate.\" }",
           "parsed_response": {
             "selected_view": "blended",
-            "final_market_impact": "RISK_OFF",
+            "final_market_impact": "MIXED",
             "final_impact_horizon": "MULTI_DAY",
             "final_crypto_relevance": "HIGH",
             "final_key_tags": [
-              "CPI_HOT",
               "FED_HAWKISH",
-              "LIQUIDITY_CONTRACTING"
+              "LIQUIDITY_CONTRACTING",
+              "RISK_OFF_NEWS",
+              "RISK_ON_NEWS"
             ],
-            "confidence": 0.85,
-            "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: hot CPI, hawkish Fed speeches, negative stablecoin flow, and rising rate hike expectations. No contradictory evidence; blended conclusion reinforces consensus."
+            "confidence": 0.7,
+            "reason": "Both deterministic and LLM views agree on hawkish Fed and liquidity contraction, but the LLM highlights offsetting crypto-positive news (CLARITY Act, institutional adoption). The structured facts show mixed signals: VIX up 5.29% over 5 days (risk-off), but DXY down and stablecoin flow negative but small relative to market cap. The student loan default headline adds to risk-off sentiment, while crypto-specific developments provide a counterbalance. Thus, a blended MIXED impact is most appropriate."
           },
           "error": null
         }
@@ -520,17 +521,17 @@
       "macro_mode": "RISK_OFF",
       "macro_horizon": "MULTI_DAY",
       "macro_permission": "ALLOW_SHORT",
-      "macro_impact_score": -13,
+      "macro_impact_score": -9,
       "macro_bias_tier": "STRONG_RISK_OFF",
       "fear_greed_index": 49.0,
       "fear_greed_state": "NEUTRAL",
       "fear_greed_change_5d": null,
-      "vix_level": 18.29,
-      "vix_change_1d_pct": -0.49,
-      "vix_change_5d_pct": 5.24,
-      "dxy_level": 98.38,
+      "vix_level": 18.3,
+      "vix_change_1d_pct": -0.44,
+      "vix_change_5d_pct": 5.29,
+      "dxy_level": 98.36,
       "dxy_trend": "FLAT",
-      "usdjpy_level": 157.691,
+      "usdjpy_level": 157.703,
       "usdjpy_trend": "UP",
       "fed_event_risk": "HIGH",
       "macro_event_window": true,
@@ -541,19 +542,19 @@
         "[USD] FOMC Member Williams Speaks (Low)",
         "[USD] FOMC Member Hammack Speaks (Low)",
         "Clarity Act Text Reveals Stablecoin Rules, Crypto Provisions Ahead Of Hearing",
-        "Markets raise chances for a Fed rate hike following hot inflation report",
         "AI super rally has retail investors acting the most aggressive since trading frenzy during Covid",
         "Elliptic Raises $120 Million in Series D Led by One Peak and Nasdaq",
         "Senate Republicans Rebut CLARITY Act Criticism Before Markup",
         "Michael Saylor Says CLARITY Act Could Unlock BTC, MSTR, and STRC Markets",
         "Bitcoin may avoid historic bear market losses as ETF flows grow, says analyst",
-        "Ether price is still stuck below $2.4K: Here is why"
+        "Ether price is still stuck below $2.4K: Here is why",
+        "What Is Strategy (MSTR)? The Bitcoin Treasury Company"
       ]
     },
     "qlib_freshness": {
       "fresh": true,
       "expected_completed_bar": "2026-05-12 12:00:00",
-      "payload_as_of": "2026-05-12 17:41:18",
+      "payload_as_of": "2026-05-12 18:07:07",
       "model_trained_at": null,
       "model_train_end": null,
       "model_is_fresh": null,
@@ -589,17 +590,17 @@
       "regime_1d": "BULL",
       "major_trend_1d": "BEAR",
       "major_trend_source": "PRICE_VS_SMA200",
-      "sma200_distance_pct": -15.3719,
+      "sma200_distance_pct": -15.1522,
       "short_term_major_trend_alignment": "CONFLICT",
       "macro_mode": "RISK_OFF",
       "macro_horizon": "MULTI_DAY",
       "macro_permission": "ALLOW_SHORT",
       "macro_bias_tier": "STRONG_RISK_OFF",
-      "macro_impact_score": -13.0,
+      "macro_impact_score": -9.0,
       "fear_greed_change_5d": null,
-      "vix_level": 18.29,
-      "vix_change_1d_pct": -0.49,
-      "vix_change_5d_pct": 5.24,
+      "vix_level": 18.3,
+      "vix_change_1d_pct": -0.44,
+      "vix_change_5d_pct": 5.29,
       "event_risk_active": true,
       "usd_strength_flag": false,
       "yen_stress_flag": false,
@@ -611,16 +612,16 @@
       "flow_signal_mixed": false,
       "flow_support_long": false,
       "flow_support_short": false,
-      "funding_rate": 4.14354051484e-05,
-      "funding_zscore": -0.95,
-      "oi_now": 54586046.56399999,
+      "funding_rate": 5.01887333456e-05,
+      "funding_zscore": -0.7,
+      "oi_now": 54727763.544999994,
       "delta_oi_24h_percent": 5.09465498496251,
-      "qlib_relative_score_8h": 0.029,
+      "qlib_relative_score_8h": 0.0583,
       "qlib_percentile_8h": 0.75,
-      "p_up_8h": 0.4963,
-      "p_down_8h": 0.4561,
+      "p_up_8h": 0.5139,
+      "p_down_8h": 0.4385,
       "p_flat_8h": 0.0476,
-      "confidence_8h": 0.4963,
+      "confidence_8h": 0.5139,
       "qlib_direction": "FLAT",
       "qlib_direction_confident": false,
       "qlib_data_fresh": true,
@@ -633,7 +634,7 @@
       "range_lower_bound": 648.3,
       "range_upper_bound": 666.6,
       "range_width_pct": 0.0278,
-      "price_position_in_range": 0.3552,
+      "price_position_in_range": 0.4481,
       "grid_mode": "ARITHMETIC",
       "grid_count": 3,
       "grid_spacing_pct": 0.0093,
@@ -671,18 +672,18 @@
     "symbol": "BNB-USDT",
     "cycleId": "cycle_2026-05-12_1600",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778608020,
+    "snapshot_timestamp": 1778609552,
     "technical": {
-      "current_price": 654.8,
+      "current_price": 656.5,
       "rsi14": 48.92602568210908,
       "rsi_source": "rsi_4h",
       "williams_r14": -82.14285714285718,
-      "vix": 18.29,
+      "vix": 18.3,
       "bollinger_position": 0.3731148151190182,
       "relative_sma20_pct": null,
-      "relative_sma50_pct": 5.2594,
-      "relative_sma200_pct": -15.3719,
-      "relative_volume_20": 1.3265808818021756,
+      "relative_sma50_pct": 5.5327,
+      "relative_sma200_pct": -15.1522,
+      "relative_volume_20": 1.3405325245619808,
       "prior_120d_drawdown_pct": -31.56623976485409,
       "atr14": 9.292857142857152,
       "major_trend_1d": "BEAR",
@@ -691,17 +692,17 @@
     "qlib": {
       "rank": 2,
       "qlib_percentile": 0.75,
-      "p_up_8h": 0.4963,
-      "p_down_8h": 0.4561,
+      "p_up_8h": 0.5139,
+      "p_down_8h": 0.4385,
       "p_flat_8h": 0.0476,
       "direction": "FLAT",
       "direction_confident": false,
-      "relative_score_8h": 0.029,
+      "relative_score_8h": 0.0583,
       "data_fresh": true,
       "freshness": {
         "fresh": true,
         "expected_completed_bar": "2026-05-12 12:00:00",
-        "payload_as_of": "2026-05-12 17:41:18",
+        "payload_as_of": "2026-05-12 18:07:07",
         "model_trained_at": null,
         "model_train_end": null,
         "model_is_fresh": null,
@@ -735,9 +736,9 @@
       "stablecoin_flow_semantic": "UNAVAILABLE",
       "flow_composite_semantic": "UNAVAILABLE",
       "flow_signal_mixed": false,
-      "funding_rate": 4.14354051484e-05,
-      "funding_zscore": -0.95,
-      "open_interest": 54586046.56399999,
+      "funding_rate": 5.01887333456e-05,
+      "funding_zscore": -0.7,
+      "open_interest": 54727763.544999994,
       "delta_oi_24h_percent": 5.09465498496251,
       "liquidation_long_usd": 78454.49,
       "liquidation_short_usd": 29162.962999999996,
@@ -751,21 +752,22 @@
       "macro_mode": "RISK_OFF",
       "macro_permission": "ALLOW_SHORT",
       "macro_bias_tier": "STRONG_RISK_OFF",
-      "macro_impact_score": -13,
+      "macro_impact_score": -9,
       "macro_horizon": "MULTI_DAY",
       "final_macro_decision": {
         "source": "llm_adjudicated",
         "selected_view": "blended",
-        "market_impact": "RISK_OFF",
+        "market_impact": "MIXED",
         "impact_horizon": "MULTI_DAY",
         "crypto_relevance": "HIGH",
         "key_tags": [
-          "CPI_HOT",
           "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING"
+          "LIQUIDITY_CONTRACTING",
+          "RISK_OFF_NEWS",
+          "RISK_ON_NEWS"
         ],
         "confidence": "MEDIUM",
-        "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: hot CPI, hawkish Fed speeches, negative stablecoin flow, and rising rate hike expectations. No contradictory evidence; blended conclusion reinforces consensus.",
+        "reason": "Both deterministic and LLM views agree on hawkish Fed and liquidity contraction, but the LLM highlights offsetting crypto-positive news (CLARITY Act, institutional adoption). The structured facts show mixed signals: VIX up 5.29% over 5 days (risk-off), but DXY down and stablecoin flow negative but small relative to market cap. The student loan default headline adds to risk-off sentiment, while crypto-specific developments provide a counterbalance. Thus, a blended MIXED impact is most appropriate.",
         "deterministic_view": {
           "event_type": "FED_SPEECH",
           "policy_stance": "HAWKISH",
@@ -773,7 +775,6 @@
           "impact_horizon": "MULTI_DAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
-            "CPI_HOT",
             "FED_HAWKISH",
             "LIQUIDITY_CONTRACTING"
           ],
@@ -785,12 +786,11 @@
           "impact_horizon": "MULTI_DAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
-            "CPI_HOT",
             "FED_HAWKISH",
             "LIQUIDITY_CONTRACTING"
           ],
-          "news_summary": "Hot CPI and hawkish Fed speeches dominate, with stablecoin outflows and rising rate hike expectations pressuring risk assets.",
-          "brief_rationale": "CPI hot, Fed speakers hawkish, stablecoin flow negative, and markets pricing rate hikes all point to risk-off sentiment."
+          "news_summary": "Student loan defaults and high CPI data reinforce hawkish Fed expectations, while CLARITY Act and crypto adoption news provide mixed signals.",
+          "brief_rationale": "Dominant macro news (student loan defaults, high CPI) and upcoming FOMC speeches point to continued hawkish Fed stance, which is negative for risk assets. However, positive crypto regulatory developments (CLARITY Act) and institutional adoption (Elliptic, MSTR) partially offset. Overall, the macro headwinds outweigh the crypto-specific positives."
         },
         "adjudication_audit": {
           "enabled": true,
@@ -798,29 +798,31 @@
           "model": "deepseek-chat",
           "status": "parsed",
           "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"2.6 million student loan borrowers fell into default in early 2026: New York Fed\", \"Bitcoin digests highest US CPI since 2023 as Fed rate hike woes return\", \"[USD] FOMC Member Williams Speaks (Low)\", \"[USD] FOMC Member Hammack Speaks (Low)\", \"Clarity Act Text Reveals Stablecoin Rules, Crypto Provisions Ahead Of Hearing\", \"Market...",
-          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_OFF\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"CPI_HOT\", \"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: hot CPI, hawkish Fed speeches, negative stablecoin flow, and rising rate hike expectations. No contradictory evidence; blended conclusion reinforces consensus.\" }",
+          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"2.6 million student loan borrowers fell into default in early 2026: New York Fed\", \"Bitcoin digests highest US CPI since 2023 as Fed rate hike woes return\", \"[USD] FOMC Member Williams Speaks (Low)\", \"[USD] FOMC Member Hammack Speaks (Low)\", \"Clarity Act Text Reveals Stablecoin Rules, Crypto Provisions Ahead Of Hearing\", \"AI sup...",
+          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"RISK_OFF_NEWS\", \"RISK_ON_NEWS\"], \"confidence\": 0.7, \"reason\": \"Both deterministic and LLM views agree on hawkish Fed and liquidity contraction, but the LLM highlights offsetting crypto-positive news (CLARITY Act, institutional adoption). The structured facts show mixed signals: VIX up 5.29% over 5 days (risk-off), but DXY down and stablecoin flow negative but small relative to market cap. The student loan default headline adds to risk-off sentiment, while crypto-specific developments provide a counterbalance. Thus, a blended MIXED impact is most appropriate.\" }",
           "parsed_response": {
             "selected_view": "blended",
-            "final_market_impact": "RISK_OFF",
+            "final_market_impact": "MIXED",
             "final_impact_horizon": "MULTI_DAY",
             "final_crypto_relevance": "HIGH",
             "final_key_tags": [
-              "CPI_HOT",
               "FED_HAWKISH",
-              "LIQUIDITY_CONTRACTING"
+              "LIQUIDITY_CONTRACTING",
+              "RISK_OFF_NEWS",
+              "RISK_ON_NEWS"
             ],
-            "confidence": 0.85,
-            "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: hot CPI, hawkish Fed speeches, negative stablecoin flow, and rising rate hike expectations. No contradictory evidence; blended conclusion reinforces consensus."
+            "confidence": 0.7,
+            "reason": "Both deterministic and LLM views agree on hawkish Fed and liquidity contraction, but the LLM highlights offsetting crypto-positive news (CLARITY Act, institutional adoption). The structured facts show mixed signals: VIX up 5.29% over 5 days (risk-off), but DXY down and stablecoin flow negative but small relative to market cap. The student loan default headline adds to risk-off sentiment, while crypto-specific developments provide a counterbalance. Thus, a blended MIXED impact is most appropriate."
           },
           "error": null
         }
       },
       "macro_decision_source": "llm_adjudicated",
       "marginal_tags": [
-        "CPI_HOT",
         "FED_HAWKISH",
-        "LIQUIDITY_CONTRACTING"
+        "LIQUIDITY_CONTRACTING",
+        "RISK_OFF_NEWS",
+        "RISK_ON_NEWS"
       ]
     },
     "position": {
@@ -853,36 +855,19 @@
     "schema_version": "model_decision_v1",
     "action": "WAIT",
     "direction": "FLAT",
-    "confidence": 0.6,
+    "confidence": 0.3,
     "setup_type": "no_edge",
     "risk_level": "MEDIUM",
     "horizon": "MULTI_DAY",
     "reason_codes": [
-      "macro_risk_off",
-      "qlib_mildly_bullish",
-      "missing_onchain_data",
-      "neutral_technicals"
+      "MIXED_MACRO",
+      "CONTRADICTORY_TECHNICALS",
+      "MISSING_ONCHAIN_DATA",
+      "LOW_QLIB_CONFIDENCE"
     ],
-    "invalid_if": [
-      "price breaks above 670 with volume and positive onchain inflow"
-    ],
-    "invalidation_rules": [
-      {
-        "field": "current_price",
-        "op": ">=",
-        "reason": "break above resistance with volume",
-        "value": 670,
-        "persistence": 2
-      },
-      {
-        "field": "macro_permission",
-        "op": "==",
-        "reason": "macro turns risk-on",
-        "value_ref": "ALLOW_LONG",
-        "persistence": 1
-      }
-    ],
-    "summary": "Macro strongly bearish (RISK_OFF, CPI_HOT, FED_HAWKISH) but Qlib ML shows mild bullish tilt (p_up 0.496, rank 2/5). Missing onchain flow data and neutral RSI (48.9) reduce conviction. Prefer WAIT/FLAT.",
+    "invalid_if": [],
+    "invalidation_rules": [],
+    "summary": "Macro MIXED, technicals contradictory (BULL regime vs BEAR trend), onchain data missing, Qlib flat with low confidence. No clear edge.",
     "model_role": "direction_only",
     "program_controls": [
       "entry",
@@ -903,7 +888,7 @@
         "status": "parsed",
         "system_prompt_preview": "You are a crypto trading decision analyst using DeepSeek reasoning. Decide only whether the setup deserves a directional trade. Do not choose position size, leverage, exact order placement, stop loss, or take profit. The deterministic program controls risk and execution. Return only a concise decision brief with evidence bullets, contradictions, data gaps, and thesis invalidation. Do not expose hidden chain-of-thought. Before finalizing, explicitly self-criticize the trade idea by checking evidence for LONG, evidence for SHORT, evidence for WAIT/FLAT, stale or missing data, and what would invalidate the directional view. If evidence conflicts, prefer WAIT/FLAT.",
         "user_prompt_preview": "Use the supplied market state only. Produce a concise decision brief, not JSON. Allowed final directional meanings: BUY+LONG for an opening long idea, SELL+SHORT for an opening short idea, and HOLD/WAIT+FLAT for no new trade. Missing data should reduce confidence. The brief must not include position size, leverage, exact order placement, stop loss, or take profit. Self-criticism checklist to apply before the final brief: 1. What supports LONG? 2. What supports SHORT? 3. What supports WAIT/FLAT? 4. What data is missing or stale? 5. What would invalidate this view? 6. If evidence conflicts, choose WAIT/FLAT. market_state={\"cycleId\": \"cycle_2026-05-12_1600\", \"data_availability\": {\"has_exchange_netflow_24h\": false, \"has_flow_semantics\": true, \"has_large_transfer_count_24h\": false, \"has_onchain_flow_data\": false, \"has_prior_120d_drawdown\": true, \"has_relative_volume_20\": true, \"has_rsi14\": true, \"has_sma200_distance\": true, \"has_sma20_distance\": false, \"has_sma50_distance\": true, \"has_stablecoin_net_flow\": true, \"has_token_net_flow\": true, \"has_vix\": true, \"has_williams_r14\": true}, \"macro\": {\"final_macro_decision\": {\"adjudication_audit\": {\"enabled\": true, \"error\": null, \"model\": \"de...",
-        "raw_response_preview": "## Decision: WAIT/FLAT **Evidence for LONG** - Qlib ML has p_up_8h 0.496 vs p_down_8h 0.456, rank 2/5 (bullish tilt), qlib_percentile 0.75. - Williams %R at -82.14 (oversold) could mean mean-reversion bounce. - Prior 120d drawdown of -31.6% suggests potential for relief rally. - Delta OI +5.09% (increased participation) and relative volume 1.33 (above average). **Evidence for SHORT** - Macro adjudication: **STRONG_RISK_OFF**, MULTI_DAY horizon, tags: CPI_HOT, FED_HAWKISH, LIQUIDITY_CONTRACTING. - Major trend (1d) is BEAR; price -15.37% below SMA200. - RS14 at 48.9 (below neutral), liquidations $78K long vs $29K short (longs under pressure). - Onchain flow data missing (stablecoin, token, exchange netflow all null) \u2013 no bullish inflow signal. **Evidence for WAIT/FLAT** - Conflicting signals: macro strongly bearish versus ML marginally bullish (direction_confident: false). - Funding z-score -0.95 (flat, not extreme) \u2013 no conviction on positioning. - Stale/missing onchain data: no netflow, no large transfers, no whale bias \u2013 reduces reliability. - No clear catalyst to override macro headwinds given neutral technicals (RSI 48.9, Bollinger middle). **Data Gaps / Stale** - Exchange ne...",
+        "raw_response_preview": "**Decision: HOLD/WAIT+FLAT** No new directional trade. Evidence is too contradictory and incomplete for a confident setup. **Evidence for LONG** - Technical regime (1d BULL) and Williams %R oversold (-82.14) suggest potential bounce. - Qlib ranks #2 (0.75 percentile) with p_up_8h 0.514 > p_down_8h 0.438. - OI up 5.09% in 24h, relative volume 1.34x average \u2014 possible accumulation. - Price above SMA50 (+5.5%), Bollinger mid (0.37). - Macro tagged \u201cRISK_ON_NEWS\u201d (CLARITY Act, institutional adoption) provides counterbalance. **Evidence for SHORT** - Macro bias is STRONG_RISK_OFF (score -9), mode RISK_OFF, permission ALLOW_SHORT. - Major trend 1d BEAR, price -15.15% below SMA200. Prior 120d drawdown -31.6%. - VIX 18.3 elevated, student loan defaults + hawkish Fed speeches. - Funding positive (0.005% \u2014 longs paying) but low \u2014 no squeeze pressure. - Onchain flow data missing entirely \u2014 cannot confirm accumulation. **Evidence for WAIT/FLAT** - Macro adjudicated as MIXED (conflicting risk-on/risk-off signals). - Technical: regime BULL vs major trend BEAR \u2014 contradictory. - RSI14 neutral (48.9), no clear momentum. - Qlib direction is FLAT with low confidence (direction_confident: false). ...",
         "reasoning_available": true,
         "parsed_response": null,
         "error": null,
@@ -924,41 +909,24 @@
         "status": "parsed",
         "system_prompt_preview": "You are a deterministic JSON formatter for a crypto trading system. Convert the supplied DeepSeek reasoning brief into one JSON object. Do not add new market judgments. Do not output markdown. Use only the allowed contract. If the brief is uncertain, contradictory, or asks for unsupported fields, return WAIT/FLAT with low confidence.",
         "user_prompt_preview": "Return one JSON object matching this contract. This is JSON mode, so output only JSON. contract={\"action\": [\"BUY\", \"HOLD\", \"SELL\", \"WAIT\"], \"confidence\": \"number from 0.0 to 1.0\", \"direction\": [\"FLAT\", \"LONG\", \"SHORT\"], \"horizon\": [\"MULTI_DAY\", \"SHORT\", \"SWING\"], \"invalid_if\": \"array of short strings; directional thesis invalidation only\", \"invalidation_rules\": \"array of executable invalidation rule objects. Allowed shape: {\\\"field\\\": string, \\\"op\\\": one of >= <= > < == !=, \\\"value_ref\\\" or \\\"value\\\": string/number/bool, \\\"persistence\\\": integer 1..6, \\\"reason\\\": short string}. Use only fields present in market_state.\", \"reason_codes\": \"array of short strings; evidence tags only\", \"risk_level\": [\"HIGH\", \"LOW\", \"MEDIUM\"], \"setup_type\": [\"bottom_reversal\", \"no_edge\", \"range_rotation\", \"top_distribution\", \"trend_breakdown\", \"trend_following\"], \"summary\": \"short human-readable evidence summary\"} Consistency rules: - BUY must pair with LONG. - SELL must pair with SHORT. - HOLD or WAIT must pair with FLAT. - The model controls only direction and confidence; program controls entry, stop_loss, take_profit, position_size, leverage, and execution. - For invalidation_rules, output only sim...",
-        "raw_response_preview": "{ \"action\": \"WAIT\", \"confidence\": 0.6, \"direction\": \"FLAT\", \"horizon\": \"MULTI_DAY\", \"invalid_if\": [\"price breaks above 670 with volume and positive onchain inflow\"], \"invalidation_rules\": [ {\"field\": \"current_price\", \"op\": \">=\", \"value\": 670, \"persistence\": 2, \"reason\": \"break above resistance with volume\"}, {\"field\": \"macro_permission\", \"op\": \"==\", \"value_ref\": \"ALLOW_LONG\", \"persistence\": 1, \"reason\": \"macro turns risk-on\"} ], \"reason_codes\": [\"macro_risk_off\", \"qlib_mildly_bullish\", \"missing_onchain_data\", \"neutral_technicals\"], \"risk_level\": \"MEDIUM\", \"setup_type\": \"no_edge\", \"summary\": \"Macro strongly bearish (RISK_OFF, CPI_HOT, FED_HAWKISH) but Qlib ML shows mild bullish tilt (p_up 0.496, rank 2/5). Missing onchain flow data and neutral RSI (48.9) reduce conviction. Prefer WAIT/FLAT.\" }",
+        "raw_response_preview": "{ \"action\": \"WAIT\", \"confidence\": 0.3, \"direction\": \"FLAT\", \"horizon\": \"MULTI_DAY\", \"invalid_if\": [], \"invalidation_rules\": [], \"reason_codes\": [\"MIXED_MACRO\", \"CONTRADICTORY_TECHNICALS\", \"MISSING_ONCHAIN_DATA\", \"LOW_QLIB_CONFIDENCE\"], \"risk_level\": \"MEDIUM\", \"setup_type\": \"no_edge\", \"summary\": \"Macro MIXED, technicals contradictory (BULL regime vs BEAR trend), onchain data missing, Qlib flat with low confidence. No clear edge.\" }",
         "reasoning_available": false,
         "parsed_response": {
           "action": "WAIT",
-          "confidence": 0.6,
+          "confidence": 0.3,
           "direction": "FLAT",
           "horizon": "MULTI_DAY",
-          "invalid_if": [
-            "price breaks above 670 with volume and positive onchain inflow"
-          ],
-          "invalidation_rules": [
-            {
-              "field": "current_price",
-              "op": ">=",
-              "value": 670,
-              "persistence": 2,
-              "reason": "break above resistance with volume"
-            },
-            {
-              "field": "macro_permission",
-              "op": "==",
-              "value_ref": "ALLOW_LONG",
-              "persistence": 1,
-              "reason": "macro turns risk-on"
-            }
-          ],
+          "invalid_if": [],
+          "invalidation_rules": [],
           "reason_codes": [
-            "macro_risk_off",
-            "qlib_mildly_bullish",
-            "missing_onchain_data",
-            "neutral_technicals"
+            "MIXED_MACRO",
+            "CONTRADICTORY_TECHNICALS",
+            "MISSING_ONCHAIN_DATA",
+            "LOW_QLIB_CONFIDENCE"
           ],
           "risk_level": "MEDIUM",
           "setup_type": "no_edge",
-          "summary": "Macro strongly bearish (RISK_OFF, CPI_HOT, FED_HAWKISH) but Qlib ML shows mild bullish tilt (p_up 0.496, rank 2/5). Missing onchain flow data and neutral RSI (48.9) reduce conviction. Prefer WAIT/FLAT."
+          "summary": "Macro MIXED, technicals contradictory (BULL regime vs BEAR trend), onchain data missing, Qlib flat with low confidence. No clear edge."
         },
         "error": null,
         "attempt_count": 1,
@@ -977,25 +945,25 @@
     "symbol": "BNB-USDT",
     "cycleId": "cycle_2026-05-12_1600",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778608020,
+    "snapshot_timestamp": 1778609552,
     "generation_mode": "model_decision",
     "market_state": {
       "schema_version": "model_market_state_v1",
       "symbol": "BNB-USDT",
       "cycleId": "cycle_2026-05-12_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778608020,
+      "snapshot_timestamp": 1778609552,
       "technical": {
-        "current_price": 654.8,
+        "current_price": 656.5,
         "rsi14": 48.92602568210908,
         "rsi_source": "rsi_4h",
         "williams_r14": -82.14285714285718,
-        "vix": 18.29,
+        "vix": 18.3,
         "bollinger_position": 0.3731148151190182,
         "relative_sma20_pct": null,
-        "relative_sma50_pct": 5.2594,
-        "relative_sma200_pct": -15.3719,
-        "relative_volume_20": 1.3265808818021756,
+        "relative_sma50_pct": 5.5327,
+        "relative_sma200_pct": -15.1522,
+        "relative_volume_20": 1.3405325245619808,
         "prior_120d_drawdown_pct": -31.56623976485409,
         "atr14": 9.292857142857152,
         "major_trend_1d": "BEAR",
@@ -1004,17 +972,17 @@
       "qlib": {
         "rank": 2,
         "qlib_percentile": 0.75,
-        "p_up_8h": 0.4963,
-        "p_down_8h": 0.4561,
+        "p_up_8h": 0.5139,
+        "p_down_8h": 0.4385,
         "p_flat_8h": 0.0476,
         "direction": "FLAT",
         "direction_confident": false,
-        "relative_score_8h": 0.029,
+        "relative_score_8h": 0.0583,
         "data_fresh": true,
         "freshness": {
           "fresh": true,
           "expected_completed_bar": "2026-05-12 12:00:00",
-          "payload_as_of": "2026-05-12 17:41:18",
+          "payload_as_of": "2026-05-12 18:07:07",
           "model_trained_at": null,
           "model_train_end": null,
           "model_is_fresh": null,
@@ -1048,9 +1016,9 @@
         "stablecoin_flow_semantic": "UNAVAILABLE",
         "flow_composite_semantic": "UNAVAILABLE",
         "flow_signal_mixed": false,
-        "funding_rate": 4.14354051484e-05,
-        "funding_zscore": -0.95,
-        "open_interest": 54586046.56399999,
+        "funding_rate": 5.01887333456e-05,
+        "funding_zscore": -0.7,
+        "open_interest": 54727763.544999994,
         "delta_oi_24h_percent": 5.09465498496251,
         "liquidation_long_usd": 78454.49,
         "liquidation_short_usd": 29162.962999999996,
@@ -1064,21 +1032,22 @@
         "macro_mode": "RISK_OFF",
         "macro_permission": "ALLOW_SHORT",
         "macro_bias_tier": "STRONG_RISK_OFF",
-        "macro_impact_score": -13,
+        "macro_impact_score": -9,
         "macro_horizon": "MULTI_DAY",
         "final_macro_decision": {
           "source": "llm_adjudicated",
           "selected_view": "blended",
-          "market_impact": "RISK_OFF",
+          "market_impact": "MIXED",
           "impact_horizon": "MULTI_DAY",
           "crypto_relevance": "HIGH",
           "key_tags": [
-            "CPI_HOT",
             "FED_HAWKISH",
-            "LIQUIDITY_CONTRACTING"
+            "LIQUIDITY_CONTRACTING",
+            "RISK_OFF_NEWS",
+            "RISK_ON_NEWS"
           ],
           "confidence": "MEDIUM",
-          "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: hot CPI, hawkish Fed speeches, negative stablecoin flow, and rising rate hike expectations. No contradictory evidence; blended conclusion reinforces consensus.",
+          "reason": "Both deterministic and LLM views agree on hawkish Fed and liquidity contraction, but the LLM highlights offsetting crypto-positive news (CLARITY Act, institutional adoption). The structured facts show mixed signals: VIX up 5.29% over 5 days (risk-off), but DXY down and stablecoin flow negative but small relative to market cap. The student loan default headline adds to risk-off sentiment, while crypto-specific developments provide a counterbalance. Thus, a blended MIXED impact is most appropriate.",
           "deterministic_view": {
             "event_type": "FED_SPEECH",
             "policy_stance": "HAWKISH",
@@ -1086,7 +1055,6 @@
             "impact_horizon": "MULTI_DAY",
             "crypto_relevance": "HIGH",
             "key_tags": [
-              "CPI_HOT",
               "FED_HAWKISH",
               "LIQUIDITY_CONTRACTING"
             ],
@@ -1098,12 +1066,11 @@
             "impact_horizon": "MULTI_DAY",
             "crypto_relevance": "HIGH",
             "key_tags": [
-              "CPI_HOT",
               "FED_HAWKISH",
               "LIQUIDITY_CONTRACTING"
             ],
-            "news_summary": "Hot CPI and hawkish Fed speeches dominate, with stablecoin outflows and rising rate hike expectations pressuring risk assets.",
-            "brief_rationale": "CPI hot, Fed speakers hawkish, stablecoin flow negative, and markets pricing rate hikes all point to risk-off sentiment."
+            "news_summary": "Student loan defaults and high CPI data reinforce hawkish Fed expectations, while CLARITY Act and crypto adoption news provide mixed signals.",
+            "brief_rationale": "Dominant macro news (student loan defaults, high CPI) and upcoming FOMC speeches point to continued hawkish Fed stance, which is negative for risk assets. However, positive crypto regulatory developments (CLARITY Act) and institutional adoption (Elliptic, MSTR) partially offset. Overall, the macro headwinds outweigh the crypto-specific positives."
           },
           "adjudication_audit": {
             "enabled": true,
@@ -1111,29 +1078,31 @@
             "model": "deepseek-chat",
             "status": "parsed",
             "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"2.6 million student loan borrowers fell into default in early 2026: New York Fed\", \"Bitcoin digests highest US CPI since 2023 as Fed rate hike woes return\", \"[USD] FOMC Member Williams Speaks (Low)\", \"[USD] FOMC Member Hammack Speaks (Low)\", \"Clarity Act Text Reveals Stablecoin Rules, Crypto Provisions Ahead Of Hearing\", \"Market...",
-            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_OFF\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"CPI_HOT\", \"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: hot CPI, hawkish Fed speeches, negative stablecoin flow, and rising rate hike expectations. No contradictory evidence; blended conclusion reinforces consensus.\" }",
+            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"2.6 million student loan borrowers fell into default in early 2026: New York Fed\", \"Bitcoin digests highest US CPI since 2023 as Fed rate hike woes return\", \"[USD] FOMC Member Williams Speaks (Low)\", \"[USD] FOMC Member Hammack Speaks (Low)\", \"Clarity Act Text Reveals Stablecoin Rules, Crypto Provisions Ahead Of Hearing\", \"AI sup...",
+            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"RISK_OFF_NEWS\", \"RISK_ON_NEWS\"], \"confidence\": 0.7, \"reason\": \"Both deterministic and LLM views agree on hawkish Fed and liquidity contraction, but the LLM highlights offsetting crypto-positive news (CLARITY Act, institutional adoption). The structured facts show mixed signals: VIX up 5.29% over 5 days (risk-off), but DXY down and stablecoin flow negative but small relative to market cap. The student loan default headline adds to risk-off sentiment, while crypto-specific developments provide a counterbalance. Thus, a blended MIXED impact is most appropriate.\" }",
             "parsed_response": {
               "selected_view": "blended",
-              "final_market_impact": "RISK_OFF",
+              "final_market_impact": "MIXED",
               "final_impact_horizon": "MULTI_DAY",
               "final_crypto_relevance": "HIGH",
               "final_key_tags": [
-                "CPI_HOT",
                 "FED_HAWKISH",
-                "LIQUIDITY_CONTRACTING"
+                "LIQUIDITY_CONTRACTING",
+                "RISK_OFF_NEWS",
+                "RISK_ON_NEWS"
               ],
-              "confidence": 0.85,
-              "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. The structured facts support this: hot CPI, hawkish Fed speeches, negative stablecoin flow, and rising rate hike expectations. No contradictory evidence; blended conclusion reinforces consensus."
+              "confidence": 0.7,
+              "reason": "Both deterministic and LLM views agree on hawkish Fed and liquidity contraction, but the LLM highlights offsetting crypto-positive news (CLARITY Act, institutional adoption). The structured facts show mixed signals: VIX up 5.29% over 5 days (risk-off), but DXY down and stablecoin flow negative but small relative to market cap. The student loan default headline adds to risk-off sentiment, while crypto-specific developments provide a counterbalance. Thus, a blended MIXED impact is most appropriate."
             },
             "error": null
           }
         },
         "macro_decision_source": "llm_adjudicated",
         "marginal_tags": [
-          "CPI_HOT",
           "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING"
+          "LIQUIDITY_CONTRACTING",
+          "RISK_OFF_NEWS",
+          "RISK_ON_NEWS"
         ]
       },
       "position": {
@@ -1166,36 +1135,19 @@
       "schema_version": "model_decision_v1",
       "action": "WAIT",
       "direction": "FLAT",
-      "confidence": 0.6,
+      "confidence": 0.3,
       "setup_type": "no_edge",
       "risk_level": "MEDIUM",
       "horizon": "MULTI_DAY",
       "reason_codes": [
-        "macro_risk_off",
-        "qlib_mildly_bullish",
-        "missing_onchain_data",
-        "neutral_technicals"
+        "MIXED_MACRO",
+        "CONTRADICTORY_TECHNICALS",
+        "MISSING_ONCHAIN_DATA",
+        "LOW_QLIB_CONFIDENCE"
       ],
-      "invalid_if": [
-        "price breaks above 670 with volume and positive onchain inflow"
-      ],
-      "invalidation_rules": [
-        {
-          "field": "current_price",
-          "op": ">=",
-          "reason": "break above resistance with volume",
-          "value": 670,
-          "persistence": 2
-        },
-        {
-          "field": "macro_permission",
-          "op": "==",
-          "reason": "macro turns risk-on",
-          "value_ref": "ALLOW_LONG",
-          "persistence": 1
-        }
-      ],
-      "summary": "Macro strongly bearish (RISK_OFF, CPI_HOT, FED_HAWKISH) but Qlib ML shows mild bullish tilt (p_up 0.496, rank 2/5). Missing onchain flow data and neutral RSI (48.9) reduce conviction. Prefer WAIT/FLAT.",
+      "invalid_if": [],
+      "invalidation_rules": [],
+      "summary": "Macro MIXED, technicals contradictory (BULL regime vs BEAR trend), onchain data missing, Qlib flat with low confidence. No clear edge.",
       "model_role": "direction_only",
       "program_controls": [
         "entry",
@@ -1216,7 +1168,7 @@
           "status": "parsed",
           "system_prompt_preview": "You are a crypto trading decision analyst using DeepSeek reasoning. Decide only whether the setup deserves a directional trade. Do not choose position size, leverage, exact order placement, stop loss, or take profit. The deterministic program controls risk and execution. Return only a concise decision brief with evidence bullets, contradictions, data gaps, and thesis invalidation. Do not expose hidden chain-of-thought. Before finalizing, explicitly self-criticize the trade idea by checking evidence for LONG, evidence for SHORT, evidence for WAIT/FLAT, stale or missing data, and what would invalidate the directional view. If evidence conflicts, prefer WAIT/FLAT.",
           "user_prompt_preview": "Use the supplied market state only. Produce a concise decision brief, not JSON. Allowed final directional meanings: BUY+LONG for an opening long idea, SELL+SHORT for an opening short idea, and HOLD/WAIT+FLAT for no new trade. Missing data should reduce confidence. The brief must not include position size, leverage, exact order placement, stop loss, or take profit. Self-criticism checklist to apply before the final brief: 1. What supports LONG? 2. What supports SHORT? 3. What supports WAIT/FLAT? 4. What data is missing or stale? 5. What would invalidate this view? 6. If evidence conflicts, choose WAIT/FLAT. market_state={\"cycleId\": \"cycle_2026-05-12_1600\", \"data_availability\": {\"has_exchange_netflow_24h\": false, \"has_flow_semantics\": true, \"has_large_transfer_count_24h\": false, \"has_onchain_flow_data\": false, \"has_prior_120d_drawdown\": true, \"has_relative_volume_20\": true, \"has_rsi14\": true, \"has_sma200_distance\": true, \"has_sma20_distance\": false, \"has_sma50_distance\": true, \"has_stablecoin_net_flow\": true, \"has_token_net_flow\": true, \"has_vix\": true, \"has_williams_r14\": true}, \"macro\": {\"final_macro_decision\": {\"adjudication_audit\": {\"enabled\": true, \"error\": null, \"model\": \"de...",
-          "raw_response_preview": "## Decision: WAIT/FLAT **Evidence for LONG** - Qlib ML has p_up_8h 0.496 vs p_down_8h 0.456, rank 2/5 (bullish tilt), qlib_percentile 0.75. - Williams %R at -82.14 (oversold) could mean mean-reversion bounce. - Prior 120d drawdown of -31.6% suggests potential for relief rally. - Delta OI +5.09% (increased participation) and relative volume 1.33 (above average). **Evidence for SHORT** - Macro adjudication: **STRONG_RISK_OFF**, MULTI_DAY horizon, tags: CPI_HOT, FED_HAWKISH, LIQUIDITY_CONTRACTING. - Major trend (1d) is BEAR; price -15.37% below SMA200. - RS14 at 48.9 (below neutral), liquidations $78K long vs $29K short (longs under pressure). - Onchain flow data missing (stablecoin, token, exchange netflow all null) \u2013 no bullish inflow signal. **Evidence for WAIT/FLAT** - Conflicting signals: macro strongly bearish versus ML marginally bullish (direction_confident: false). - Funding z-score -0.95 (flat, not extreme) \u2013 no conviction on positioning. - Stale/missing onchain data: no netflow, no large transfers, no whale bias \u2013 reduces reliability. - No clear catalyst to override macro headwinds given neutral technicals (RSI 48.9, Bollinger middle). **Data Gaps / Stale** - Exchange ne...",
+          "raw_response_preview": "**Decision: HOLD/WAIT+FLAT** No new directional trade. Evidence is too contradictory and incomplete for a confident setup. **Evidence for LONG** - Technical regime (1d BULL) and Williams %R oversold (-82.14) suggest potential bounce. - Qlib ranks #2 (0.75 percentile) with p_up_8h 0.514 > p_down_8h 0.438. - OI up 5.09% in 24h, relative volume 1.34x average \u2014 possible accumulation. - Price above SMA50 (+5.5%), Bollinger mid (0.37). - Macro tagged \u201cRISK_ON_NEWS\u201d (CLARITY Act, institutional adoption) provides counterbalance. **Evidence for SHORT** - Macro bias is STRONG_RISK_OFF (score -9), mode RISK_OFF, permission ALLOW_SHORT. - Major trend 1d BEAR, price -15.15% below SMA200. Prior 120d drawdown -31.6%. - VIX 18.3 elevated, student loan defaults + hawkish Fed speeches. - Funding positive (0.005% \u2014 longs paying) but low \u2014 no squeeze pressure. - Onchain flow data missing entirely \u2014 cannot confirm accumulation. **Evidence for WAIT/FLAT** - Macro adjudicated as MIXED (conflicting risk-on/risk-off signals). - Technical: regime BULL vs major trend BEAR \u2014 contradictory. - RSI14 neutral (48.9), no clear momentum. - Qlib direction is FLAT with low confidence (direction_confident: false). ...",
           "reasoning_available": true,
           "parsed_response": null,
           "error": null,
@@ -1237,41 +1189,24 @@
           "status": "parsed",
           "system_prompt_preview": "You are a deterministic JSON formatter for a crypto trading system. Convert the supplied DeepSeek reasoning brief into one JSON object. Do not add new market judgments. Do not output markdown. Use only the allowed contract. If the brief is uncertain, contradictory, or asks for unsupported fields, return WAIT/FLAT with low confidence.",
           "user_prompt_preview": "Return one JSON object matching this contract. This is JSON mode, so output only JSON. contract={\"action\": [\"BUY\", \"HOLD\", \"SELL\", \"WAIT\"], \"confidence\": \"number from 0.0 to 1.0\", \"direction\": [\"FLAT\", \"LONG\", \"SHORT\"], \"horizon\": [\"MULTI_DAY\", \"SHORT\", \"SWING\"], \"invalid_if\": \"array of short strings; directional thesis invalidation only\", \"invalidation_rules\": \"array of executable invalidation rule objects. Allowed shape: {\\\"field\\\": string, \\\"op\\\": one of >= <= > < == !=, \\\"value_ref\\\" or \\\"value\\\": string/number/bool, \\\"persistence\\\": integer 1..6, \\\"reason\\\": short string}. Use only fields present in market_state.\", \"reason_codes\": \"array of short strings; evidence tags only\", \"risk_level\": [\"HIGH\", \"LOW\", \"MEDIUM\"], \"setup_type\": [\"bottom_reversal\", \"no_edge\", \"range_rotation\", \"top_distribution\", \"trend_breakdown\", \"trend_following\"], \"summary\": \"short human-readable evidence summary\"} Consistency rules: - BUY must pair with LONG. - SELL must pair with SHORT. - HOLD or WAIT must pair with FLAT. - The model controls only direction and confidence; program controls entry, stop_loss, take_profit, position_size, leverage, and execution. - For invalidation_rules, output only sim...",
-          "raw_response_preview": "{ \"action\": \"WAIT\", \"confidence\": 0.6, \"direction\": \"FLAT\", \"horizon\": \"MULTI_DAY\", \"invalid_if\": [\"price breaks above 670 with volume and positive onchain inflow\"], \"invalidation_rules\": [ {\"field\": \"current_price\", \"op\": \">=\", \"value\": 670, \"persistence\": 2, \"reason\": \"break above resistance with volume\"}, {\"field\": \"macro_permission\", \"op\": \"==\", \"value_ref\": \"ALLOW_LONG\", \"persistence\": 1, \"reason\": \"macro turns risk-on\"} ], \"reason_codes\": [\"macro_risk_off\", \"qlib_mildly_bullish\", \"missing_onchain_data\", \"neutral_technicals\"], \"risk_level\": \"MEDIUM\", \"setup_type\": \"no_edge\", \"summary\": \"Macro strongly bearish (RISK_OFF, CPI_HOT, FED_HAWKISH) but Qlib ML shows mild bullish tilt (p_up 0.496, rank 2/5). Missing onchain flow data and neutral RSI (48.9) reduce conviction. Prefer WAIT/FLAT.\" }",
+          "raw_response_preview": "{ \"action\": \"WAIT\", \"confidence\": 0.3, \"direction\": \"FLAT\", \"horizon\": \"MULTI_DAY\", \"invalid_if\": [], \"invalidation_rules\": [], \"reason_codes\": [\"MIXED_MACRO\", \"CONTRADICTORY_TECHNICALS\", \"MISSING_ONCHAIN_DATA\", \"LOW_QLIB_CONFIDENCE\"], \"risk_level\": \"MEDIUM\", \"setup_type\": \"no_edge\", \"summary\": \"Macro MIXED, technicals contradictory (BULL regime vs BEAR trend), onchain data missing, Qlib flat with low confidence. No clear edge.\" }",
           "reasoning_available": false,
           "parsed_response": {
             "action": "WAIT",
-            "confidence": 0.6,
+            "confidence": 0.3,
             "direction": "FLAT",
             "horizon": "MULTI_DAY",
-            "invalid_if": [
-              "price breaks above 670 with volume and positive onchain inflow"
-            ],
-            "invalidation_rules": [
-              {
-                "field": "current_price",
-                "op": ">=",
-                "value": 670,
-                "persistence": 2,
-                "reason": "break above resistance with volume"
-              },
-              {
-                "field": "macro_permission",
-                "op": "==",
-                "value_ref": "ALLOW_LONG",
-                "persistence": 1,
-                "reason": "macro turns risk-on"
-              }
-            ],
+            "invalid_if": [],
+            "invalidation_rules": [],
             "reason_codes": [
-              "macro_risk_off",
-              "qlib_mildly_bullish",
-              "missing_onchain_data",
-              "neutral_technicals"
+              "MIXED_MACRO",
+              "CONTRADICTORY_TECHNICALS",
+              "MISSING_ONCHAIN_DATA",
+              "LOW_QLIB_CONFIDENCE"
             ],
             "risk_level": "MEDIUM",
             "setup_type": "no_edge",
-            "summary": "Macro strongly bearish (RISK_OFF, CPI_HOT, FED_HAWKISH) but Qlib ML shows mild bullish tilt (p_up 0.496, rank 2/5). Missing onchain flow data and neutral RSI (48.9) reduce conviction. Prefer WAIT/FLAT."
+            "summary": "Macro MIXED, technicals contradictory (BULL regime vs BEAR trend), onchain data missing, Qlib flat with low confidence. No clear edge."
           },
           "error": null,
           "attempt_count": 1,
@@ -1289,7 +1224,7 @@
     "qlib_freshness": {
       "fresh": true,
       "expected_completed_bar": "2026-05-12 12:00:00",
-      "payload_as_of": "2026-05-12 17:41:18",
+      "payload_as_of": "2026-05-12 18:07:07",
       "model_trained_at": null,
       "model_train_end": null,
       "model_is_fresh": null,
@@ -1317,7 +1252,7 @@
       "generation_mode": "model_decision",
       "action": "WAIT",
       "direction": "FLAT",
-      "confidence": 0.6,
+      "confidence": 0.3,
       "min_confidence": 0.55,
       "reason": "model_requested_no_new_directional_trade"
     }
@@ -1386,14 +1321,14 @@
     "history": [
       {
         "type": "EXECUTION_NOT_REQUESTED",
-        "at": "2026-05-12T17:47:24Z",
+        "at": "2026-05-12T18:12:59Z",
         "payload": {
           "review_note": "rule evaluation rejected or produced no approved candidates"
         }
       },
       {
         "type": "EXECUTION_SKIPPED",
-        "at": "2026-05-12T17:48:08Z",
+        "at": "2026-05-12T18:13:43Z",
         "payload": {
           "reason": "do_nothing",
           "execution_action": "DO_NOTHING"
@@ -1445,10 +1380,10 @@
       "execution_action": "DO_NOTHING"
     },
     "feedback_packets": [],
-    "generated_at": "2026-05-12T17:54:05Z"
+    "generated_at": "2026-05-12T18:19:46Z"
   },
-  "created_at": "2026-05-12T17:47:24Z",
-  "created_at_local": "2026-05-13T01:47:24+0800",
-  "updated_at": "2026-05-12T17:54:05Z",
-  "updated_at_local": "2026-05-13T01:48:08+0800"
+  "created_at": "2026-05-12T18:12:59Z",
+  "created_at_local": "2026-05-13T02:12:59+0800",
+  "updated_at": "2026-05-12T18:19:46Z",
+  "updated_at_local": "2026-05-13T02:13:43+0800"
 }
