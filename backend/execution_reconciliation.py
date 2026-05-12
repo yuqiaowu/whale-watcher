@@ -135,6 +135,198 @@ def _match_live_position(record: Dict[str, Any], positions: List[Dict[str, Any]]
     return None
 
 
+def _okx_order_time(order: Dict[str, Any]) -> Optional[str]:
+    return _ms_to_iso(order.get("cTime")) or _ms_to_iso(order.get("uTime"))
+
+
+def _okx_order_side(order: Dict[str, Any]) -> str:
+    pos_side = str(order.get("posSide") or "").lower()
+    side = str(order.get("side") or "").lower()
+    if pos_side in {"long", "short"}:
+        return _normalize_side(pos_side)
+    return _normalize_side(side)
+
+
+def _okx_order_symbol(order: Dict[str, Any]) -> str:
+    return _normalize_symbol(order.get("instId") or order.get("symbol"))
+
+
+def _okx_order_price(order: Dict[str, Any]) -> float:
+    return _safe_float(order.get("avgPx") or order.get("fillPx") or order.get("px"), 0.0)
+
+
+def _is_open_order(order: Dict[str, Any]) -> bool:
+    pos_side = str(order.get("posSide") or "").lower()
+    side = str(order.get("side") or "").lower()
+    if pos_side == "long" and side == "buy":
+        return True
+    if pos_side == "short" and side == "sell":
+        return True
+    return False
+
+
+def _price_close(left: Any, right: Any, tolerance_pct: float = 0.005) -> bool:
+    left_val = _safe_float(left, 0.0)
+    right_val = _safe_float(right, 0.0)
+    if left_val <= 0 or right_val <= 0:
+        return False
+    return abs(left_val - right_val) / right_val <= tolerance_pct
+
+
+def _time_close(left: Any, right: Any, tolerance_seconds: int = 30 * 60) -> bool:
+    left_dt = _parse_dt(left)
+    right_dt = _parse_dt(right)
+    if left_dt is None or right_dt is None:
+        return False
+    return abs((left_dt - right_dt).total_seconds()) <= tolerance_seconds
+
+
+def _position_inst_id(position: Dict[str, Any]) -> str:
+    inst_id = str(position.get("instId") or "").strip().upper()
+    if inst_id:
+        return inst_id
+    symbol = _normalize_symbol(position.get("symbol"))
+    return f"{symbol}-USDT-SWAP" if symbol else ""
+
+
+def _fetch_recent_open_orders(executor: OKXExecutor, positions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    if not hasattr(executor, "get_recent_filled_orders"):
+        return []
+    orders: List[Dict[str, Any]] = []
+    seen_order_ids: Set[str] = set()
+    inst_ids = sorted(set(_position_inst_id(position) for position in positions if _position_inst_id(position)))
+    for inst_id in inst_ids:
+        try:
+            recent = executor.get_recent_filled_orders(inst_id=inst_id, limit=100)
+        except Exception:
+            recent = []
+        if not isinstance(recent, list):
+            continue
+        for order in recent:
+            if not isinstance(order, dict) or not _is_open_order(order):
+                continue
+            order_id = str(order.get("ordId") or order.get("clOrdId") or "")
+            if order_id and order_id in seen_order_ids:
+                continue
+            if order_id:
+                seen_order_ids.add(order_id)
+            orders.append(order)
+    return orders
+
+
+def _open_order_matches_position(order: Dict[str, Any], position: Dict[str, Any]) -> bool:
+    if _okx_order_symbol(order) != _normalize_symbol(position.get("symbol") or position.get("instId")):
+        return False
+    if _okx_order_side(order) != _normalize_side(position.get("type") or position.get("posSide")):
+        return False
+    order_time = _okx_order_time(order)
+    position_time, _ = _position_open_timestamp(position)
+    if order_time and position_time and not _time_close(order_time, position_time):
+        return False
+    order_price = _okx_order_price(order)
+    if order_price and position.get("entryPrice") is not None and not _price_close(order_price, position.get("entryPrice")):
+        return False
+    return True
+
+
+def _record_matches_open_order(record: Dict[str, Any], order: Dict[str, Any], position: Dict[str, Any]) -> bool:
+    execution = record.get("execution") or {}
+    risk_review = record.get("riskReview") or {}
+    if _normalize_symbol(record.get("symbol")) != _normalize_symbol(position.get("symbol") or position.get("instId")):
+        return False
+    if _normalize_side(risk_review.get("final_intent")) != _normalize_side(position.get("type") or position.get("posSide")):
+        return False
+
+    order_id = str(order.get("ordId") or "")
+    cl_ord_id = str(order.get("clOrdId") or "")
+    if order_id and str(execution.get("exchange_order_id") or "") == order_id:
+        return True
+    if cl_ord_id and str(execution.get("client_order_id") or "") == cl_ord_id:
+        return True
+
+    if execution.get("execution_action") not in {"OPEN_LONG", "OPEN_SHORT"}:
+        return False
+    record_time = execution.get("executed_at") or record.get("created_at")
+    order_time = _okx_order_time(order)
+    if not _time_close(record_time, order_time):
+        return False
+    proposed_price = execution.get("proposed_entry_price") or (risk_review.get("approved_candidate") or {}).get("proposed_entry_price")
+    return _price_close(proposed_price, _okx_order_price(order), tolerance_pct=0.01)
+
+
+def _attach_live_position_to_origin_record(record: Dict[str, Any], position: Dict[str, Any], order: Dict[str, Any]) -> bool:
+    before = str(record.get("positionState")) + str((record.get("execution") or {}).get("sync_status"))
+    execution = record.setdefault("execution", {})
+    order_time = _okx_order_time(order)
+    position_time, timestamp_source = _position_open_timestamp(position)
+    executed_at = order_time or position_time
+    execution["order_status"] = "FILLED"
+    execution["sync_status"] = "OPEN"
+    execution["avg_fill_price"] = _safe_float(position.get("entryPrice"), _okx_order_price(order))
+    execution["filled_size"] = _safe_float(position.get("amount") or position.get("pos") or position.get("size"))
+    execution["position_side"] = _normalize_side(position.get("type") or position.get("posSide"))
+    execution["exchange_order_id"] = str(order.get("ordId") or execution.get("exchange_order_id") or "")
+    if order.get("clOrdId"):
+        execution["client_order_id"] = order.get("clOrdId")
+    if order.get("tag"):
+        execution["order_tag"] = order.get("tag")
+    execution["executed_at"] = executed_at
+    execution["live_position_detected_at"] = _iso_now()
+    _update_protection_state(execution, position)
+    record["positionState"] = "entered"
+    record["created_at"] = record.get("created_at") or executed_at
+    record["updated_at"] = _iso_now()
+    provenance = record.setdefault("provenance", {})
+    provenance["matched_open_order"] = True
+    provenance["matched_open_order_id"] = order.get("ordId")
+    provenance["matched_client_order_id"] = order.get("clOrdId")
+    provenance["position_open_time_source"] = "okx_order_history" if order_time else timestamp_source
+    _append_execution_event(record, "OPEN_ORDER_PROVENANCE_MATCHED", {
+        "order_id": order.get("ordId"),
+        "client_order_id": order.get("clOrdId"),
+        "tag": order.get("tag"),
+        "executed_at": executed_at,
+        "source": "okx_orders_history",
+    })
+    after = str(record.get("positionState")) + str(execution.get("sync_status"))
+    return before != after
+
+
+def _match_origin_record_for_live_position(
+    position: Dict[str, Any],
+    records: List[Dict[str, Any]],
+    open_orders: List[Dict[str, Any]],
+) -> Tuple[Optional[Dict[str, Any]], Optional[Dict[str, Any]]]:
+    matching_orders = [order for order in open_orders if _open_order_matches_position(order, position)]
+    if not matching_orders:
+        return None, None
+    matching_orders.sort(key=lambda item: _parse_dt(_okx_order_time(item)) or datetime.max.replace(tzinfo=timezone.utc))
+    for order in matching_orders:
+        for record in records:
+            if isinstance(record, dict) and _record_matches_open_order(record, order, position):
+                return record, order
+    return None, matching_orders[0]
+
+
+def _has_potential_origin_record(position: Dict[str, Any], records: List[Dict[str, Any]]) -> bool:
+    symbol = _normalize_symbol(position.get("symbol") or position.get("instId"))
+    side = _normalize_side(position.get("type") or position.get("posSide"))
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        if _normalize_symbol(record.get("symbol")) != symbol:
+            continue
+        risk_review = record.get("riskReview") or {}
+        if side and _normalize_side(risk_review.get("final_intent")) not in {side, ""}:
+            continue
+        execution = record.get("execution") or {}
+        if execution.get("execution_action") in {"OPEN_LONG", "OPEN_SHORT"}:
+            return True
+        if execution.get("client_order_id") or execution.get("exchange_order_id"):
+            return True
+    return False
+
+
 def _match_closed_trade(record: Dict[str, Any], trade_history: List[Dict[str, Any]], used_trade_ids: Set[str]) -> Optional[Dict[str, Any]]:
     record_dt = _parse_dt(record.get("created_at"))
     if record_dt is None:
@@ -643,6 +835,7 @@ def run_execution_reconciliation() -> Dict[str, Any]:
     actions: List[Dict[str, Any]] = []
     executor = OKXExecutor()
     managed_position_keys = set()
+    open_orders: Optional[List[Dict[str, Any]]] = None
 
     for record in records:
         execution = record.get("execution") or {}
@@ -783,6 +976,22 @@ def run_execution_reconciliation() -> Dict[str, Any]:
         if not symbol or side not in {"LONG", "SHORT"}:
             continue
         if key in managed_position_keys:
+            continue
+        if open_orders is None and _has_potential_origin_record(position, records):
+            open_orders = _fetch_recent_open_orders(executor, positions)
+        origin_record, origin_order = _match_origin_record_for_live_position(position, records, open_orders or [])
+        if origin_record is not None and origin_order is not None:
+            changed = _attach_live_position_to_origin_record(origin_record, position, origin_order)
+            managed_position_keys.add(key)
+            if changed:
+                updated_count += 1
+                actions.append({
+                    "decisionId": origin_record.get("decisionId"),
+                    "symbol": origin_record.get("symbol"),
+                    "action": "matched_open_order_provenance",
+                    "exchange_order_id": origin_order.get("ordId"),
+                    "client_order_id": origin_order.get("clOrdId"),
+                })
             continue
         adopted = _adopt_live_position(position)
         if str(adopted.get("decisionId") or "") in existing_decision_ids:

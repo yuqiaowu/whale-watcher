@@ -409,7 +409,7 @@ class OKXExecutor:
             {"algoOrdType": str(algo_ord_type or "contract_grid"), "algoId": str(algo_id)},
         )
 
-    def execute_trade(self, symbol, action, amount_usd, leverage, stop_loss=None, take_profit=None, natr_percent=None, pos_side=None, invalidation_rule=None):
+    def execute_trade(self, symbol, action, amount_usd, leverage, stop_loss=None, take_profit=None, natr_percent=None, pos_side=None, invalidation_rule=None, client_order_id=None, order_tag=None):
         """
         Main entry point for AI Trader.
         Includes a 'Risk Shield' Layer to enforce NATR and NAV Risk rules.
@@ -767,6 +767,10 @@ class OKXExecutor:
                 "instId": instId, "tdMode": "isolated", "side": side,
                 "ordType": "limit", "px": str(limit_px), "sz": str(sz), "posSide": target_pos_side
             }
+            if client_order_id:
+                payload["clOrdId"] = str(client_order_id)[:32]
+            if order_tag:
+                payload["tag"] = str(order_tag)[:16]
         
         if (stop_loss and str(stop_loss) != "None") or (take_profit and str(take_profit) != "None"):
             # Calculate and round TP/SL
@@ -806,6 +810,15 @@ class OKXExecutor:
             
         print(f"❌ Order Failed: {res.get('msg')}")
         return None
+
+    def get_recent_filled_orders(self, inst_id=None, limit=100):
+        params = {"instType": "SWAP", "state": "filled", "limit": str(limit)}
+        if inst_id:
+            params["instId"] = inst_id
+        res = self._request("GET", "/api/v5/trade/orders-history", params)
+        if res.get("code") != "0":
+            return []
+        return res.get("data") or []
 
     def get_open_position_count(self):
         if self.shadow_mode:

@@ -1,6 +1,8 @@
 import json
+import hashlib
 import math
 import os
+import re
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -2747,6 +2749,8 @@ def _build_execution_request(snapshot: Dict[str, Any], risk_review: Dict[str, An
         }
 
     candidate = risk_review["approved_candidate"]
+    client_order_id = _client_order_id(snapshot["decision_id"], risk_review["execution_action"], snapshot["symbol"])
+    order_tag = "WWV2"
     return {
         "symbol": snapshot["symbol"],
         "cycleId": snapshot["cycleId"],
@@ -2768,6 +2772,15 @@ def _build_execution_request(snapshot: Dict[str, Any], risk_review: Dict[str, An
         "filled_size": 0.0,
         "exchange_order_id": None,
         "exchange_algo_id": None,
+        "client_order_id": client_order_id,
+        "order_tag": order_tag,
+        "order_provenance": {
+            "decisionId": snapshot["decision_id"],
+            "cycleId": snapshot["cycleId"],
+            "symbol": snapshot["symbol"],
+            "intent": risk_review.get("final_intent"),
+            "execution_action": risk_review["execution_action"],
+        },
         "executed_at": None,
         "sync_status": "PENDING_SUBMIT",
         "failure_reason": None,
@@ -2822,6 +2835,21 @@ def _make_trade_record(
         "updated_at": now_iso,
         "updated_at_local": now_local,
     }
+
+
+def _client_order_id(decision_id: str, execution_action: str, symbol: str) -> str:
+    digest = hashlib.sha1(f"{decision_id}|{execution_action}".encode("utf-8")).hexdigest()[:18]
+    match = re.search(r"cycle_(\d{4})-(\d{2})-(\d{2})_(\d{4})", str(decision_id))
+    if match:
+        yyyy, mm, dd, hhmm = match.groups()
+        stamp = f"{yyyy[-2:]}{mm}{dd}{hhmm}"
+    else:
+        stamp = "unknown"
+    symbol_code = _normalize_trade_symbol(symbol)[:5]
+    side_code = "L" if execution_action == "OPEN_LONG" else "S" if execution_action == "OPEN_SHORT" else "X"
+    readable = f"ww{stamp}{symbol_code}{side_code}"
+    max_hash_len = max(6, 32 - len(readable))
+    return f"{readable}{digest[:max_hash_len]}"[:32]
 
 
 def _append_trade_record(record: Dict[str, Any]) -> None:
@@ -3075,6 +3103,8 @@ def _execute_if_enabled(executor: OKXExecutor, execution: Dict[str, Any], risk_r
             "basis": candidate.get("invalidation_basis"),
             "conditions": candidate.get("invalidation_conditions"),
         },
+        client_order_id=execution.get("client_order_id"),
+        order_tag=execution.get("order_tag"),
     )
     if order_id:
         execution["exchange_order_id"] = str(order_id)

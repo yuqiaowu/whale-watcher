@@ -42,6 +42,16 @@ class FakeGridExecutor:
         }
 
 
+class FakeOrderHistoryExecutor:
+    def __init__(self, orders):
+        self.orders = orders
+
+    def get_recent_filled_orders(self, inst_id=None, limit=100):
+        if inst_id:
+            return [order for order in self.orders if order.get("instId") == inst_id]
+        return self.orders
+
+
 class ExecutionReconciliationTests(unittest.TestCase):
     def test_adopts_unmanaged_live_position_into_v2_ledger(self):
         store = {
@@ -159,6 +169,81 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(result["record_count"], 1)
         self.assertEqual(len(fake_db.store["trade_decision_records"]), 1)
         self.assertEqual(fake_db.store["trade_decision_records"][0]["decisionId"], "d1")
+
+    def test_matches_unmanaged_live_position_to_open_order_provenance(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "cycle_2026-05-12_1200_DOGE",
+                    "cycleId": "cycle_2026-05-12_1200",
+                    "symbol": "DOGE-USDT",
+                    "created_at": "2026-05-12T12:22:01Z",
+                    "positionState": "candidate",
+                    "modelDecision": {
+                        "action": "SELL",
+                        "direction": "SHORT",
+                        "reason_codes": ["QLIB_BEARISH"],
+                    },
+                    "riskReview": {
+                        "approved": False,
+                        "final_intent": "SHORT",
+                        "approved_candidate": {"proposed_entry_price": 0.10934},
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "client_order_id": "ww2605121200DOGESabc123",
+                        "order_status": "PENDING_SUBMIT",
+                        "sync_status": "PENDING_SUBMIT",
+                        "proposed_entry_price": 0.10934,
+                        "history": [],
+                    },
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "DOGE",
+                        "instId": "DOGE-USDT-SWAP",
+                        "type": "short",
+                        "entryPrice": 0.10921,
+                        "amount": 2550,
+                        "leverage": 2,
+                        "stopLoss": 0.1136,
+                        "takeProfit": 0.10083,
+                        "positionOpenedAt": "2026-05-12T12:23:10Z",
+                    }
+                ]
+            },
+            "trade_history": [],
+        }
+        orders = [
+            {
+                "instId": "DOGE-USDT-SWAP",
+                "ordId": "okx-order-1",
+                "clOrdId": "ww2605121200DOGESabc123",
+                "tag": "WWV2",
+                "side": "sell",
+                "posSide": "short",
+                "avgPx": "0.10921",
+                "cTime": "1778588590000",
+            }
+        ]
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db), patch.object(er, "OKXExecutor", return_value=FakeOrderHistoryExecutor(orders)):
+            result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 1)
+        self.assertEqual(result["record_count"], 1)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["decisionId"], "cycle_2026-05-12_1200_DOGE")
+        self.assertEqual(record["positionState"], "entered")
+        self.assertEqual(record["execution"]["exchange_order_id"], "okx-order-1")
+        self.assertEqual(record["execution"]["client_order_id"], "ww2605121200DOGESabc123")
+        self.assertEqual(record["execution"]["order_status"], "FILLED")
+        self.assertEqual(record["execution"]["sync_status"], "OPEN")
+        self.assertTrue(record["provenance"]["matched_open_order"])
+        self.assertFalse(record["provenance"].get("adopted_live_position", False))
+        self.assertTrue(any(event["type"] == "OPEN_ORDER_PROVENANCE_MATCHED" for event in record["execution"]["history"]))
 
     def test_backfills_existing_adopted_record_open_time_from_live_position(self):
         store = {

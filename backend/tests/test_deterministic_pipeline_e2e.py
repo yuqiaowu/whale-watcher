@@ -2023,13 +2023,51 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             def execute_trade(self, **kwargs):
                 return "demo-order-1"
 
-        with patch.dict(os.environ, {"TRADING_MODE": "DEMO"}, clear=False):
+        fake_db = FakeDB({"portfolio_state": {"positions": []}})
+        with patch.dict(os.environ, {"TRADING_MODE": "DEMO"}, clear=False), patch.object(dp, "db", fake_db):
             os.environ.pop("ENABLE_V2_EXECUTION", None)
             result = dp._execute_if_enabled(MiniExecutor(), execution, risk_review)
 
         self.assertEqual(result["order_status"], "SUBMITTED")
         self.assertIsNone(result.get("failure_reason"))
         self.assertEqual(result["exchange_order_id"], "demo-order-1")
+
+    def test_execution_request_includes_okx_order_provenance(self):
+        snapshot = {
+            "decision_id": "cycle_2026-05-12_1200_DOGE",
+            "cycleId": "cycle_2026-05-12_1200",
+            "symbol": "DOGE-USDT",
+        }
+        risk_review = {
+            "approved": True,
+            "strategy_family": "DIRECTIONAL",
+            "execution_action": "OPEN_SHORT",
+            "approved_position_size_usd": 278.27,
+            "leverage": 2,
+            "final_intent": "SHORT",
+            "approved_candidate": {
+                "entry_type": "MARKET",
+                "proposed_entry_price": 0.10934,
+                "proposed_sl_price": 0.1136,
+                "proposed_tp_price": 0.10083,
+            },
+        }
+
+        execution = dp._build_execution_request(snapshot, risk_review)
+
+        self.assertTrue(execution["client_order_id"].startswith("ww2605121200DOGES"))
+        self.assertLessEqual(len(execution["client_order_id"]), 32)
+        self.assertEqual("WWV2", execution["order_tag"])
+        self.assertEqual(
+            {
+                "decisionId": "cycle_2026-05-12_1200_DOGE",
+                "cycleId": "cycle_2026-05-12_1200",
+                "symbol": "DOGE-USDT",
+                "intent": "SHORT",
+                "execution_action": "OPEN_SHORT",
+            },
+            execution["order_provenance"],
+        )
 
     def test_run_cycle_persists_pending_record_before_submit(self):
         fake_db = FakeDB({"portfolio_state": {"positions": [], "total_equity": 10000}})
