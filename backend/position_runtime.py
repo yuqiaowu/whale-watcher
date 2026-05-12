@@ -363,20 +363,12 @@ def _thesis_weakened(record: Dict[str, Any], snapshot: Dict[str, Any], live_posi
 
 def _reassessed_max_holding_bars(record: Dict[str, Any], snapshot: Dict[str, Any]) -> int:
     risk_review = record.get("riskReview") or {}
-    research = record.get("researchOutput") or {}
-    features = snapshot.get("decision_ready_features", {}) or {}
+    del snapshot
 
     if risk_review.get("strategy_family") == "GRID":
         return int(risk_review.get("max_holding_bars") or 0)
 
-    max_holding_bars = 3 if features.get("macro_mode") == "EVENT_DRIVEN" else 6
-    if research.get("thesis_strength") == "LOW":
-        max_holding_bars = min(max_holding_bars, 2)
-    elif research.get("thesis_strength") == "MEDIUM":
-        max_holding_bars = min(max_holding_bars, 4)
-    if research.get("holding_horizon") == "SHORT":
-        max_holding_bars = min(max_holding_bars, 3)
-    return max(1, int(max_holding_bars))
+    return 1
 
 
 def _review_expired_position(

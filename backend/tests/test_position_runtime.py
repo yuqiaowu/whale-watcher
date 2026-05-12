@@ -430,7 +430,7 @@ class PositionRuntimeTests(unittest.TestCase):
         self.assertEqual(record["positionState"], "entered")
         self.assertEqual(record["execution"]["runtime_action"], "EXTEND_HOLDING")
         self.assertEqual(record["execution"]["runtime_reason"], "max_holding_review_passed")
-        self.assertEqual(record["riskReview"]["max_holding_bars"], 4)
+        self.assertEqual(record["riskReview"]["max_holding_bars"], 1)
         self.assertIsNotNone(record["execution"].get("holding_window_started_at"))
         self.assertTrue(any(event["type"] == "MAX_HOLDING_REVIEW_EXTENDED" for event in record["execution"]["history"]))
 
@@ -707,7 +707,7 @@ class PositionRuntimeTests(unittest.TestCase):
         self.assertEqual(record["positionState"], "entered")
         self.assertEqual(record["execution"]["runtime_action"], "EXTEND_HOLDING")
         self.assertEqual(record["execution"]["runtime_reason"], "max_holding_review_passed")
-        self.assertEqual(record["riskReview"]["max_holding_bars"], 4)
+        self.assertEqual(record["riskReview"]["max_holding_bars"], 1)
         self.assertTrue(any(event["type"] == "MAX_HOLDING_REVIEW_EXTENDED" for event in record["execution"]["history"]))
 
     def test_f_blueprint_skips_generic_invalidation_and_uses_f_runtime_rules(self):
