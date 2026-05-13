@@ -953,6 +953,11 @@ class OKXExecutor:
                 info = self.get_instrument_info(pos["instId"])
                 ct_val = info.get("ctVal", 1.0) if info else 1.0
                 actual_amount = abs(float(pos.get("pos", 0))) * ct_val
+                leverage = float(pos.get("lever", 1) or 1)
+                raw_notional = float(pos.get("notionalUsd", 0) or 0)
+                notional_usd = raw_notional if raw_notional > 0 else actual_amount * mark_px
+                raw_margin = float(pos.get("margin", 0) or 0)
+                margin_usd = raw_margin if raw_margin > 0 else notional_usd / max(leverage, 1.0)
 
                 # Retrieve SL/TP from Algo Map
                 sl = algo_map.get(pos["instId"], {}).get("sl")
@@ -963,14 +968,16 @@ class OKXExecutor:
                 mapped_real.append({
                     "symbol": sym,
                     "instId": pos["instId"],
-                    "leverage": int(float(pos.get("lever", 1))),
+                    "leverage": int(leverage),
                     "type": side,
                     "entryPrice": entry_px,
                     "currentPrice": mark_px,
                     "pnl": upl,
                     "pnlPercent": float(f"{upl_ratio:.2f}"),
                     "amount": str(actual_amount), # Actual tokens/size
-                    "margin": float(pos.get("margin", 0) or pos.get("notionalUsd", 0)) / float(pos.get("lever", 1)), # Approx
+                    "margin": margin_usd,
+                    "marginUsd": margin_usd,
+                    "notionalUsd": notional_usd,
                     "stopLoss": sl,
                     "takeProfit": tp,
                     "timestamp": opened_at,

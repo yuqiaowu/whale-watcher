@@ -139,7 +139,11 @@ export function AICopyTrading() {
                     <div className="bg-[#0A0C0E] border border-[#2D3139]/30 p-4">
                       <div className="text-[10px] text-[#8E9297] mb-2">{t.aiTrading.cashBalance}</div>
                       <div className="text-2xl font-bold font-mono text-[#E8E8E8]">
-                        ${(summary?.nav ? summary.nav - positions.reduce((acc, p) => acc + (p.entryPrice * Number(p.amount) / (p.leverage || 1)), 0) : 0).toFixed(2)}
+                        ${(summary?.nav ? summary.nav - positions.reduce((acc, p) => {
+                          const notional = p.notionalUsd ?? (p.entryPrice * Number(p.amount || 0));
+                          const margin = p.marginUsd ?? p.margin ?? (notional / (p.leverage || 1));
+                          return acc + margin;
+                        }, 0) : 0).toFixed(2)}
                       </div>
                     </div>
                   </div>
@@ -165,6 +169,10 @@ export function AICopyTrading() {
 
                         <div className="text-[10px] text-[#8E9297] font-mono">
                           {t.aiTrading.holding}: {pos.amount}
+                        </div>
+                        <div className="text-[10px] text-[#8E9297] font-mono">
+                          {language === "zh" ? "名义仓位" : "Notional"}: ${(pos.notionalUsd ?? (pos.entryPrice * Number(pos.amount || 0))).toFixed(2)}
+                          <span className="ml-3">{language === "zh" ? "保证金" : "Margin"}: ${(pos.marginUsd ?? pos.margin ?? ((pos.notionalUsd ?? (pos.entryPrice * Number(pos.amount || 0))) / (pos.leverage || 1))).toFixed(2)}</span>
                         </div>
 
                         <div className="grid grid-cols-2 gap-y-4">

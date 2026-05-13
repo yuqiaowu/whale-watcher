@@ -1333,7 +1333,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
 
         self.assertTrue(risk_review["approved"])
-        self.assertEqual(risk_review["approved_position_size_usd"], 105.0)
+        self.assertEqual(risk_review["approved_position_size_usd"], 262.5)
         self.assertIn("same-direction resonance increased size", risk_review["review_note"])
         self.assertEqual(risk_review["candidate_structure"]["overall_state"], "same_direction_resonance")
 
@@ -1374,7 +1374,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
 
         self.assertTrue(risk_review["approved"])
-        self.assertEqual(50.0, risk_review["approved_position_size_usd"])
+        self.assertEqual(125.0, risk_review["approved_position_size_usd"])
         self.assertEqual(2.0, risk_review["leverage"])
         self.assertIn("macro conflict reduced size", risk_review["review_note"])
 
@@ -1422,7 +1422,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
 
         self.assertTrue(risk_review["approved"])
-        self.assertEqual(75.0, risk_review["approved_position_size_usd"])
+        self.assertEqual(187.5, risk_review["approved_position_size_usd"])
         self.assertEqual(2.5, risk_review["leverage"])
         self.assertEqual(3, risk_review["max_holding_bars"])
         self.assertIn("major trend conflict lightly reduced size", risk_review["review_note"])
@@ -1468,6 +1468,94 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(risk_review["leverage"], 5.0)
         self.assertEqual(risk_review["approved_position_size_usd"], 40.0)
         self.assertEqual(abs(100 - 150) / 100 * risk_review["approved_position_size_usd"], 20.0)
+
+    def test_risk_review_caps_new_trade_by_total_portfolio_exposure(self):
+        snapshot = {
+            "symbol": "SOL-USDT",
+            "cycleId": "cycle_test",
+            "decision_ready_features": {"macro_mode": "MIXED"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {
+                "overall_state": "single_signal",
+                "has_directional_conflict": False,
+                "long_count": 0,
+                "short_count": 1,
+                "resonance_groups": {"LONG": [], "SHORT": ["ModelDecision_LLM"]},
+                "approved_groups": {"LONG": [], "SHORT": ["ModelDecision_LLM"]},
+                "approved_resonance_strength": 1,
+            },
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "model short",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 95,
+                    "proposed_tp_price": 110,
+                    "reference_values": {},
+                    "invalidation_basis": "invalid",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                },
+            ],
+        }
+        portfolio_state = {
+            "total_equity": 1000.0,
+            "positions": [{"symbol": "ETH", "amount": "7", "currentPrice": 100}],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value=portfolio_state):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertTrue(risk_review["approved"])
+        self.assertEqual(50.0, risk_review["approved_position_size_usd"])
+        self.assertIn("total exposure limit", risk_review["review_note"])
+
+    def test_risk_review_rejects_when_total_portfolio_exposure_is_full(self):
+        snapshot = {
+            "symbol": "SOL-USDT",
+            "cycleId": "cycle_test",
+            "decision_ready_features": {"macro_mode": "MIXED"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {
+                "overall_state": "single_signal",
+                "has_directional_conflict": False,
+                "long_count": 0,
+                "short_count": 1,
+                "resonance_groups": {"LONG": [], "SHORT": ["ModelDecision_LLM"]},
+                "approved_groups": {"LONG": [], "SHORT": ["ModelDecision_LLM"]},
+                "approved_resonance_strength": 1,
+            },
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "model short",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 95,
+                    "proposed_tp_price": 110,
+                    "reference_values": {},
+                    "invalidation_basis": "invalid",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                },
+            ],
+        }
+        portfolio_state = {
+            "total_equity": 1000.0,
+            "positions": [{"symbol": "ETH", "notionalUsd": 800}],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value=portfolio_state):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertFalse(risk_review["approved"])
+        self.assertEqual("NO_TRADE", risk_review["final_intent"])
+        self.assertIn("portfolio total exposure cap reached", risk_review["review_note"])
 
     def test_directional_holding_bars_are_capped_by_thesis_strength(self):
         snapshot = {

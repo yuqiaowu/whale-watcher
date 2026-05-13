@@ -33,6 +33,9 @@ export interface Position {
     stopLoss: number;
     takeProfit: number;
     amount: number | string;
+    margin?: number;
+    marginUsd?: number;
+    notionalUsd?: number;
     pnl: number;
     pnlPercent: number;
     type: string;
@@ -87,7 +90,87 @@ export interface NavPoint {
     btc_price?: number;
 }
 
-// ... (interfaces)
+export interface QlibFreshness {
+    fresh?: boolean;
+    expected_completed_bar?: string | null;
+    payload_as_of?: string | null;
+    model_trained_at?: string | null;
+    model_train_end?: string | null;
+    model_is_fresh?: boolean | null;
+    model_freshness_reason?: string | null;
+    payload_symbols?: string[];
+    missing_payload_symbols?: string[];
+    csv_latest_by_symbol?: Record<string, string | null>;
+    stale_csv_symbols?: string[];
+    reasons?: string[];
+}
+
+export interface V2LatestCycle {
+    cycleId?: string;
+    generated_at?: string;
+    generated_at_local?: string;
+    cycle_local_time?: string;
+    timeframe?: string;
+    decision_mode?: 'model_decision' | 'candidate_blueprint' | string;
+    qlib_freshness?: QlibFreshness;
+    snapshots?: Record<string, any>[];
+    candidate_batches?: Record<string, any>[];
+    rule_evaluations?: Record<string, any>[];
+    research_outputs?: Array<Record<string, any> | null>;
+    risk_reviews?: Record<string, any>[];
+    executions?: Record<string, any>[];
+    record_count?: number;
+    post_trade_review?: Record<string, any> | null;
+}
+
+export interface V2TradeRecord {
+    decisionId?: string;
+    cycleId?: string;
+    symbol?: string;
+    timeframe?: string;
+    positionState?: string;
+    snapshot?: Record<string, any>;
+    marketState?: Record<string, any> | null;
+    modelDecision?: {
+        schema_version?: string;
+        action?: 'BUY' | 'SELL' | 'WAIT' | 'HOLD' | string;
+        direction?: 'LONG' | 'SHORT' | 'FLAT' | string;
+        confidence?: number;
+        setup_type?: string;
+        risk_level?: string;
+        horizon?: string;
+        reason_codes?: string[];
+        invalid_if?: string[];
+        invalidation_rules?: Record<string, any>[];
+        summary?: string;
+        model_role?: string;
+        llm_audit?: Record<string, any>;
+        verifier?: Record<string, any>;
+    } | null;
+    candidate?: {
+        generation_mode?: 'model_decision' | string;
+        candidate_proposals?: Record<string, any>[];
+        model_decision_diagnostic?: Record<string, any>;
+        qlib_freshness?: QlibFreshness;
+        [key: string]: any;
+    };
+    ruleEvaluation?: Record<string, any>;
+    researchOutput?: Record<string, any> | null;
+    riskReview?: Record<string, any>;
+    execution?: Record<string, any>;
+    provenance?: Record<string, any>;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface ApiHealth {
+    status?: string;
+    version?: string;
+    mongo_connected?: boolean;
+    latest_run_status?: string;
+    latest_run_at?: string;
+    latest_cycle_id?: string;
+}
 
 export interface MarketStats {
     fed_futures?: {
@@ -163,5 +246,29 @@ export async function fetchMarketStats(): Promise<MarketStats> {
 export async function fetchCryptoData(): Promise<CryptoDataResponse> {
     const res = await fetch(`${API_BASE_URL}/crypto-data`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch crypto data');
+    return res.json();
+}
+
+export async function fetchLatestV2Cycle(): Promise<V2LatestCycle> {
+    const res = await fetch(`${API_BASE_URL}/v2/latest-cycle`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch latest v2 cycle');
+    return res.json();
+}
+
+export async function fetchV2TradeRecords(): Promise<V2TradeRecord[]> {
+    const res = await fetch(`${API_BASE_URL}/v2/trade-records`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch v2 trade records');
+    return res.json();
+}
+
+export async function fetchLatestV2TradeRecord(): Promise<V2TradeRecord> {
+    const res = await fetch(`${API_BASE_URL}/v2/latest-trade-record`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch latest v2 trade record');
+    return res.json();
+}
+
+export async function fetchApiHealth(): Promise<ApiHealth> {
+    const res = await fetch(`${API_BASE_URL}/health`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch API health');
     return res.json();
 }

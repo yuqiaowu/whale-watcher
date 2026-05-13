@@ -3,6 +3,7 @@ import { translations, Language } from './translations';
 
 interface LanguageContextType {
   language: Language;
+  setLanguage: (language: Language) => void;
   toggleLanguage: () => void;
   t: typeof translations.zh;
 }
@@ -18,14 +19,31 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return 'zh';
   };
 
-  const [language, setLanguage] = useState<Language>(detectSystemLanguage);
+  const getInitialLanguage = (): Language => {
+    if (typeof window !== 'undefined') {
+      const saved = window.localStorage.getItem('preferred-language');
+      if (saved === 'zh' || saved === 'en') return saved;
+    }
+    return detectSystemLanguage();
+  };
+
+  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+
+  const setLanguage = (nextLanguage: Language) => {
+    setLanguageState(nextLanguage);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('preferred-language', nextLanguage);
+      document.documentElement.lang = nextLanguage === 'zh' ? 'zh-CN' : 'en';
+    }
+  };
 
   const toggleLanguage = () => {
-    setLanguage(prev => prev === 'zh' ? 'en' : 'zh');
+    setLanguage(language === 'zh' ? 'en' : 'zh');
   };
 
   const value = {
     language,
+    setLanguage,
     toggleLanguage,
     t: translations[language]
   };
@@ -44,6 +62,7 @@ export function useLanguage() {
     if (import.meta.hot) {
       return {
         language: 'zh' as Language,
+        setLanguage: () => { },
         toggleLanguage: () => { },
         t: translations.zh
       };

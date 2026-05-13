@@ -82,8 +82,9 @@ GLOBAL_CONFIG = {
     "global_leverage_min": 1.0,
     "global_leverage_max": 8.0,
     "approved_risk_fraction": 0.02,
-    "default_position_size_fraction": 0.10,
-    "max_position_size_fraction": 0.25,
+    "default_position_size_fraction": 0.25,
+    "max_position_size_fraction": 0.40,
+    "max_total_exposure_fraction": 0.75,
     "qlib_rank_bucket_size": 3,
     "qlib_prob_threshold": 0.55,
     "qlib_prob_gap_threshold": 0.15,
@@ -597,7 +598,7 @@ def _symbol_position_snapshot(portfolio_state: Dict[str, Any], symbol: str) -> D
 
     first = symbol_positions[0]
     side = "LONG" if str(first.get("type", "")).lower() == "long" else "SHORT"
-    notional = _safe_float(first.get("margin")) * max(_safe_float(first.get("leverage"), 1.0), 1.0)
+    notional = _position_notional_usd(first)
     distance_to_liq = _estimate_distance_to_liq(first)
     return {
         "position_side": side,
@@ -608,6 +609,48 @@ def _symbol_position_snapshot(portfolio_state: Dict[str, Any], symbol: str) -> D
         "distance_to_liq": distance_to_liq,
         "open_positions": symbol_positions,
     }
+
+
+def _position_notional_usd(position: Dict[str, Any]) -> float:
+    explicit = _safe_float(
+        position.get("notionalUsd")
+        or position.get("notional_usd")
+        or position.get("position_size_usd")
+        or position.get("size_usd"),
+        0.0,
+    )
+    if explicit > 0:
+        return explicit
+
+    amount = _safe_float(position.get("amount") or position.get("size") or position.get("pos") or position.get("sz"), 0.0)
+    price = _safe_float(
+        position.get("currentPrice") or position.get("entryPrice") or position.get("markPx") or position.get("avgPx"),
+        0.0,
+    )
+    if amount > 0 and price > 0:
+        return abs(amount) * price
+
+    margin = _safe_float(position.get("margin") or position.get("initial_margin") or position.get("imr"), 0.0)
+    leverage = max(_safe_float(position.get("leverage") or position.get("lever"), 1.0), 1.0)
+    return margin * leverage if margin > 0 else 0.0
+
+
+def _portfolio_total_exposure_usd(portfolio_state: Dict[str, Any]) -> float:
+    positions = portfolio_state.get("positions", []) if isinstance(portfolio_state, dict) else []
+    if not isinstance(positions, list):
+        return 0.0
+    return sum(_position_notional_usd(position) for position in positions if isinstance(position, dict))
+
+
+def _cap_position_size_by_total_exposure(
+    portfolio_state: Dict[str, Any],
+    account_equity: float,
+    requested_size_usd: float,
+) -> Tuple[float, float, float]:
+    max_total_exposure = account_equity * GLOBAL_CONFIG["max_total_exposure_fraction"]
+    current_exposure = _portfolio_total_exposure_usd(portfolio_state)
+    remaining_exposure = max(max_total_exposure - current_exposure, 0.0)
+    return min(requested_size_usd, remaining_exposure), current_exposure, max_total_exposure
 
 
 def _estimate_distance_to_liq(position: Dict[str, Any]) -> Optional[float]:
@@ -2693,6 +2736,57 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
             stop_loss=_safe_float(candidate.get("proposed_sl_price")),
             requested_size_usd=approved_position_size_usd,
         )
+    approved_position_size_usd, current_exposure_usd, max_total_exposure_usd = _cap_position_size_by_total_exposure(
+        portfolio_state=portfolio_state,
+        account_equity=account_equity,
+        requested_size_usd=approved_position_size_usd,
+    )
+    if approved_position_size_usd <= 0:
+        return {
+            "symbol": snapshot["symbol"],
+            "cycleId": snapshot["cycleId"],
+            "strategy_family": _strategy_family_for_intent(candidate["decision_intent"]),
+            "approved": False,
+            "final_intent": "NO_TRADE",
+            "approved_risk_fraction": 0.0,
+            "approved_position_size_usd": 0.0,
+            "leverage": 1.0,
+            "max_holding_bars": 0,
+            "execution_action": "DO_NOTHING",
+            "next_position_state": "candidate",
+            "review_note": (
+                "portfolio total exposure cap reached; "
+                f"current_exposure={round(current_exposure_usd, 2)}, "
+                f"max_total_exposure={round(max_total_exposure_usd, 2)}"
+            ),
+            "approved_candidate": candidate,
+            "candidate_structure": candidate_structure,
+        }
+    if current_exposure_usd + approved_position_size_usd >= max_total_exposure_usd:
+        review_note = (
+            f"{review_note}; capped by portfolio total exposure limit "
+            f"({round(current_exposure_usd, 2)}/{round(max_total_exposure_usd, 2)} used)"
+        )
+    if is_grid_candidate:
+        grid_count = max(int(candidate.get("reference_values", {}).get("grid_count") or 1), 1)
+        per_grid_notional = approved_position_size_usd / grid_count
+        candidate.setdefault("reference_values", {})
+        candidate["reference_values"]["per_grid_notional_usd"] = round(per_grid_notional, 2)
+        if per_grid_notional < GLOBAL_CONFIG["grid_min_per_grid_notional_usd"]:
+            return {
+                "symbol": snapshot["symbol"],
+                "cycleId": snapshot["cycleId"],
+                "strategy_family": STRATEGY_FAMILY_GRID,
+                "approved": False,
+                "final_intent": "NO_TRADE",
+                "approved_risk_fraction": 0.0,
+                "approved_position_size_usd": 0.0,
+                "leverage": 1.0,
+                "max_holding_bars": 0,
+                "execution_action": "DO_NOTHING",
+                "next_position_state": "candidate",
+                "review_note": "grid per-cell notional too small after portfolio exposure cap",
+            }
     leverage = min(GLOBAL_CONFIG["global_leverage_max"], max(GLOBAL_CONFIG["global_leverage_min"], leverage))
 
     if candidate["decision_intent"] == "GRID_NEUTRAL":
