@@ -3,9 +3,9 @@
   "cycleId": "cycle_2026-05-14_1600",
   "symbol": "DOGE-USDT",
   "timeframe": "4h",
-  "snapshot_timestamp": 1778774950,
-  "snapshot_time": "2026-05-14T16:09:10Z",
-  "snapshot_time_local": "2026-05-15T00:09:10+0800",
+  "snapshot_timestamp": 1778782118,
+  "snapshot_time": "2026-05-14T18:08:38Z",
+  "snapshot_time_local": "2026-05-15T02:08:38+0800",
   "local_timezone": "Asia/Shanghai",
   "positionState": "candidate",
   "snapshot": {
@@ -13,21 +13,21 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-14_1600",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778774950,
-    "snapshot_time": "2026-05-14T16:09:10Z",
-    "snapshot_time_local": "2026-05-15T00:09:10+0800",
+    "snapshot_timestamp": 1778782118,
+    "snapshot_time": "2026-05-14T18:08:38Z",
+    "snapshot_time_local": "2026-05-15T02:08:38+0800",
     "local_timezone": "Asia/Shanghai",
     "market_snapshot": {
-      "price": 0.11381,
+      "price": 0.11582,
       "price_source": "market_price",
       "stale_market_price_replaced": false,
-      "raw_market_price": 0.11381,
+      "raw_market_price": 0.11582,
       "reference_close_price": 0.11389,
-      "change_24h": 1.074600355239777,
+      "change_24h": 2.85968028419183,
       "rsi_4h": 60.07085794295177,
       "rsi_delta_4h": 2.487595993920948,
       "adx_14": 16.43373160505303,
-      "volume_ratio": 1.4679136275727476,
+      "volume_ratio": 1.5348915894602726,
       "bb_width": 0.055983729122934,
       "bb_pct_b": 0.9104927933609418,
       "bb_mid_slope_pct": 0.004549476114127441,
@@ -38,13 +38,13 @@
       "range_edge_close_count": 0,
       "wick_ratio_lower": 2.75,
       "wick_ratio_upper": 75.0,
-      "funding_rate": -2.05208930945e-05,
-      "funding_zscore": -1.19,
-      "oi_now": 120696531.56619994,
+      "funding_rate": -8.00554190722e-05,
+      "funding_zscore": -2.22,
+      "oi_now": 122828154.69639996,
       "delta_oi_24h_percent": 5.993822206865099,
-      "natr_percent": 2.0045015005245412,
-      "whale_ls_ratio": 1.08529945553539,
-      "whale_pos_ratio": 0.8832830797461284,
+      "natr_percent": 2.099842379089334,
+      "whale_ls_ratio": 1.0374149659863947,
+      "whale_pos_ratio": 0.9012585938947723,
       "atr_14": 0.0025014285714285,
       "trigger_candle_open": 0.11308,
       "trigger_candle_high": 0.11662,
@@ -85,14 +85,14 @@
       "flow_signal_mixed": false,
       "sentiment_score": 0.0,
       "liquidation_long_usd": 867877.3225000004,
-      "liquidation_short_usd": 1909453.5547999993,
+      "liquidation_short_usd": 1881547.4175999996,
       "liquidation_long_to_volume_4h": 0.0032724897166265,
-      "liquidation_short_to_volume_4h": 0.0071999428495944,
-      "funding_rate": -2.05208930945e-05,
-      "funding_zscore": -1.19,
-      "oi_now": 120696531.56619994,
+      "liquidation_short_to_volume_4h": 0.0070427701137536,
+      "funding_rate": -8.00554190722e-05,
+      "funding_zscore": -2.22,
+      "oi_now": 122828154.69639996,
       "delta_oi_24h_percent": 5.993822206865099,
-      "qlib_relative_score_8h": 0.1283,
+      "qlib_relative_score_8h": 0.3062,
       "qlib_rank_8h": 1,
       "qlib_percentile_8h": 1.0,
       "p_up_8h": 0.9,
@@ -105,69 +105,69 @@
     "macro_snapshot": {
       "event_type": "FED_SPEECH",
       "policy_stance": "HAWKISH",
-      "market_impact": "RISK_OFF",
-      "impact_horizon": "MULTI_DAY",
+      "market_impact": "MIXED",
+      "impact_horizon": "SWING",
       "crypto_relevance": "HIGH",
       "key_tags": [
         "FED_HAWKISH",
-        "LIQUIDITY_CONTRACTING",
         "RISK_OFF_NEWS",
-        "USD_STRENGTH"
+        "USD_STRENGTH",
+        "RISK_ON_NEWS"
       ],
-      "brief_rationale": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. Structured facts support this: VIX up 4.33% in 5 days, DXY up 0.5%, stablecoin outflow, Fear & Greed at 34 (Fear). The mixed adoption news is outweighed by $635M ETF outflows and hawkish Fed signals. Blended conclusion reinforces the consensus.",
-      "news_summary": "Mixed crypto adoption news and institutional flows, but large Bitcoin ETF outflows and hawkish Fed signals dominate risk sentiment.",
+      "brief_rationale": "Deterministic view emphasizes hawkish Fed and risk-off macro (fear/greed 34, stablecoin outflows, DXY strength), but LLM view correctly incorporates positive crypto-specific news (Clarity Act, Blackrock BUIDL, Interactive Brokers). The mixed evidence supports a blended MIXED impact with SWING horizon, as crypto regulatory progress may offset macro headwinds in the short term.",
+      "news_summary": "Crypto regulatory progress and institutional adoption boost sentiment, while Fed speakers maintain hawkish tone.",
       "classification_basis": {
         "fear_greed_index": 34.0,
         "fear_greed_state": "FEAR",
         "fear_greed_change_5d": null,
-        "fed_implied_rate": 3.615,
-        "fed_change_5d_bps": -2.0,
-        "usdjpy_level": 158.098,
-        "usdjpy_change_5d_pct": 1.02,
-        "dxy_level": 98.75,
-        "dxy_change_5d_pct": 0.5,
-        "vix_level": 17.82,
-        "vix_change_1d_pct": -0.28,
-        "vix_change_5d_pct": 4.33,
+        "fed_implied_rate": 3.62,
+        "fed_change_5d_bps": -1.5,
+        "usdjpy_level": 158.184,
+        "usdjpy_change_5d_pct": 1.07,
+        "dxy_level": 98.8,
+        "dxy_change_5d_pct": 0.56,
+        "vix_level": 17.36,
+        "vix_change_1d_pct": -2.85,
+        "vix_change_5d_pct": 1.64,
         "us10y_level": 4.45,
-        "us10y_change_5d_pct": 1.3,
-        "global_stable_flow": -301620012.39701843,
-        "global_stable_market_cap": 266544809847.03943,
-        "global_stable_flow_ratio_pct": -0.11315921423122341
+        "us10y_change_5d_pct": 1.39,
+        "global_stable_flow": -281385251.10691833,
+        "global_stable_market_cap": 266594146214.8014,
+        "global_stable_flow_ratio_pct": -0.10554817316963869
       },
       "key_events": [
         "FED_HAWKISH",
-        "LIQUIDITY_CONTRACTING",
         "RISK_OFF_NEWS",
-        "USD_STRENGTH"
+        "USD_STRENGTH",
+        "RISK_ON_NEWS"
       ],
       "event_facts": {
         "fear_greed_index": 34.0,
         "fear_greed_state": "FEAR",
         "fear_greed_change_5d": null,
-        "fed_implied_rate": 3.615,
-        "fed_change_5d_bps": -2.0,
-        "usdjpy_level": 158.098,
-        "usdjpy_change_5d_pct": 1.02,
-        "dxy_level": 98.75,
-        "dxy_change_5d_pct": 0.5,
-        "vix_level": 17.82,
-        "vix_change_1d_pct": -0.28,
-        "vix_change_5d_pct": 4.33,
+        "fed_implied_rate": 3.62,
+        "fed_change_5d_bps": -1.5,
+        "usdjpy_level": 158.184,
+        "usdjpy_change_5d_pct": 1.07,
+        "dxy_level": 98.8,
+        "dxy_change_5d_pct": 0.56,
+        "vix_level": 17.36,
+        "vix_change_1d_pct": -2.85,
+        "vix_change_5d_pct": 1.64,
         "us10y_level": 4.45,
-        "us10y_change_5d_pct": 1.3,
-        "global_stable_flow": -301620012.39701843,
-        "global_stable_market_cap": 266544809847.03943,
-        "global_stable_flow_ratio_pct": -0.11315921423122341
+        "us10y_change_5d_pct": 1.39,
+        "global_stable_flow": -281385251.10691833,
+        "global_stable_market_cap": 266594146214.8014,
+        "global_stable_flow_ratio_pct": -0.10554817316963869
       },
       "news_selection": {
         "selected": [
           {
-            "title": "JPMorgan lifts Bitcoin ETF exposure in Q1, led by BlackRock\u2019s IBIT",
-            "bucket": "bitcoin",
-            "score": 23,
-            "published": "Thu, 14 May 2026 11:22:22 +0000",
-            "source": "https://cointelegraph.com/news/jpmorgan-bitcoin-etf-buy-blackrock-ibit-q1-2026?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
+            "title": "Crypto industry scores win as Clarity Act regulation bill clears Senate hurdle",
+            "bucket": "macro",
+            "score": 21,
+            "published": "Thu, 14 May 2026 17:55:58 GMT",
+            "source": "https://www.cnbc.com/2026/05/14/clarity-act-congress-crypto-senate.html",
             "sentiment": "Bearish"
           },
           {
@@ -179,28 +179,28 @@
             "sentiment": "Bullish"
           },
           {
-            "title": "Coinbase Wins USDC Treasury Deployer Seat on Hyperliquid, Circle Handles Cross-Chain Infrastructure",
+            "title": "Blackrock\u2019s Onchain BUIDL Fund Secures Top AAA-mf Rating From Moody\u2019s",
             "bucket": "general",
-            "score": 19,
-            "published": "Thu, 14 May 2026 14:01:06 +0000",
-            "source": "https://news.bitcoin.com/coinbase-wins-usdc-treasury-deployer-seat-on-hyperliquid-circle-handles-cross-chain-infrastructure/",
+            "score": 18,
+            "published": "Thu, 14 May 2026 16:45:48 +0000",
+            "source": "https://news.bitcoin.com/blackrocks-onchain-buidl-fund-secures-top-aaa-mf-rating-from-moodys/",
             "sentiment": "Bullish"
           },
           {
             "title": "Bessent sees 'substantial disinflation' ahead as Warsh takes over the Fed",
             "bucket": "macro",
             "score": 18,
-            "published": "Thu, 14 May 2026 14:20:36 GMT",
+            "published": "Thu, 14 May 2026 16:22:18 GMT",
             "source": "https://www.cnbc.com/2026/05/14/bessent-sees-substantial-disinflation-ahead-as-warsh-takes-over-the-fed.html",
             "sentiment": "Bullish"
           },
           {
-            "title": "Bitcoin ETF Outflows Just Hit a 3-Month High of $635 Million: What\u2019s Driving the Exit?",
-            "bucket": "macro",
-            "score": 17,
-            "published": "2026-05-14T15:43:40Z",
-            "source": "https://finance.yahoo.com/markets/crypto/articles/bitcoin-etf-outflows-just-hit-154340851.html",
-            "sentiment": "Bearish"
+            "title": "Bitcoin holds key support for $85K breakout as S&P 500 hits new all-time high",
+            "bucket": "bitcoin",
+            "score": 16,
+            "published": "Thu, 14 May 2026 15:52:40 +0000",
+            "source": "https://cointelegraph.com/markets/bitcoin-holds-support-for-85k-breakout-sp-500-new-all-time-high?utm_source=rss_feed&utm_medium=rss_tag_bitcoin&utm_campaign=rss_partner_inbound",
+            "sentiment": "Bullish"
           },
           {
             "title": "[USD] FOMC Member Williams Speaks (Low)",
@@ -219,22 +219,6 @@
             "sentiment": "Bearish"
           },
           {
-            "title": "Bitcoin Firm Nakamoto's Stock Hits New Low After Posting $239M Loss, Selling More BTC",
-            "bucket": "general",
-            "score": 14,
-            "published": "Thu, 14 May 2026 15:09:28 +0000",
-            "source": "https://decrypt.co/367854/bitcoin-firm-nakamoto-stock-new-low-239-million-loss-selling-btc",
-            "sentiment": "Bearish"
-          },
-          {
-            "title": "Bank of England Softens \u2018Overly Conservative\u2019 Stablecoin Plans Amid Industry Pressure",
-            "bucket": "general",
-            "score": 14,
-            "published": "Thu, 14 May 2026 13:10:39 +0000",
-            "source": "https://decrypt.co/367831/bank-of-england-softens-overly-conservative-stablecoin-plans-amid-industry-pressure",
-            "sentiment": "Bearish"
-          },
-          {
             "title": "Wells Fargo lifts Ether ETF holdings in Q1 as Bitcoin positions shift",
             "bucket": "ethereum",
             "score": 13,
@@ -243,11 +227,19 @@
             "sentiment": "Neutral"
           },
           {
-            "title": "AARP Backs CLARITY Act Ahead of Senate Banking Markup",
+            "title": "Pro-Crypto CLARITY Act H.R. 3633 Passes Senate Banking Committee 15-9",
             "bucket": "general",
             "score": 13,
-            "published": "Thu, 14 May 2026 13:21:46 +0000",
-            "source": "https://news.bitcoin.com/aarp-backs-clarity-act-ahead-of-senate-banking-markup/",
+            "published": "Thu, 14 May 2026 17:08:25 +0000",
+            "source": "https://news.bitcoin.com/pro-crypto-clarity-act-h-r-3633-passes-senate-banking-committee-15-9/",
+            "sentiment": "Neutral"
+          },
+          {
+            "title": "Democrats Split on Clarity Act as Crypto Bill Passes Key Senate Committee Vote",
+            "bucket": "general",
+            "score": 12,
+            "published": "Thu, 14 May 2026 16:51:58 +0000",
+            "source": "https://decrypt.co/367871/democrats-split-clarity-act-crypto-bill-passes-senate-committee-vote",
             "sentiment": "Neutral"
           },
           {
@@ -257,9 +249,7 @@
             "published": "2026-05-15 1:15pm",
             "source": "https://www.forexfactory.com/calendar/192-us-capacity-utilization-rate",
             "sentiment": "Bearish"
-          }
-        ],
-        "dropped": [
+          },
           {
             "title": "[EUR] German Bank Holiday (Holiday)",
             "bucket": "calendar",
@@ -267,13 +257,23 @@
             "published": "2026-05-14 6:02am",
             "source": "https://www.forexfactory.com/calendar/391-ge-bank-holiday",
             "sentiment": "Bearish"
-          },
+          }
+        ],
+        "dropped": [
           {
             "title": "[EUR] French Bank Holiday (Holiday)",
             "bucket": "calendar",
             "score": 12,
             "published": "2026-05-14 6:01am",
             "source": "https://www.forexfactory.com/calendar/396-fr-bank-holiday",
+            "sentiment": "Bearish"
+          },
+          {
+            "title": "U.S. Border Patrol Chief Mike Banks resigns",
+            "bucket": "macro",
+            "score": 11,
+            "published": "Thu, 14 May 2026 17:24:56 GMT",
+            "source": "https://www.cnbc.com/2026/05/14/border-patrol-mike-banks-resigns-cbp-immigration.html",
             "sentiment": "Bearish"
           },
           {
@@ -293,20 +293,20 @@
             "sentiment": "Bearish"
           },
           {
-            "title": "Bond markets brace as UK PM Starmer's political rivals break cover, heath sec. Streeting resigns",
+            "title": "Analysis: Trump finally gets his man at the Fed. Will Kevin Warsh disappoint him?",
             "bucket": "macro",
-            "score": 11,
-            "published": "Thu, 14 May 2026 14:30:20 GMT",
-            "source": "https://www.cnbc.com/2026/05/14/uk-labour-leadership-challenge-starmer-rivals.html",
+            "score": 10,
+            "published": "Wed, 13 May 2026 23:22:51 GMT",
+            "source": "https://www.cnbc.com/2026/05/13/warsh-trump-congress-senate-analysis.html",
             "sentiment": "Neutral"
           },
           {
-            "title": "Kevin Warsh wins Senate confirmation as the next Federal Reserve chair",
-            "bucket": "macro",
+            "title": "Dune Cuts 25% of Staff and Bets on AI to Power Crypto Data\u2019s Next Chapter",
+            "bucket": "general",
             "score": 10,
-            "published": "Wed, 13 May 2026 23:21:35 GMT",
-            "source": "https://www.cnbc.com/2026/05/13/kevin-warsh-wins-senate-confirmation-as-the-next-federal-reserve-chair.html",
-            "sentiment": "Neutral"
+            "published": "Thu, 14 May 2026 17:38:57 +0000",
+            "source": "https://news.bitcoin.com/dune-cuts-25-of-staff-and-bets-on-ai-to-power-crypto-datas-next-chapter/",
+            "sentiment": "Bullish"
           },
           {
             "title": "CLARITY Act Faces Growing Scrutiny as Senate Markup Begins",
@@ -317,12 +317,12 @@
             "sentiment": "Bullish"
           },
           {
-            "title": "CME Launching Nasdaq Crypto Index Futures Led by BTC, ETH, XRP",
-            "bucket": "general",
+            "title": "Solid Power (SLDP) Continues Advancing Key Battery Milestones As Liquidity Stays Strong",
+            "bucket": "macro",
             "score": 10,
-            "published": "Thu, 14 May 2026 14:45:07 +0000",
-            "source": "https://news.bitcoin.com/cme-launching-nasdaq-crypto-index-futures-led-by-btc-eth-xrp/",
-            "sentiment": "Bullish"
+            "published": "2026-05-14T17:38:38Z",
+            "source": "https://finance.yahoo.com/markets/stocks/articles/solid-power-sldp-continues-advancing-173838228.html",
+            "sentiment": "Neutral"
           },
           {
             "title": "Traders say Ethereum ready for a 'strong move' after ETH price taps $2.3K",
@@ -339,6 +339,14 @@
             "published": "Tue, 12 May 2026 07:06:20 +0000",
             "source": "https://cointelegraph.com/news/ethereum-foundation-hits-glamsterdam-milestones-names-new-protocol-leads?utm_source=rss_feed&utm_medium=rss_tag_ethereum&utm_campaign=rss_partner_inbound",
             "sentiment": "Bullish"
+          },
+          {
+            "title": "Tether, Tron and TRM Financial Crime Unit Has Frozen $450 Million in Illicit Crypto Funds",
+            "bucket": "general",
+            "score": 9,
+            "published": "Thu, 14 May 2026 17:16:12 +0000",
+            "source": "https://decrypt.co/367874/tether-tron-trm-financial-crime-unit-frozen-450-million-crypto-funds",
+            "sentiment": "Neutral"
           },
           {
             "title": "Bullish Shares Dip on Earnings Miss, $605 Million Loss as Value of Crypto Holdings Fell",
@@ -397,31 +405,23 @@
             "sentiment": "Neutral"
           },
           {
-            "title": "Reform UK's Nigel Farage Faces Standards Probe Over Tether Billionaire's $6.7 Million Gift",
-            "bucket": "general",
-            "score": 7,
-            "published": "Thu, 14 May 2026 14:25:26 +0000",
-            "source": "https://decrypt.co/367821/reform-uks-nigel-farage-faces-standards-probe-tether-billionaires-gift",
-            "sentiment": "Neutral"
-          },
-          {
-            "title": "Wealthy donors stand to win double tax benefit if Trump Accounts allow stock donations",
-            "bucket": "macro",
-            "score": 6,
-            "published": "Thu, 14 May 2026 15:15:40 GMT",
-            "source": "https://www.cnbc.com/2026/05/14/wealthy-donors-gain-trump-accounts-stock-donations.html",
-            "sentiment": "Neutral"
-          },
-          {
             "title": "65% of workers have avoided using AI for moral, environmental, privacy or other reasons: CNBC survey",
             "bucket": "macro",
             "score": 6,
             "published": "Thu, 14 May 2026 13:30:02 GMT",
             "source": "https://www.cnbc.com/2026/05/14/most-workers-have-avoided-ai-for-moral-environmental-privacy-other-reasons-cnbc-survey.html",
             "sentiment": "Neutral"
+          },
+          {
+            "title": "Trump-Xi summit could hinge on these two crucial tech flashpoints",
+            "bucket": "macro",
+            "score": 6,
+            "published": "Thu, 14 May 2026 13:25:05 GMT",
+            "source": "https://www.cnbc.com/2026/05/14/trump-xi-summit-tech-flashpoints.html",
+            "sentiment": "Neutral"
           }
         ],
-        "candidate_count": 33
+        "candidate_count": 35
       },
       "provenance": {
         "generation_mode": "llm_refined",
@@ -430,6 +430,7 @@
         "llm_applied": true,
         "llm_override_fields": [
           "brief_rationale",
+          "key_tags",
           "news_summary"
         ],
         "llm_audit": {
@@ -439,16 +440,15 @@
           "status": "parsed",
           "system_prompt_preview": "You are a constrained macro-news classifier. Use fixed reasoning order: event type -> impact horizon -> market impact -> brief rationale -> summary. Output only a JSON object.",
           "user_prompt_preview": "Read the provided macro news headlines and structured facts. Follow this fixed order: identify event type -> classify impact horizon -> classify market impact -> summarize briefly. Return only valid JSON with keys: news_summary, brief_rationale, market_impact, impact_horizon, crypto_relevance, key_tags. Allowed market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed crypto_relevance: HIGH, MEDIUM, LOW. Do not invent tags outside the provided candidate tag list. FEW_SHOT_EXAMPLES: [{\"headline\": \"Powell says rates may stay higher for longer as inflation remains sticky\", \"expected_output\": {\"news_summary\": \"Fed rhetoric remains restrictive and adds short-term pressure to risk assets.\", \"brief_rationale\": \"Higher-for-longer Fed language is hawkish and usually weighs on crypto in the short term.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"INTRADAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\"]}}, {\"headline\": \"US inflation cools faster than expected and traders price earlier rate cuts\", \"expected_output\": {\"news_summary\": \"Cooling inflation supports easier policy expectations and im...",
-          "raw_response_preview": "{ \"news_summary\": \"Mixed crypto adoption news and institutional flows, but large Bitcoin ETF outflows and hawkish Fed signals dominate risk sentiment.\", \"brief_rationale\": \"Institutional adoption (JPMorgan, Interactive Brokers, Coinbase) is positive, but $635M Bitcoin ETF outflows, Nakamoto's loss, and hawkish Fed speeches (Williams, Hammack) reinforce risk-off. Bessent's disinflation comment is mildly dovish but overshadowed.\", \"market_impact\": \"RISK_OFF\", \"impact_horizon\": \"MULTI_DAY\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"RISK_OFF_NEWS\", \"USD_STRENGTH\"] }",
+          "raw_response_preview": "{ \"news_summary\": \"Crypto regulatory progress and institutional adoption boost sentiment, while Fed speakers maintain hawkish tone.\", \"brief_rationale\": \"Positive crypto-specific news (Clarity Act, Blackrock BUIDL rating, Interactive Brokers) is offset by hawkish Fed speeches and risk-off macro data (fear & greed at 34, stablecoin outflows). Overall mixed but with a slight positive tilt due to regulatory wins.\", \"market_impact\": \"MIXED\", \"impact_horizon\": \"SWING\", \"crypto_relevance\": \"HIGH\", \"key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\", \"USD_STRENGTH\"] }",
           "parsed_response": {
-            "news_summary": "Mixed crypto adoption news and institutional flows, but large Bitcoin ETF outflows and hawkish Fed signals dominate risk sentiment.",
-            "brief_rationale": "Institutional adoption (JPMorgan, Interactive Brokers, Coinbase) is positive, but $635M Bitcoin ETF outflows, Nakamoto's loss, and hawkish Fed speeches (Williams, Hammack) reinforce risk-off. Bessent's disinflation comment is mildly dovish but overshadowed.",
-            "market_impact": "RISK_OFF",
-            "impact_horizon": "MULTI_DAY",
+            "news_summary": "Crypto regulatory progress and institutional adoption boost sentiment, while Fed speakers maintain hawkish tone.",
+            "brief_rationale": "Positive crypto-specific news (Clarity Act, Blackrock BUIDL rating, Interactive Brokers) is offset by hawkish Fed speeches and risk-off macro data (fear & greed at 34, stablecoin outflows). Overall mixed but with a slight positive tilt due to regulatory wins.",
+            "market_impact": "MIXED",
+            "impact_horizon": "SWING",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "LIQUIDITY_CONTRACTING",
               "RISK_OFF_NEWS",
               "USD_STRENGTH"
             ]
@@ -459,17 +459,17 @@
       "final_macro_decision": {
         "source": "llm_adjudicated",
         "selected_view": "blended",
-        "market_impact": "RISK_OFF",
-        "impact_horizon": "MULTI_DAY",
+        "market_impact": "MIXED",
+        "impact_horizon": "SWING",
         "crypto_relevance": "HIGH",
         "key_tags": [
           "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
           "RISK_OFF_NEWS",
-          "USD_STRENGTH"
+          "USD_STRENGTH",
+          "RISK_ON_NEWS"
         ],
         "confidence": "MEDIUM",
-        "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. Structured facts support this: VIX up 4.33% in 5 days, DXY up 0.5%, stablecoin outflow, Fear & Greed at 34 (Fear). The mixed adoption news is outweighed by $635M ETF outflows and hawkish Fed signals. Blended conclusion reinforces the consensus.",
+        "reason": "Deterministic view emphasizes hawkish Fed and risk-off macro (fear/greed 34, stablecoin outflows, DXY strength), but LLM view correctly incorporates positive crypto-specific news (Clarity Act, Blackrock BUIDL, Interactive Brokers). The mixed evidence supports a blended MIXED impact with SWING horizon, as crypto regulatory progress may offset macro headwinds in the short term.",
         "deterministic_view": {
           "event_type": "FED_SPEECH",
           "policy_stance": "HAWKISH",
@@ -480,23 +480,23 @@
             "FED_HAWKISH",
             "LIQUIDITY_CONTRACTING",
             "RISK_OFF_NEWS",
-            "USD_STRENGTH"
+            "USD_STRENGTH",
+            "VOL_PRESSURE_EASING"
           ],
-          "news_summary": "JPMorgan lifts Bitcoin ETF exposure in Q1, led by BlackRock\u2019s IBIT | Interactive Brokers Debuts All-in-One Prediction Market Portal | Coinbase Wins USDC Treasury Deployer Seat on Hyperliquid, Circle Handles Cross-Chain Infrastructure",
-          "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.50%/5d); fear/vix imply risk-off (34, VIX 17.82); stablecoin flow is $-301,620,012. Classified as RISK_OFF with MULTI_DAY horizon."
+          "news_summary": "Crypto industry scores win as Clarity Act regulation bill clears Senate hurdle | Interactive Brokers Debuts All-in-One Prediction Market Portal | Blackrock\u2019s Onchain BUIDL Fund Secures Top AAA-mf Rating From Moody\u2019s",
+          "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.56%/5d); fear/vix imply risk-off (34, VIX 17.36); volatility pressure eased (VIX 17.36, -2.85%/1d); stablecoin flow is $-281,385,251. Classified as RISK_OFF with MULTI_DAY horizon."
         },
         "llm_view": {
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "MULTI_DAY",
+          "market_impact": "MIXED",
+          "impact_horizon": "SWING",
           "crypto_relevance": "HIGH",
           "key_tags": [
             "FED_HAWKISH",
-            "LIQUIDITY_CONTRACTING",
             "RISK_OFF_NEWS",
             "USD_STRENGTH"
           ],
-          "news_summary": "Mixed crypto adoption news and institutional flows, but large Bitcoin ETF outflows and hawkish Fed signals dominate risk sentiment.",
-          "brief_rationale": "Institutional adoption (JPMorgan, Interactive Brokers, Coinbase) is positive, but $635M Bitcoin ETF outflows, Nakamoto's loss, and hawkish Fed speeches (Williams, Hammack) reinforce risk-off. Bessent's disinflation comment is mildly dovish but overshadowed."
+          "news_summary": "Crypto regulatory progress and institutional adoption boost sentiment, while Fed speakers maintain hawkish tone.",
+          "brief_rationale": "Positive crypto-specific news (Clarity Act, Blackrock BUIDL rating, Interactive Brokers) is offset by hawkish Fed speeches and risk-off macro data (fear & greed at 34, stablecoin outflows). Overall mixed but with a slight positive tilt due to regulatory wins."
         },
         "adjudication_audit": {
           "enabled": true,
@@ -504,63 +504,63 @@
           "model": "deepseek-chat",
           "status": "parsed",
           "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"JPMorgan lifts Bitcoin ETF exposure in Q1, led by BlackRock\u2019s IBIT\", \"Interactive Brokers Debuts All-in-One Prediction Market Portal\", \"Coinbase Wins USDC Treasury Deployer Seat on Hyperliquid, Circle Handles Cross-Chain Infrastructure\", \"Bessent sees 'substantial disinflation' ahead as Warsh takes over the Fed\", \"Bitcoin ETF Ou...",
-          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_OFF\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"RISK_OFF_NEWS\", \"USD_STRENGTH\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. Structured facts support this: VIX up 4.33% in 5 days, DXY up 0.5%, stablecoin outflow, Fear & Greed at 34 (Fear). The mixed adoption news is outweighed by $635M ETF outflows and hawkish Fed signals. Blended conclusion reinforces the consensus.\" }",
+          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Crypto industry scores win as Clarity Act regulation bill clears Senate hurdle\", \"Interactive Brokers Debuts All-in-One Prediction Market Portal\", \"Blackrock\u2019s Onchain BUIDL Fund Secures Top AAA-mf Rating From Moody\u2019s\", \"Bessent sees 'substantial disinflation' ahead as Warsh takes over the Fed\", \"Bitcoin holds key support for $8...",
+          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\", \"USD_STRENGTH\", \"RISK_ON_NEWS\"], \"confidence\": 0.7, \"reason\": \"Deterministic view emphasizes hawkish Fed and risk-off macro (fear/greed 34, stablecoin outflows, DXY strength), but LLM view correctly incorporates positive crypto-specific news (Clarity Act, Blackrock BUIDL, Interactive Brokers). The mixed evidence supports a blended MIXED impact with SWING horizon, as crypto regulatory progress may offset macro headwinds in the short term.\" }",
           "parsed_response": {
             "selected_view": "blended",
-            "final_market_impact": "RISK_OFF",
-            "final_impact_horizon": "MULTI_DAY",
+            "final_market_impact": "MIXED",
+            "final_impact_horizon": "SWING",
             "final_crypto_relevance": "HIGH",
             "final_key_tags": [
               "FED_HAWKISH",
-              "LIQUIDITY_CONTRACTING",
               "RISK_OFF_NEWS",
-              "USD_STRENGTH"
+              "USD_STRENGTH",
+              "RISK_ON_NEWS"
             ],
-            "confidence": 0.85,
-            "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. Structured facts support this: VIX up 4.33% in 5 days, DXY up 0.5%, stablecoin outflow, Fear & Greed at 34 (Fear). The mixed adoption news is outweighed by $635M ETF outflows and hawkish Fed signals. Blended conclusion reinforces the consensus."
+            "confidence": 0.7,
+            "reason": "Deterministic view emphasizes hawkish Fed and risk-off macro (fear/greed 34, stablecoin outflows, DXY strength), but LLM view correctly incorporates positive crypto-specific news (Clarity Act, Blackrock BUIDL, Interactive Brokers). The mixed evidence supports a blended MIXED impact with SWING horizon, as crypto regulatory progress may offset macro headwinds in the short term."
           },
           "error": null
         }
       },
       "macro_decision_source": "llm_adjudicated",
       "macro_mode": "RISK_OFF",
-      "macro_horizon": "MULTI_DAY",
+      "macro_horizon": "SWING",
       "macro_permission": "ALLOW_SHORT",
-      "macro_impact_score": -14,
+      "macro_impact_score": -7,
       "macro_bias_tier": "STRONG_RISK_OFF",
       "fear_greed_index": 34.0,
       "fear_greed_state": "FEAR",
       "fear_greed_change_5d": null,
-      "vix_level": 17.82,
-      "vix_change_1d_pct": -0.28,
-      "vix_change_5d_pct": 4.33,
-      "dxy_level": 98.75,
+      "vix_level": 17.36,
+      "vix_change_1d_pct": -2.85,
+      "vix_change_5d_pct": 1.64,
+      "dxy_level": 98.8,
       "dxy_trend": "UP",
-      "usdjpy_level": 158.098,
+      "usdjpy_level": 158.184,
       "usdjpy_trend": "UP",
       "fed_event_risk": "HIGH",
       "macro_event_window": true,
       "risk_off_score": 0.85,
       "news_headlines": [
-        "JPMorgan lifts Bitcoin ETF exposure in Q1, led by BlackRock\u2019s IBIT",
+        "Crypto industry scores win as Clarity Act regulation bill clears Senate hurdle",
         "Interactive Brokers Debuts All-in-One Prediction Market Portal",
-        "Coinbase Wins USDC Treasury Deployer Seat on Hyperliquid, Circle Handles Cross-Chain Infrastructure",
+        "Blackrock\u2019s Onchain BUIDL Fund Secures Top AAA-mf Rating From Moody\u2019s",
         "Bessent sees 'substantial disinflation' ahead as Warsh takes over the Fed",
-        "Bitcoin ETF Outflows Just Hit a 3-Month High of $635 Million: What\u2019s Driving the Exit?",
+        "Bitcoin holds key support for $85K breakout as S&P 500 hits new all-time high",
         "[USD] FOMC Member Williams Speaks (Low)",
         "[USD] FOMC Member Hammack Speaks (Low)",
-        "Bitcoin Firm Nakamoto's Stock Hits New Low After Posting $239M Loss, Selling More BTC",
-        "Bank of England Softens \u2018Overly Conservative\u2019 Stablecoin Plans Amid Industry Pressure",
         "Wells Fargo lifts Ether ETF holdings in Q1 as Bitcoin positions shift",
-        "AARP Backs CLARITY Act Ahead of Senate Banking Markup",
-        "[USD] Capacity Utilization Rate (Low)"
+        "Pro-Crypto CLARITY Act H.R. 3633 Passes Senate Banking Committee 15-9",
+        "Democrats Split on Clarity Act as Crypto Bill Passes Key Senate Committee Vote",
+        "[USD] Capacity Utilization Rate (Low)",
+        "[EUR] German Bank Holiday (Holiday)"
       ]
     },
     "qlib_freshness": {
       "fresh": true,
       "expected_completed_bar": "2026-05-14 12:00:00",
-      "payload_as_of": "2026-05-14 16:06:37",
+      "payload_as_of": "2026-05-14 18:06:28",
       "model_trained_at": null,
       "model_train_end": null,
       "model_is_fresh": null,
@@ -596,17 +596,17 @@
       "regime_1d": "BEAR",
       "major_trend_1d": "BEAR",
       "major_trend_source": "PRICE_VS_SMA200",
-      "sma200_distance_pct": -6.2922,
+      "sma200_distance_pct": -4.6372,
       "short_term_major_trend_alignment": "ALIGNED",
       "macro_mode": "RISK_OFF",
-      "macro_horizon": "MULTI_DAY",
+      "macro_horizon": "SWING",
       "macro_permission": "ALLOW_SHORT",
       "macro_bias_tier": "STRONG_RISK_OFF",
-      "macro_impact_score": -14.0,
+      "macro_impact_score": -7.0,
       "fear_greed_change_5d": null,
-      "vix_level": 17.82,
-      "vix_change_1d_pct": -0.28,
-      "vix_change_5d_pct": 4.33,
+      "vix_level": 17.36,
+      "vix_change_1d_pct": -2.85,
+      "vix_change_5d_pct": 1.64,
       "event_risk_active": true,
       "usd_strength_flag": true,
       "yen_stress_flag": false,
@@ -618,11 +618,11 @@
       "flow_signal_mixed": false,
       "flow_support_long": false,
       "flow_support_short": false,
-      "funding_rate": -2.05208930945e-05,
-      "funding_zscore": -1.19,
-      "oi_now": 120696531.56619994,
+      "funding_rate": -8.00554190722e-05,
+      "funding_zscore": -2.22,
+      "oi_now": 122828154.69639996,
       "delta_oi_24h_percent": 5.993822206865099,
-      "qlib_relative_score_8h": 0.1283,
+      "qlib_relative_score_8h": 0.3062,
       "qlib_percentile_8h": 1.0,
       "p_up_8h": 0.9,
       "p_down_8h": 0.05,
@@ -638,12 +638,12 @@
       "range_regime": false,
       "grid_candidate_eligible": false,
       "range_lower_bound": 0.1096,
-      "range_upper_bound": 0.1154,
-      "range_width_pct": 0.0518,
-      "price_position_in_range": 0.729,
+      "range_upper_bound": 0.1208,
+      "range_width_pct": 0.0976,
+      "price_position_in_range": 0.5569,
       "grid_mode": "ARITHMETIC",
-      "grid_count": 6,
-      "grid_spacing_pct": 0.0086,
+      "grid_count": 12,
+      "grid_spacing_pct": 0.0081,
       "min_profitable_spacing_pct": 0.0034,
       "grid_spacing_profitable": true,
       "grid_bb_width": 0.056,
@@ -659,13 +659,12 @@
       "grid_preflight_missing_fields": [],
       "grid_macro_trend_ok": false,
       "grid_macro_block_reasons": [
-        "bearish_liquidity_macro_cluster",
         "directional_swing_macro"
       ],
       "ma5_cross_up_ma10_1d": false,
       "ma5_cross_down_ma10_1d": false,
       "ma5_10_gap_pct_1d": -0.0004141423010507294,
-      "max_profitable_grid_count": 15,
+      "max_profitable_grid_count": 28,
       "grid_review_after_hours": 36,
       "grid_extension_step_hours": 12,
       "grid_max_lifetime_hours": 60
@@ -678,18 +677,18 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-14_1600",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778774950,
+    "snapshot_timestamp": 1778782118,
     "technical": {
-      "current_price": 0.11381,
+      "current_price": 0.11582,
       "rsi14": 60.07085794295177,
       "rsi_source": "rsi_4h",
       "williams_r14": -29.706202393906366,
-      "vix": 17.82,
+      "vix": 17.36,
       "bollinger_position": 0.9104927933609418,
       "relative_sma20_pct": null,
-      "relative_sma50_pct": 15.0668,
-      "relative_sma200_pct": -6.2922,
-      "relative_volume_20": 1.4679136275727476,
+      "relative_sma50_pct": 17.099,
+      "relative_sma200_pct": -4.6372,
+      "relative_volume_20": 1.5348915894602726,
       "prior_120d_drawdown_pct": -23.885584441622676,
       "atr14": 0.0025014285714285,
       "major_trend_1d": "BEAR",
@@ -703,12 +702,12 @@
       "p_flat_8h": 0.05,
       "direction": "LONG",
       "direction_confident": true,
-      "relative_score_8h": 0.1283,
+      "relative_score_8h": 0.3062,
       "data_fresh": true,
       "freshness": {
         "fresh": true,
         "expected_completed_bar": "2026-05-14 12:00:00",
-        "payload_as_of": "2026-05-14 16:06:37",
+        "payload_as_of": "2026-05-14 18:06:28",
         "model_trained_at": null,
         "model_train_end": null,
         "model_is_fresh": null,
@@ -742,14 +741,14 @@
       "stablecoin_flow_semantic": "UNAVAILABLE",
       "flow_composite_semantic": "UNAVAILABLE",
       "flow_signal_mixed": false,
-      "funding_rate": -2.05208930945e-05,
-      "funding_zscore": -1.19,
-      "open_interest": 120696531.56619994,
+      "funding_rate": -8.00554190722e-05,
+      "funding_zscore": -2.22,
+      "open_interest": 122828154.69639996,
       "delta_oi_24h_percent": 5.993822206865099,
       "liquidation_long_usd": 867877.3225000004,
-      "liquidation_short_usd": 1909453.5547999993,
+      "liquidation_short_usd": 1881547.4175999996,
       "liquidation_long_to_volume_4h": 0.0032724897166265,
-      "liquidation_short_to_volume_4h": 0.0071999428495944,
+      "liquidation_short_to_volume_4h": 0.0070427701137536,
       "sentiment_score": 0.0,
       "exchange_netflow_24h": null,
       "large_transfer_count_24h": null
@@ -758,22 +757,22 @@
       "macro_mode": "RISK_OFF",
       "macro_permission": "ALLOW_SHORT",
       "macro_bias_tier": "STRONG_RISK_OFF",
-      "macro_impact_score": -14,
-      "macro_horizon": "MULTI_DAY",
+      "macro_impact_score": -7,
+      "macro_horizon": "SWING",
       "final_macro_decision": {
         "source": "llm_adjudicated",
         "selected_view": "blended",
-        "market_impact": "RISK_OFF",
-        "impact_horizon": "MULTI_DAY",
+        "market_impact": "MIXED",
+        "impact_horizon": "SWING",
         "crypto_relevance": "HIGH",
         "key_tags": [
           "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
           "RISK_OFF_NEWS",
-          "USD_STRENGTH"
+          "USD_STRENGTH",
+          "RISK_ON_NEWS"
         ],
         "confidence": "MEDIUM",
-        "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. Structured facts support this: VIX up 4.33% in 5 days, DXY up 0.5%, stablecoin outflow, Fear & Greed at 34 (Fear). The mixed adoption news is outweighed by $635M ETF outflows and hawkish Fed signals. Blended conclusion reinforces the consensus.",
+        "reason": "Deterministic view emphasizes hawkish Fed and risk-off macro (fear/greed 34, stablecoin outflows, DXY strength), but LLM view correctly incorporates positive crypto-specific news (Clarity Act, Blackrock BUIDL, Interactive Brokers). The mixed evidence supports a blended MIXED impact with SWING horizon, as crypto regulatory progress may offset macro headwinds in the short term.",
         "deterministic_view": {
           "event_type": "FED_SPEECH",
           "policy_stance": "HAWKISH",
@@ -784,23 +783,23 @@
             "FED_HAWKISH",
             "LIQUIDITY_CONTRACTING",
             "RISK_OFF_NEWS",
-            "USD_STRENGTH"
+            "USD_STRENGTH",
+            "VOL_PRESSURE_EASING"
           ],
-          "news_summary": "JPMorgan lifts Bitcoin ETF exposure in Q1, led by BlackRock\u2019s IBIT | Interactive Brokers Debuts All-in-One Prediction Market Portal | Coinbase Wins USDC Treasury Deployer Seat on Hyperliquid, Circle Handles Cross-Chain Infrastructure",
-          "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.50%/5d); fear/vix imply risk-off (34, VIX 17.82); stablecoin flow is $-301,620,012. Classified as RISK_OFF with MULTI_DAY horizon."
+          "news_summary": "Crypto industry scores win as Clarity Act regulation bill clears Senate hurdle | Interactive Brokers Debuts All-in-One Prediction Market Portal | Blackrock\u2019s Onchain BUIDL Fund Secures Top AAA-mf Rating From Moody\u2019s",
+          "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.56%/5d); fear/vix imply risk-off (34, VIX 17.36); volatility pressure eased (VIX 17.36, -2.85%/1d); stablecoin flow is $-281,385,251. Classified as RISK_OFF with MULTI_DAY horizon."
         },
         "llm_view": {
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "MULTI_DAY",
+          "market_impact": "MIXED",
+          "impact_horizon": "SWING",
           "crypto_relevance": "HIGH",
           "key_tags": [
             "FED_HAWKISH",
-            "LIQUIDITY_CONTRACTING",
             "RISK_OFF_NEWS",
             "USD_STRENGTH"
           ],
-          "news_summary": "Mixed crypto adoption news and institutional flows, but large Bitcoin ETF outflows and hawkish Fed signals dominate risk sentiment.",
-          "brief_rationale": "Institutional adoption (JPMorgan, Interactive Brokers, Coinbase) is positive, but $635M Bitcoin ETF outflows, Nakamoto's loss, and hawkish Fed speeches (Williams, Hammack) reinforce risk-off. Bessent's disinflation comment is mildly dovish but overshadowed."
+          "news_summary": "Crypto regulatory progress and institutional adoption boost sentiment, while Fed speakers maintain hawkish tone.",
+          "brief_rationale": "Positive crypto-specific news (Clarity Act, Blackrock BUIDL rating, Interactive Brokers) is offset by hawkish Fed speeches and risk-off macro data (fear & greed at 34, stablecoin outflows). Overall mixed but with a slight positive tilt due to regulatory wins."
         },
         "adjudication_audit": {
           "enabled": true,
@@ -808,21 +807,21 @@
           "model": "deepseek-chat",
           "status": "parsed",
           "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"JPMorgan lifts Bitcoin ETF exposure in Q1, led by BlackRock\u2019s IBIT\", \"Interactive Brokers Debuts All-in-One Prediction Market Portal\", \"Coinbase Wins USDC Treasury Deployer Seat on Hyperliquid, Circle Handles Cross-Chain Infrastructure\", \"Bessent sees 'substantial disinflation' ahead as Warsh takes over the Fed\", \"Bitcoin ETF Ou...",
-          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_OFF\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"RISK_OFF_NEWS\", \"USD_STRENGTH\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. Structured facts support this: VIX up 4.33% in 5 days, DXY up 0.5%, stablecoin outflow, Fear & Greed at 34 (Fear). The mixed adoption news is outweighed by $635M ETF outflows and hawkish Fed signals. Blended conclusion reinforces the consensus.\" }",
+          "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Crypto industry scores win as Clarity Act regulation bill clears Senate hurdle\", \"Interactive Brokers Debuts All-in-One Prediction Market Portal\", \"Blackrock\u2019s Onchain BUIDL Fund Secures Top AAA-mf Rating From Moody\u2019s\", \"Bessent sees 'substantial disinflation' ahead as Warsh takes over the Fed\", \"Bitcoin holds key support for $8...",
+          "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\", \"USD_STRENGTH\", \"RISK_ON_NEWS\"], \"confidence\": 0.7, \"reason\": \"Deterministic view emphasizes hawkish Fed and risk-off macro (fear/greed 34, stablecoin outflows, DXY strength), but LLM view correctly incorporates positive crypto-specific news (Clarity Act, Blackrock BUIDL, Interactive Brokers). The mixed evidence supports a blended MIXED impact with SWING horizon, as crypto regulatory progress may offset macro headwinds in the short term.\" }",
           "parsed_response": {
             "selected_view": "blended",
-            "final_market_impact": "RISK_OFF",
-            "final_impact_horizon": "MULTI_DAY",
+            "final_market_impact": "MIXED",
+            "final_impact_horizon": "SWING",
             "final_crypto_relevance": "HIGH",
             "final_key_tags": [
               "FED_HAWKISH",
-              "LIQUIDITY_CONTRACTING",
               "RISK_OFF_NEWS",
-              "USD_STRENGTH"
+              "USD_STRENGTH",
+              "RISK_ON_NEWS"
             ],
-            "confidence": 0.85,
-            "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. Structured facts support this: VIX up 4.33% in 5 days, DXY up 0.5%, stablecoin outflow, Fear & Greed at 34 (Fear). The mixed adoption news is outweighed by $635M ETF outflows and hawkish Fed signals. Blended conclusion reinforces the consensus."
+            "confidence": 0.7,
+            "reason": "Deterministic view emphasizes hawkish Fed and risk-off macro (fear/greed 34, stablecoin outflows, DXY strength), but LLM view correctly incorporates positive crypto-specific news (Clarity Act, Blackrock BUIDL, Interactive Brokers). The mixed evidence supports a blended MIXED impact with SWING horizon, as crypto regulatory progress may offset macro headwinds in the short term."
           },
           "error": null
         }
@@ -830,9 +829,9 @@
       "macro_decision_source": "llm_adjudicated",
       "marginal_tags": [
         "FED_HAWKISH",
-        "LIQUIDITY_CONTRACTING",
         "RISK_OFF_NEWS",
-        "USD_STRENGTH"
+        "USD_STRENGTH",
+        "RISK_ON_NEWS"
       ]
     },
     "position": {
@@ -865,19 +864,19 @@
     "schema_version": "model_decision_v1",
     "action": "WAIT",
     "direction": "FLAT",
-    "confidence": 0.4,
+    "confidence": 0.3,
     "setup_type": "no_edge",
     "risk_level": "MEDIUM",
-    "horizon": "MULTI_DAY",
+    "horizon": "SWING",
     "reason_codes": [
-      "MACRO_RISK_OFF",
       "QLIB_BULLISH",
-      "DATA_GAPS",
-      "CONFLICTING_SIGNALS"
+      "MACRO_RISK_OFF",
+      "TREND_BEARISH",
+      "DATA_GAPS"
     ],
     "invalid_if": [],
     "invalidation_rules": [],
-    "summary": "Strong macro bearish vs short-term ML bullish; missing on-chain data; prefer wait for alignment.",
+    "summary": "Qlib strongly bullish (90% up) but macro risk-off and bearish trend conflict; missing onchain data; no clear edge.",
     "model_role": "direction_only",
     "program_controls": [
       "entry",
@@ -898,7 +897,7 @@
         "status": "parsed",
         "system_prompt_preview": "You are a crypto trading decision analyst using DeepSeek reasoning. Decide only whether the setup deserves a directional trade. Do not choose position size, leverage, exact order placement, stop loss, or take profit. The deterministic program controls risk and execution. Return only a concise decision brief with evidence bullets, contradictions, data gaps, and thesis invalidation. Do not expose hidden chain-of-thought. Before finalizing, explicitly self-criticize the trade idea by checking evidence for LONG, evidence for SHORT, evidence for WAIT/FLAT, stale or missing data, and what would invalidate the directional view. If evidence conflicts, prefer WAIT/FLAT.",
         "user_prompt_preview": "Use the supplied market state only. Produce a concise decision brief, not JSON. Allowed final directional meanings: BUY+LONG for an opening long idea, SELL+SHORT for an opening short idea, and HOLD/WAIT+FLAT for no new trade. Missing data should reduce confidence. The brief must not include position size, leverage, exact order placement, stop loss, or take profit. Self-criticism checklist to apply before the final brief: 1. What supports LONG? 2. What supports SHORT? 3. What supports WAIT/FLAT? 4. What data is missing or stale? 5. What would invalidate this view? 6. If evidence conflicts, choose WAIT/FLAT. market_state={\"cycleId\": \"cycle_2026-05-14_1600\", \"data_availability\": {\"has_exchange_netflow_24h\": false, \"has_flow_semantics\": true, \"has_large_transfer_count_24h\": false, \"has_onchain_flow_data\": false, \"has_prior_120d_drawdown\": true, \"has_relative_volume_20\": true, \"has_rsi14\": true, \"has_sma200_distance\": true, \"has_sma20_distance\": false, \"has_sma50_distance\": true, \"has_stablecoin_net_flow\": true, \"has_token_net_flow\": true, \"has_vix\": true, \"has_williams_r14\": true}, \"macro\": {\"final_macro_decision\": {\"adjudication_audit\": {\"enabled\": true, \"error\": null, \"model\": \"de...",
-        "raw_response_preview": "**Decision: HOLD/WAIT+FLAT** **Evidence & Self-Criticism:** - **LONG evidence:** Qlib model (90% up probability, confident), short liquidation dominance ($1.9M vs $0.87M), rising OI (+6%), price above SMA50 (+15%), above-average volume, RSI 60 (not overbought). - **SHORT evidence:** Macro STRONG_RISK_OFF, bearish 1D trend/regime, price below SMA200 (-6.3%), VIX 17.82, prior 120d drawdown -23.9%, hawkish Fed/liquidity contraction tags, macro permission explicitly ALLOW_SHORT. - **WAIT/FLAT evidence:** Strong conflict between macro bearish (multi-day) and qlib bullish (8h). Incomplete on-chain flow data (null exchange netflow, missing whale bias, stale stablecoin/token flows). Technicals mixed: bollinger near upper band, Williams %R neutral, no clear confluence. - **Data gaps:** exchange_netflow_24h, large_transfer_count_24h, stablecoin/token net flow semantics, SMA20 distance\u2014all missing or unreliable. - **Invalidation triggers:** For long view, a sustained break below recent lows would invalidate qlib\u2019s bullish call; for short view, a macro shift to risk-on would void. The current conflict favors caution. **Conclusion:** Conflicting signals (strong macro headwinds vs. short-term...",
+        "raw_response_preview": "## Decision Brief: HOLD/WAIT+FLAT \u2013 No New Trade ### Evidence for LONG - **Qlib model strongly bullish**: 90% probability up in 8h, rank #1, percentile 1.0, direction LONG with high confidence. - **Technical short-term bullish**: RSI14 60.07 (bullish), Williams %R -29.7 (bullish), price above SMA50 (+17.1%), relative volume elevated (1.53). - **Onchain hints**: Open interest rising +6%, short liquidations exceeding longs in last 4h, negative funding rate (shorts paying longs). ### Evidence for SHORT - **Macro risk-off mode**: macro_bias_tier STRONG_RISK_OFF, macro_mode RISK_OFF, macro permission ALLOW_SHORT (only shorts allowed), macro impact score -7. - **Technical intermediate\u2011term bearish**: major trend 1d BEAR, regime BEAR, price below SMA200 (-4.6%), prior 120d drawdown -23.9%. - **Mixed macro adjudication**: final macro impact MIXED but horizon SWING \u2013 headline macro still leans risk-off. ### Evidence for WAIT/FLAT - **Strong directional conflict**: Qlib (90% up) directly opposes macro risk-off and bearish trend. No alignment between short-term model and macro context. - **Missing onchain data**: exchange netflow, large transfers, stablecoin/token flows all unavailable \u2013 w...",
         "reasoning_available": true,
         "parsed_response": null,
         "error": null,
@@ -919,24 +918,24 @@
         "status": "parsed",
         "system_prompt_preview": "You are a deterministic JSON formatter for a crypto trading system. Convert the supplied DeepSeek reasoning brief into one JSON object. Do not add new market judgments. Do not output markdown. Use only the allowed contract. If the brief is uncertain, contradictory, or asks for unsupported fields, return WAIT/FLAT with low confidence.",
         "user_prompt_preview": "Return one JSON object matching this contract. This is JSON mode, so output only JSON. contract={\"action\": [\"BUY\", \"HOLD\", \"SELL\", \"WAIT\"], \"confidence\": \"number from 0.0 to 1.0\", \"direction\": [\"FLAT\", \"LONG\", \"SHORT\"], \"horizon\": [\"MULTI_DAY\", \"SHORT\", \"SWING\"], \"invalid_if\": \"array of short strings; directional thesis invalidation only\", \"invalidation_rules\": \"array of executable invalidation rule objects. Allowed shape: {\\\"field\\\": string, \\\"op\\\": one of >= <= > < == !=, \\\"value_ref\\\" or \\\"value\\\": string/number/bool, \\\"persistence\\\": integer 1..6, \\\"reason\\\": short string}. Use only fields present in market_state.\", \"reason_codes\": \"array of short strings; evidence tags only\", \"risk_level\": [\"HIGH\", \"LOW\", \"MEDIUM\"], \"setup_type\": [\"bottom_reversal\", \"no_edge\", \"range_rotation\", \"top_distribution\", \"trend_breakdown\", \"trend_following\"], \"summary\": \"short human-readable evidence summary\"} Consistency rules: - BUY must pair with LONG. - SELL must pair with SHORT. - HOLD or WAIT must pair with FLAT. - The model controls only direction and confidence; program controls entry, stop_loss, take_profit, position_size, leverage, and execution. - For invalidation_rules, output only sim...",
-        "raw_response_preview": "{ \"action\": \"WAIT\", \"confidence\": 0.4, \"direction\": \"FLAT\", \"horizon\": \"MULTI_DAY\", \"invalid_if\": [], \"invalidation_rules\": [], \"reason_codes\": [\"MACRO_RISK_OFF\", \"QLIB_BULLISH\", \"DATA_GAPS\", \"CONFLICTING_SIGNALS\"], \"risk_level\": \"MEDIUM\", \"setup_type\": \"no_edge\", \"summary\": \"Strong macro bearish vs short-term ML bullish; missing on-chain data; prefer wait for alignment.\" }",
+        "raw_response_preview": "{ \"action\": \"WAIT\", \"confidence\": 0.3, \"direction\": \"FLAT\", \"horizon\": \"SWING\", \"invalid_if\": [], \"invalidation_rules\": [], \"reason_codes\": [\"QLIB_BULLISH\", \"MACRO_RISK_OFF\", \"TREND_BEARISH\", \"DATA_GAPS\"], \"risk_level\": \"MEDIUM\", \"setup_type\": \"no_edge\", \"summary\": \"Qlib strongly bullish (90% up) but macro risk-off and bearish trend conflict; missing onchain data; no clear edge.\" }",
         "reasoning_available": false,
         "parsed_response": {
           "action": "WAIT",
-          "confidence": 0.4,
+          "confidence": 0.3,
           "direction": "FLAT",
-          "horizon": "MULTI_DAY",
+          "horizon": "SWING",
           "invalid_if": [],
           "invalidation_rules": [],
           "reason_codes": [
-            "MACRO_RISK_OFF",
             "QLIB_BULLISH",
-            "DATA_GAPS",
-            "CONFLICTING_SIGNALS"
+            "MACRO_RISK_OFF",
+            "TREND_BEARISH",
+            "DATA_GAPS"
           ],
           "risk_level": "MEDIUM",
           "setup_type": "no_edge",
-          "summary": "Strong macro bearish vs short-term ML bullish; missing on-chain data; prefer wait for alignment."
+          "summary": "Qlib strongly bullish (90% up) but macro risk-off and bearish trend conflict; missing onchain data; no clear edge."
         },
         "error": null,
         "attempt_count": 1,
@@ -955,25 +954,25 @@
     "symbol": "DOGE-USDT",
     "cycleId": "cycle_2026-05-14_1600",
     "timeframe": "4h",
-    "snapshot_timestamp": 1778774950,
+    "snapshot_timestamp": 1778782118,
     "generation_mode": "model_decision",
     "market_state": {
       "schema_version": "model_market_state_v1",
       "symbol": "DOGE-USDT",
       "cycleId": "cycle_2026-05-14_1600",
       "timeframe": "4h",
-      "snapshot_timestamp": 1778774950,
+      "snapshot_timestamp": 1778782118,
       "technical": {
-        "current_price": 0.11381,
+        "current_price": 0.11582,
         "rsi14": 60.07085794295177,
         "rsi_source": "rsi_4h",
         "williams_r14": -29.706202393906366,
-        "vix": 17.82,
+        "vix": 17.36,
         "bollinger_position": 0.9104927933609418,
         "relative_sma20_pct": null,
-        "relative_sma50_pct": 15.0668,
-        "relative_sma200_pct": -6.2922,
-        "relative_volume_20": 1.4679136275727476,
+        "relative_sma50_pct": 17.099,
+        "relative_sma200_pct": -4.6372,
+        "relative_volume_20": 1.5348915894602726,
         "prior_120d_drawdown_pct": -23.885584441622676,
         "atr14": 0.0025014285714285,
         "major_trend_1d": "BEAR",
@@ -987,12 +986,12 @@
         "p_flat_8h": 0.05,
         "direction": "LONG",
         "direction_confident": true,
-        "relative_score_8h": 0.1283,
+        "relative_score_8h": 0.3062,
         "data_fresh": true,
         "freshness": {
           "fresh": true,
           "expected_completed_bar": "2026-05-14 12:00:00",
-          "payload_as_of": "2026-05-14 16:06:37",
+          "payload_as_of": "2026-05-14 18:06:28",
           "model_trained_at": null,
           "model_train_end": null,
           "model_is_fresh": null,
@@ -1026,14 +1025,14 @@
         "stablecoin_flow_semantic": "UNAVAILABLE",
         "flow_composite_semantic": "UNAVAILABLE",
         "flow_signal_mixed": false,
-        "funding_rate": -2.05208930945e-05,
-        "funding_zscore": -1.19,
-        "open_interest": 120696531.56619994,
+        "funding_rate": -8.00554190722e-05,
+        "funding_zscore": -2.22,
+        "open_interest": 122828154.69639996,
         "delta_oi_24h_percent": 5.993822206865099,
         "liquidation_long_usd": 867877.3225000004,
-        "liquidation_short_usd": 1909453.5547999993,
+        "liquidation_short_usd": 1881547.4175999996,
         "liquidation_long_to_volume_4h": 0.0032724897166265,
-        "liquidation_short_to_volume_4h": 0.0071999428495944,
+        "liquidation_short_to_volume_4h": 0.0070427701137536,
         "sentiment_score": 0.0,
         "exchange_netflow_24h": null,
         "large_transfer_count_24h": null
@@ -1042,22 +1041,22 @@
         "macro_mode": "RISK_OFF",
         "macro_permission": "ALLOW_SHORT",
         "macro_bias_tier": "STRONG_RISK_OFF",
-        "macro_impact_score": -14,
-        "macro_horizon": "MULTI_DAY",
+        "macro_impact_score": -7,
+        "macro_horizon": "SWING",
         "final_macro_decision": {
           "source": "llm_adjudicated",
           "selected_view": "blended",
-          "market_impact": "RISK_OFF",
-          "impact_horizon": "MULTI_DAY",
+          "market_impact": "MIXED",
+          "impact_horizon": "SWING",
           "crypto_relevance": "HIGH",
           "key_tags": [
             "FED_HAWKISH",
-            "LIQUIDITY_CONTRACTING",
             "RISK_OFF_NEWS",
-            "USD_STRENGTH"
+            "USD_STRENGTH",
+            "RISK_ON_NEWS"
           ],
           "confidence": "MEDIUM",
-          "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. Structured facts support this: VIX up 4.33% in 5 days, DXY up 0.5%, stablecoin outflow, Fear & Greed at 34 (Fear). The mixed adoption news is outweighed by $635M ETF outflows and hawkish Fed signals. Blended conclusion reinforces the consensus.",
+          "reason": "Deterministic view emphasizes hawkish Fed and risk-off macro (fear/greed 34, stablecoin outflows, DXY strength), but LLM view correctly incorporates positive crypto-specific news (Clarity Act, Blackrock BUIDL, Interactive Brokers). The mixed evidence supports a blended MIXED impact with SWING horizon, as crypto regulatory progress may offset macro headwinds in the short term.",
           "deterministic_view": {
             "event_type": "FED_SPEECH",
             "policy_stance": "HAWKISH",
@@ -1068,23 +1067,23 @@
               "FED_HAWKISH",
               "LIQUIDITY_CONTRACTING",
               "RISK_OFF_NEWS",
-              "USD_STRENGTH"
+              "USD_STRENGTH",
+              "VOL_PRESSURE_EASING"
             ],
-            "news_summary": "JPMorgan lifts Bitcoin ETF exposure in Q1, led by BlackRock\u2019s IBIT | Interactive Brokers Debuts All-in-One Prediction Market Portal | Coinbase Wins USDC Treasury Deployer Seat on Hyperliquid, Circle Handles Cross-Chain Infrastructure",
-            "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.50%/5d); fear/vix imply risk-off (34, VIX 17.82); stablecoin flow is $-301,620,012. Classified as RISK_OFF with MULTI_DAY horizon."
+            "news_summary": "Crypto industry scores win as Clarity Act regulation bill clears Senate hurdle | Interactive Brokers Debuts All-in-One Prediction Market Portal | Blackrock\u2019s Onchain BUIDL Fund Secures Top AAA-mf Rating From Moody\u2019s",
+            "brief_rationale": "Fed pricing remains restrictive; DXY is stronger (+0.56%/5d); fear/vix imply risk-off (34, VIX 17.36); volatility pressure eased (VIX 17.36, -2.85%/1d); stablecoin flow is $-281,385,251. Classified as RISK_OFF with MULTI_DAY horizon."
           },
           "llm_view": {
-            "market_impact": "RISK_OFF",
-            "impact_horizon": "MULTI_DAY",
+            "market_impact": "MIXED",
+            "impact_horizon": "SWING",
             "crypto_relevance": "HIGH",
             "key_tags": [
               "FED_HAWKISH",
-              "LIQUIDITY_CONTRACTING",
               "RISK_OFF_NEWS",
               "USD_STRENGTH"
             ],
-            "news_summary": "Mixed crypto adoption news and institutional flows, but large Bitcoin ETF outflows and hawkish Fed signals dominate risk sentiment.",
-            "brief_rationale": "Institutional adoption (JPMorgan, Interactive Brokers, Coinbase) is positive, but $635M Bitcoin ETF outflows, Nakamoto's loss, and hawkish Fed speeches (Williams, Hammack) reinforce risk-off. Bessent's disinflation comment is mildly dovish but overshadowed."
+            "news_summary": "Crypto regulatory progress and institutional adoption boost sentiment, while Fed speakers maintain hawkish tone.",
+            "brief_rationale": "Positive crypto-specific news (Clarity Act, Blackrock BUIDL rating, Interactive Brokers) is offset by hawkish Fed speeches and risk-off macro data (fear & greed at 34, stablecoin outflows). Overall mixed but with a slight positive tilt due to regulatory wins."
           },
           "adjudication_audit": {
             "enabled": true,
@@ -1092,21 +1091,21 @@
             "model": "deepseek-chat",
             "status": "parsed",
             "system_prompt_preview": "You are a constrained final macro adjudicator. Choose the best final macro conclusion from deterministic and LLM evidence. Output only a JSON object.",
-            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"JPMorgan lifts Bitcoin ETF exposure in Q1, led by BlackRock\u2019s IBIT\", \"Interactive Brokers Debuts All-in-One Prediction Market Portal\", \"Coinbase Wins USDC Treasury Deployer Seat on Hyperliquid, Circle Handles Cross-Chain Infrastructure\", \"Bessent sees 'substantial disinflation' ahead as Warsh takes over the Fed\", \"Bitcoin ETF Ou...",
-            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"RISK_OFF\", \"final_impact_horizon\": \"MULTI_DAY\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"LIQUIDITY_CONTRACTING\", \"RISK_OFF_NEWS\", \"USD_STRENGTH\"], \"confidence\": 0.85, \"reason\": \"Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. Structured facts support this: VIX up 4.33% in 5 days, DXY up 0.5%, stablecoin outflow, Fear & Greed at 34 (Fear). The mixed adoption news is outweighed by $635M ETF outflows and hawkish Fed signals. Blended conclusion reinforces the consensus.\" }",
+            "user_prompt_preview": "You are the final macro decision adjudicator for a crypto trading system. Compare the deterministic program conclusion with the first-pass LLM conclusion. Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. Do not blindly defer to either side. Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, final_crypto_relevance, final_key_tags, confidence, reason. Allowed selected_view: deterministic, llm, blended. Allowed final_market_impact: RISK_ON, RISK_OFF, MIXED, NO_CLEAR_IMPACT. Allowed final_impact_horizon: INTRADAY, SWING, MULTI_DAY, NOISE. Allowed final_crypto_relevance: HIGH, MEDIUM, LOW. Allowed final_key_tags must come from ALLOWED_TAGS. HEADLINES: [\"Crypto industry scores win as Clarity Act regulation bill clears Senate hurdle\", \"Interactive Brokers Debuts All-in-One Prediction Market Portal\", \"Blackrock\u2019s Onchain BUIDL Fund Secures Top AAA-mf Rating From Moody\u2019s\", \"Bessent sees 'substantial disinflation' ahead as Warsh takes over the Fed\", \"Bitcoin holds key support for $8...",
+            "raw_response_preview": "{ \"selected_view\": \"blended\", \"final_market_impact\": \"MIXED\", \"final_impact_horizon\": \"SWING\", \"final_crypto_relevance\": \"HIGH\", \"final_key_tags\": [\"FED_HAWKISH\", \"RISK_OFF_NEWS\", \"USD_STRENGTH\", \"RISK_ON_NEWS\"], \"confidence\": 0.7, \"reason\": \"Deterministic view emphasizes hawkish Fed and risk-off macro (fear/greed 34, stablecoin outflows, DXY strength), but LLM view correctly incorporates positive crypto-specific news (Clarity Act, Blackrock BUIDL, Interactive Brokers). The mixed evidence supports a blended MIXED impact with SWING horizon, as crypto regulatory progress may offset macro headwinds in the short term.\" }",
             "parsed_response": {
               "selected_view": "blended",
-              "final_market_impact": "RISK_OFF",
-              "final_impact_horizon": "MULTI_DAY",
+              "final_market_impact": "MIXED",
+              "final_impact_horizon": "SWING",
               "final_crypto_relevance": "HIGH",
               "final_key_tags": [
                 "FED_HAWKISH",
-                "LIQUIDITY_CONTRACTING",
                 "RISK_OFF_NEWS",
-                "USD_STRENGTH"
+                "USD_STRENGTH",
+                "RISK_ON_NEWS"
               ],
-              "confidence": 0.85,
-              "reason": "Both deterministic and LLM views agree on RISK_OFF, MULTI_DAY, HIGH relevance, and key tags. Structured facts support this: VIX up 4.33% in 5 days, DXY up 0.5%, stablecoin outflow, Fear & Greed at 34 (Fear). The mixed adoption news is outweighed by $635M ETF outflows and hawkish Fed signals. Blended conclusion reinforces the consensus."
+              "confidence": 0.7,
+              "reason": "Deterministic view emphasizes hawkish Fed and risk-off macro (fear/greed 34, stablecoin outflows, DXY strength), but LLM view correctly incorporates positive crypto-specific news (Clarity Act, Blackrock BUIDL, Interactive Brokers). The mixed evidence supports a blended MIXED impact with SWING horizon, as crypto regulatory progress may offset macro headwinds in the short term."
             },
             "error": null
           }
@@ -1114,9 +1113,9 @@
         "macro_decision_source": "llm_adjudicated",
         "marginal_tags": [
           "FED_HAWKISH",
-          "LIQUIDITY_CONTRACTING",
           "RISK_OFF_NEWS",
-          "USD_STRENGTH"
+          "USD_STRENGTH",
+          "RISK_ON_NEWS"
         ]
       },
       "position": {
@@ -1149,19 +1148,19 @@
       "schema_version": "model_decision_v1",
       "action": "WAIT",
       "direction": "FLAT",
-      "confidence": 0.4,
+      "confidence": 0.3,
       "setup_type": "no_edge",
       "risk_level": "MEDIUM",
-      "horizon": "MULTI_DAY",
+      "horizon": "SWING",
       "reason_codes": [
-        "MACRO_RISK_OFF",
         "QLIB_BULLISH",
-        "DATA_GAPS",
-        "CONFLICTING_SIGNALS"
+        "MACRO_RISK_OFF",
+        "TREND_BEARISH",
+        "DATA_GAPS"
       ],
       "invalid_if": [],
       "invalidation_rules": [],
-      "summary": "Strong macro bearish vs short-term ML bullish; missing on-chain data; prefer wait for alignment.",
+      "summary": "Qlib strongly bullish (90% up) but macro risk-off and bearish trend conflict; missing onchain data; no clear edge.",
       "model_role": "direction_only",
       "program_controls": [
         "entry",
@@ -1182,7 +1181,7 @@
           "status": "parsed",
           "system_prompt_preview": "You are a crypto trading decision analyst using DeepSeek reasoning. Decide only whether the setup deserves a directional trade. Do not choose position size, leverage, exact order placement, stop loss, or take profit. The deterministic program controls risk and execution. Return only a concise decision brief with evidence bullets, contradictions, data gaps, and thesis invalidation. Do not expose hidden chain-of-thought. Before finalizing, explicitly self-criticize the trade idea by checking evidence for LONG, evidence for SHORT, evidence for WAIT/FLAT, stale or missing data, and what would invalidate the directional view. If evidence conflicts, prefer WAIT/FLAT.",
           "user_prompt_preview": "Use the supplied market state only. Produce a concise decision brief, not JSON. Allowed final directional meanings: BUY+LONG for an opening long idea, SELL+SHORT for an opening short idea, and HOLD/WAIT+FLAT for no new trade. Missing data should reduce confidence. The brief must not include position size, leverage, exact order placement, stop loss, or take profit. Self-criticism checklist to apply before the final brief: 1. What supports LONG? 2. What supports SHORT? 3. What supports WAIT/FLAT? 4. What data is missing or stale? 5. What would invalidate this view? 6. If evidence conflicts, choose WAIT/FLAT. market_state={\"cycleId\": \"cycle_2026-05-14_1600\", \"data_availability\": {\"has_exchange_netflow_24h\": false, \"has_flow_semantics\": true, \"has_large_transfer_count_24h\": false, \"has_onchain_flow_data\": false, \"has_prior_120d_drawdown\": true, \"has_relative_volume_20\": true, \"has_rsi14\": true, \"has_sma200_distance\": true, \"has_sma20_distance\": false, \"has_sma50_distance\": true, \"has_stablecoin_net_flow\": true, \"has_token_net_flow\": true, \"has_vix\": true, \"has_williams_r14\": true}, \"macro\": {\"final_macro_decision\": {\"adjudication_audit\": {\"enabled\": true, \"error\": null, \"model\": \"de...",
-          "raw_response_preview": "**Decision: HOLD/WAIT+FLAT** **Evidence & Self-Criticism:** - **LONG evidence:** Qlib model (90% up probability, confident), short liquidation dominance ($1.9M vs $0.87M), rising OI (+6%), price above SMA50 (+15%), above-average volume, RSI 60 (not overbought). - **SHORT evidence:** Macro STRONG_RISK_OFF, bearish 1D trend/regime, price below SMA200 (-6.3%), VIX 17.82, prior 120d drawdown -23.9%, hawkish Fed/liquidity contraction tags, macro permission explicitly ALLOW_SHORT. - **WAIT/FLAT evidence:** Strong conflict between macro bearish (multi-day) and qlib bullish (8h). Incomplete on-chain flow data (null exchange netflow, missing whale bias, stale stablecoin/token flows). Technicals mixed: bollinger near upper band, Williams %R neutral, no clear confluence. - **Data gaps:** exchange_netflow_24h, large_transfer_count_24h, stablecoin/token net flow semantics, SMA20 distance\u2014all missing or unreliable. - **Invalidation triggers:** For long view, a sustained break below recent lows would invalidate qlib\u2019s bullish call; for short view, a macro shift to risk-on would void. The current conflict favors caution. **Conclusion:** Conflicting signals (strong macro headwinds vs. short-term...",
+          "raw_response_preview": "## Decision Brief: HOLD/WAIT+FLAT \u2013 No New Trade ### Evidence for LONG - **Qlib model strongly bullish**: 90% probability up in 8h, rank #1, percentile 1.0, direction LONG with high confidence. - **Technical short-term bullish**: RSI14 60.07 (bullish), Williams %R -29.7 (bullish), price above SMA50 (+17.1%), relative volume elevated (1.53). - **Onchain hints**: Open interest rising +6%, short liquidations exceeding longs in last 4h, negative funding rate (shorts paying longs). ### Evidence for SHORT - **Macro risk-off mode**: macro_bias_tier STRONG_RISK_OFF, macro_mode RISK_OFF, macro permission ALLOW_SHORT (only shorts allowed), macro impact score -7. - **Technical intermediate\u2011term bearish**: major trend 1d BEAR, regime BEAR, price below SMA200 (-4.6%), prior 120d drawdown -23.9%. - **Mixed macro adjudication**: final macro impact MIXED but horizon SWING \u2013 headline macro still leans risk-off. ### Evidence for WAIT/FLAT - **Strong directional conflict**: Qlib (90% up) directly opposes macro risk-off and bearish trend. No alignment between short-term model and macro context. - **Missing onchain data**: exchange netflow, large transfers, stablecoin/token flows all unavailable \u2013 w...",
           "reasoning_available": true,
           "parsed_response": null,
           "error": null,
@@ -1203,24 +1202,24 @@
           "status": "parsed",
           "system_prompt_preview": "You are a deterministic JSON formatter for a crypto trading system. Convert the supplied DeepSeek reasoning brief into one JSON object. Do not add new market judgments. Do not output markdown. Use only the allowed contract. If the brief is uncertain, contradictory, or asks for unsupported fields, return WAIT/FLAT with low confidence.",
           "user_prompt_preview": "Return one JSON object matching this contract. This is JSON mode, so output only JSON. contract={\"action\": [\"BUY\", \"HOLD\", \"SELL\", \"WAIT\"], \"confidence\": \"number from 0.0 to 1.0\", \"direction\": [\"FLAT\", \"LONG\", \"SHORT\"], \"horizon\": [\"MULTI_DAY\", \"SHORT\", \"SWING\"], \"invalid_if\": \"array of short strings; directional thesis invalidation only\", \"invalidation_rules\": \"array of executable invalidation rule objects. Allowed shape: {\\\"field\\\": string, \\\"op\\\": one of >= <= > < == !=, \\\"value_ref\\\" or \\\"value\\\": string/number/bool, \\\"persistence\\\": integer 1..6, \\\"reason\\\": short string}. Use only fields present in market_state.\", \"reason_codes\": \"array of short strings; evidence tags only\", \"risk_level\": [\"HIGH\", \"LOW\", \"MEDIUM\"], \"setup_type\": [\"bottom_reversal\", \"no_edge\", \"range_rotation\", \"top_distribution\", \"trend_breakdown\", \"trend_following\"], \"summary\": \"short human-readable evidence summary\"} Consistency rules: - BUY must pair with LONG. - SELL must pair with SHORT. - HOLD or WAIT must pair with FLAT. - The model controls only direction and confidence; program controls entry, stop_loss, take_profit, position_size, leverage, and execution. - For invalidation_rules, output only sim...",
-          "raw_response_preview": "{ \"action\": \"WAIT\", \"confidence\": 0.4, \"direction\": \"FLAT\", \"horizon\": \"MULTI_DAY\", \"invalid_if\": [], \"invalidation_rules\": [], \"reason_codes\": [\"MACRO_RISK_OFF\", \"QLIB_BULLISH\", \"DATA_GAPS\", \"CONFLICTING_SIGNALS\"], \"risk_level\": \"MEDIUM\", \"setup_type\": \"no_edge\", \"summary\": \"Strong macro bearish vs short-term ML bullish; missing on-chain data; prefer wait for alignment.\" }",
+          "raw_response_preview": "{ \"action\": \"WAIT\", \"confidence\": 0.3, \"direction\": \"FLAT\", \"horizon\": \"SWING\", \"invalid_if\": [], \"invalidation_rules\": [], \"reason_codes\": [\"QLIB_BULLISH\", \"MACRO_RISK_OFF\", \"TREND_BEARISH\", \"DATA_GAPS\"], \"risk_level\": \"MEDIUM\", \"setup_type\": \"no_edge\", \"summary\": \"Qlib strongly bullish (90% up) but macro risk-off and bearish trend conflict; missing onchain data; no clear edge.\" }",
           "reasoning_available": false,
           "parsed_response": {
             "action": "WAIT",
-            "confidence": 0.4,
+            "confidence": 0.3,
             "direction": "FLAT",
-            "horizon": "MULTI_DAY",
+            "horizon": "SWING",
             "invalid_if": [],
             "invalidation_rules": [],
             "reason_codes": [
-              "MACRO_RISK_OFF",
               "QLIB_BULLISH",
-              "DATA_GAPS",
-              "CONFLICTING_SIGNALS"
+              "MACRO_RISK_OFF",
+              "TREND_BEARISH",
+              "DATA_GAPS"
             ],
             "risk_level": "MEDIUM",
             "setup_type": "no_edge",
-            "summary": "Strong macro bearish vs short-term ML bullish; missing on-chain data; prefer wait for alignment."
+            "summary": "Qlib strongly bullish (90% up) but macro risk-off and bearish trend conflict; missing onchain data; no clear edge."
           },
           "error": null,
           "attempt_count": 1,
@@ -1238,7 +1237,7 @@
     "qlib_freshness": {
       "fresh": true,
       "expected_completed_bar": "2026-05-14 12:00:00",
-      "payload_as_of": "2026-05-14 16:06:37",
+      "payload_as_of": "2026-05-14 18:06:28",
       "model_trained_at": null,
       "model_train_end": null,
       "model_is_fresh": null,
@@ -1266,7 +1265,7 @@
       "generation_mode": "model_decision",
       "action": "WAIT",
       "direction": "FLAT",
-      "confidence": 0.4,
+      "confidence": 0.3,
       "min_confidence": 0.55,
       "reason": "model_requested_no_new_directional_trade"
     }
@@ -1335,14 +1334,14 @@
     "history": [
       {
         "type": "EXECUTION_NOT_REQUESTED",
-        "at": "2026-05-14T16:09:31Z",
+        "at": "2026-05-14T18:09:03Z",
         "payload": {
           "review_note": "rule evaluation rejected or produced no approved candidates"
         }
       },
       {
         "type": "EXECUTION_SKIPPED",
-        "at": "2026-05-14T16:09:35Z",
+        "at": "2026-05-14T18:09:07Z",
         "payload": {
           "reason": "do_nothing",
           "execution_action": "DO_NOTHING"
@@ -1394,10 +1393,10 @@
       "execution_action": "DO_NOTHING"
     },
     "feedback_packets": [],
-    "generated_at": "2026-05-14T16:09:56Z"
+    "generated_at": "2026-05-14T18:09:30Z"
   },
-  "created_at": "2026-05-14T16:09:31Z",
-  "created_at_local": "2026-05-15T00:09:31+0800",
-  "updated_at": "2026-05-14T16:09:56Z",
-  "updated_at_local": "2026-05-15T00:09:35+0800"
+  "created_at": "2026-05-14T18:09:03Z",
+  "created_at_local": "2026-05-15T02:09:03+0800",
+  "updated_at": "2026-05-14T18:09:30Z",
+  "updated_at_local": "2026-05-15T02:09:07+0800"
 }
