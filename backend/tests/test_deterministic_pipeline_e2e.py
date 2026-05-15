@@ -163,6 +163,52 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(0.65, batch["model_decision_diagnostic"]["min_confidence"])
         self.assertEqual("model_confidence_below_threshold", batch["model_decision_diagnostic"]["reason"])
 
+    def test_model_decision_allows_vwap_reclaim_as_short_invalidation(self):
+        snapshot = {
+            "symbol": "BTC-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-05-15T16:00:00Z",
+            "market_snapshot": {
+                "price": 79120.5,
+                "atr_14": 1047.2,
+                "price_vs_vwap_16h_pct": -0.8187,
+            },
+            "decision_ready_features": {"macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+            "position_snapshot": {"position_side": None},
+            "is_decision_eligible": True,
+        }
+        market_state = {
+            "technical": {
+                "current_price": 79120.5,
+                "atr14": 1047.2,
+                "price_vs_vwap_16h_pct": -0.8187,
+            },
+        }
+        model_decision = {
+            "action": "SELL",
+            "direction": "SHORT",
+            "confidence": 0.85,
+            "setup_type": "trend_breakdown",
+            "risk_level": "HIGH",
+            "horizon": "MULTI_DAY",
+            "reason_codes": ["price_below_vwap_16h"],
+            "invalid_if": ["price reclaims VWAP_16h"],
+            "invalidation_rules": [
+                {"field": "price_vs_vwap_16h_pct", "op": ">=", "value": 0.0, "persistence": 2, "reason": "price reclaims VWAP_16h"},
+            ],
+            "summary": "short while price stays below 16h vwap",
+        }
+
+        batch = dp._build_model_decision_candidate_batch(snapshot, market_state, model_decision)
+
+        candidate = batch["candidate_proposals"][0]
+        self.assertIn(
+            {"field": "price_vs_vwap_16h_pct", "op": ">=", "reason": "price reclaims VWAP_16h", "value": 0.0, "persistence": 2},
+            candidate["invalidation_conditions"]["rules"],
+        )
+        self.assertEqual([], candidate["reference_values"]["model_rejected_invalidation_rules"])
+
     def test_model_market_state_carries_qlib_and_macro_fields(self):
         snapshot = {
             "symbol": "ETH-USDT",

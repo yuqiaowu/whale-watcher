@@ -1975,6 +1975,8 @@ MODEL_INVALIDATION_ALLOWED_FIELDS = {
     "p_down_8h",
     "p_flat_8h",
     "qlib_data_fresh",
+    "price_vs_vwap_4h_pct",
+    "price_vs_vwap_16h_pct",
 }
 MODEL_INVALIDATION_ALLOWED_VALUE_REFS = {
     "model_stop_price",
