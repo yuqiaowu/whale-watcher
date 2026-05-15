@@ -340,8 +340,6 @@ def _thesis_weakened(record: Dict[str, Any], snapshot: Dict[str, Any], live_posi
         return True, "research_thesis_weakened"
     if research.get("thesis_change") == "REVERSED":
         return True, "research_thesis_reversed"
-    if research.get("thesis_strength") == "LOW":
-        return True, "research_thesis_low"
 
     features = snapshot.get("decision_ready_features", {}) or {}
     macro_permission = features.get("macro_permission")

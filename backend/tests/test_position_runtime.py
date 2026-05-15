@@ -370,6 +370,69 @@ class PositionRuntimeTests(unittest.TestCase):
         self.assertEqual(record["execution"]["last_runtime_order_id"], "runtime_order_1")
         self.assertTrue(any(event["type"] == "PROTECTION_REPAIR_TRIGGERED" for event in record["execution"]["history"]))
 
+    def test_low_initial_thesis_does_not_trigger_immediate_runtime_reduce(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "d_low_entry",
+                    "symbol": "ETH-USDT",
+                    "created_at": "2026-05-15T14:07:54Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "ETH-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "SHORT",
+                        "max_holding_bars": 1,
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "executed_at": "2026-05-15T14:08:04Z",
+                        "add_allowed": True,
+                        "history": [],
+                    },
+                    "researchOutput": {"thesis_change": "INITIAL", "thesis_strength": "LOW"},
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "ETH",
+                        "type": "short",
+                        "entryPrice": 2210.79,
+                        "currentPrice": 2214.0,
+                        "amount": 0.029,
+                        "margin": 32.06,
+                        "leverage": 2.0,
+                    }
+                ]
+            },
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "ETH-USDT",
+                        "decision_ready_features": {
+                            "macro_permission": "ALLOW_SHORT",
+                            "flow_support_long": False,
+                            "flow_support_short": True,
+                            "regime_1d": "BEAR",
+                        },
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db), patch.object(pr, "_bars_since", return_value=0):
+            result = pr.run_in_position_runtime(executor=FakeExecutor())
+
+        self.assertEqual(result["updated_count"], 0)
+        self.assertEqual(result["actions"], [])
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["positionState"], "entered")
+        self.assertNotEqual(record["execution"].get("runtime_action"), "REDUCE_25")
+        self.assertFalse(any(event["type"] == "THESIS_WEAKENED_TRIGGERED" for event in record["execution"]["history"]))
+
     def test_max_holding_bars_triggers_review_extension_when_unprofitable_thesis_still_valid(self):
         store = {
             "trade_decision_records": [
