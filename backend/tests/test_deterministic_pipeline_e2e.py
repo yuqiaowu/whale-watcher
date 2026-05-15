@@ -155,10 +155,11 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         batch = dp._build_model_decision_candidate_batch(
             snapshot,
             {"technical": {"current_price": 2500.0, "atr14": 60.0}},
-            {"action": "BUY", "direction": "LONG", "confidence": 0.2},
+            {"action": "BUY", "direction": "LONG", "confidence": 0.6},
         )
 
         self.assertEqual([], batch["candidate_proposals"])
+        self.assertEqual(0.65, batch["model_decision_diagnostic"]["min_confidence"])
         self.assertEqual("model_confidence_below_threshold", batch["model_decision_diagnostic"]["reason"])
 
     def test_model_market_state_carries_qlib_and_macro_fields(self):
@@ -394,7 +395,16 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             ],
             "summary": "short setup",
         }
+        verifier_result = {
+            "veto": False,
+            "veto_reasons": [],
+            "missing_data": [],
+            "risk_notes": [],
+            "risk_adjustment": "NEUTRAL",
+            "adjustment_reason": "",
+        }
         with (
+            patch.dict(os.environ, {"ENABLE_MODEL_DECISION_VERIFIER": "1"}, clear=False),
             patch.object(
                 model_decision_agent,
                 "call_deepseek_text_with_audit",
@@ -403,7 +413,10 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             patch.object(
                 model_decision_agent,
                 "call_deepseek_json_with_audit",
-                return_value=(formatter_decision, {"status": "parsed"}),
+                side_effect=[
+                    (formatter_decision, {"status": "parsed"}),
+                    (verifier_result, {"status": "parsed"}),
+                ],
             ),
         ):
             decision = model_decision_agent.build_model_decision({"symbol": "BTC-USDT"})
@@ -413,6 +426,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             [{"field": "price", "op": ">=", "reason": "swing high reclaimed", "value_ref": "recent_swing_high", "persistence": 2}],
             decision["invalidation_rules"],
         )
+        self.assertEqual("NEUTRAL", decision["verifier"]["risk_adjustment"])
 
     def test_model_decision_verifier_veto_falls_back_to_wait_flat(self):
         formatter_decision = {
@@ -507,6 +521,52 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual([], decision["verifier"]["veto_reasons"])
         self.assertEqual(verifier_veto["veto_reasons"], decision["verifier"]["missing_data"])
         self.assertIn("optional_onchain_missing_data_downgraded", decision["verifier"]["risk_notes"])
+        self.assertEqual("NEUTRAL", decision["verifier"]["risk_adjustment"])
+
+    def test_model_decision_verifier_keeps_risk_adjustment_for_risk_review(self):
+        formatter_decision = {
+            "action": "SELL",
+            "direction": "SHORT",
+            "confidence": 0.67,
+            "setup_type": "trend_breakdown",
+            "risk_level": "MEDIUM",
+            "horizon": "SWING",
+            "reason_codes": ["qlib_downside"],
+            "invalid_if": ["breakdown fails"],
+            "summary": "downside setup with some risks",
+        }
+        verifier_result = {
+            "veto": False,
+            "veto_reasons": [],
+            "missing_data": [],
+            "risk_notes": ["countertrend bounce risk"],
+            "risk_adjustment": "REDUCE_SIZE",
+            "adjustment_reason": "short evidence is valid but not clean",
+        }
+
+        with (
+            patch.dict(os.environ, {"ENABLE_MODEL_DECISION_VERIFIER": "1"}, clear=False),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_text_with_audit",
+                return_value=("short evidence exists but size should be conservative", {"status": "parsed"}),
+            ),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_json_with_audit",
+                side_effect=[
+                    (formatter_decision, {"status": "parsed", "model": "deepseek-chat"}),
+                    (verifier_result, {"status": "parsed", "model": "deepseek-chat"}),
+                ],
+            ),
+        ):
+            decision = model_decision_agent.build_model_decision({"symbol": "ETH-USDT"})
+
+        self.assertEqual("SELL", decision["action"])
+        self.assertEqual("SHORT", decision["direction"])
+        self.assertFalse(decision["verifier"]["veto"])
+        self.assertEqual("REDUCE_SIZE", decision["verifier"]["risk_adjustment"])
+        self.assertEqual("short evidence is valid but not clean", decision["verifier"]["adjustment_reason"])
 
     def test_model_decision_verifier_keeps_real_veto_after_filtering_missing_data(self):
         formatter_decision = {
@@ -1426,6 +1486,194 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(2.5, risk_review["leverage"])
         self.assertEqual(3, risk_review["max_holding_bars"])
         self.assertIn("major trend conflict lightly reduced size", risk_review["review_note"])
+
+    def test_risk_review_applies_verifier_reduce_size_recommendation(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "decision_ready_features": {"macro_mode": "MIXED", "macro_permission": "ALLOW_BOTH", "major_trend_1d": "BEAR"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "short setup",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 105,
+                    "proposed_tp_price": 90,
+                    "reference_values": {
+                        "model_verifier": {
+                            "risk_adjustment": "REDUCE_SIZE",
+                            "adjustment_reason": "valid but noisy evidence",
+                        }
+                    },
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertTrue(risk_review["approved"])
+        self.assertEqual(125.0, risk_review["approved_position_size_usd"])
+        self.assertEqual(2.0, risk_review["leverage"])
+        self.assertEqual(1, risk_review["max_holding_bars"])
+        self.assertIn("verifier recommended size reduction: valid but noisy evidence", risk_review["review_note"])
+
+    def test_risk_review_blocks_short_when_bull_regime_lacks_short_flow_support(self):
+        snapshot = {
+            "symbol": "BTC-USDT",
+            "cycleId": "cycle_test",
+            "decision_ready_features": {
+                "regime_1d": "BULL",
+                "flow_support_long": True,
+                "flow_support_short": False,
+                "macro_permission": "ALLOW_BOTH",
+            },
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "short setup",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 105,
+                    "proposed_tp_price": 90,
+                    "reference_values": {},
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}) as load_portfolio:
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        load_portfolio.assert_not_called()
+        self.assertFalse(risk_review["approved"])
+        self.assertEqual("NO_TRADE", risk_review["final_intent"])
+        self.assertEqual("DO_NOTHING", risk_review["execution_action"])
+        self.assertIn("pre_entry_bull_regime_without_flow_support", risk_review["review_note"])
+
+    def test_risk_review_blocks_long_when_bear_regime_lacks_long_flow_support(self):
+        snapshot = {
+            "symbol": "DOGE-USDT",
+            "cycleId": "cycle_test",
+            "decision_ready_features": {
+                "regime_1d": "BEAR",
+                "flow_support_long": False,
+                "flow_support_short": True,
+                "macro_permission": "ALLOW_BOTH",
+            },
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "LONG",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "long setup",
+                    "proposed_entry_price": 0.1,
+                    "proposed_sl_price": 0.095,
+                    "proposed_tp_price": 0.11,
+                    "reference_values": {},
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertFalse(risk_review["approved"])
+        self.assertEqual("DO_NOTHING", risk_review["execution_action"])
+        self.assertIn("pre_entry_bear_regime_without_flow_support", risk_review["review_note"])
+
+    def test_risk_review_can_apply_verifier_modest_size_increase(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "decision_ready_features": {"macro_mode": "MIXED", "macro_permission": "ALLOW_BOTH", "major_trend_1d": "BEAR"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "clean short setup",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 105,
+                    "proposed_tp_price": 90,
+                    "reference_values": {
+                        "model_verifier": {
+                            "risk_adjustment": "INCREASE_SIZE",
+                            "adjustment_reason": "multi-source alignment",
+                        }
+                    },
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertTrue(risk_review["approved"])
+        self.assertEqual(312.5, risk_review["approved_position_size_usd"])
+        self.assertIn("verifier recommended modest size increase: multi-source alignment", risk_review["review_note"])
+
+    def test_risk_review_ignores_verifier_increase_when_direction_conflicts(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "decision_ready_features": {"macro_mode": "RISK_OFF", "macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "LONG",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "long setup with conflicts",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 95,
+                    "proposed_tp_price": 110,
+                    "reference_values": {
+                        "model_verifier": {
+                            "risk_adjustment": "INCREASE_SIZE",
+                            "adjustment_reason": "model says strong",
+                        }
+                    },
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertTrue(risk_review["approved"])
+        self.assertEqual(93.75, risk_review["approved_position_size_usd"])
+        self.assertIn("verifier increase ignored due to conflict or low thesis", risk_review["review_note"])
 
     def test_risk_review_caps_max_loss_at_two_percent_of_equity_and_uses_five_x_default_leverage(self):
         snapshot = {

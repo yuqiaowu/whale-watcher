@@ -18,6 +18,7 @@ ALLOWED_SETUP_TYPES = {
 }
 ALLOWED_RISK_LEVELS = {"LOW", "MEDIUM", "HIGH"}
 ALLOWED_HORIZONS = {"SHORT", "SWING", "MULTI_DAY"}
+ALLOWED_VERIFIER_RISK_ADJUSTMENTS = {"REDUCE_SIZE", "NEUTRAL", "INCREASE_SIZE"}
 
 OPTIONAL_ONCHAIN_MISSING_TERMS = (
     "onchain",
@@ -107,6 +108,12 @@ def _compact_list(value: Any, limit: int = 6) -> List[str]:
         if len(out) >= limit:
             break
     return out
+
+
+def _compact_text(value: Any, limit: int = 160) -> str:
+    if value is None:
+        return ""
+    return str(value).strip()[:limit]
 
 
 def _compact_rule_list(value: Any, limit: int = 8) -> List[Dict[str, Any]]:
@@ -298,16 +305,16 @@ def _verifier_contract() -> Dict[str, Any]:
         "veto_reasons": "array of short strings explaining only rejection reasons",
         "missing_data": "array of short strings for missing/stale data that weakens the trade",
         "risk_notes": "array of short strings for risk context; no sizing or execution instructions",
+        "risk_adjustment": sorted(ALLOWED_VERIFIER_RISK_ADJUSTMENTS),
+        "adjustment_reason": "short reason for REDUCE_SIZE or INCREASE_SIZE; risk review makes the final sizing decision",
     }
 
 
 def _decision_needs_verifier(decision: Dict[str, Any]) -> bool:
-    if not _env_flag_enabled("ENABLE_MODEL_DECISION_VERIFIER"):
-        return False
     action = str(decision.get("action") or "").upper()
     direction = str(decision.get("direction") or "").upper()
     confidence = _safe_float(decision.get("confidence")) or 0.0
-    min_confidence = _safe_float(os.getenv("MODEL_DECISION_VERIFIER_MIN_CONFIDENCE")) or 0.65
+    min_confidence = _safe_float(os.getenv("MODEL_DECISION_MIN_CONFIDENCE")) or 0.65
     return (
         ((action == "BUY" and direction == "LONG") or (action == "SELL" and direction == "SHORT"))
         and confidence >= min_confidence
@@ -329,6 +336,9 @@ def _normalize_verifier_result(verifier_raw: Dict[str, Any]) -> Dict[str, Any]:
     veto_reasons = _compact_list(verifier_raw.get("veto_reasons"), limit=6)
     missing_data = _compact_list(verifier_raw.get("missing_data"), limit=6)
     risk_notes = _compact_list(verifier_raw.get("risk_notes"), limit=6)
+    risk_adjustment = str(verifier_raw.get("risk_adjustment") or "NEUTRAL").upper()
+    if risk_adjustment not in ALLOWED_VERIFIER_RISK_ADJUSTMENTS:
+        risk_adjustment = "NEUTRAL"
 
     hard_veto_reasons: List[str] = []
     optional_missing_reasons: List[str] = []
@@ -353,6 +363,8 @@ def _normalize_verifier_result(verifier_raw: Dict[str, Any]) -> Dict[str, Any]:
         "veto_reasons": hard_veto_reasons[:6],
         "missing_data": missing_data[:6],
         "risk_notes": risk_notes[:6],
+        "risk_adjustment": "NEUTRAL" if veto else risk_adjustment,
+        "adjustment_reason": _compact_text(verifier_raw.get("adjustment_reason")),
     }
 
 
@@ -362,8 +374,9 @@ def _verify_model_decision(
 ) -> tuple[Optional[Dict[str, Any]], Dict[str, Any]]:
     verifier_system_prompt = (
         "You are a conservative trade verifier. Your job is to find reasons to reject a proposed directional "
-        "crypto trade. Do not improve the trade. Do not choose position size, leverage, entry, stop loss, "
-        "take profit, or execution. Return only JSON."
+        "crypto trade. If the trade is not bad enough to reject, you may recommend REDUCE_SIZE, NEUTRAL, or "
+        "INCREASE_SIZE for the downstream deterministic risk review. Do not choose exact position size, leverage, "
+        "entry, stop loss, take profit, or execution. Return only JSON."
     )
     verifier_prompt = (
         "Review the proposed model decision against the market state. Be skeptical. Veto if evidence is "
@@ -373,7 +386,9 @@ def _verify_model_decision(
         "exchange_netflow_24h, large_transfer_count_24h, whale_bias, flow_bias, token flow, or stablecoin flow is "
         "expected coverage limitation; put it in missing_data or risk_notes, not veto_reasons. Treat Qlib freshness, "
         "current price, technical indicators, and risk/invalidation facts as required data. If there is no clear "
-        "non-missing-data rejection reason, set veto=false. Output only JSON matching this contract.\n\n"
+        "non-missing-data rejection reason, set veto=false. Use risk_adjustment only as a sizing recommendation: "
+        "REDUCE_SIZE for meaningful but non-fatal risks, INCREASE_SIZE only when evidence is unusually clean and "
+        "multi-source aligned, otherwise NEUTRAL. Output only JSON matching this contract.\n\n"
         f"contract={json.dumps(_verifier_contract(), ensure_ascii=False, sort_keys=True)}\n\n"
         f"market_state={json.dumps(market_state, ensure_ascii=False, sort_keys=True)}\n\n"
         f"proposed_decision={json.dumps(decision, ensure_ascii=False, sort_keys=True)}"

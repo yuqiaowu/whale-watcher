@@ -2046,7 +2046,7 @@ def _build_model_decision_candidate_batch(
     action = str(model_decision.get("action") or "WAIT").upper()
     direction = str(model_decision.get("direction") or "FLAT").upper()
     confidence = _safe_float(model_decision.get("confidence"), 0.0)
-    min_confidence = _safe_float(os.getenv("MODEL_DECISION_MIN_CONFIDENCE"), 0.55)
+    min_confidence = _safe_float(os.getenv("MODEL_DECISION_MIN_CONFIDENCE"), 0.65)
     proposals: List[Dict[str, Any]] = []
     diagnostic: Dict[str, Any] = {
         "generation_mode": "model_decision",
@@ -2112,6 +2112,7 @@ def _build_model_decision_candidate_batch(
                     "model_horizon": model_decision.get("horizon"),
                     "model_reason_codes": model_decision.get("reason_codes") or [],
                     "model_invalid_if": model_decision.get("invalid_if") or [],
+                    "model_verifier": model_decision.get("verifier") or {},
                     "model_approved_invalidation_rules": model_approved_rules,
                     "model_rejected_invalidation_rules": model_rejected_rules,
                     "model_stop_price": round(sl, 8),
@@ -2587,6 +2588,16 @@ def _build_risk_review(snapshot: Dict[str, Any], rule_evaluation: Dict[str, Any]
     return _build_risk_review_with_research(snapshot, rule_evaluation, None)
 
 
+def _pre_entry_thesis_block_reason(snapshot: Dict[str, Any], intent: str) -> str:
+    features = snapshot.get("decision_ready_features", {}) or {}
+    regime = features.get("regime_1d")
+    if intent == "LONG" and regime == "BEAR" and not bool(features.get("flow_support_long")):
+        return "pre_entry_bear_regime_without_flow_support"
+    if intent == "SHORT" and regime == "BULL" and not bool(features.get("flow_support_short")):
+        return "pre_entry_bull_regime_without_flow_support"
+    return ""
+
+
 def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: Dict[str, Any], research_output: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     if not rule_evaluation.get("passed") or not rule_evaluation.get("approved_candidates"):
         return {
@@ -2626,6 +2637,25 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
         matching = [c for c in rule_evaluation["approved_candidates"] if c.get("trigger_source") in selected_source]
         if matching:
             candidate = matching[0]
+
+    pre_entry_block_reason = _pre_entry_thesis_block_reason(snapshot, str(candidate.get("decision_intent") or ""))
+    if pre_entry_block_reason:
+        return {
+            "symbol": snapshot["symbol"],
+            "cycleId": snapshot["cycleId"],
+            "strategy_family": _strategy_family_for_intent(candidate["decision_intent"]),
+            "approved": False,
+            "final_intent": "NO_TRADE",
+            "approved_risk_fraction": 0.0,
+            "approved_position_size_usd": 0.0,
+            "leverage": 1.0,
+            "max_holding_bars": 0,
+            "execution_action": "DO_NOTHING",
+            "next_position_state": "candidate",
+            "review_note": f"pre-entry thesis conflict blocked trade: {pre_entry_block_reason}",
+            "approved_candidate": candidate,
+            "candidate_structure": rule_evaluation.get("candidate_structure", {}) or {},
+        }
 
     portfolio_state = _load_portfolio_state()
     account_equity = _safe_float(portfolio_state.get("total_equity"), 0.0)
@@ -2694,30 +2724,57 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
 
     macro_permission = snapshot["decision_ready_features"].get("macro_permission", "ALLOW_BOTH")
     intent = candidate.get("decision_intent")
-    if (
+    macro_conflict = (
         not is_grid_candidate
         and (
             (macro_permission == "ALLOW_SHORT" and intent == "LONG")
             or (macro_permission == "ALLOW_LONG" and intent == "SHORT")
         )
-    ):
+    )
+    if macro_conflict:
         approved_position_size_usd *= 0.5
         leverage = min(leverage, 2.0)
         max_holding_bars = min(max_holding_bars, 3)
         review_note = f"{review_note}; macro conflict reduced size and leverage"
 
     major_trend = snapshot["decision_ready_features"].get("major_trend_1d", "UNKNOWN")
-    if (
+    major_trend_conflict = (
         not is_grid_candidate
         and (
             (major_trend == "BEAR" and intent == "LONG")
             or (major_trend == "BULL" and intent == "SHORT")
         )
-    ):
+    )
+    if major_trend_conflict:
         approved_position_size_usd *= 0.75
         leverage = min(leverage, 2.5)
         max_holding_bars = min(max_holding_bars, 4)
         review_note = f"{review_note}; major trend conflict lightly reduced size and duration"
+
+    verifier = candidate.get("reference_values", {}).get("model_verifier") or {}
+    verifier_adjustment = str(verifier.get("risk_adjustment") or "NEUTRAL").upper()
+    verifier_reason = str(verifier.get("adjustment_reason") or "").strip()
+    if not is_grid_candidate and verifier_adjustment == "REDUCE_SIZE":
+        approved_position_size_usd *= 0.5
+        leverage = min(leverage, 2.0)
+        max_holding_bars = min(max_holding_bars, 1)
+        note = "verifier recommended size reduction"
+        if verifier_reason:
+            note = f"{note}: {verifier_reason}"
+        review_note = f"{review_note}; {note}"
+    elif not is_grid_candidate and verifier_adjustment == "INCREASE_SIZE":
+        thesis_strength = str((research_output or {}).get("thesis_strength") or "HIGH").upper()
+        if macro_conflict or major_trend_conflict or thesis_strength == "LOW":
+            review_note = f"{review_note}; verifier increase ignored due to conflict or low thesis"
+        else:
+            approved_position_size_usd = min(
+                approved_position_size_usd * 1.25,
+                account_equity * GLOBAL_CONFIG["max_position_size_fraction"],
+            )
+            note = "verifier recommended modest size increase"
+            if verifier_reason:
+                note = f"{note}: {verifier_reason}"
+            review_note = f"{review_note}; {note}"
 
     resonance_bonus = _safe_float(candidate.get("resonance_bonus"), 0.0)
     if candidate_structure.get("overall_state") == "same_direction_resonance" and resonance_bonus > 0:
