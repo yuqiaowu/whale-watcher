@@ -19,6 +19,7 @@ from model_decision_agent import build_market_state, build_model_decision
 from okx_executor import OKXExecutor
 from post_trade_review import run_post_trade_review
 from research_agent import build_research_output
+from vwap_features import load_vwap_feature_context
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -582,6 +583,10 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
     return result
 
 
+def _load_vwap_feature_context_map() -> Dict[str, Dict[str, Any]]:
+    return load_vwap_feature_context(TRACKED_SYMBOLS)
+
+
 def _symbol_position_snapshot(portfolio_state: Dict[str, Any], symbol: str) -> Dict[str, Any]:
     positions = portfolio_state.get("positions", []) or []
     symbol_positions = [p for p in positions if p.get("symbol", "").upper() == symbol.upper()]
@@ -832,6 +837,7 @@ def _build_decision_snapshot(
     macro_snapshot = deepcopy(macro_snapshot) if macro_snapshot is not None else _build_macro_snapshot(whale_analysis)
     market_data = qlib_coin.get("market_data", {})
     chart_context = chart_context or {}
+    vwap_context = chart_context.get("vwap") if isinstance(chart_context.get("vwap"), dict) else {}
     qlib_freshness = deepcopy(qlib_freshness) if isinstance(qlib_freshness, dict) else {}
     qlib_data_fresh = qlib_freshness.get("fresh", True) is True
 
@@ -907,6 +913,37 @@ def _build_decision_snapshot(
         "structure_resistance_12bar_volume_confirmed": chart_context.get("structure_resistance_12bar_volume_confirmed"),
         "structure_support_stop_long": chart_context.get("structure_support_stop_long"),
         "structure_resistance_stop_short": chart_context.get("structure_resistance_stop_short"),
+        "vwap_available": bool(vwap_context.get("vwap_available")),
+        "vwap_missing_reason": vwap_context.get("vwap_missing_reason"),
+        "vwap_bar": vwap_context.get("vwap_bar"),
+        "vwap_source": vwap_context.get("vwap_source"),
+        "vwap_band_method": vwap_context.get("vwap_band_method"),
+        "vwap_band_multipliers": vwap_context.get("vwap_band_multipliers") or [],
+        "vwap_latest_price": _optional_float(vwap_context.get("vwap_latest_price")),
+        "vwap_4h": _optional_float(vwap_context.get("vwap_4h")),
+        "vwap_std_4h": _optional_float(vwap_context.get("vwap_std_4h")),
+        "vwap_upper_1_4h": _optional_float(vwap_context.get("vwap_upper_1_4h")),
+        "vwap_lower_1_4h": _optional_float(vwap_context.get("vwap_lower_1_4h")),
+        "price_vs_vwap_4h_pct": _optional_float(vwap_context.get("price_vs_vwap_4h_pct")),
+        "price_vwap_zscore_4h": _optional_float(vwap_context.get("price_vwap_zscore_4h")),
+        "vwap_4h_zone": vwap_context.get("vwap_4h_zone"),
+        "vwap_16h": _optional_float(vwap_context.get("vwap_16h")),
+        "vwap_std_16h": _optional_float(vwap_context.get("vwap_std_16h")),
+        "vwap_upper_1_16h": _optional_float(vwap_context.get("vwap_upper_1_16h")),
+        "vwap_lower_1_16h": _optional_float(vwap_context.get("vwap_lower_1_16h")),
+        "vwap_upper_2_16h": _optional_float(vwap_context.get("vwap_upper_2_16h")),
+        "vwap_lower_2_16h": _optional_float(vwap_context.get("vwap_lower_2_16h")),
+        "vwap_upper_3_16h": _optional_float(vwap_context.get("vwap_upper_3_16h")),
+        "vwap_lower_3_16h": _optional_float(vwap_context.get("vwap_lower_3_16h")),
+        "price_vs_vwap_16h_pct": _optional_float(vwap_context.get("price_vs_vwap_16h_pct")),
+        "price_vs_vwap_upper_1_16h_pct": _optional_float(vwap_context.get("price_vs_vwap_upper_1_16h_pct")),
+        "price_vs_vwap_lower_1_16h_pct": _optional_float(vwap_context.get("price_vs_vwap_lower_1_16h_pct")),
+        "price_vs_vwap_upper_2_16h_pct": _optional_float(vwap_context.get("price_vs_vwap_upper_2_16h_pct")),
+        "price_vs_vwap_lower_2_16h_pct": _optional_float(vwap_context.get("price_vs_vwap_lower_2_16h_pct")),
+        "price_vs_vwap_upper_3_16h_pct": _optional_float(vwap_context.get("price_vs_vwap_upper_3_16h_pct")),
+        "price_vs_vwap_lower_3_16h_pct": _optional_float(vwap_context.get("price_vs_vwap_lower_3_16h_pct")),
+        "price_vwap_zscore_16h": _optional_float(vwap_context.get("price_vwap_zscore_16h")),
+        "vwap_16h_zone": vwap_context.get("vwap_16h_zone"),
     }
     onchain_snapshot = {
         "token_net_flow": token_flow,
@@ -3288,6 +3325,9 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
     cycle_id = _aligned_cycle_id()
     qlib_map = _qlib_coin_map(qlib_payload)
     chart_context_map = _load_chart_feature_context_map()
+    vwap_context_map = _load_vwap_feature_context_map()
+    for symbol, vwap_context in vwap_context_map.items():
+        chart_context_map.setdefault(symbol, {})["vwap"] = vwap_context
     qlib_freshness = _qlib_freshness_report(qlib_payload, qlib_map, chart_context_map)
     qlib_map_for_decision = qlib_map if qlib_freshness.get("fresh") else {}
     macro_snapshot = _build_macro_snapshot(whale_analysis)

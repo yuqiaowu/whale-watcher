@@ -4,6 +4,7 @@ import re
 from typing import Any, Dict, List, Optional
 
 from llm_client import call_llm_json_with_audit
+from polymarket_signal import build_prediction_market_signal, unavailable_signal
 
 ALLOWED_MARKET_IMPACTS = {"RISK_ON", "RISK_OFF", "MIXED", "NO_CLEAR_IMPACT"}
 ALLOWED_IMPACT_HORIZONS = {"INTRADAY", "SWING", "MULTI_DAY", "NOISE"}
@@ -859,6 +860,19 @@ def _filtered_macro_tags(tags: Any) -> List[str]:
     return deduped
 
 
+def _prediction_market_enabled() -> bool:
+    return os.getenv("ENABLE_POLYMARKET_SIGNAL", "0").strip().lower() in {"1", "true", "yes"}
+
+
+def _load_prediction_market_signal() -> Dict[str, Any]:
+    if not _prediction_market_enabled():
+        return unavailable_signal("disabled")
+    try:
+        return build_prediction_market_signal(persist=True)
+    except Exception as exc:
+        return unavailable_signal(f"fetch_or_calculation_failed:{exc.__class__.__name__}")
+
+
 def _final_macro_decision_fallback(
     classification: Dict[str, Any],
     deterministic_view: Dict[str, Any],
@@ -881,6 +895,7 @@ def _final_macro_decision_fallback(
         "llm_view": _normalize_llm_macro_view(
             ((merged.get("provenance") or {}).get("llm_audit") or {}).get("parsed_response")
         ),
+        "prediction_market": merged.get("prediction_market"),
         "adjudication_audit": audit,
     }
     merged["final_macro_decision"] = final_decision
@@ -907,10 +922,12 @@ def _llm_final_macro_adjudication(
         )
 
     facts = classification.get("event_facts") or classification.get("classification_basis") or {}
+    prediction_market = classification.get("prediction_market") or unavailable_signal("not_loaded")
     prompt = (
         "You are the final macro decision adjudicator for a crypto trading system. "
         "Compare the deterministic program conclusion with the first-pass LLM conclusion. "
-        "Use the structured facts, including marginal 5-day changes, to decide which conclusion is better or whether a blended final conclusion is needed. "
+        "Use the structured facts, including marginal 5-day changes and prediction-market expectation data, to decide which conclusion is better or whether a blended final conclusion is needed. "
+        "Treat prediction_market as reference-only market expectation, not as a hard trading signal. "
         "Prefer MIXED or NO_CLEAR_IMPACT when evidence is contradictory or weak. "
         "Do not blindly defer to either side. "
         "Return only valid JSON with keys: selected_view, final_market_impact, final_impact_horizon, "
@@ -922,6 +939,7 @@ def _llm_final_macro_adjudication(
         "Allowed final_key_tags must come from ALLOWED_TAGS.\n\n"
         f"HEADLINES: {json.dumps(headlines, ensure_ascii=False)}\n"
         f"STRUCTURED_FACTS: {json.dumps(facts, ensure_ascii=False)}\n"
+        f"PREDICTION_MARKET: {json.dumps(prediction_market, ensure_ascii=False)}\n"
         f"DETERMINISTIC_VIEW: {json.dumps(deterministic_view, ensure_ascii=False)}\n"
         f"LLM_VIEW: {json.dumps(llm_view, ensure_ascii=False)}\n"
         f"ALLOWED_TAGS: {json.dumps(sorted(ALLOWED_MACRO_TAGS), ensure_ascii=False)}"
@@ -987,6 +1005,7 @@ def _llm_final_macro_adjudication(
         "reason": merged.get("brief_rationale"),
         "deterministic_view": deterministic_view,
         "llm_view": llm_view,
+        "prediction_market": prediction_market,
         "adjudication_audit": audit,
     }
     merged["final_macro_decision"] = final_decision
@@ -1000,6 +1019,7 @@ def build_macro_news_snapshot(whale_analysis: Dict[str, Any]) -> Dict[str, Any]:
     news_obj = whale_analysis.get("news", {}) if isinstance(whale_analysis.get("news"), dict) else {}
 
     deterministic_classification = _deterministic_classification(fear_greed, macro_data, news_obj)
+    deterministic_classification["prediction_market"] = _load_prediction_market_signal()
     headlines = [event["title"] for event in (deterministic_classification.get("news_selection") or {}).get("selected", [])]
     classification = _llm_summary_override(deterministic_classification, headlines)
     classification = _llm_final_macro_adjudication(classification, deterministic_classification, headlines)

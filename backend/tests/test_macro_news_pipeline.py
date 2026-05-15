@@ -70,6 +70,39 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertIn("brief_rationale", result)
         self.assertTrue(result["macro_event_window"])
 
+    def test_macro_snapshot_carries_prediction_market_signal_when_enabled(self):
+        whale_analysis = {
+            "fear_greed": {"value": 52, "value_classification": "Neutral"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": 0, "trend": "flat"},
+                "japan_macro": {"price": 145.0, "change_5d_pct": 0.0},
+                "liquidity_monitor": {
+                    "dxy": {"price": 104.0, "change_5d_pct": 0.0},
+                    "vix": {"price": 14.0, "change_1d_pct": 0.0, "change_5d_pct": 0.0},
+                },
+            },
+            "news": {"macro": {"items": []}},
+        }
+        prediction_market = {
+            "available": True,
+            "calculation_owner": "program",
+            "interpretation_scope": "prediction_market_expectation_reference_only",
+            "combined_score": 0.22,
+            "combined_label": "MILD_RISK_ON",
+            "score_delta_24h": 0.04,
+            "score_delta_24h_label": "SLIGHTLY_IMPROVING",
+            "confidence": "MEDIUM",
+        }
+
+        with patch.dict("os.environ", {"ENABLE_POLYMARKET_SIGNAL": "1"}), patch(
+            "macro_news_pipeline.build_prediction_market_signal",
+            return_value=prediction_market,
+        ):
+            result = build_macro_news_snapshot(whale_analysis)
+
+        self.assertEqual(prediction_market, result["prediction_market"])
+        self.assertEqual(prediction_market, result["final_macro_decision"]["prediction_market"])
+
     def test_noise_case_defaults_to_non_directional_outputs(self):
         whale_analysis = {
             "fear_greed": {"value": 52, "value_classification": "Neutral"},

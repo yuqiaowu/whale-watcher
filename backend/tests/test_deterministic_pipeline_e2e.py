@@ -16,6 +16,7 @@ if str(BACKEND_DIR) not in sys.path:
 import deterministic_pipeline as dp
 import llm_client
 import model_decision_agent
+import vwap_features
 
 
 class FakeDB:
@@ -206,6 +207,15 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
                 "macro_mode": "RISK_ON",
                 "macro_permission": "ALLOW_BOTH",
                 "macro_bias_tier": "MILD_RISK_ON",
+                "prediction_market": {
+                    "available": True,
+                    "calculation_owner": "program",
+                    "interpretation_scope": "prediction_market_expectation_reference_only",
+                    "combined_score": 0.18,
+                    "combined_label": "MILD_RISK_ON",
+                    "score_delta_24h": 0.03,
+                    "score_delta_24h_label": "SLIGHTLY_IMPROVING",
+                },
             },
             "position_snapshot": {},
         }
@@ -225,6 +235,62 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertTrue(state["data_availability"]["has_vix"])
         self.assertTrue(state["data_availability"]["has_onchain_flow_data"])
         self.assertTrue(state["data_availability"]["has_flow_semantics"])
+        self.assertEqual("MILD_RISK_ON", state["macro"]["prediction_market"]["combined_label"])
+        self.assertEqual("program", state["macro"]["prediction_market"]["calculation_owner"])
+
+    def test_model_market_state_carries_vwap_fields(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-05-11T00:00:00Z",
+            "market_snapshot": {
+                "price": 2500.0,
+                "vwap_available": True,
+                "vwap_bar": "5m",
+                "vwap_source": "HLC3",
+                "vwap_band_method": "volume_weighted_standard_deviation",
+                "vwap_band_multipliers": [1, 2, 3],
+                "vwap_4h": 2480.0,
+                "vwap_std_4h": 8.0,
+                "vwap_upper_1_4h": 2488.0,
+                "vwap_lower_1_4h": 2472.0,
+                "price_vs_vwap_4h_pct": 0.8065,
+                "price_vwap_zscore_4h": 2.5,
+                "vwap_4h_zone": "ABOVE_UPPER_2_BELOW_UPPER_3",
+                "vwap_16h": 2460.0,
+                "vwap_std_16h": 20.0,
+                "vwap_upper_1_16h": 2480.0,
+                "vwap_lower_1_16h": 2440.0,
+                "vwap_upper_2_16h": 2500.0,
+                "vwap_lower_2_16h": 2420.0,
+                "vwap_upper_3_16h": 2520.0,
+                "vwap_lower_3_16h": 2400.0,
+                "price_vs_vwap_16h_pct": 1.626,
+                "price_vs_vwap_upper_1_16h_pct": 0.8065,
+                "price_vs_vwap_lower_1_16h_pct": 2.459,
+                "price_vwap_zscore_16h": 2.0,
+                "vwap_16h_zone": "ABOVE_UPPER_2_BELOW_UPPER_3",
+            },
+            "onchain_snapshot": {},
+            "decision_ready_features": {},
+            "macro_snapshot": {},
+            "position_snapshot": {},
+        }
+
+        state = dp.build_market_state(snapshot)
+
+        technical = state["technical"]
+        self.assertTrue(technical["vwap_available"])
+        self.assertEqual("5m", technical["vwap_bar"])
+        self.assertEqual("HLC3", technical["vwap_source"])
+        self.assertEqual([1, 2, 3], technical["vwap_band_multipliers"])
+        self.assertEqual(2480.0, technical["vwap_4h"])
+        self.assertEqual(2460.0, technical["vwap_16h"])
+        self.assertEqual(2.0, technical["price_vwap_zscore_16h"])
+        self.assertEqual("ABOVE_UPPER_2_BELOW_UPPER_3", technical["vwap_16h_zone"])
+        self.assertTrue(state["data_availability"]["has_vwap_4h"])
+        self.assertTrue(state["data_availability"]["has_vwap_16h"])
 
     def test_model_market_state_preserves_zero_values(self):
         snapshot = {
@@ -262,6 +328,39 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(0.0, state["technical"]["relative_volume_20"])
         self.assertEqual(0.0, state["technical"]["prior_120d_drawdown_pct"])
         self.assertTrue(state["data_availability"]["has_prior_120d_drawdown"])
+
+    def test_vwap_feature_computation_uses_hlc3_quote_volume_and_bands(self):
+        candles = []
+        for idx in range(192):
+            price = 100.0 + idx * 0.1
+            candles.append(
+                [
+                    str(1770000000000 + idx * 300000),
+                    str(price - 0.2),
+                    str(price + 0.5),
+                    str(price - 0.5),
+                    str(price),
+                    "10",
+                    "1000",
+                    str(1000 + idx),
+                    "1",
+                ]
+            )
+
+        features = vwap_features.compute_vwap_features_from_candles(candles)
+
+        self.assertTrue(features["vwap_available"])
+        self.assertTrue(features["vwap_4h_available"])
+        self.assertTrue(features["vwap_16h_available"])
+        self.assertEqual("5m", features["vwap_bar"])
+        self.assertEqual("HLC3", features["vwap_source"])
+        self.assertEqual("volume_weighted_standard_deviation", features["vwap_band_method"])
+        self.assertEqual([1, 2, 3], features["vwap_band_multipliers"])
+        self.assertEqual(48, features["vwap_4h_bar_count"])
+        self.assertEqual(192, features["vwap_16h_bar_count"])
+        self.assertGreater(features["vwap_upper_1_16h"], features["vwap_16h"])
+        self.assertLess(features["vwap_lower_1_16h"], features["vwap_16h"])
+        self.assertIn("vwap_16h_zone", features)
 
     def test_qlib_freshness_report_flags_stale_payload_and_csv(self):
         qlib_payload = {
@@ -2524,6 +2623,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
              patch.object(dp, "_load_qlib_payload", return_value={}), \
              patch.object(dp, "_qlib_coin_map", return_value={}), \
              patch.object(dp, "_load_chart_feature_context_map", return_value={}), \
+             patch.object(dp, "_load_vwap_feature_context_map", return_value={}), \
              patch.object(dp, "_build_macro_snapshot", return_value={}), \
              patch.object(dp, "_aligned_cycle_id", return_value="cycle_test"), \
              patch.object(dp, "_build_decision_snapshot", return_value=snapshot), \
