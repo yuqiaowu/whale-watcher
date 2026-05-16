@@ -1318,6 +1318,50 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(1.34, snapshot["decision_ready_features"]["funding_zscore"])
         self.assertEqual(6.45, snapshot["decision_ready_features"]["delta_oi_24h_percent"])
 
+    def test_vwap_fields_are_mirrored_for_downstream_context(self):
+        whale_analysis = {
+            "fear_greed": {"value": 50, "value_classification": "Neutral"},
+            "macro": {},
+            "news": {},
+            "btc": {"market": {"price": 78000}},
+        }
+        vwap = {
+            "vwap_available": True,
+            "vwap_bar": "5m",
+            "vwap_source": "HLC3",
+            "vwap_latest_price": 78077.1,
+            "vwap_4h": 78021.658,
+            "vwap_std_4h": 180.0,
+            "price_vs_vwap_4h_pct": 0.0711,
+            "price_vwap_zscore_4h": 0.3085,
+            "vwap_4h_zone": "ABOVE_VWAP_BELOW_UPPER_1",
+            "vwap_16h": 78415.274,
+            "vwap_std_16h": 440.0,
+            "price_vs_vwap_16h_pct": -0.4313,
+            "price_vwap_zscore_16h": -0.766,
+            "vwap_16h_zone": "BELOW_VWAP_ABOVE_LOWER_1",
+        }
+        snapshot = dp._build_decision_snapshot(
+            "BTC",
+            whale_analysis,
+            {"rank": 1, "p_up_8h": 0.2, "p_down_8h": 0.6, "p_flat_8h": 0.2, "market_data": {"close": 78000}},
+            {"positions": [], "total_equity": 10000},
+            "cycle_test",
+            chart_context={"vwap": vwap},
+        )
+
+        market = snapshot["market_snapshot"]
+        features = snapshot["decision_ready_features"]
+        self.assertTrue(features["vwap_available"])
+        self.assertEqual(market["vwap_bar"], features["vwap_bar"])
+        self.assertEqual(market["vwap_source"], features["vwap_source"])
+        self.assertEqual(market["vwap_4h"], features["vwap_4h"])
+        self.assertEqual(market["price_vs_vwap_4h_pct"], features["price_vs_vwap_4h_pct"])
+        self.assertEqual(market["vwap_4h_zone"], features["vwap_4h_zone"])
+        self.assertEqual(market["vwap_16h"], features["vwap_16h"])
+        self.assertEqual(market["price_vwap_zscore_16h"], features["price_vwap_zscore_16h"])
+        self.assertEqual(market["vwap_16h_zone"], features["vwap_16h_zone"])
+
     def test_conflicted_research_waits_for_confirmation(self):
         store = {
             "whale_analysis": {
