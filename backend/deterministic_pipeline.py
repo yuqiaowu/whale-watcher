@@ -3424,6 +3424,7 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
         "research_outputs": research_outputs,
         "risk_reviews": risk_reviews,
         "executions": executions,
+        "records": records,
         "record_count": len(records),
         "post_trade_review": None,
     }

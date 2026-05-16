@@ -41,6 +41,7 @@ class DBClient:
                 self.client.admin.command('ping')
                 self.db = self.client[self.db_name]
                 self.is_connected = True
+                self._ensure_indexes()
                 print(f"✅ [MongoDB] Safely connected to Cloud Database! db={self.db_name}")
             except Exception as e:
                 print(f"⚠️ [MongoDB] Connection Failed: {e}. Falling back to local JSON.")
@@ -60,6 +61,19 @@ class DBClient:
             except Exception:
                 pass
         return "whale_watcher"
+
+    def _ensure_indexes(self):
+        try:
+            self._ensure_collection_indexes("trade_decision_records", self.db["trade_decision_records"])
+            self._ensure_collection_indexes("decision_cycles_v2", self.db["decision_cycles_v2"])
+        except Exception as e:
+            print(f"⚠️ [MongoDB Index Error] {e}")
+
+    def _ensure_collection_indexes(self, collection_name, collection):
+        if collection_name == "trade_decision_records":
+            collection.create_index([("created_at", -1)], background=True)
+        elif collection_name == "decision_cycles_v2":
+            collection.create_index([("generated_at", -1)], background=True)
 
     def _get_local_path(self, collection_name):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -152,20 +166,30 @@ class DBClient:
                     safe_data["_id"] = "current_state"
                     collection.replace_one({"_id": "current_state"}, safe_data, upsert=True)
                 else:
-                    # For arrays (logs, history), if we pass the whole array, we'd need to clear and insert
-                    # Or better: just replace everything. Since array sizes are small right now.
-                    # A better way for large arrays is to use insert_one when a new log arrives, 
-                    # but since the current architecture dumps the whole list, we drop and insert many.
+                    # Replace array-like collections atomically. The old
+                    # delete-then-insert path could leave Mongo empty if a
+                    # large history write failed after delete_many({}).
                     if isinstance(data, list):
-                        collection.delete_many({})
-                        if data:
-                            # MongoDB modification: Ensure no internal `_id` conflicts
+                        if not data:
+                            collection.delete_many({})
+                        else:
                             safe_data = []
                             for item in data:
-                                safe_item = item.copy()
+                                safe_item = item.copy() if isinstance(item, dict) else {"value": item}
                                 safe_item.pop("_id", None)
                                 safe_data.append(safe_item)
-                            collection.insert_many(safe_data)
+
+                            temp_name = f"__tmp_replace_{collection_name}"
+                            temp_collection = self.db[temp_name]
+                            temp_collection.drop()
+                            try:
+                                for idx in range(0, len(safe_data), 100):
+                                    temp_collection.insert_many(safe_data[idx:idx + 100])
+                                self._ensure_collection_indexes(collection_name, temp_collection)
+                                temp_collection.rename(collection_name, dropTarget=True)
+                            except Exception:
+                                temp_collection.drop()
+                                raise
             except Exception as e:
                 print(f"⚠️ [MongoDB Sync Error] {collection_name}: {e}")
 

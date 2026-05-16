@@ -1221,8 +1221,10 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             result = dp.run_deterministic_cycle(executor=FakeExecutor())
 
         self.assertIn("executions", result)
+        self.assertIn("records", result)
         self.assertEqual(result["record_count"], 5)
         self.assertEqual(len(result["executions"]), 5)
+        self.assertEqual(len(result["records"]), 5)
         saved_records = fake_db.store.get("trade_decision_records", [])
         self.assertEqual(len(saved_records), 5)
         self.assertTrue(all("decisionId" in record for record in saved_records))

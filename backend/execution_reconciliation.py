@@ -462,7 +462,7 @@ def _recent_unmatched_closed_trade(trade: Dict[str, Any], now: Optional[datetime
     exit_dt = _parse_dt(trade.get("exitTime"))
     if exit_dt is None:
         return False
-    now = now or datetime.now(timezone.utc)
+    now = now or _parse_dt(_iso_now()) or datetime.now(timezone.utc)
     return 0 <= (now - exit_dt).total_seconds() <= 72 * 3600
 
 
