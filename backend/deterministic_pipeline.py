@@ -894,6 +894,7 @@ def _build_decision_snapshot(
         "macd_hist_4h": _safe_float(chart_context.get("macd_hist_4h"), _safe_float(market.get("macd_hist"), _safe_float(market_data.get("macd_hist")))),
         "rel_volume_60": _safe_float(chart_context.get("rel_volume_60")),
         "volume_usd_4h": _safe_float(chart_context.get("volume_usd_4h")),
+        "sma20_4h": _positive_optional_float(chart_context.get("sma20_4h"), market.get("sma20_4h"), market_data.get("ma_20")),
         "sma50_4h": _safe_float(chart_context.get("sma50_4h")),
         "sma5_1d": _safe_float(chart_context.get("sma5_1d"), _safe_float(market.get("sma5_1d"))),
         "sma10_1d": _safe_float(chart_context.get("sma10_1d"), _safe_float(market.get("sma10_1d"))),

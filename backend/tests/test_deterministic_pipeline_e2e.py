@@ -218,7 +218,9 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             "market_snapshot": {
                 "price": 2500.0,
                 "rsi_4h": 61.0,
+                "williams_r14": -35.0,
                 "bb_pct_b": 0.72,
+                "ma_20": 2450.0,
                 "sma50_1d": 2400.0,
                 "sma200_1d": 2100.0,
                 "volume_ratio": 1.4,
@@ -271,6 +273,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(0.62, state["qlib"]["p_up_8h"])
         self.assertEqual("LONG", state["qlib"]["direction"])
         self.assertEqual(18.5, state["technical"]["vix"])
+        self.assertEqual(2.0408, state["technical"]["relative_sma20_pct"])
         self.assertEqual(19.0476, state["technical"]["relative_sma200_pct"])
         self.assertTrue(state["onchain"]["flow_data_available"])
         self.assertEqual(7868172.45, state["onchain"]["token_net_flow"])
@@ -279,8 +282,11 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(0.023, state["onchain"]["liquidation_long_to_volume_4h"])
         self.assertEqual(1525790534.8, state["onchain"]["open_interest"])
         self.assertTrue(state["data_availability"]["has_vix"])
+        self.assertTrue(state["data_availability"]["has_sma20_distance"])
         self.assertTrue(state["data_availability"]["has_onchain_flow_data"])
         self.assertTrue(state["data_availability"]["has_flow_semantics"])
+        self.assertEqual([], state["data_availability"]["required_missing_fields"])
+        self.assertEqual(["exchange_netflow_24h", "large_transfer_count_24h"], state["data_availability"]["optional_missing_fields"])
         self.assertEqual("MILD_RISK_ON", state["macro"]["prediction_market"]["combined_label"])
         self.assertEqual("program", state["macro"]["prediction_market"]["calculation_owner"])
 
@@ -975,7 +981,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         snapshot = dp._build_decision_snapshot(
             "ETH",
             whale_analysis,
-            {"qlib_score": 0.001, "rank": 2, "p_up_8h": 0.52, "p_down_8h": 0.24, "p_flat_8h": 0.24, "market_data": {"atr_14": 35, "close": 2400}},
+            {"qlib_score": 0.001, "rank": 2, "p_up_8h": 0.52, "p_down_8h": 0.24, "p_flat_8h": 0.24, "market_data": {"atr_14": 35, "close": 2400, "ma_20": 2350}},
             {"positions": [], "total_equity": 10000},
             "cycle_test",
         )
@@ -986,6 +992,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertFalse(snapshot["decision_ready_features"]["flow_support_long"])
         self.assertFalse(snapshot["decision_ready_features"]["flow_support_short"])
         self.assertTrue(snapshot["decision_ready_features"]["flow_signal_mixed"])
+        self.assertEqual(2350, snapshot["market_snapshot"]["sma20_4h"])
 
     def test_build_decision_snapshot_prefers_confirmed_chart_wick_over_live_market_wick(self):
         whale_analysis = {

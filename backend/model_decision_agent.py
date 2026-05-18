@@ -163,7 +163,7 @@ def build_market_state(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         "williams_r14": _safe_float(market.get("williams_r14")),
         "vix": _safe_float(_first_present(macro.get("vix"), macro.get("vix_level"), features.get("vix_level"))),
         "bollinger_position": _safe_float(_first_present(market.get("bb_pos_20"), market.get("bb_pct_b"), features.get("bb_pos_20"))),
-        "relative_sma20_pct": _pct_distance(price, _safe_float(_first_present(market.get("sma20_1d"), market.get("sma20_4h")))),
+        "relative_sma20_pct": _pct_distance(price, _safe_float(_first_present(market.get("sma20_1d"), market.get("sma20_4h"), market.get("ma_20")))),
         "relative_sma50_pct": _pct_distance(price, _safe_float(_first_present(market.get("sma50_1d"), market.get("sma50_4h")))),
         "relative_sma200_pct": _pct_distance(price, _safe_float(_first_present(market.get("sma200_1d"), features.get("sma200_1d")))),
         "relative_volume_20": _safe_float(_first_present(market.get("rel_volume_20"), market.get("volume_ratio"), market.get("rel_volume_60"))),
@@ -220,6 +220,28 @@ def build_market_state(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         "has_exchange_netflow_24h": onchain.get("exchange_netflow_24h") is not None,
         "has_large_transfer_count_24h": onchain.get("large_transfer_count_24h") is not None,
     }
+    required_missing_fields = [
+        name
+        for name, available in (
+            ("rsi14", data_availability["has_rsi14"]),
+            ("williams_r14", data_availability["has_williams_r14"]),
+            ("sma20_distance", data_availability["has_sma20_distance"]),
+            ("sma50_distance", data_availability["has_sma50_distance"]),
+            ("sma200_distance", data_availability["has_sma200_distance"]),
+            ("relative_volume_20", data_availability["has_relative_volume_20"]),
+        )
+        if not available
+    ]
+    optional_missing_fields = [
+        name
+        for name, available in (
+            ("exchange_netflow_24h", data_availability["has_exchange_netflow_24h"]),
+            ("large_transfer_count_24h", data_availability["has_large_transfer_count_24h"]),
+        )
+        if not available
+    ]
+    data_availability["required_missing_fields"] = required_missing_fields
+    data_availability["optional_missing_fields"] = optional_missing_fields
 
     return {
         "schema_version": "model_market_state_v1",
@@ -413,10 +435,11 @@ def _verify_model_decision(
     verifier_prompt = (
         "Review the proposed model decision against the market state. Be skeptical. Veto if evidence is "
         "contradictory, required data is stale/missing, direction conflicts with technical context, or confidence "
-        "is not well supported. Do not veto solely because optional onchain fields are unavailable. For symbols "
-        "where market_state.onchain.flow_data_available=false or flow_composite_semantic=UNAVAILABLE, absence of "
-        "exchange_netflow_24h, large_transfer_count_24h, whale_bias, flow_bias, token flow, or stablecoin flow is "
-        "expected coverage limitation; put it in missing_data or risk_notes, not veto_reasons. Treat Qlib freshness, "
+        "is not well supported. Use market_state.data_availability.required_missing_fields as the missing-data "
+        "surface that can weaken or reject a trade. Do not veto or reduce size solely because fields listed in "
+        "market_state.data_availability.optional_missing_fields are unavailable. Absence of exchange_netflow_24h, "
+        "large_transfer_count_24h, whale_bias, or flow_bias is expected optional coverage limitation when token flow "
+        "or stablecoin flow context is present; put it in risk_notes only when relevant, not veto_reasons. Treat Qlib freshness, "
         "current price, technical indicators, and risk/invalidation facts as required data. If there is no clear "
         "non-missing-data rejection reason, set veto=false. Use risk_adjustment only as a sizing recommendation: "
         "REDUCE_SIZE for meaningful but non-fatal risks, INCREASE_SIZE only when evidence is unusually clean and "
