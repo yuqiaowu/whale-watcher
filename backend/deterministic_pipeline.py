@@ -83,7 +83,6 @@ GLOBAL_CONFIG = {
     "global_leverage_min": 1.0,
     "global_leverage_max": 8.0,
     "approved_risk_fraction": 0.02,
-    "default_position_size_fraction": 0.25,
     "max_position_size_fraction": 0.40,
     "max_total_exposure_fraction": 0.75,
     "qlib_rank_bucket_size": 3,
@@ -2725,8 +2724,7 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
         leverage = min(GLOBAL_CONFIG["grid_leverage_default"], GLOBAL_CONFIG["grid_leverage_max"])
         max_holding_bars = max(1, int((_safe_float(candidate.get("reference_values", {}).get("max_lifetime_hours"), GLOBAL_CONFIG["grid_max_lifetime_hours"])) / 4))
     else:
-        raw_size = account_equity * GLOBAL_CONFIG["default_position_size_fraction"]
-        approved_position_size_usd = min(raw_size, account_equity * GLOBAL_CONFIG["max_position_size_fraction"])
+        approved_position_size_usd = account_equity * GLOBAL_CONFIG["max_position_size_fraction"]
         approved_position_size_usd = _cap_position_size_by_max_loss(
             account_equity=account_equity,
             entry_price=_safe_float(candidate.get("proposed_entry_price")),

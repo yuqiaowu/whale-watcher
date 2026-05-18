@@ -1584,7 +1584,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
 
         self.assertTrue(risk_review["approved"])
-        self.assertEqual(risk_review["approved_position_size_usd"], 262.5)
+        self.assertEqual(risk_review["approved_position_size_usd"], 400.0)
         self.assertIn("same-direction resonance increased size", risk_review["review_note"])
         self.assertEqual(risk_review["candidate_structure"]["overall_state"], "same_direction_resonance")
 
@@ -1625,7 +1625,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
 
         self.assertTrue(risk_review["approved"])
-        self.assertEqual(125.0, risk_review["approved_position_size_usd"])
+        self.assertEqual(200.0, risk_review["approved_position_size_usd"])
         self.assertEqual(2.0, risk_review["leverage"])
         self.assertIn("macro conflict reduced size", risk_review["review_note"])
 
@@ -1673,7 +1673,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
 
         self.assertTrue(risk_review["approved"])
-        self.assertEqual(187.5, risk_review["approved_position_size_usd"])
+        self.assertEqual(300.0, risk_review["approved_position_size_usd"])
         self.assertEqual(2.5, risk_review["leverage"])
         self.assertEqual(3, risk_review["max_holding_bars"])
         self.assertIn("major trend conflict lightly reduced size", risk_review["review_note"])
@@ -1712,7 +1712,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
 
         self.assertTrue(risk_review["approved"])
-        self.assertEqual(125.0, risk_review["approved_position_size_usd"])
+        self.assertEqual(200.0, risk_review["approved_position_size_usd"])
         self.assertEqual(2.0, risk_review["leverage"])
         self.assertEqual(1, risk_review["max_holding_bars"])
         self.assertIn("verifier recommended size reduction: valid but noisy evidence", risk_review["review_note"])
@@ -1826,7 +1826,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
 
         self.assertTrue(risk_review["approved"])
-        self.assertEqual(312.5, risk_review["approved_position_size_usd"])
+        self.assertEqual(400.0, risk_review["approved_position_size_usd"])
         self.assertIn("verifier recommended modest size increase: multi-source alignment", risk_review["review_note"])
 
     def test_risk_review_ignores_verifier_increase_when_direction_conflicts(self):
@@ -1863,7 +1863,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
 
         self.assertTrue(risk_review["approved"])
-        self.assertEqual(93.75, risk_review["approved_position_size_usd"])
+        self.assertEqual(150.0, risk_review["approved_position_size_usd"])
         self.assertIn("verifier increase ignored due to conflict or low thesis", risk_review["review_note"])
 
     def test_risk_review_caps_max_loss_at_two_percent_of_equity_and_uses_five_x_default_leverage(self):
