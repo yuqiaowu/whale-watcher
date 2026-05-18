@@ -114,6 +114,15 @@ class OKXExecutorTests(unittest.TestCase):
         self.assertEqual(body["sz"], "500")
         self.assertEqual(body["triggerParams"], [{"triggerAction": "start", "triggerStrategy": "instant"}])
 
+    def test_calculate_position_size_rounds_up_without_ten_percent_equity_cap(self):
+        executor = OKXExecutor(shadow_mode=False)
+        executor.get_instrument_info = lambda inst_id: {"ctVal": 1.0, "lotSz": 1.0}
+        executor.get_account_equity = lambda: 1000.0
+
+        size = executor.calculate_position_size("BTC-USDT-SWAP", amount_usd=100.0, price=200.0)
+
+        self.assertEqual(size, 1)
+
     def test_live_grid_stop_uses_stop_endpoint(self):
         executor = OKXExecutor(shadow_mode=False)
         executor.trading_mode = "DEMO"

@@ -207,13 +207,8 @@ class OKXExecutor:
         
         # --- SMART ROUND UP LOGIC ---
         if sz == 0 and amount_usd > 50:
-            equity = self.get_account_equity()
-            # Safety Rule: 1 contract shouldn't be more than 10% of total equity
-            if equity > 0 and (one_contract_val / equity) < 0.10: 
-                print(f"💡 Smart Round-Up: {instId} alloc ${amount_usd} < 1 contract (${one_contract_val:.2f}). Bumped to 1.")
-                sz = 1
-            else:
-                print(f"⚠️ {instId} alloc ${amount_usd} too small for 1 contract (${one_contract_val:.2f}). Skipped.")
+            print(f"💡 Smart Round-Up: {instId} alloc ${amount_usd} < 1 contract (${one_contract_val:.2f}). Bumped to 1.")
+            sz = 1
 
         return sz
 
