@@ -89,6 +89,8 @@ GLOBAL_CONFIG = {
     "qlib_prob_threshold": 0.55,
     "qlib_prob_gap_threshold": 0.15,
     "qlib_flat_max_threshold": 0.40,
+    "directional_high_flat_block_threshold": 0.60,
+    "doge_min_relative_volume": 1.0,
     "qlib_invalidation_prob_threshold": 0.45,
     "grid_flat_min_threshold": 0.55,
     "grid_flat_exit_threshold": 0.45,
@@ -2644,11 +2646,76 @@ def _build_risk_review(snapshot: Dict[str, Any], rule_evaluation: Dict[str, Any]
 
 def _pre_entry_thesis_block_reason(snapshot: Dict[str, Any], intent: str) -> str:
     features = snapshot.get("decision_ready_features", {}) or {}
+    market = snapshot.get("market_snapshot", {}) or {}
+    onchain = snapshot.get("onchain_snapshot", {}) or {}
     regime = features.get("regime_1d")
     if intent == "LONG" and regime == "BEAR" and not bool(features.get("flow_support_long")):
         return "pre_entry_bear_regime_without_flow_support"
     if intent == "SHORT" and regime == "BULL" and not bool(features.get("flow_support_short")):
         return "pre_entry_bull_regime_without_flow_support"
+    if intent in {"LONG", "SHORT"}:
+        flat_block_reason = _high_qlib_flat_directional_block_reason(snapshot, intent)
+        if flat_block_reason:
+            return flat_block_reason
+    if str(snapshot.get("symbol") or "").upper().startswith("DOGE-") and intent in {"LONG", "SHORT"}:
+        p_up = _safe_float(onchain.get("p_up_8h"), _safe_float(features.get("p_up_8h")))
+        p_down = _safe_float(onchain.get("p_down_8h"), _safe_float(features.get("p_down_8h")))
+        p_flat = _safe_float(onchain.get("p_flat_8h"), _safe_float(features.get("p_flat_8h")))
+        qlib_supports_intent = (
+            p_flat <= GLOBAL_CONFIG["qlib_flat_max_threshold"]
+            and (
+                (intent == "LONG" and p_up > p_flat and p_up >= p_down)
+                or (intent == "SHORT" and p_down > p_flat and p_down >= p_up)
+            )
+        )
+        major_trend = str(features.get("major_trend_1d") or "").upper()
+        regime = str(features.get("regime_1d") or "").upper()
+        technical_trend_aligned = (
+            (intent == "LONG" and major_trend == "BULL" and regime != "BEAR")
+            or (intent == "SHORT" and major_trend == "BEAR" and regime != "BULL")
+        )
+        relative_volume = _safe_float(
+            market.get("rel_volume_20"),
+            _safe_float(market.get("volume_ratio"), _safe_float(market.get("rel_volume_60"))),
+        )
+        volume_ok = relative_volume >= GLOBAL_CONFIG["doge_min_relative_volume"]
+        if not qlib_supports_intent:
+            return "pre_entry_doge_qlib_flat_or_not_aligned"
+        if not technical_trend_aligned:
+            return "pre_entry_doge_technical_trend_not_aligned"
+        if not volume_ok:
+            return "pre_entry_doge_relative_volume_too_low"
+    return ""
+
+
+def _high_qlib_flat_directional_block_reason(snapshot: Dict[str, Any], intent: str) -> str:
+    features = snapshot.get("decision_ready_features", {}) or {}
+    market = snapshot.get("market_snapshot", {}) or {}
+    onchain = snapshot.get("onchain_snapshot", {}) or {}
+    p_flat = _safe_float(onchain.get("p_flat_8h"), _safe_float(features.get("p_flat_8h")))
+    if p_flat < GLOBAL_CONFIG["directional_high_flat_block_threshold"]:
+        return ""
+
+    price_vs_vwap_16h = _safe_float(market.get("price_vs_vwap_16h_pct"), _safe_float(features.get("price_vs_vwap_16h_pct")))
+    price_vs_vwap_4h = _safe_float(market.get("price_vs_vwap_4h_pct"), _safe_float(features.get("price_vs_vwap_4h_pct")))
+    price = _safe_float(market.get("price") or market.get("close"))
+    support = _safe_float(market.get("structure_support_12bar_volume_confirmed"))
+    resistance = _safe_float(market.get("structure_resistance_12bar_volume_confirmed"))
+
+    if intent == "SHORT":
+        broke_vwap = price_vs_vwap_16h < 0 or (price_vs_vwap_16h == 0 and price_vs_vwap_4h < 0)
+        broke_structure = price > 0 and support > 0 and price < support
+        if broke_vwap or broke_structure:
+            return ""
+        return "pre_entry_high_qlib_flat_short_without_vwap_or_structure_break"
+
+    if intent == "LONG":
+        broke_vwap = price_vs_vwap_16h > 0 or (price_vs_vwap_16h == 0 and price_vs_vwap_4h > 0)
+        broke_structure = price > 0 and resistance > 0 and price > resistance
+        if broke_vwap or broke_structure:
+            return ""
+        return "pre_entry_high_qlib_flat_long_without_vwap_or_structure_break"
+
     return ""
 
 

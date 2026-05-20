@@ -1799,6 +1799,142 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual("DO_NOTHING", risk_review["execution_action"])
         self.assertIn("pre_entry_bear_regime_without_flow_support", risk_review["review_note"])
 
+    def test_risk_review_blocks_doge_directional_trade_without_qlib_trend_and_volume(self):
+        snapshot = {
+            "symbol": "DOGE-USDT",
+            "cycleId": "cycle_test",
+            "market_snapshot": {
+                "price": 0.103,
+                "volume_ratio": 0.72,
+                "price_vs_vwap_16h_pct": -0.4,
+            },
+            "onchain_snapshot": {
+                "p_up_8h": 0.18,
+                "p_down_8h": 0.20,
+                "p_flat_8h": 0.62,
+            },
+            "decision_ready_features": {
+                "regime_1d": "BEAR",
+                "major_trend_1d": "BEAR",
+                "flow_support_short": True,
+                "macro_permission": "ALLOW_BOTH",
+            },
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "doge short",
+                    "proposed_entry_price": 0.103,
+                    "proposed_sl_price": 0.108,
+                    "proposed_tp_price": 0.095,
+                    "reference_values": {},
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}) as load_portfolio:
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        load_portfolio.assert_not_called()
+        self.assertFalse(risk_review["approved"])
+        self.assertEqual("DO_NOTHING", risk_review["execution_action"])
+        self.assertIn("pre_entry_doge_qlib_flat_or_not_aligned", risk_review["review_note"])
+
+    def test_risk_review_blocks_high_qlib_flat_short_without_breakdown_confirmation(self):
+        snapshot = {
+            "symbol": "BTC-USDT",
+            "cycleId": "cycle_test",
+            "market_snapshot": {
+                "price": 77500.0,
+                "price_vs_vwap_16h_pct": 0.68,
+                "price_vs_vwap_4h_pct": 0.22,
+                "structure_support_12bar_volume_confirmed": 76018.0,
+            },
+            "onchain_snapshot": {"p_up_8h": 0.18, "p_down_8h": 0.12, "p_flat_8h": 0.70},
+            "decision_ready_features": {
+                "regime_1d": "BEAR",
+                "major_trend_1d": "BEAR",
+                "flow_support_short": True,
+                "macro_permission": "ALLOW_BOTH",
+            },
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "macro short while qlib flat",
+                    "proposed_entry_price": 77500.0,
+                    "proposed_sl_price": 78500.0,
+                    "proposed_tp_price": 75500.0,
+                    "reference_values": {},
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}) as load_portfolio:
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        load_portfolio.assert_not_called()
+        self.assertFalse(risk_review["approved"])
+        self.assertEqual("DO_NOTHING", risk_review["execution_action"])
+        self.assertIn("pre_entry_high_qlib_flat_short_without_vwap_or_structure_break", risk_review["review_note"])
+
+    def test_risk_review_allows_high_qlib_flat_short_after_vwap_breakdown(self):
+        snapshot = {
+            "symbol": "BTC-USDT",
+            "cycleId": "cycle_test",
+            "market_snapshot": {
+                "price": 75500.0,
+                "price_vs_vwap_16h_pct": -0.35,
+                "price_vs_vwap_4h_pct": -0.22,
+                "structure_support_12bar_volume_confirmed": 76018.0,
+            },
+            "onchain_snapshot": {"p_up_8h": 0.18, "p_down_8h": 0.12, "p_flat_8h": 0.70},
+            "decision_ready_features": {
+                "regime_1d": "BEAR",
+                "major_trend_1d": "BEAR",
+                "flow_support_short": True,
+                "macro_permission": "ALLOW_BOTH",
+            },
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "short after vwap breakdown",
+                    "proposed_entry_price": 75500.0,
+                    "proposed_sl_price": 76500.0,
+                    "proposed_tp_price": 73500.0,
+                    "reference_values": {},
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertTrue(risk_review["approved"])
+        self.assertEqual("OPEN_SHORT", risk_review["execution_action"])
+
     def test_risk_review_can_apply_verifier_modest_size_increase(self):
         snapshot = {
             "symbol": "ETH-USDT",
