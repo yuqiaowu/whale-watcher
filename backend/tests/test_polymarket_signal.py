@@ -8,7 +8,7 @@ BACKEND_DIR = Path(__file__).resolve().parents[1]
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from polymarket_signal import build_prediction_market_signal, delta_label, score_label
+from polymarket_signal import build_prediction_market_signal, delta_label, momentum_label, score_label
 
 
 def _market(
@@ -47,6 +47,7 @@ class PolymarketSignalTests(unittest.TestCase):
         self.assertEqual("IMPROVING", delta_label(0.06))
         self.assertEqual("STABLE", delta_label(0.0))
         self.assertEqual("WEAKENING", delta_label(-0.06))
+        self.assertEqual("SLIGHTLY_WEAKENING", momentum_label(-0.006))
 
     def test_low_probability_tail_touch_market_is_not_treated_as_risk_off(self):
         now = datetime(2026, 5, 16, 0, 0, tzinfo=timezone.utc)
@@ -72,6 +73,51 @@ class PolymarketSignalTests(unittest.TestCase):
         self.assertTrue(signal["available"])
         self.assertEqual(0.0, signal["combined_score"])
         self.assertEqual("NEUTRAL", signal["combined_label"])
+        self.assertEqual(0.02, signal["markets_used"][0]["expectation_value"])
+
+    def test_tail_touch_market_momentum_uses_yes_price_delta(self):
+        now = datetime(2026, 5, 16, 0, 0, tzinfo=timezone.utc)
+        events = [
+            {
+                "id": "event_tail_delta",
+                "title": "Bitcoin tail market",
+                "markets": [
+                    _market("btc-85k", "Will Bitcoin reach $85,000 in May?", 0.028, "2026-06-01T00:00:00Z"),
+                ],
+            }
+        ]
+        prior_market_history = [
+            {
+                "market_id": "btc-85k",
+                "market_score": 0.0,
+                "yes_price": 0.065,
+                "direction_sign": 1,
+                "market_type": "touch_before_date",
+                "snapshot_at": "2026-05-15T00:00:00Z",
+            }
+        ]
+        prior_signal_history = [
+            {
+                "combined_score": 0.0,
+                "composition_hash": "older",
+                "market_ids": ["btc-85k"],
+                "snapshot_at": "2026-05-15T00:00:00Z",
+            }
+        ]
+
+        signal = build_prediction_market_signal(
+            now=now,
+            fetch_events=lambda: events,
+            market_history=prior_market_history,
+            signal_history=prior_signal_history,
+            watchlist_market_ids=["btc-85k"],
+            persist=False,
+        )
+
+        self.assertTrue(signal["available"])
+        self.assertEqual(0.0, signal["combined_score"])
+        self.assertEqual(-0.037, signal["same_market_delta_24h"])
+        self.assertEqual("WEAKENING", signal["expectation_momentum_24h_label"])
 
     def test_build_signal_filters_markets_and_computes_same_market_deltas(self):
         now = datetime(2026, 5, 16, 0, 0, tzinfo=timezone.utc)

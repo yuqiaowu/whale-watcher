@@ -130,6 +130,20 @@ def delta_label(delta: Optional[float]) -> str:
     return "WEAKENING"
 
 
+def momentum_label(delta: Optional[float]) -> str:
+    if delta is None:
+        return "UNAVAILABLE"
+    if delta >= 0.015:
+        return "IMPROVING"
+    if delta >= 0.005:
+        return "SLIGHTLY_IMPROVING"
+    if delta > -0.005:
+        return "STABLE"
+    if delta > -0.015:
+        return "SLIGHTLY_WEAKENING"
+    return "WEAKENING"
+
+
 def _horizon(days_to_expiry: float, end_dt: Optional[datetime], now: datetime) -> str:
     if 3 <= days_to_expiry <= 14:
         return "short_term"
@@ -338,6 +352,19 @@ def _market_score(meta: Dict[str, Any]) -> Optional[float]:
     return round((price - 0.5) * 2.0 * direction, 6)
 
 
+def _expectation_value(meta: Dict[str, Any], market_score: Optional[float]) -> Optional[float]:
+    price = _safe_float(meta.get("yes_price"))
+    direction = _safe_float(meta.get("direction_sign"))
+    if price is None or direction is None:
+        return None
+    if meta.get("market_type") == "touch_before_date":
+        # Absolute low-probability tail-touch markets should not become
+        # directional risk-off by themselves. Their probability movement is
+        # still useful, so keep the signed Yes price for same-market momentum.
+        return round(price * direction, 6)
+    return market_score
+
+
 def _flatten_markets(events: Iterable[Dict[str, Any]], now: datetime) -> List[Dict[str, Any]]:
     min_volume_24h = _safe_float(os.getenv("POLYMARKET_MIN_VOLUME_24H"), 1000.0) or 1000.0
     min_liquidity = _safe_float(os.getenv("POLYMARKET_MIN_LIQUIDITY"), 2000.0) or 2000.0
@@ -366,6 +393,7 @@ def _flatten_markets(events: Iterable[Dict[str, Any]], now: datetime) -> List[Di
                 continue
             seen.add(market_id)
             score = _market_score(meta)
+            expectation_value = _expectation_value(meta, score)
             weight = _market_weight(meta) if eligible and score is not None else 0.0
             rows.append(
                 {
@@ -373,6 +401,7 @@ def _flatten_markets(events: Iterable[Dict[str, Any]], now: datetime) -> List[Di
                     "eligible": eligible and score is not None,
                     "exclude_reasons": reasons,
                     "market_score": score,
+                    "expectation_value": expectation_value,
                     "market_label": score_label(score),
                     "weight": weight,
                     "snapshot_at": _iso(now),
@@ -550,6 +579,17 @@ def _nearest_market_by_id(
     return _nearest_prior_signal(matches, target_ts, max_age_hours)
 
 
+def _market_momentum_value(row: Dict[str, Any]) -> Optional[float]:
+    value = _safe_float(row.get("expectation_value"))
+    if value is not None:
+        return value
+    price = _safe_float(row.get("yes_price"))
+    direction = _safe_float(row.get("direction_sign"))
+    if price is not None and direction is not None and row.get("market_type") == "touch_before_date":
+        return round(price * direction, 6)
+    return _safe_float(row.get("market_score"))
+
+
 def _delta_summary(
     current_signal: Dict[str, Any],
     current_markets: List[Dict[str, Any]],
@@ -568,6 +608,8 @@ def _delta_summary(
         prior_score = _safe_float(prior.get("combined_score")) if prior else None
         delta = round(current_score - prior_score, 6) if current_score is not None and prior_score is not None else None
         same_market_deltas = []
+        weighted_delta_sum = 0.0
+        weighted_delta_weight = 0.0
         for market in current_markets:
             if not market.get("stable_reference_market"):
                 continue
@@ -579,21 +621,32 @@ def _delta_summary(
             )
             if not prior_market:
                 continue
-            prior_market_score = _safe_float(prior_market.get("market_score"))
-            current_market_score = _safe_float(market.get("market_score"))
+            prior_market_score = _market_momentum_value(prior_market)
+            current_market_score = _market_momentum_value(market)
             if prior_market_score is None or current_market_score is None:
                 continue
-            same_market_deltas.append(current_market_score - prior_market_score)
+            market_delta = current_market_score - prior_market_score
+            same_market_deltas.append(market_delta)
+            weight = _safe_float(market.get("weight"), 0.0) or 0.0
+            if weight > 0:
+                weighted_delta_sum += market_delta * weight
+                weighted_delta_weight += weight
         overlap_count = len(same_market_deltas)
-        same_market_delta = (
+        same_market_median_delta = (
             round(sorted(same_market_deltas)[overlap_count // 2], 6)
             if overlap_count
             else None
+        )
+        same_market_delta = (
+            round(weighted_delta_sum / weighted_delta_weight, 6)
+            if weighted_delta_weight > 0
+            else same_market_median_delta
         )
         prior_ids = set(prior.get("market_ids") or []) if prior else set()
         out[f"score_delta_{key}"] = _round(delta, 4)
         out[f"score_delta_{key}_label"] = delta_label(delta)
         out[f"same_market_delta_{key}"] = _round(same_market_delta, 4)
+        out[f"same_market_median_delta_{key}"] = _round(same_market_median_delta, 4)
         out[f"same_market_overlap_{key}_count"] = overlap_count
         out[f"composition_changed_{key}"] = bool(prior and current_composition != prior.get("composition_hash"))
         out[f"market_set_overlap_{key}_count"] = len(current_ids & prior_ids) if prior else 0
@@ -656,6 +709,7 @@ def _build_signal(
         "interpretation_scope": "prediction_market_expectation_reference_only",
         "primary_signal_basis": "same_market_momentum_preferred",
         "absolute_score_role": "background_only",
+        "same_market_delta_method": "weighted_mean_expectation_value_delta",
         "score_scale": SCORE_SCALE,
         "snapshot_at": _iso(now),
         "combined_score": _round(combined_score, 4),
@@ -677,6 +731,7 @@ def _build_signal(
                 "question": item.get("question"),
                 "yes_price": item.get("yes_price"),
                 "market_score": _round(item.get("market_score"), 4),
+                "expectation_value": _round(item.get("expectation_value"), 4),
                 "market_label": item.get("market_label"),
                 "weight": _round(item.get("weight"), 4),
                 "days_to_expiry": item.get("days_to_expiry"),
@@ -698,6 +753,7 @@ def _build_signal(
                 "question": item.get("question"),
                 "yes_price": item.get("yes_price"),
                 "market_score": _round(item.get("market_score"), 4),
+                "expectation_value": _round(item.get("expectation_value"), 4),
                 "market_label": item.get("market_label"),
                 "weight": _round(item.get("weight"), 4),
                 "days_to_expiry": item.get("days_to_expiry"),
@@ -713,7 +769,7 @@ def _build_signal(
     for key in ("4h", "24h", "7d", "30d"):
         momentum = signal.get(f"same_market_delta_{key}")
         signal[f"expectation_momentum_{key}"] = momentum
-        signal[f"expectation_momentum_{key}_label"] = delta_label(momentum)
+        signal[f"expectation_momentum_{key}_label"] = momentum_label(momentum)
     if combined_score is None:
         signal["missing_reason"] = "no_stable_reference_markets"
     signal["confidence"] = _confidence(signal)

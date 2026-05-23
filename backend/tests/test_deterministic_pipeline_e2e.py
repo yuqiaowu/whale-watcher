@@ -2850,6 +2850,10 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
                 test_case.assertEqual(pending["decisionId"], "cycle_test_BNB")
                 test_case.assertEqual(pending["riskReview"]["approved_candidate"]["trigger_source"], "Blueprint_F2")
                 test_case.assertEqual(pending["execution"]["order_status"], "PENDING_SUBMIT")
+                test_case.assertEqual(
+                    pending["opening_thesis_snapshot"]["invalidation_conditions"],
+                    candidate["invalidation_conditions"],
+                )
                 return "order-f2-1"
 
         with patch.object(dp, "db", fake_db), \
@@ -2874,6 +2878,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(final_record["execution"]["order_status"], "SUBMITTED")
         self.assertEqual(final_record["execution"]["exchange_order_id"], "order-f2-1")
         self.assertEqual(final_record["riskReview"]["approved_candidate"]["trigger_source"], "Blueprint_F2")
+        self.assertEqual(final_record["opening_thesis_snapshot"]["source"], "pre_execution_decision_record")
 
     def test_append_trade_record_does_not_replace_active_execution_with_no_trade(self):
         active_record = {

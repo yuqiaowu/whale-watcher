@@ -245,6 +245,180 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertFalse(record["provenance"].get("adopted_live_position", False))
         self.assertTrue(any(event["type"] == "OPEN_ORDER_PROVENANCE_MATCHED" for event in record["execution"]["history"]))
 
+    def test_fuzzy_matches_live_position_to_origin_record_when_order_history_missing(self):
+        invalidation_conditions = {
+            "operator": "OR",
+            "rules": [{"field": "price", "op": ">=", "value_ref": "model_stop_price"}],
+            "persistence": 1,
+        }
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "cycle_2026-05-22_2000_SOL",
+                    "cycleId": "cycle_2026-05-22_2000",
+                    "symbol": "SOL-USDT",
+                    "created_at": "2026-05-22T20:15:30Z",
+                    "positionState": "candidate",
+                    "riskReview": {
+                        "approved": False,
+                        "final_intent": "SHORT",
+                        "approved_candidate": {
+                            "proposed_entry_price": 84.92,
+                            "proposed_sl_price": 87.69,
+                            "proposed_tp_price": 79.07,
+                            "reference_values": {"model_stop_price": 87.69},
+                            "invalidation_basis": "programmatic_stop_and_approved_model_rules",
+                            "invalidation_conditions": invalidation_conditions,
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "PENDING_SUBMIT",
+                        "sync_status": "PENDING_SUBMIT",
+                        "proposed_entry_price": 84.92,
+                        "history": [],
+                    },
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "SOL",
+                        "instId": "SOL-USDT-SWAP",
+                        "type": "short",
+                        "entryPrice": 84.89,
+                        "currentPrice": 84.28,
+                        "amount": 1.21,
+                        "leverage": 2,
+                        "stopLoss": 87.69,
+                        "takeProfit": 79.07,
+                        "positionOpenedAt": "2026-05-22T20:16:13Z",
+                    }
+                ]
+            },
+            "trade_history": [],
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db), patch.object(er, "OKXExecutor", return_value=FakeOrderHistoryExecutor([])):
+            result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 1)
+        self.assertEqual(len(fake_db.store["trade_decision_records"]), 1)
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["decisionId"], "cycle_2026-05-22_2000_SOL")
+        self.assertEqual(record["positionState"], "entered")
+        self.assertEqual(record["execution"]["order_status"], "FILLED")
+        self.assertEqual(record["execution"]["sync_status"], "OPEN")
+        self.assertEqual(record["execution"]["avg_fill_price"], 84.89)
+        self.assertEqual(record["provenance"]["matched_live_position_source"], "portfolio_state_fuzzy_match")
+        self.assertFalse(record["provenance"].get("adopted_live_position", False))
+        self.assertEqual(
+            invalidation_conditions,
+            record["riskReview"]["approved_candidate"]["invalidation_conditions"],
+        )
+        self.assertEqual(
+            invalidation_conditions,
+            record["opening_thesis_snapshot"]["invalidation_conditions"],
+        )
+        self.assertEqual("portfolio_state_fuzzy_match", record["opening_thesis_snapshot"]["source"])
+        self.assertTrue(any(event["type"] == "LIVE_POSITION_PROVENANCE_MATCHED" for event in record["execution"]["history"]))
+
+    def test_existing_adopted_record_is_relinked_to_origin_record(self):
+        invalidation_conditions = {
+            "operator": "OR",
+            "rules": [{"field": "price", "op": ">=", "value_ref": "model_stop_price"}],
+            "persistence": 1,
+        }
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "adopted_SOL_short_84_89_2026_05_22_201613",
+                    "cycleId": "cycle_2026-05-22_2000",
+                    "symbol": "SOL-USDT",
+                    "created_at": "2026-05-22T20:16:13Z",
+                    "positionState": "entered",
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "SHORT",
+                        "approved_candidate": {
+                            "trigger_source": "ADOPTED_LIVE_POSITION",
+                            "proposed_entry_price": 84.89,
+                            "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "avg_fill_price": 84.89,
+                        "executed_at": "2026-05-22T20:16:13Z",
+                        "history": [],
+                    },
+                    "provenance": {"adopted_live_position": True},
+                },
+                {
+                    "decisionId": "cycle_2026-05-22_2000_SOL",
+                    "cycleId": "cycle_2026-05-22_2000",
+                    "symbol": "SOL-USDT",
+                    "created_at": "2026-05-22T20:15:30Z",
+                    "positionState": "candidate",
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "SHORT",
+                        "max_holding_bars": 3,
+                        "approved_candidate": {
+                            "proposed_entry_price": 84.92,
+                            "proposed_sl_price": 87.69,
+                            "proposed_tp_price": 79.07,
+                            "reference_values": {"model_stop_price": 87.69},
+                            "invalidation_basis": "programmatic_stop_and_approved_model_rules",
+                            "invalidation_conditions": invalidation_conditions,
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "PENDING_SUBMIT",
+                        "sync_status": "PENDING_SUBMIT",
+                        "proposed_entry_price": 84.92,
+                        "history": [],
+                    },
+                },
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "SOL",
+                        "instId": "SOL-USDT-SWAP",
+                        "type": "short",
+                        "entryPrice": 84.89,
+                        "currentPrice": 84.28,
+                        "amount": 1.21,
+                        "leverage": 2,
+                        "stopLoss": 87.69,
+                        "takeProfit": 79.07,
+                        "positionOpenedAt": "2026-05-22T20:16:13Z",
+                    }
+                ]
+            },
+            "trade_history": [],
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db), patch.object(er, "OKXExecutor", return_value=FakeOrderHistoryExecutor([])):
+            result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 1)
+        records = fake_db.store["trade_decision_records"]
+        adopted = next(record for record in records if record["decisionId"].startswith("adopted_SOL"))
+        origin = next(record for record in records if record["decisionId"] == "cycle_2026-05-22_2000_SOL")
+        self.assertEqual(adopted["positionState"], "superseded")
+        self.assertEqual(adopted["execution"]["order_status"], "SUPERSEDED")
+        self.assertEqual(adopted["execution"]["superseded_by_decision_id"], "cycle_2026-05-22_2000_SOL")
+        self.assertEqual(origin["positionState"], "entered")
+        self.assertEqual(origin["execution"]["order_status"], "FILLED")
+        self.assertEqual(origin["provenance"]["matched_live_position_source"], "portfolio_state_fuzzy_match")
+        self.assertEqual(invalidation_conditions, origin["riskReview"]["approved_candidate"]["invalidation_conditions"])
+        self.assertEqual(invalidation_conditions, origin["opening_thesis_snapshot"]["invalidation_conditions"])
+
     def test_backfills_existing_adopted_record_open_time_from_live_position(self):
         store = {
             "trade_decision_records": [

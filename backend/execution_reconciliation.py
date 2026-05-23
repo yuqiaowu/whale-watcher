@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Set, Tuple
 
@@ -79,6 +80,40 @@ def _append_execution_event(record: Dict[str, Any], event_type: str, payload: Op
         "payload": payload or {},
     })
     execution["history"] = history[-80:]
+
+
+def _ensure_opening_thesis_snapshot(record: Dict[str, Any], source: str) -> None:
+    if record.get("opening_thesis_snapshot"):
+        return
+    risk_review = record.get("riskReview") or {}
+    candidate = risk_review.get("approved_candidate") or {}
+    model_decision = record.get("modelDecision") or {}
+    research_output = record.get("researchOutput") or {}
+    execution = record.get("execution") or {}
+    record["opening_thesis_snapshot"] = {
+        "source": source,
+        "frozen_at": _iso_now(),
+        "decisionId": record.get("decisionId"),
+        "cycleId": record.get("cycleId"),
+        "symbol": record.get("symbol"),
+        "side": risk_review.get("final_intent") or model_decision.get("direction"),
+        "entry_price": candidate.get("proposed_entry_price") or execution.get("proposed_entry_price"),
+        "stop_loss": candidate.get("proposed_sl_price") or execution.get("proposed_sl_price"),
+        "take_profit": candidate.get("proposed_tp_price") or execution.get("proposed_tp_price"),
+        "model_action": model_decision.get("action"),
+        "model_direction": model_decision.get("direction"),
+        "model_confidence": model_decision.get("confidence"),
+        "model_summary": model_decision.get("summary"),
+        "model_invalid_if": deepcopy(model_decision.get("invalid_if") or []),
+        "model_reason_codes": deepcopy(model_decision.get("reason_codes") or []),
+        "thesis_strength": research_output.get("thesis_strength"),
+        "thesis_change": research_output.get("thesis_change"),
+        "research_summary": research_output.get("summary"),
+        "invalidation_basis": candidate.get("invalidation_basis"),
+        "invalidation_conditions": deepcopy(candidate.get("invalidation_conditions") or {}),
+        "reference_values": deepcopy(candidate.get("reference_values") or {}),
+        "max_holding_bars": risk_review.get("max_holding_bars"),
+    }
 
 
 def _update_protection_state(execution: Dict[str, Any], live_position: Optional[Dict[str, Any]] = None) -> None:
@@ -268,14 +303,54 @@ def _open_order_matches_position(order: Dict[str, Any], position: Dict[str, Any]
     return True
 
 
-def _record_matches_open_order(record: Dict[str, Any], order: Dict[str, Any], position: Dict[str, Any]) -> bool:
+def _record_open_side(record: Dict[str, Any]) -> str:
+    risk_review = record.get("riskReview") or {}
+    execution = record.get("execution") or {}
+    side = _normalize_side(risk_review.get("final_intent"))
+    if side:
+        return side
+    action = str(execution.get("execution_action") or "").upper()
+    if action == "OPEN_LONG":
+        return "LONG"
+    if action == "OPEN_SHORT":
+        return "SHORT"
+    return ""
+
+
+def _record_open_price(record: Dict[str, Any]) -> Any:
     execution = record.get("execution") or {}
     risk_review = record.get("riskReview") or {}
-    if record.get("positionState") == "closed" or execution.get("order_status") == "CLOSED":
+    candidate = risk_review.get("approved_candidate") or {}
+    return (
+        execution.get("avg_fill_price")
+        or execution.get("proposed_entry_price")
+        or candidate.get("proposed_entry_price")
+    )
+
+
+def _record_open_time(record: Dict[str, Any]) -> Any:
+    execution = record.get("execution") or {}
+    return (
+        execution.get("executed_at")
+        or execution.get("position_opened_at")
+        or record.get("created_at")
+    )
+
+
+def _record_has_open_execution_intent(record: Dict[str, Any]) -> bool:
+    execution = record.get("execution") or {}
+    if execution.get("execution_action") in {"OPEN_LONG", "OPEN_SHORT"}:
+        return True
+    return bool(execution.get("client_order_id") or execution.get("exchange_order_id"))
+
+
+def _record_matches_open_order(record: Dict[str, Any], order: Dict[str, Any], position: Dict[str, Any]) -> bool:
+    execution = record.get("execution") or {}
+    if record.get("positionState") in {"closed", "superseded"} or execution.get("order_status") in {"CLOSED", "SUPERSEDED"}:
         return False
     if _normalize_symbol(record.get("symbol")) != _normalize_symbol(position.get("symbol") or position.get("instId")):
         return False
-    if _normalize_side(risk_review.get("final_intent")) != _normalize_side(position.get("type") or position.get("posSide")):
+    if _record_open_side(record) != _normalize_side(position.get("type") or position.get("posSide")):
         return False
 
     order_id = str(order.get("ordId") or "")
@@ -285,19 +360,62 @@ def _record_matches_open_order(record: Dict[str, Any], order: Dict[str, Any], po
     if cl_ord_id and str(execution.get("client_order_id") or "") == cl_ord_id:
         return True
 
-    if execution.get("execution_action") not in {"OPEN_LONG", "OPEN_SHORT"}:
+    if not _record_has_open_execution_intent(record):
         return False
-    record_time = execution.get("executed_at") or record.get("created_at")
+    record_time = _record_open_time(record)
     order_time = _okx_order_time(order)
     if not _time_close(record_time, order_time):
         return False
-    proposed_price = execution.get("proposed_entry_price") or (risk_review.get("approved_candidate") or {}).get("proposed_entry_price")
+    proposed_price = _record_open_price(record)
     return _price_close(proposed_price, _okx_order_price(order), tolerance_pct=0.01)
 
 
-def _attach_live_position_to_origin_record(record: Dict[str, Any], position: Dict[str, Any], order: Dict[str, Any]) -> bool:
+def _record_matches_live_position_fallback(record: Dict[str, Any], position: Dict[str, Any]) -> bool:
+    execution = record.get("execution") or {}
+    if record.get("positionState") in {"closed", "superseded"} or execution.get("order_status") in {"CLOSED", "SUPERSEDED"}:
+        return False
+    if _normalize_symbol(record.get("symbol")) != _normalize_symbol(position.get("symbol") or position.get("instId")):
+        return False
+    if _record_open_side(record) != _normalize_side(position.get("type") or position.get("posSide")):
+        return False
+    if not _record_has_open_execution_intent(record):
+        return False
+
+    record_price = _record_open_price(record)
+    position_price = position.get("entryPrice")
+    if record_price is None or position_price is None:
+        return False
+    if not _price_close(record_price, position_price, tolerance_pct=0.015):
+        return False
+
+    record_time = _record_open_time(record)
+    position_time, timestamp_source = _position_open_timestamp(position)
+    if timestamp_source == "adoption_time":
+        return False
+    return _time_close(record_time, position_time, tolerance_seconds=2 * 3600)
+
+
+def _origin_match_score(record: Dict[str, Any], position: Dict[str, Any]) -> Tuple[float, float]:
+    record_time = _parse_dt(_record_open_time(record))
+    position_time, _ = _position_open_timestamp(position)
+    position_dt = _parse_dt(position_time)
+    time_diff = abs((record_time - position_dt).total_seconds()) if record_time and position_dt else float("inf")
+    record_price = _safe_float(_record_open_price(record), 0.0)
+    position_price = _safe_float(position.get("entryPrice"), 0.0)
+    price_diff = abs(record_price - position_price) / position_price if record_price > 0 and position_price > 0 else float("inf")
+    return time_diff, price_diff
+
+
+def _attach_live_position_to_origin_record(
+    record: Dict[str, Any],
+    position: Dict[str, Any],
+    order: Optional[Dict[str, Any]] = None,
+    *,
+    match_source: str = "okx_orders_history",
+) -> bool:
     before = str(record.get("positionState")) + str((record.get("execution") or {}).get("sync_status"))
     execution = record.setdefault("execution", {})
+    order = order or {}
     order_time = _okx_order_time(order)
     position_time, timestamp_source = _position_open_timestamp(position)
     executed_at = order_time or position_time
@@ -317,17 +435,22 @@ def _attach_live_position_to_origin_record(record: Dict[str, Any], position: Dic
     record["positionState"] = "entered"
     record["created_at"] = record.get("created_at") or executed_at
     record["updated_at"] = _iso_now()
+    _ensure_opening_thesis_snapshot(record, source=match_source)
     provenance = record.setdefault("provenance", {})
     provenance["matched_open_order"] = True
     provenance["matched_open_order_id"] = order.get("ordId")
     provenance["matched_client_order_id"] = order.get("clOrdId")
+    provenance["matched_live_position"] = True
+    provenance["matched_live_position_source"] = match_source
     provenance["position_open_time_source"] = "okx_order_history" if order_time else timestamp_source
-    _append_execution_event(record, "OPEN_ORDER_PROVENANCE_MATCHED", {
+    event_type = "OPEN_ORDER_PROVENANCE_MATCHED" if order else "LIVE_POSITION_PROVENANCE_MATCHED"
+    _append_execution_event(record, event_type, {
         "order_id": order.get("ordId"),
         "client_order_id": order.get("clOrdId"),
         "tag": order.get("tag"),
         "executed_at": executed_at,
-        "source": "okx_orders_history",
+        "entry_price": execution.get("avg_fill_price"),
+        "source": match_source,
     })
     after = str(record.get("positionState")) + str(execution.get("sync_status"))
     return before != after
@@ -349,6 +472,49 @@ def _match_origin_record_for_live_position(
     return None, matching_orders[0]
 
 
+def _match_origin_record_for_live_position_fallback(
+    position: Dict[str, Any],
+    records: List[Dict[str, Any]],
+) -> Optional[Dict[str, Any]]:
+    matches = [
+        record
+        for record in records
+        if isinstance(record, dict) and _record_matches_live_position_fallback(record, position)
+    ]
+    if not matches:
+        return None
+    matches.sort(key=lambda record: _origin_match_score(record, position))
+    return matches[0]
+
+
+def _is_adopted_live_position_record(record: Dict[str, Any]) -> bool:
+    provenance = record.get("provenance") or {}
+    candidate = ((record.get("riskReview") or {}).get("approved_candidate") or {})
+    return bool(provenance.get("adopted_live_position")) or candidate.get("trigger_source") == "ADOPTED_LIVE_POSITION"
+
+
+def _supersede_adopted_record(adopted_record: Dict[str, Any], origin_record: Dict[str, Any]) -> bool:
+    before = str(adopted_record.get("positionState")) + str((adopted_record.get("execution") or {}).get("sync_status"))
+    execution = adopted_record.setdefault("execution", {})
+    risk_review = adopted_record.setdefault("riskReview", {})
+    adopted_record["positionState"] = "superseded"
+    risk_review["approved"] = False
+    execution["order_status"] = "SUPERSEDED"
+    execution["sync_status"] = "SUPERSEDED"
+    execution["superseded_by_decision_id"] = origin_record.get("decisionId")
+    execution["superseded_at"] = _iso_now()
+    provenance = adopted_record.setdefault("provenance", {})
+    provenance["superseded_by_origin_record"] = True
+    provenance["superseded_by_decision_id"] = origin_record.get("decisionId")
+    _append_execution_event(adopted_record, "ADOPTED_RECORD_SUPERSEDED_BY_ORIGIN", {
+        "origin_decision_id": origin_record.get("decisionId"),
+        "origin_cycle_id": origin_record.get("cycleId"),
+        "source": "portfolio_state_fuzzy_match",
+    })
+    after = str(adopted_record.get("positionState")) + str(execution.get("sync_status"))
+    return before != after
+
+
 def _has_potential_origin_record(position: Dict[str, Any], records: List[Dict[str, Any]]) -> bool:
     symbol = _normalize_symbol(position.get("symbol") or position.get("instId"))
     side = _normalize_side(position.get("type") or position.get("posSide"))
@@ -358,7 +524,9 @@ def _has_potential_origin_record(position: Dict[str, Any], records: List[Dict[st
         if _normalize_symbol(record.get("symbol")) != symbol:
             continue
         execution = record.get("execution") or {}
-        if record.get("positionState") == "closed" or execution.get("order_status") == "CLOSED":
+        if record.get("positionState") in {"closed", "superseded"} or execution.get("order_status") in {"CLOSED", "SUPERSEDED"}:
+            continue
+        if _is_adopted_live_position_record(record):
             continue
         risk_review = record.get("riskReview") or {}
         if side and _normalize_side(risk_review.get("final_intent")) not in {side, ""}:
@@ -883,6 +1051,31 @@ def run_execution_reconciliation() -> Dict[str, Any]:
     for record in records:
         execution = record.get("execution") or {}
         risk_review = record.get("riskReview") or {}
+        if _is_adopted_live_position_record(record) and record.get("positionState") != "superseded":
+            live_position = _match_live_position(record, positions)
+            if live_position:
+                origin_record = _match_origin_record_for_live_position_fallback(
+                    live_position,
+                    [item for item in records if item is not record],
+                )
+                if origin_record is not None:
+                    origin_changed = _attach_live_position_to_origin_record(
+                        origin_record,
+                        live_position,
+                        None,
+                        match_source="portfolio_state_fuzzy_match",
+                    )
+                    adopted_changed = _supersede_adopted_record(record, origin_record)
+                    managed_position_keys.add(_position_key(live_position))
+                    if origin_changed or adopted_changed:
+                        updated_count += 1
+                        actions.append({
+                            "decisionId": origin_record.get("decisionId"),
+                            "symbol": origin_record.get("symbol"),
+                            "action": "relinked_adopted_live_position_to_origin",
+                            "superseded_decision_id": record.get("decisionId"),
+                        })
+                    continue
         if risk_review.get("approved") is not True:
             continue
         if record.get("positionState") == "closed" or execution.get("order_status") == "CLOSED":
@@ -1034,6 +1227,24 @@ def run_execution_reconciliation() -> Dict[str, Any]:
                     "action": "matched_open_order_provenance",
                     "exchange_order_id": origin_order.get("ordId"),
                     "client_order_id": origin_order.get("clOrdId"),
+                })
+            continue
+        origin_record = _match_origin_record_for_live_position_fallback(position, records)
+        if origin_record is not None:
+            changed = _attach_live_position_to_origin_record(
+                origin_record,
+                position,
+                None,
+                match_source="portfolio_state_fuzzy_match",
+            )
+            managed_position_keys.add(key)
+            if changed:
+                updated_count += 1
+                actions.append({
+                    "decisionId": origin_record.get("decisionId"),
+                    "symbol": origin_record.get("symbol"),
+                    "action": "matched_live_position_provenance",
+                    "match_source": "portfolio_state_fuzzy_match",
                 })
             continue
         adopted = _adopt_live_position(position)

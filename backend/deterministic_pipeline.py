@@ -3082,7 +3082,7 @@ def _make_trade_record(
 ) -> Dict[str, Any]:
     now_iso = _iso_now()
     now_local = _iso_now_local()
-    return {
+    record = {
         "decisionId": snapshot["decision_id"],
         "cycleId": snapshot["cycleId"],
         "symbol": snapshot["symbol"],
@@ -3106,6 +3106,33 @@ def _make_trade_record(
         "updated_at": now_iso,
         "updated_at_local": now_local,
     }
+    if execution.get("execution_action") in {"OPEN_LONG", "OPEN_SHORT"}:
+        candidate = risk_review.get("approved_candidate") or {}
+        record["opening_thesis_snapshot"] = {
+            "source": "pre_execution_decision_record",
+            "frozen_at": now_iso,
+            "decisionId": snapshot["decision_id"],
+            "cycleId": snapshot["cycleId"],
+            "symbol": snapshot["symbol"],
+            "side": risk_review.get("final_intent") or (model_decision or {}).get("direction"),
+            "entry_price": candidate.get("proposed_entry_price") or execution.get("proposed_entry_price"),
+            "stop_loss": candidate.get("proposed_sl_price") or execution.get("proposed_sl_price"),
+            "take_profit": candidate.get("proposed_tp_price") or execution.get("proposed_tp_price"),
+            "model_action": (model_decision or {}).get("action"),
+            "model_direction": (model_decision or {}).get("direction"),
+            "model_confidence": (model_decision or {}).get("confidence"),
+            "model_summary": (model_decision or {}).get("summary"),
+            "model_invalid_if": deepcopy((model_decision or {}).get("invalid_if") or []),
+            "model_reason_codes": deepcopy((model_decision or {}).get("reason_codes") or []),
+            "thesis_strength": (research_output or {}).get("thesis_strength"),
+            "thesis_change": (research_output or {}).get("thesis_change"),
+            "research_summary": (research_output or {}).get("summary"),
+            "invalidation_basis": candidate.get("invalidation_basis"),
+            "invalidation_conditions": deepcopy(candidate.get("invalidation_conditions") or {}),
+            "reference_values": deepcopy(candidate.get("reference_values") or {}),
+            "max_holding_bars": risk_review.get("max_holding_bars"),
+        }
+    return record
 
 
 def _client_order_id(decision_id: str, execution_action: str, symbol: str) -> str:
