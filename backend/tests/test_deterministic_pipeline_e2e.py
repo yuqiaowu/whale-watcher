@@ -2879,6 +2879,12 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(final_record["execution"]["exchange_order_id"], "order-f2-1")
         self.assertEqual(final_record["riskReview"]["approved_candidate"]["trigger_source"], "Blueprint_F2")
         self.assertEqual(final_record["opening_thesis_snapshot"]["source"], "pre_execution_decision_record")
+        audit_events = fake_db.store["trade_audit_ledger"]
+        self.assertTrue(any(event["event_type"] == "TRADE_DECISION_PRE_EXECUTION" for event in audit_events))
+        execution_event = next(event for event in audit_events if event["event_type"] == "TRADE_EXECUTION_RECORDED")
+        self.assertEqual(execution_event["decisionId"], "cycle_test_BNB")
+        self.assertEqual(execution_event["execution"]["exchange_order_id"], "order-f2-1")
+        self.assertEqual(execution_event["opening_thesis_snapshot"]["source"], "pre_execution_decision_record")
 
     def test_append_trade_record_does_not_replace_active_execution_with_no_trade(self):
         active_record = {
@@ -2915,6 +2921,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(len(saved), 1)
         self.assertEqual(saved[0]["execution"]["order_status"], "SUBMITTED")
         self.assertEqual(saved[0]["riskReview"]["approved_candidate"]["trigger_source"], "Blueprint_F2")
+        self.assertNotIn("trade_audit_ledger", fake_db.store)
 
     def test_open_execution_skips_when_symbol_position_already_exists(self):
         execution = {

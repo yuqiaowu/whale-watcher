@@ -19,6 +19,7 @@ from model_decision_agent import build_market_state, build_model_decision
 from okx_executor import OKXExecutor
 from post_trade_review import run_post_trade_review
 from research_agent import build_research_output
+from trade_audit import append_trade_audit_event
 from vwap_features import load_vwap_feature_context
 
 
@@ -3184,6 +3185,33 @@ def _append_trade_record(record: Dict[str, Any]) -> None:
     db.save_data("trade_decision_records", collection)
     if collection:
         db.save_data("latest_trade_decision_record", collection[0])
+    _append_trade_record_audit_event(record)
+
+
+def _append_trade_record_audit_event(record: Dict[str, Any]) -> None:
+    execution = record.get("execution") or {}
+    action = str(execution.get("execution_action") or "")
+    if action not in {"OPEN_LONG", "OPEN_SHORT", "START_GRID_BOT", "CLOSE_POSITION"}:
+        return
+
+    status = str(execution.get("order_status") or "PENDING").upper()
+    event_type = "TRADE_DECISION_PRE_EXECUTION"
+    if status in {"SUBMITTED", "FILLED"} or execution.get("exchange_order_id") or execution.get("exchange_algo_id"):
+        event_type = "TRADE_EXECUTION_RECORDED"
+    elif status in {"FAILED", "SKIPPED"}:
+        event_type = "TRADE_EXECUTION_NOT_FILLED"
+
+    append_trade_audit_event(
+        db,
+        event_type,
+        record,
+        source="deterministic_pipeline",
+        payload={
+            "audit_reason": "append_only_trade_record_snapshot",
+            "order_status": execution.get("order_status"),
+            "sync_status": execution.get("sync_status"),
+        },
+    )
 
 
 def _execution_is_nonterminal(record: Dict[str, Any]) -> bool:

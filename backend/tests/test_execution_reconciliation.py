@@ -102,6 +102,10 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(record["execution"]["executed_at"], "2026-04-30T10:00:00Z")
         self.assertEqual(record["provenance"]["position_open_time_source"], "timestamp")
         self.assertTrue(any(event["type"] == "LIVE_POSITION_ADOPTED" for event in record["execution"]["history"]))
+        audit_event = fake_db.store["trade_audit_ledger"][0]
+        self.assertEqual(audit_event["event_type"], "LIVE_POSITION_ADOPTED")
+        self.assertEqual(audit_event["decisionId"], record["decisionId"])
+        self.assertEqual(audit_event["riskReview"]["approved_candidate"]["trigger_source"], "ADOPTED_LIVE_POSITION")
 
     def test_adopts_live_position_using_raw_exchange_created_time(self):
         store = {
@@ -418,6 +422,9 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(origin["provenance"]["matched_live_position_source"], "portfolio_state_fuzzy_match")
         self.assertEqual(invalidation_conditions, origin["riskReview"]["approved_candidate"]["invalidation_conditions"])
         self.assertEqual(invalidation_conditions, origin["opening_thesis_snapshot"]["invalidation_conditions"])
+        audit_types = {event["event_type"] for event in fake_db.store["trade_audit_ledger"]}
+        self.assertIn("TRADE_PROVENANCE_MATCHED", audit_types)
+        self.assertIn("ADOPTED_POSITION_SUPERSEDED", audit_types)
 
     def test_backfills_existing_adopted_record_open_time_from_live_position(self):
         store = {
@@ -822,6 +829,9 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(record["execution"]["closed_trade_id"], "recent_t1")
         self.assertEqual(record["execution"]["close_reason"], "unmatched_okx_closed_trade")
         self.assertTrue(record["provenance"]["unmatched_closed_trade"])
+        audit_event = fake_db.store["trade_audit_ledger"][0]
+        self.assertEqual(audit_event["event_type"], "UNMATCHED_CLOSED_TRADE_RECORDED")
+        self.assertEqual(audit_event["execution"]["closed_trade_id"], "recent_t1")
 
 
 if __name__ == "__main__":

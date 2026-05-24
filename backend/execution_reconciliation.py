@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 
 from db_client import db
 from okx_executor import OKXExecutor
+from trade_audit import append_trade_audit_event
 
 
 def _iso_now() -> str:
@@ -452,6 +453,18 @@ def _attach_live_position_to_origin_record(
         "entry_price": execution.get("avg_fill_price"),
         "source": match_source,
     })
+    append_trade_audit_event(
+        db,
+        "TRADE_PROVENANCE_MATCHED",
+        record,
+        source="execution_reconciliation",
+        payload={
+            "match_source": match_source,
+            "order_id": order.get("ordId"),
+            "client_order_id": order.get("clOrdId"),
+            "executed_at": executed_at,
+        },
+    )
     after = str(record.get("positionState")) + str(execution.get("sync_status"))
     return before != after
 
@@ -511,6 +524,16 @@ def _supersede_adopted_record(adopted_record: Dict[str, Any], origin_record: Dic
         "origin_cycle_id": origin_record.get("cycleId"),
         "source": "portfolio_state_fuzzy_match",
     })
+    append_trade_audit_event(
+        db,
+        "ADOPTED_POSITION_SUPERSEDED",
+        adopted_record,
+        source="execution_reconciliation",
+        payload={
+            "origin_decision_id": origin_record.get("decisionId"),
+            "origin_cycle_id": origin_record.get("cycleId"),
+        },
+    )
     after = str(adopted_record.get("positionState")) + str(execution.get("sync_status"))
     return before != after
 
@@ -1138,6 +1161,17 @@ def run_execution_reconciliation() -> Dict[str, Any]:
                     "position_side": execution.get("position_side"),
                     "protection_status": execution.get("protection_status"),
                 })
+                append_trade_audit_event(
+                    db,
+                    "TRADE_OPEN_RECONCILED",
+                    record,
+                    source="execution_reconciliation",
+                    payload={
+                        "entry_price": execution.get("avg_fill_price"),
+                        "filled_size": execution.get("filled_size"),
+                        "protection_status": execution.get("protection_status"),
+                    },
+                )
             elif execution.get("sync_status") != "OPEN":
                 execution["sync_status"] = "OPEN"
                 _update_protection_state(execution, live_position)
@@ -1145,6 +1179,15 @@ def run_execution_reconciliation() -> Dict[str, Any]:
                     "symbol": record.get("symbol"),
                     "protection_status": execution.get("protection_status"),
                 })
+                append_trade_audit_event(
+                    db,
+                    "TRADE_OPEN_SYNCED",
+                    record,
+                    source="execution_reconciliation",
+                    payload={
+                        "protection_status": execution.get("protection_status"),
+                    },
+                )
             else:
                 prior_protection = execution.get("protection_status")
                 _update_protection_state(execution, live_position)
@@ -1180,6 +1223,20 @@ def run_execution_reconciliation() -> Dict[str, Any]:
                     "runtime_action": execution.get("runtime_action"),
                     "okx_reason": closed_trade.get("reason"),
                 })
+                append_trade_audit_event(
+                    db,
+                    "TRADE_CLOSED_RECONCILED",
+                    record,
+                    source="execution_reconciliation",
+                    payload={
+                        "trade_id": trade_id,
+                        "pnl": execution.get("realized_pnl"),
+                        "pnl_percent": execution.get("realized_pnl_percent"),
+                        "reason": close_reason,
+                        "reason_source": close_reason_source,
+                        "okx_reason": closed_trade.get("reason"),
+                    },
+                )
 
         elif execution.get("order_status") == "FILLED":
             execution["sync_status"] = "PENDING_CLOSE_SYNC"
@@ -1252,6 +1309,16 @@ def run_execution_reconciliation() -> Dict[str, Any]:
             continue
         adopted_records.append(adopted)
         existing_decision_ids.add(str(adopted.get("decisionId") or ""))
+        append_trade_audit_event(
+            db,
+            "LIVE_POSITION_ADOPTED",
+            adopted,
+            source="execution_reconciliation",
+            payload={
+                "audit_reason": "live_position_without_matching_origin_record",
+                "position_key": key,
+            },
+        )
         actions.append({
             "decisionId": adopted.get("decisionId"),
             "symbol": adopted.get("symbol"),
@@ -1279,6 +1346,16 @@ def run_execution_reconciliation() -> Dict[str, Any]:
         unmatched_closed_records.append(unmatched)
         existing_trade_ids.add(trade_id)
         existing_decision_ids.add(decision_id)
+        append_trade_audit_event(
+            db,
+            "UNMATCHED_CLOSED_TRADE_RECORDED",
+            unmatched,
+            source="execution_reconciliation",
+            payload={
+                "audit_reason": "closed_trade_without_matching_origin_record",
+                "trade_id": trade_id,
+            },
+        )
         actions.append({
             "decisionId": unmatched.get("decisionId"),
             "symbol": unmatched.get("symbol"),

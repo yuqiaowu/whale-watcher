@@ -1,7 +1,7 @@
 import os
 import json
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
+from pymongo.errors import ConnectionFailure, DuplicateKeyError
 from datetime import datetime
 from dotenv import load_dotenv
 import certifi
@@ -66,6 +66,7 @@ class DBClient:
         try:
             self._ensure_collection_indexes("trade_decision_records", self.db["trade_decision_records"])
             self._ensure_collection_indexes("decision_cycles_v2", self.db["decision_cycles_v2"])
+            self._ensure_collection_indexes("trade_audit_ledger", self.db["trade_audit_ledger"])
         except Exception as e:
             print(f"⚠️ [MongoDB Index Error] {e}")
 
@@ -74,6 +75,10 @@ class DBClient:
             collection.create_index([("created_at", -1)], background=True)
         elif collection_name == "decision_cycles_v2":
             collection.create_index([("generated_at", -1)], background=True)
+        elif collection_name == "trade_audit_ledger":
+            collection.create_index([("event_at", -1)], background=True)
+            collection.create_index([("decisionId", 1), ("event_at", -1)], background=True)
+            collection.create_index([("cycleId", 1), ("symbol", 1)], background=True)
 
     def _get_local_path(self, collection_name):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -126,6 +131,8 @@ class DBClient:
                         cursor = cursor.sort("created_at", -1)
                     elif collection_name == "decision_cycles_v2":
                         cursor = cursor.sort("generated_at", -1)
+                    elif collection_name == "trade_audit_ledger":
+                        cursor = cursor.sort("event_at", -1)
                     
                     data = list(cursor)
                     if data:
@@ -192,6 +199,50 @@ class DBClient:
                                 raise
             except Exception as e:
                 print(f"⚠️ [MongoDB Sync Error] {collection_name}: {e}")
+
+    def append_data(self, collection_name, item, max_local_records=1000):
+        """Append one immutable record.
+
+        Array-like save_data() intentionally replaces bounded frontend-facing
+        collections. Audit ledgers need insert semantics so later reconciliations
+        cannot overwrite the original decision evidence.
+        """
+        if not isinstance(item, dict):
+            item = {"value": item}
+
+        path = self._get_local_path(collection_name)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        try:
+            local_data = []
+            if os.path.exists(path):
+                with open(path, "r") as f:
+                    loaded = json.load(f)
+                    if isinstance(loaded, list):
+                        local_data = loaded
+            item_id = item.get("_id") or item.get("event_id")
+            already_exists = any(
+                (existing.get("_id") or existing.get("event_id")) == item_id
+                for existing in local_data
+                if isinstance(existing, dict)
+            )
+            if not item_id or not already_exists:
+                local_data.append(item.copy())
+                if max_local_records and len(local_data) > max_local_records:
+                    local_data = local_data[-max_local_records:]
+                with open(path, "w") as f:
+                    json.dump(self._normalize_list_for_local_storage(collection_name, local_data), f, indent=2)
+        except Exception as e:
+            print(f"⚠️ Failed to append local json {collection_name}: {e}")
+
+        if self.is_connected:
+            try:
+                safe_item = item.copy()
+                collection = self.db[collection_name]
+                collection.insert_one(safe_item)
+            except DuplicateKeyError:
+                pass
+            except Exception as e:
+                print(f"⚠️ [MongoDB Append Error] {collection_name}: {e}")
 
 # Singleton Instance
 db = DBClient()
