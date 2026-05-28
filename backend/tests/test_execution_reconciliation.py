@@ -833,6 +833,43 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(audit_event["event_type"], "UNMATCHED_CLOSED_TRADE_RECORDED")
         self.assertEqual(audit_event["execution"]["closed_trade_id"], "recent_t1")
 
+    def test_audit_closed_trade_id_prevents_duplicate_unmatched_record(self):
+        with patch.object(er, "_iso_now", return_value="2026-05-12T05:00:00Z"):
+            store = {
+                "trade_decision_records": [],
+                "portfolio_state": {"positions": []},
+                "trade_audit_ledger": [
+                    {
+                        "event_type": "TRADE_CLOSED_RECONCILED",
+                        "payload": {"trade_id": "recent_t1"},
+                        "execution": {"order_status": "CLOSED", "closed_trade_id": "recent_t1"},
+                    }
+                ],
+                "trade_history": [
+                    {
+                        "id": "recent_t1",
+                        "symbol": "DOGE",
+                        "type": "short",
+                        "entryPrice": 0.11,
+                        "exitPrice": 0.1099,
+                        "amount": 2500,
+                        "leverage": 2,
+                        "pnl": 3.25,
+                        "pnlPercent": 2.34,
+                        "entryTime": "2026-05-11 16:08:17",
+                        "exitTime": "2026-05-12 04:11:23",
+                        "reason": "OKX Real Trade",
+                    }
+                ],
+            }
+            fake_db = FakeDB(store)
+            with patch.object(er, "db", fake_db):
+                result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 0)
+        self.assertEqual(fake_db.store["trade_decision_records"], [])
+        self.assertEqual(len(fake_db.store["trade_audit_ledger"]), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -453,6 +453,7 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
         frame = instrument_df.sort_values("datetime").copy()
         frame["volume_ma_60"] = frame["volume"].rolling(60, min_periods=60).mean()
         frame["rel_volume_60"] = frame["volume"] / frame["volume_ma_60"]
+        frame["sma20_4h"] = frame["close"].rolling(20, min_periods=20).mean()
         frame["sma50_4h"] = frame["close"].rolling(50, min_periods=50).mean()
         frame["bb_width"] = frame["bb_width_20"] if "bb_width_20" in frame.columns else pd.NA
         frame["bb_pct_b"] = frame["bb_pos_20"] if "bb_pos_20" in frame.columns else 0.5
@@ -550,6 +551,7 @@ def _load_chart_feature_context_map() -> Dict[str, Dict[str, Any]]:
             "wick_ratio_lower": round(lower_shadow / full_range * 100, 2),
             "wick_ratio_upper": round(upper_shadow / full_range * 100, 2),
             "rel_volume_60": _safe_float(latest.get("rel_volume_60")),
+            "sma20_4h": _safe_float(latest.get("sma20_4h")),
             "sma50_4h": _safe_float(latest.get("sma50_4h")),
             "bb_width": _safe_float(latest.get("bb_width")),
             "bb_pct_b": _safe_float(latest.get("bb_pct_b"), 0.5),
@@ -962,6 +964,8 @@ def _build_decision_snapshot(
         "liquidation_short_usd": _safe_float(stats24.get("liquidation_short_usd")),
         "liquidation_long_to_volume_4h": _safe_float(chart_context.get("liquidation_long_to_volume_4h")),
         "liquidation_short_to_volume_4h": _safe_float(chart_context.get("liquidation_short_to_volume_4h")),
+        "exchange_netflow_24h": _optional_float(stats24.get("exchange_netflow_24h")),
+        "large_transfer_count_24h": _optional_float(stats24.get("large_transfer_count_24h")),
         "funding_rate": funding_rate,
         "funding_zscore": funding_zscore,
         "oi_now": market_snapshot["oi_now"],

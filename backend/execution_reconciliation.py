@@ -649,6 +649,28 @@ def _trade_id_set(records: List[Dict[str, Any]]) -> Set[str]:
     return trade_ids
 
 
+def _closed_trade_id_set_from_audit(audit_events: List[Dict[str, Any]]) -> Set[str]:
+    trade_ids: Set[str] = set()
+    closed_event_types = {"TRADE_CLOSED_RECONCILED", "UNMATCHED_CLOSED_TRADE_RECORDED"}
+    for event in audit_events if isinstance(audit_events, list) else []:
+        if not isinstance(event, dict):
+            continue
+        execution = event.get("execution") or {}
+        if event.get("event_type") not in closed_event_types and execution.get("order_status") != "CLOSED":
+            continue
+
+        payload = event.get("payload") or {}
+        for value in (payload.get("trade_id"), execution.get("closed_trade_id")):
+            if value:
+                trade_ids.add(str(value))
+        for history_event in execution.get("history", []) or []:
+            history_payload = history_event.get("payload") or {}
+            value = history_payload.get("trade_id")
+            if value:
+                trade_ids.add(str(value))
+    return trade_ids
+
+
 def _recent_unmatched_closed_trade(trade: Dict[str, Any], now: Optional[datetime] = None) -> bool:
     exit_dt = _parse_dt(trade.get("exitTime"))
     if exit_dt is None:
@@ -1330,7 +1352,12 @@ def run_execution_reconciliation() -> Dict[str, Any]:
         records = adopted_records + records
         updated_count += len(adopted_records)
 
-    existing_trade_ids = _trade_id_set(records).union(used_trade_ids)
+    audit_events = db.get_data("trade_audit_ledger", [])
+    existing_trade_ids = (
+        _trade_id_set(records)
+        .union(used_trade_ids)
+        .union(_closed_trade_id_set_from_audit(audit_events))
+    )
     unmatched_closed_records: List[Dict[str, Any]] = []
     existing_decision_ids = {str(record.get("decisionId") or "") for record in records if isinstance(record, dict)}
     for trade in trade_history:

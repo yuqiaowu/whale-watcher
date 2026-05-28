@@ -957,6 +957,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertNotEqual(-99, eth_context["macd_line_4h"])
         self.assertEqual(38.89, eth_context["wick_ratio_lower"])
         self.assertEqual(50.0, eth_context["wick_ratio_upper"])
+        self.assertAlmostEqual(sum(row["close"] for row in rows[70:90]) / 20, eth_context["sma20_4h"])
 
     def test_build_decision_snapshot_maps_flow_into_fixed_semantics(self):
         whale_analysis = {
@@ -974,7 +975,12 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             "news": {"macro": {"items": []}, "calendar": {"items": []}},
             "eth": {
                 "market": {"price": 2400, "rsi_4h": 48, "adx_14": 22, "volume_ratio": 1.1},
-                "stats_24h": {"token_net_flow": -100000, "stablecoin_net_flow": 50000},
+                "stats_24h": {
+                    "token_net_flow": -100000,
+                    "stablecoin_net_flow": 50000,
+                    "exchange_netflow_24h": -250000,
+                    "large_transfer_count_24h": 7,
+                },
             },
         }
 
@@ -993,6 +999,8 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertFalse(snapshot["decision_ready_features"]["flow_support_short"])
         self.assertTrue(snapshot["decision_ready_features"]["flow_signal_mixed"])
         self.assertEqual(2350, snapshot["market_snapshot"]["sma20_4h"])
+        self.assertEqual(-250000, snapshot["onchain_snapshot"]["exchange_netflow_24h"])
+        self.assertEqual(7, snapshot["onchain_snapshot"]["large_transfer_count_24h"])
 
     def test_build_decision_snapshot_prefers_confirmed_chart_wick_over_live_market_wick(self):
         whale_analysis = {
