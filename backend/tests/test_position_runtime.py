@@ -852,7 +852,7 @@ class PositionRuntimeTests(unittest.TestCase):
         self.assertFalse(any(event["type"] == "INVALIDATION_TRIGGERED" for event in record["execution"]["history"]))
         self.assertTrue(any(event["type"] == "F_RUNTIME_EXIT_TRIGGERED" for event in record["execution"]["history"]))
 
-    def test_model_short_vwap_reclaim_invalidation_triggers_close(self):
+    def test_model_short_vwap_reclaim_waits_for_persistence_before_close(self):
         store = {
             "trade_decision_records": [
                 {
@@ -864,7 +864,7 @@ class PositionRuntimeTests(unittest.TestCase):
                     "riskReview": {
                         "approved": True,
                         "final_intent": "SHORT",
-                        "max_holding_bars": 3,
+                        "max_holding_bars": 999999,
                         "approved_candidate": {
                             "trigger_source": "ModelDecision_LLM",
                             "reference_values": {"model_stop_price": 81215.0},
@@ -916,12 +916,171 @@ class PositionRuntimeTests(unittest.TestCase):
             result = pr.run_in_position_runtime(executor=FakeExecutor())
 
         self.assertEqual(result["updated_count"], 1)
+        self.assertEqual(result["actions"], [])
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["positionState"], "entered")
+        self.assertNotEqual(record["execution"].get("runtime_action"), "CLOSE_POSITION")
+        state = record["execution"]["invalidation_state"]
+        vwap_key = "price_vs_vwap_16h_pct|>=|value:0.0"
+        self.assertEqual(state[vwap_key]["consecutive_hits"], 1)
+        self.assertEqual(state[vwap_key]["required_hits"], 2)
+        self.assertTrue(any(event["type"] == "INVALIDATION_PERSISTENCE_OBSERVED" for event in record["execution"]["history"]))
+        self.assertFalse(any(event["type"] == "INVALIDATION_TRIGGERED" for event in record["execution"]["history"]))
+
+    def test_model_short_vwap_reclaim_closes_after_required_persistence_hits(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "m_vwap",
+                    "symbol": "BTC-USDT",
+                    "created_at": "2026-05-15T16:00:00Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "BTC-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "SHORT",
+                        "max_holding_bars": 3,
+                        "approved_candidate": {
+                            "trigger_source": "ModelDecision_LLM",
+                            "reference_values": {"model_stop_price": 81215.0},
+                            "invalidation_conditions": {
+                                "operator": "OR",
+                                "rules": [
+                                    {"field": "price", "op": ">=", "value_ref": "model_stop_price"},
+                                    {"field": "price_vs_vwap_16h_pct", "op": ">=", "value": 0.0, "persistence": 2, "reason": "price reclaims VWAP_16h"},
+                                ],
+                                "persistence": 1,
+                            },
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "executed_at": "2026-05-15T16:00:00Z",
+                        "invalidation_state": {
+                            "price_vs_vwap_16h_pct|>=|value:0.0": {
+                                "consecutive_hits": 1,
+                                "required_hits": 2,
+                                "first_matched_at": "2026-05-15T16:10:00Z",
+                                "last_checked_at": "2026-05-15T16:10:00Z",
+                                "last_matched_at": "2026-05-15T16:10:00Z",
+                                "matched": True,
+                            }
+                        },
+                        "history": [],
+                    },
+                    "researchOutput": {"thesis_change": "UNCHANGED", "thesis_strength": "HIGH"},
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "BTC",
+                        "type": "short",
+                        "entryPrice": 79095.4,
+                        "currentPrice": 79850.0,
+                        "amount": 0.0016,
+                        "margin": 63.0,
+                        "leverage": 2.0,
+                    }
+                ]
+            },
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "BTC-USDT",
+                        "market_snapshot": {"price_vs_vwap_16h_pct": 0.12},
+                        "decision_ready_features": {"macro_permission": "ALLOW_SHORT"},
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db):
+            result = pr.run_in_position_runtime(executor=FakeExecutor())
+
+        self.assertEqual(result["updated_count"], 1)
         self.assertEqual(result["actions"][0]["action"], "CLOSE_POSITION")
         record = fake_db.store["trade_decision_records"][0]
         self.assertEqual(record["positionState"], "exit_pending")
         self.assertEqual(record["execution"]["runtime_action"], "CLOSE_POSITION")
         self.assertEqual(record["execution"]["runtime_reason"], "candidate_invalidation")
-        self.assertTrue(any(event["type"] == "INVALIDATION_TRIGGERED" for event in record["execution"]["history"]))
+        state = record["execution"]["invalidation_state"]
+        self.assertEqual(state["price_vs_vwap_16h_pct|>=|value:0.0"]["consecutive_hits"], 2)
+        event = next(event for event in record["execution"]["history"] if event["type"] == "INVALIDATION_TRIGGERED")
+        self.assertEqual(event["payload"]["triggering_rules"][0]["rule_key"], "price_vs_vwap_16h_pct|>=|value:0.0")
+        self.assertEqual(event["payload"]["triggering_rules"][0]["consecutive_hits"], 2)
+
+    def test_model_stop_price_invalidation_closes_without_extra_persistence(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "m_stop",
+                    "symbol": "BTC-USDT",
+                    "created_at": "2026-05-15T16:00:00Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "BTC-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "SHORT",
+                        "max_holding_bars": 3,
+                        "approved_candidate": {
+                            "trigger_source": "ModelDecision_LLM",
+                            "reference_values": {"model_stop_price": 81215.0},
+                            "invalidation_conditions": {
+                                "operator": "OR",
+                                "rules": [
+                                    {"field": "price", "op": ">=", "value_ref": "model_stop_price"},
+                                    {"field": "price_vs_vwap_16h_pct", "op": ">=", "value": 0.0, "persistence": 2},
+                                ],
+                                "persistence": 1,
+                            },
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "executed_at": "2026-05-15T16:00:00Z",
+                        "history": [],
+                    },
+                    "researchOutput": {"thesis_change": "UNCHANGED", "thesis_strength": "HIGH"},
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "BTC",
+                        "type": "short",
+                        "entryPrice": 79095.4,
+                        "currentPrice": 81220.0,
+                        "amount": 0.0016,
+                        "margin": 63.0,
+                        "leverage": 2.0,
+                    }
+                ]
+            },
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "BTC-USDT",
+                        "market_snapshot": {"price_vs_vwap_16h_pct": -0.12},
+                        "decision_ready_features": {"macro_permission": "ALLOW_SHORT"},
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db):
+            result = pr.run_in_position_runtime(executor=FakeExecutor())
+
+        self.assertEqual(result["updated_count"], 1)
+        self.assertEqual(result["actions"][0]["action"], "CLOSE_POSITION")
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["positionState"], "exit_pending")
+        event = next(event for event in record["execution"]["history"] if event["type"] == "INVALIDATION_TRIGGERED")
+        self.assertEqual(event["payload"]["triggering_rules"][0]["rule_key"], "price|>=|value_ref:model_stop_price")
 
     def test_profitable_position_without_invalidation_keeps_original_protection(self):
         class StrictExecutor:

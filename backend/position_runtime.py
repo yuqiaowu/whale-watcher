@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -143,6 +144,81 @@ def _resolve_runtime_field(field: str, snapshot: Dict[str, Any], live_position: 
     return None
 
 
+def _rule_key(rule: Dict[str, Any]) -> str:
+    field = str(rule.get("field") or "")
+    op = str(rule.get("op") or "")
+    if "value_ref" in rule:
+        right = f"value_ref:{rule.get('value_ref')}"
+    else:
+        right = f"value:{json.dumps(rule.get('value'), sort_keys=True, default=str)}"
+    return f"{field}|{op}|{right}"
+
+
+def _rule_required_hits(rule: Dict[str, Any], condition_default: int = 1) -> int:
+    try:
+        raw = rule.get("persistence", condition_default)
+        return max(1, min(6, int(raw or 1)))
+    except (TypeError, ValueError):
+        return max(1, min(6, condition_default))
+
+
+def _compare_runtime_rule(
+    rule: Dict[str, Any],
+    snapshot: Dict[str, Any],
+    live_position: Dict[str, Any],
+    reference_values: Dict[str, Any],
+    condition_default_persistence: int,
+) -> Dict[str, Any]:
+    field = rule.get("field")
+    op = rule.get("op")
+    left = _resolve_runtime_field(str(field or ""), snapshot, live_position, reference_values)
+    if "value_ref" in rule:
+        value_ref = str(rule.get("value_ref") or "")
+        right = reference_values.get(value_ref) if value_ref in reference_values else _resolve_runtime_field(value_ref, snapshot, live_position, reference_values)
+    else:
+        right = rule.get("value")
+
+    detail: Dict[str, Any] = {
+        "rule_key": _rule_key(rule),
+        "field": field,
+        "op": op,
+        "value_ref": rule.get("value_ref"),
+        "value": rule.get("value"),
+        "reason": rule.get("reason"),
+        "left": left,
+        "right": right,
+        "matched": False,
+        "required_hits": _rule_required_hits(rule, condition_default_persistence),
+    }
+    if left is None or right is None:
+        return detail
+
+    try:
+        left_num = _optional_float(left)
+        right_num = _optional_float(right)
+        if op == "==" and (left_num is None or right_num is None):
+            detail["matched"] = str(left) == str(right)
+        elif op == "!=" and (left_num is None or right_num is None):
+            detail["matched"] = str(left) != str(right)
+        elif left_num is None or right_num is None:
+            detail["matched"] = False
+        elif op == "<=":
+            detail["matched"] = left_num <= right_num
+        elif op == ">=":
+            detail["matched"] = left_num >= right_num
+        elif op == "==":
+            detail["matched"] = left_num == right_num
+        elif op == "<":
+            detail["matched"] = left_num < right_num
+        elif op == ">":
+            detail["matched"] = left_num > right_num
+        elif op == "!=":
+            detail["matched"] = left_num != right_num
+    except Exception:
+        detail["matched"] = False
+    return detail
+
+
 def _candidate_trigger_source(record: Dict[str, Any]) -> str:
     approved_candidate = (record.get("riskReview") or {}).get("approved_candidate", {}) or {}
     return str(approved_candidate.get("trigger_source") or "")
@@ -181,55 +257,78 @@ def _f_runtime_exit(record: Dict[str, Any], snapshot: Dict[str, Any], live_posit
     return None
 
 
-def _evaluate_invalidation(record: Dict[str, Any], snapshot: Dict[str, Any], live_position: Dict[str, Any]) -> bool:
+def _evaluate_invalidation(record: Dict[str, Any], snapshot: Dict[str, Any], live_position: Dict[str, Any]) -> Tuple[bool, Optional[Dict[str, Any]], bool]:
     approved_candidate = (record.get("riskReview") or {}).get("approved_candidate", {}) or {}
     conditions = approved_candidate.get("invalidation_conditions", {}) or {}
     rules = conditions.get("rules", []) or []
     operator = str(conditions.get("operator", "OR")).upper()
     reference_values = approved_candidate.get("reference_values", {}) or {}
     if not rules:
-        return False
+        return False, None, False
 
-    results: List[bool] = []
+    try:
+        condition_default_persistence = max(1, min(6, int(conditions.get("persistence") or 1)))
+    except (TypeError, ValueError):
+        condition_default_persistence = 1
+
+    execution = record.setdefault("execution", {})
+    state = execution.setdefault("invalidation_state", {})
+    previous_state = json.dumps(state, sort_keys=True, default=str)
+    now_iso = _iso_now()
+    evaluated_rules: List[Dict[str, Any]] = []
     for rule in rules:
-        field = rule.get("field")
-        op = rule.get("op")
-        left = _resolve_runtime_field(field, snapshot, live_position, reference_values)
-        if "value_ref" in rule:
-            value_ref = str(rule.get("value_ref") or "")
-            right = reference_values.get(value_ref) if value_ref in reference_values else _resolve_runtime_field(value_ref, snapshot, live_position, reference_values)
-        else:
-            right = rule.get("value")
-        if left is None or right is None:
-            results.append(False)
+        if not isinstance(rule, dict):
             continue
-        try:
-            left_num = _optional_float(left)
-            right_num = _optional_float(right)
-            if op == "==" and (left_num is None or right_num is None):
-                results.append(str(left) == str(right))
-            elif op == "!=" and (left_num is None or right_num is None):
-                results.append(str(left) != str(right))
-            elif left_num is None or right_num is None:
-                results.append(False)
-            elif op == "<=":
-                results.append(left_num <= right_num)
-            elif op == ">=":
-                results.append(left_num >= right_num)
-            elif op == "==":
-                results.append(left_num == right_num)
-            elif op == "<":
-                results.append(left_num < right_num)
-            elif op == ">":
-                results.append(left_num > right_num)
-            elif op == "!=":
-                results.append(left_num != right_num)
-            else:
-                results.append(False)
-        except Exception:
-            results.append(False)
+        detail = _compare_runtime_rule(rule, snapshot, live_position, reference_values, condition_default_persistence)
+        rule_key = str(detail["rule_key"])
+        current_state = state.get(rule_key) if isinstance(state.get(rule_key), dict) else {}
+        previous_hits = int(current_state.get("consecutive_hits") or 0)
+        if detail["matched"]:
+            consecutive_hits = previous_hits + 1
+            first_matched_at = current_state.get("first_matched_at") or now_iso
+        else:
+            consecutive_hits = 0
+            first_matched_at = None
+        updated_rule_state = {
+            "consecutive_hits": consecutive_hits,
+            "required_hits": detail["required_hits"],
+            "first_matched_at": first_matched_at,
+            "last_checked_at": now_iso,
+            "last_matched_at": now_iso if detail["matched"] else current_state.get("last_matched_at"),
+            "last_left": detail.get("left"),
+            "last_right": detail.get("right"),
+            "matched": detail["matched"],
+            "field": detail.get("field"),
+            "op": detail.get("op"),
+            "value_ref": detail.get("value_ref"),
+            "value": detail.get("value"),
+            "reason": detail.get("reason"),
+        }
+        if detail["matched"] or previous_hits > 0 or current_state:
+            state[rule_key] = updated_rule_state
+        detail["consecutive_hits"] = consecutive_hits
+        detail["first_matched_at"] = first_matched_at
+        detail["last_matched_at"] = updated_rule_state["last_matched_at"]
+        detail["persistence_satisfied"] = consecutive_hits >= int(detail["required_hits"])
+        evaluated_rules.append(detail)
 
-    return any(results) if operator == "OR" else all(results)
+    if not evaluated_rules:
+        return False, None, previous_state != json.dumps(state, sort_keys=True, default=str)
+
+    if operator == "AND":
+        triggered = all(rule["matched"] and rule["persistence_satisfied"] for rule in evaluated_rules)
+        triggering_rules = evaluated_rules if triggered else []
+    else:
+        triggering_rules = [rule for rule in evaluated_rules if rule["matched"] and rule["persistence_satisfied"]]
+        triggered = bool(triggering_rules)
+
+    detail = {
+        "operator": operator,
+        "rules": evaluated_rules,
+        "triggering_rules": triggering_rules,
+    }
+    state_changed = previous_state != json.dumps(state, sort_keys=True, default=str)
+    return triggered, detail, state_changed
 
 
 def _apply_adjustment(
@@ -378,8 +477,6 @@ def _review_expired_position(
     weakened, weakened_reason = _thesis_weakened(record, snapshot, live_position, side)
     if weakened:
         return False, 0, weakened_reason
-    if not _is_f_blueprint(record) and _evaluate_invalidation(record, snapshot, live_position):
-        return False, 0, "candidate_invalidation"
     if _is_f_blueprint(record) and _f_runtime_exit(record, snapshot, live_position, side) is not None:
         return False, 0, "f_runtime_exit"
 
@@ -627,7 +724,24 @@ def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str,
             execution.get("runtime_action") in {"REPAIR_PROTECTION", "CLOSE_POSITION", "REDUCE_50", "REDUCE_25"}
             or record.get("positionState") in {"exit_pending", "defensive"}
         )
-        if not runtime_action_taken and not _is_f_blueprint(record) and _evaluate_invalidation(record, snapshot, live_position):
+        invalidation_triggered = False
+        invalidation_detail = None
+        invalidation_state_changed = False
+        if not runtime_action_taken and not _is_f_blueprint(record):
+            invalidation_triggered, invalidation_detail, invalidation_state_changed = _evaluate_invalidation(record, snapshot, live_position)
+            if invalidation_state_changed:
+                changed = True
+            if (
+                invalidation_detail
+                and not invalidation_triggered
+                and any(rule.get("matched") for rule in invalidation_detail.get("rules", []))
+            ):
+                _append_execution_event(record, "INVALIDATION_PERSISTENCE_OBSERVED", {
+                    "current_price": current_price,
+                    **invalidation_detail,
+                })
+
+        if not runtime_action_taken and not _is_f_blueprint(record) and invalidation_triggered:
             close_order_id = _apply_close(executor, symbol, side, live_position)
             execution["runtime_action"] = "CLOSE_POSITION"
             execution["last_runtime_order_id"] = close_order_id
@@ -636,6 +750,7 @@ def run_in_position_runtime(executor: Optional[OKXExecutor] = None) -> Dict[str,
             _append_execution_event(record, "INVALIDATION_TRIGGERED", {
                 "current_price": current_price,
                 "order_id": close_order_id,
+                **(invalidation_detail or {}),
             })
             actions.append({"decisionId": record.get("decisionId"), "action": "CLOSE_POSITION"})
             changed = True
