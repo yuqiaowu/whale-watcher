@@ -4,7 +4,7 @@
   "symbol": "BNB-USDT",
   "timeframe": "4h",
   "snapshot_timestamp": 1780179336,
-  "positionState": "entered",
+  "positionState": "closed",
   "snapshot": {
     "decision_id": "cycle_2026-05-30_2000_BNB",
     "symbol": "BNB-USDT",
@@ -1047,7 +1047,7 @@
     "cycleId": "cycle_2026-05-30_2000",
     "strategy_family": "DIRECTIONAL",
     "execution_action": "OPEN_SHORT",
-    "order_status": "FILLED",
+    "order_status": "CLOSED",
     "requested_size_usd": 150.28,
     "requested_leverage": 2.0,
     "entry_type": "MARKET",
@@ -1058,11 +1058,11 @@
     "filled_size": 0.21,
     "exchange_order_id": null,
     "executed_at": "2026-05-30T22:59:58Z",
-    "sync_status": "OPEN",
+    "sync_status": "CLOSED",
     "failure_reason": null,
     "position_side": "SHORT",
     "live_position_detected_at": "2026-05-30T23:02:53Z",
-    "protection_status": "OPEN",
+    "protection_status": "CLOSED",
     "filled_stop_loss": 738.1,
     "filled_take_profit": 668.9,
     "history": [
@@ -1085,11 +1085,31 @@
           "add_allowed": true,
           "position_state": "entered"
         }
+      },
+      {
+        "type": "EXECUTION_CLOSED_RECONCILED",
+        "at": "2026-06-01T06:26:57Z",
+        "payload": {
+          "trade_id": "3613526828077293568",
+          "pnl": -4.79,
+          "pnl_percent": -6.37,
+          "reason": "exchange_or_external_close",
+          "reason_source": "trade_history_reconciliation",
+          "runtime_action": null,
+          "okx_reason": "OKX Real Trade"
+        }
       }
     ],
     "add_allowed": true,
     "distance_to_liq": 0.483,
-    "protection_last_synced_at": "2026-05-30T23:35:21Z"
+    "protection_last_synced_at": "2026-05-30T23:35:21Z",
+    "closed_trade_id": "3613526828077293568",
+    "closed_at": "2026-05-31 02:18:11",
+    "realized_pnl": -4.79,
+    "realized_pnl_percent": -6.37,
+    "avg_exit_price": 738.4,
+    "close_reason": "exchange_or_external_close",
+    "close_reason_source": "trade_history_reconciliation"
   },
   "evaluation": {
     "result_label": "LOSS",
@@ -1162,10 +1182,10 @@
         "message": "review prompt constraints, conflict handling, and no-trade examples"
       }
     ],
-    "generated_at": "2026-06-01T06:23:08Z"
+    "generated_at": "2026-06-01T08:23:09Z"
   },
   "created_at": "2026-05-30T22:59:58Z",
-  "updated_at": "2026-06-01T06:23:08Z",
+  "updated_at": "2026-06-01T08:23:09Z",
   "provenance": {
     "source": "execution_reconciliation",
     "adopted_live_position": true,
