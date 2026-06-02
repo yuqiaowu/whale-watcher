@@ -1,6 +1,7 @@
 import os
 import json
 from pymongo import MongoClient
+from pymongo import ReplaceOne
 from pymongo.errors import ConnectionFailure, DuplicateKeyError
 from datetime import datetime
 from dotenv import load_dotenv
@@ -16,6 +17,15 @@ SINGLETON_COLLECTIONS = {
     "latest_trade_decision_record",
     "latest_decision_cycle_v2",
     "latest_system_run",
+}
+
+LIST_IDENTITY_FIELDS = {
+    "trade_decision_records": "decisionId",
+    "decision_cycles_v2": "cycleId",
+    "system_run_history": "runId",
+    "trade_history": "id",
+    "nav_history": "timestamp",
+    "macro_history": "timestamp",
 }
 
 class DBClient:
@@ -73,8 +83,10 @@ class DBClient:
     def _ensure_collection_indexes(self, collection_name, collection):
         if collection_name == "trade_decision_records":
             collection.create_index([("created_at", -1)], background=True)
+            collection.create_index([("decisionId", 1)], background=True)
         elif collection_name == "decision_cycles_v2":
             collection.create_index([("generated_at", -1)], background=True)
+            collection.create_index([("cycleId", 1)], background=True)
         elif collection_name == "trade_audit_ledger":
             collection.create_index([("event_at", -1)], background=True)
             collection.create_index([("decisionId", 1), ("event_at", -1)], background=True)
@@ -109,6 +121,59 @@ class DBClient:
             )
         return data
 
+    def _list_identity_field(self, collection_name):
+        return LIST_IDENTITY_FIELDS.get(collection_name)
+
+    def _safe_list_items(self, data):
+        safe_data = []
+        for item in data:
+            safe_item = item.copy() if isinstance(item, dict) else {"value": item}
+            safe_item.pop("_id", None)
+            safe_data.append(safe_item)
+        return safe_data
+
+    def _save_identified_list_to_mongo(self, collection_name, collection, data):
+        identity_field = self._list_identity_field(collection_name)
+        safe_data = self._safe_list_items(data)
+        if not safe_data:
+            collection.delete_many({})
+            return
+
+        if not identity_field:
+            collection.delete_many({})
+            collection.insert_many(safe_data)
+            return
+
+        operations = []
+        incoming_ids = []
+        fallback_items = []
+        for item in safe_data:
+            identity_value = item.get(identity_field)
+            if identity_value is None or identity_value == "":
+                fallback_items.append(item)
+                continue
+            incoming_ids.append(identity_value)
+            operations.append(
+                ReplaceOne(
+                    {identity_field: identity_value},
+                    item,
+                    upsert=True,
+                )
+            )
+
+        if operations:
+            collection.bulk_write(operations, ordered=False)
+
+        # Keep bounded history semantics for collections that are saved as a
+        # complete list by callers, without using renameCollection privileges.
+        if incoming_ids:
+            collection.delete_many({identity_field: {"$nin": incoming_ids}})
+        elif fallback_items:
+            collection.delete_many({})
+
+        if fallback_items:
+            collection.insert_many(fallback_items)
+
     # --- Read / Get ---
     def get_data(self, collection_name, default_value=None):
         if default_value is None:
@@ -123,7 +188,7 @@ class DBClient:
                     if doc:
                         doc.pop("_id", None)
                         return doc
-                    # If MongoDB is empty for this, fall through to local fallback
+                    return default_value
                 else:
                     # Array-like collections: histories, decision cycles, ledgers
                     cursor = collection.find({}, {"_id": 0})
@@ -140,6 +205,8 @@ class DBClient:
                     # If empty list, fall through to local fallback
             except Exception as e:
                 print(f"⚠️ [MongoDB Fetch Error] {collection_name}: {e}. Falling back to local.")
+                if collection_name in SINGLETON_COLLECTIONS:
+                    return default_value
         
         # Fallback to local
         path = self._get_local_path(collection_name)
@@ -173,30 +240,8 @@ class DBClient:
                     safe_data["_id"] = "current_state"
                     collection.replace_one({"_id": "current_state"}, safe_data, upsert=True)
                 else:
-                    # Replace array-like collections atomically. The old
-                    # delete-then-insert path could leave Mongo empty if a
-                    # large history write failed after delete_many({}).
                     if isinstance(data, list):
-                        if not data:
-                            collection.delete_many({})
-                        else:
-                            safe_data = []
-                            for item in data:
-                                safe_item = item.copy() if isinstance(item, dict) else {"value": item}
-                                safe_item.pop("_id", None)
-                                safe_data.append(safe_item)
-
-                            temp_name = f"__tmp_replace_{collection_name}"
-                            temp_collection = self.db[temp_name]
-                            temp_collection.drop()
-                            try:
-                                for idx in range(0, len(safe_data), 100):
-                                    temp_collection.insert_many(safe_data[idx:idx + 100])
-                                self._ensure_collection_indexes(collection_name, temp_collection)
-                                temp_collection.rename(collection_name, dropTarget=True)
-                            except Exception:
-                                temp_collection.drop()
-                                raise
+                        self._save_identified_list_to_mongo(collection_name, collection, data)
             except Exception as e:
                 print(f"⚠️ [MongoDB Sync Error] {collection_name}: {e}")
 

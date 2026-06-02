@@ -155,7 +155,11 @@ def add_chart_features(df: pd.DataFrame, cfg: Dict[str, float]) -> pd.DataFrame:
     lookback = int(cfg["stop_lookback"])
     div_lookback = int(cfg["divergence_lookback"])
     volume_window = int(cfg["volume_ma_window"])
-    out["adx_14"] = out.groupby("instrument", group_keys=False)[["high", "low", "close"]].apply(compute_adx)
+    adx_values = [
+        compute_adx(instrument_df)
+        for _, instrument_df in out.groupby("instrument", sort=False)
+    ]
+    out["adx_14"] = pd.concat(adx_values).sort_index()
     out["sma50_dynamic"] = out.groupby("instrument")["close"].transform(
         lambda s: s.rolling(50, min_periods=50).mean()
     )
