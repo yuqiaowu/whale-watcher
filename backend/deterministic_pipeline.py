@@ -16,6 +16,14 @@ import pandas as pd
 from db_client import db
 from macro_news_pipeline import build_macro_news_snapshot
 from model_decision_agent import build_market_state, build_model_decision
+from model_invalidation_schema import (
+    ALLOWED_INVALIDATION_FIELDS,
+    ALLOWED_INVALIDATION_OPS,
+    ALLOWED_INVALIDATION_REFERENCE_VALUES,
+    LITERAL_INVALIDATION_VALUE_REFS,
+    normalize_invalidation_field,
+    normalize_invalidation_value_ref,
+)
 from okx_executor import OKXExecutor
 from post_trade_review import run_post_trade_review
 from research_agent import build_research_output
@@ -1989,43 +1997,6 @@ def _validate_candidate_schema(proposal: Dict[str, Any]) -> Tuple[bool, Optional
     return True, None
 
 
-MODEL_INVALIDATION_ALLOWED_FIELDS = {
-    "price",
-    "macro_permission",
-    "macro_mode",
-    "p_up_8h",
-    "p_down_8h",
-    "p_flat_8h",
-    "qlib_data_fresh",
-    "relative_sma20_pct",
-    "price_vs_vwap_4h_pct",
-    "price_vs_vwap_16h_pct",
-}
-MODEL_INVALIDATION_FIELD_ALIASES = {
-    "current_price": "price",
-}
-MODEL_INVALIDATION_LITERAL_VALUE_REFS = {
-    "ALLOW_LONG",
-    "ALLOW_SHORT",
-    "ALLOW_BOTH",
-    "RISK_ON",
-    "RISK_OFF",
-    "STRONG_RISK_OFF",
-}
-MODEL_INVALIDATION_ALLOWED_VALUE_REFS = {
-    "model_stop_price",
-    "recent_swing_high",
-    "recent_swing_low",
-    "sma50_4h",
-    "sma200_1d",
-    "structure_resistance_12bar_volume_confirmed",
-    "structure_support_12bar_volume_confirmed",
-    "structure_resistance_stop_short",
-    "structure_support_stop_long",
-}
-MODEL_INVALIDATION_ALLOWED_OPS = {">=", ">", "<=", "<", "==", "!="}
-
-
 def _model_rule_reference_values(snapshot: Dict[str, Any], sl: float) -> Dict[str, Any]:
     market = snapshot.get("market_snapshot") or {}
     features = snapshot.get("decision_ready_features") or {}
@@ -2057,27 +2028,26 @@ def _validate_model_invalidation_rules(
         if not isinstance(raw_rule, dict):
             rejected.append({"rule": raw_rule, "reason": "rule_not_object"})
             continue
-        field = str(raw_rule.get("field") or "").strip()
-        field = MODEL_INVALIDATION_FIELD_ALIASES.get(field, field)
+        field = normalize_invalidation_field(raw_rule.get("field"))
         op = str(raw_rule.get("op") or "").strip()
         reason = str(raw_rule.get("reason") or "model_invalidation_rule")[:160]
-        if field not in MODEL_INVALIDATION_ALLOWED_FIELDS:
+        if field not in ALLOWED_INVALIDATION_FIELDS:
             rejected.append({"rule": raw_rule, "reason": "field_not_allowed"})
             continue
-        if op not in MODEL_INVALIDATION_ALLOWED_OPS:
+        if op not in ALLOWED_INVALIDATION_OPS:
             rejected.append({"rule": raw_rule, "reason": "op_not_allowed"})
             continue
         rule: Dict[str, Any] = {"field": field, "op": op, "reason": reason}
         if raw_rule.get("value_ref") is not None:
             value_ref = str(raw_rule.get("value_ref") or "").strip()
-            if value_ref in MODEL_INVALIDATION_LITERAL_VALUE_REFS:
+            if value_ref in LITERAL_INVALIDATION_VALUE_REFS:
                 rule["value"] = value_ref
             else:
-                value_ref = MODEL_INVALIDATION_FIELD_ALIASES.get(value_ref, value_ref)
-                if value_ref not in MODEL_INVALIDATION_ALLOWED_VALUE_REFS and value_ref not in MODEL_INVALIDATION_ALLOWED_FIELDS:
+                value_ref = normalize_invalidation_value_ref(value_ref)
+                if value_ref not in ALLOWED_INVALIDATION_REFERENCE_VALUES and value_ref not in ALLOWED_INVALIDATION_FIELDS:
                     rejected.append({"rule": raw_rule, "reason": "value_ref_not_allowed"})
                     continue
-                if value_ref in MODEL_INVALIDATION_ALLOWED_VALUE_REFS and reference_values.get(value_ref) is None:
+                if value_ref in ALLOWED_INVALIDATION_REFERENCE_VALUES and reference_values.get(value_ref) is None:
                     rejected.append({"rule": raw_rule, "reason": "value_ref_unavailable"})
                     continue
                 rule["value_ref"] = value_ref
@@ -2089,10 +2059,10 @@ def _validate_model_invalidation_rules(
 
         if "value_ref" in rule:
             value_ref = str(rule.get("value_ref") or "").strip()
-            if value_ref not in MODEL_INVALIDATION_ALLOWED_VALUE_REFS and value_ref not in MODEL_INVALIDATION_ALLOWED_FIELDS:
+            if value_ref not in ALLOWED_INVALIDATION_REFERENCE_VALUES and value_ref not in ALLOWED_INVALIDATION_FIELDS:
                 rejected.append({"rule": raw_rule, "reason": "value_ref_not_allowed"})
                 continue
-            if value_ref in MODEL_INVALIDATION_ALLOWED_VALUE_REFS and reference_values.get(value_ref) is None:
+            if value_ref in ALLOWED_INVALIDATION_REFERENCE_VALUES and reference_values.get(value_ref) is None:
                 rejected.append({"rule": raw_rule, "reason": "value_ref_unavailable"})
                 continue
 

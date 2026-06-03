@@ -4,6 +4,13 @@ import os
 from typing import Any, Dict, List, Optional
 
 from llm_client import call_deepseek_json_with_audit, call_deepseek_text_with_audit
+from model_invalidation_schema import (
+    ALLOWED_INVALIDATION_FIELDS,
+    ALLOWED_INVALIDATION_VALUE_REFS,
+    LITERAL_INVALIDATION_VALUE_REFS,
+    normalize_invalidation_field,
+    normalize_invalidation_value_ref,
+)
 
 
 ALLOWED_ACTIONS = {"BUY", "SELL", "HOLD", "WAIT"}
@@ -19,41 +26,6 @@ ALLOWED_SETUP_TYPES = {
 ALLOWED_RISK_LEVELS = {"LOW", "MEDIUM", "HIGH"}
 ALLOWED_HORIZONS = {"SHORT", "SWING", "MULTI_DAY"}
 ALLOWED_VERIFIER_RISK_ADJUSTMENTS = {"REDUCE_SIZE", "NEUTRAL", "INCREASE_SIZE"}
-ALLOWED_INVALIDATION_FIELDS = {
-    "price",
-    "macro_permission",
-    "macro_mode",
-    "p_up_8h",
-    "p_down_8h",
-    "p_flat_8h",
-    "qlib_data_fresh",
-    "relative_sma20_pct",
-    "price_vs_vwap_4h_pct",
-    "price_vs_vwap_16h_pct",
-}
-INVALIDATION_FIELD_ALIASES = {
-    "current_price": "price",
-}
-ALLOWED_INVALIDATION_VALUE_REFS = {
-    "model_stop_price",
-    "recent_swing_high",
-    "recent_swing_low",
-    "sma50_4h",
-    "sma200_1d",
-    "structure_resistance_12bar_volume_confirmed",
-    "structure_support_12bar_volume_confirmed",
-    "structure_resistance_stop_short",
-    "structure_support_stop_long",
-    *ALLOWED_INVALIDATION_FIELDS,
-}
-LITERAL_INVALIDATION_VALUE_REFS = {
-    "ALLOW_LONG",
-    "ALLOW_SHORT",
-    "ALLOW_BOTH",
-    "RISK_ON",
-    "RISK_OFF",
-    "STRONG_RISK_OFF",
-}
 
 OPTIONAL_ONCHAIN_MISSING_TERMS = (
     "onchain",
@@ -158,8 +130,7 @@ def _compact_rule_list(value: Any, limit: int = 8) -> List[Dict[str, Any]]:
     for item in value:
         if not isinstance(item, dict):
             continue
-        field = str(item.get("field") or "").strip()
-        field = INVALIDATION_FIELD_ALIASES.get(field, field)
+        field = normalize_invalidation_field(item.get("field"))
         if field not in ALLOWED_INVALIDATION_FIELDS:
             continue
         rule = {
@@ -172,7 +143,7 @@ def _compact_rule_list(value: Any, limit: int = 8) -> List[Dict[str, Any]]:
             if value_ref in LITERAL_INVALIDATION_VALUE_REFS:
                 rule["value"] = value_ref
             else:
-                value_ref = INVALIDATION_FIELD_ALIASES.get(value_ref, value_ref)
+                value_ref = normalize_invalidation_value_ref(value_ref)
                 if value_ref not in ALLOWED_INVALIDATION_VALUE_REFS:
                     continue
                 rule["value_ref"] = value_ref
