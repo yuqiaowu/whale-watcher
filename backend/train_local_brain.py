@@ -1,4 +1,8 @@
 
+import os
+
+os.environ.setdefault("MLFLOW_ALLOW_FILE_STORE", "true")
+
 import qlib
 import json
 import pandas as pd

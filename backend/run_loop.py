@@ -314,10 +314,10 @@ def get_trade_history():
 @app.route('/api/agent-decision', methods=['GET'])
 def get_trade_decision_records_compat():
     try:
-        records = db.get_data("trade_decision_records", [])
+        latest_cycle = db.get_data("latest_decision_cycle_v2", {})
+        records = latest_cycle.get("records") if isinstance(latest_cycle, dict) else None
         if isinstance(records, list) and records:
             return jsonify(records[:10])
-        latest_cycle = db.get_data("latest_decision_cycle_v2", {})
         return jsonify([latest_cycle] if latest_cycle else [])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -341,10 +341,9 @@ def get_latest_v2_cycle():
 @app.route('/api/v2/trade-records', methods=['GET'])
 def get_v2_trade_records():
     try:
-        records = db.get_data("trade_decision_records", [])
-        if isinstance(records, list):
-            return jsonify(records[:20])
-        return jsonify([records])
+        latest_cycle = db.get_data("latest_decision_cycle_v2", {})
+        records = latest_cycle.get("records") if isinstance(latest_cycle, dict) else None
+        return jsonify(records[:20] if isinstance(records, list) else [])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -359,19 +358,11 @@ def get_latest_v2_trade_record():
 
 @app.route('/api/health', methods=['GET'])
 def get_health():
-    try:
-        latest_run = db.get_data("latest_system_run", {})
-        latest_cycle = db.get_data("latest_decision_cycle_v2", {})
-        return jsonify({
-            "status": "ok",
-            "version": VERSION,
-            "mongo_connected": db.is_connected,
-            "latest_run_status": latest_run.get("status"),
-            "latest_run_at": latest_run.get("completed_at") or latest_run.get("started_at"),
-            "latest_cycle_id": latest_cycle.get("cycleId"),
-        })
-    except Exception as e:
-        return jsonify({"status": "error", "error": str(e)}), 500
+    return jsonify({
+        "status": "ok",
+        "version": VERSION,
+        "mongo_connected": db.is_connected,
+    })
 
 
 @app.route('/api/admin/latest-run', methods=['GET'])
@@ -408,7 +399,7 @@ def serve_index():
 def start_web_server():
     """Start the Flask server to serve APIs and frontend files."""
     print(f"🌍 Flask Server starting on port {PORT}...")
-    app.run(host='0.0.0.0', port=PORT, debug=False, use_reloader=False)
+    app.run(host='0.0.0.0', port=PORT, debug=False, use_reloader=False, threaded=True)
 
 
 def _utc_iso_now() -> str:
