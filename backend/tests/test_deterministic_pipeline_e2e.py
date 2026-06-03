@@ -1738,6 +1738,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             "cycleId": "cycle_test",
             "decision_ready_features": {
                 "regime_1d": "BULL",
+                "flow_data_available": True,
                 "flow_support_long": True,
                 "flow_support_short": False,
                 "macro_permission": "ALLOW_BOTH",
@@ -1777,6 +1778,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
             "cycleId": "cycle_test",
             "decision_ready_features": {
                 "regime_1d": "BEAR",
+                "flow_data_available": True,
                 "flow_support_long": False,
                 "flow_support_short": True,
                 "macro_permission": "ALLOW_BOTH",
@@ -1806,6 +1808,46 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertFalse(risk_review["approved"])
         self.assertEqual("DO_NOTHING", risk_review["execution_action"])
         self.assertIn("pre_entry_bear_regime_without_flow_support", risk_review["review_note"])
+
+    def test_risk_review_does_not_block_missing_flow_data_as_negative_support(self):
+        snapshot = {
+            "symbol": "BNB-USDT",
+            "cycleId": "cycle_test",
+            "decision_ready_features": {
+                "regime_1d": "BULL",
+                "flow_data_available": False,
+                "flow_support_long": False,
+                "flow_support_short": False,
+                "macro_permission": "ALLOW_BOTH",
+            },
+            "onchain_snapshot": {
+                "flow_data_available": False,
+            },
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "short setup without chain flow coverage",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 105,
+                    "proposed_tp_price": 90,
+                    "reference_values": {},
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertTrue(risk_review["approved"])
+        self.assertNotIn("pre_entry_bull_regime_without_flow_support", risk_review["review_note"])
 
     def test_risk_review_blocks_doge_directional_trade_without_qlib_trend_and_volume(self):
         snapshot = {

@@ -2654,9 +2654,20 @@ def _pre_entry_thesis_block_reason(snapshot: Dict[str, Any], intent: str) -> str
     market = snapshot.get("market_snapshot", {}) or {}
     onchain = snapshot.get("onchain_snapshot", {}) or {}
     regime = features.get("regime_1d")
-    if intent == "LONG" and regime == "BEAR" and not bool(features.get("flow_support_long")):
+    flow_data_available = bool(features.get("flow_data_available") or onchain.get("flow_data_available"))
+    if (
+        flow_data_available
+        and intent == "LONG"
+        and regime == "BEAR"
+        and not bool(features.get("flow_support_long"))
+    ):
         return "pre_entry_bear_regime_without_flow_support"
-    if intent == "SHORT" and regime == "BULL" and not bool(features.get("flow_support_short")):
+    if (
+        flow_data_available
+        and intent == "SHORT"
+        and regime == "BULL"
+        and not bool(features.get("flow_support_short"))
+    ):
         return "pre_entry_bull_regime_without_flow_support"
     if intent in {"LONG", "SHORT"}:
         flat_block_reason = _high_qlib_flat_directional_block_reason(snapshot, intent)
