@@ -9,6 +9,7 @@ if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
 from db_client import DBClient
+from pymongo.errors import ConnectionFailure
 
 
 class FakeCollection:
@@ -40,6 +41,18 @@ class FakeCollection:
 
     def insert_many(self, docs):
         self.docs.extend(deepcopy(docs))
+
+    def insert_one(self, doc):
+        if any(existing.get("_id") == doc.get("_id") for existing in self.docs):
+            from pymongo.errors import DuplicateKeyError
+            raise DuplicateKeyError("duplicate")
+        self.docs.append(deepcopy(doc))
+
+    def find_one(self, query):
+        for doc in self.docs:
+            if all(doc.get(key) == value for key, value in query.items()):
+                return deepcopy(doc)
+        return None
 
     def rename(self, *args, **kwargs):
         self.renamed = True
@@ -110,6 +123,47 @@ class DBClientListSaveTests(unittest.TestCase):
         )
 
         self.assertEqual(collection.docs, [{"symbol": "new"}])
+
+
+class FakeDB(dict):
+    def __getitem__(self, name):
+        return super().__getitem__(name)
+
+
+class DBClientLiveSafetyTests(unittest.TestCase):
+    def setUp(self):
+        self.client = DBClient.__new__(DBClient)
+        self.client.is_connected = True
+        self.client.db = FakeDB({
+            "latest_decision_cycle_v2": FakeCollection([
+                {"_id": "current_state", "cycleId": "cycle_2026-06-03_2000"},
+            ]),
+            "decision_cycle_execution_locks": FakeCollection(),
+        })
+
+    def test_strict_singleton_read_uses_live_mongo(self):
+        result = self.client.get_singleton_strict("latest_decision_cycle_v2")
+
+        self.assertEqual(result["cycleId"], "cycle_2026-06-03_2000")
+        self.assertNotIn("_id", result)
+
+    def test_strict_singleton_read_fails_when_mongo_unavailable(self):
+        self.client.is_connected = False
+
+        with self.assertRaises(ConnectionFailure):
+            self.client.get_singleton_strict("latest_decision_cycle_v2")
+
+    def test_claim_once_is_atomic(self):
+        self.assertTrue(self.client.claim_once(
+            "decision_cycle_execution_locks",
+            "cycle_2026-06-03_2000",
+            {"version": "first"},
+        ))
+        self.assertFalse(self.client.claim_once(
+            "decision_cycle_execution_locks",
+            "cycle_2026-06-03_2000",
+            {"version": "second"},
+        ))
 
 
 if __name__ == "__main__":

@@ -219,6 +219,31 @@ class DBClient:
                 pass
         return default_value
 
+    def get_singleton_strict(self, collection_name):
+        """Read live singleton state without falling back to local JSON."""
+        if collection_name not in SINGLETON_COLLECTIONS:
+            raise ValueError(f"{collection_name} is not a singleton collection")
+        if not self.is_connected or self.db is None:
+            raise ConnectionFailure("MongoDB is unavailable for strict singleton read")
+
+        doc = self.db[collection_name].find_one({"_id": "current_state"})
+        if doc:
+            doc.pop("_id", None)
+        return doc or {}
+
+    def claim_once(self, collection_name, claim_id, payload=None):
+        """Atomically claim a live-only operation. Returns False if already claimed."""
+        if not self.is_connected or self.db is None:
+            raise ConnectionFailure("MongoDB is unavailable for atomic claim")
+
+        claim = dict(payload or {})
+        claim["_id"] = str(claim_id)
+        try:
+            self.db[collection_name].insert_one(claim)
+            return True
+        except DuplicateKeyError:
+            return False
+
     # --- Write / Save ---
     def save_data(self, collection_name, data):
         # 1. Always save to local json as backup / fast read for frontend

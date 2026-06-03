@@ -26,7 +26,6 @@ load_dotenv(dotenv_path=env_path)
 INTERVAL_HOURS = int(os.getenv("RUN_INTERVAL_HOURS", "2"))
 INTERVAL_SECONDS = INTERVAL_HOURS * 3600
 DECISION_TIMEFRAME_HOURS = int(os.getenv("DECISION_TIMEFRAME_HOURS", "4"))
-SKIP_DUPLICATE_DECISION_CYCLE = os.getenv("SKIP_DUPLICATE_DECISION_CYCLE", "1").lower() in {"1", "true", "yes"}
 PORT = int(os.getenv("PORT", 5001))
 LOCAL_TZ_NAME = os.getenv("LOCAL_TIMEZONE", "Asia/Shanghai")
 VERSION = (os.getenv("RAILWAY_GIT_COMMIT_SHA") or os.getenv("APP_VERSION") or "2026.04.20.local")[:12]
@@ -532,6 +531,35 @@ def run_v2_cycle():
         return {"success": False, "error": str(e)}
 
 
+def _claim_live_decision_cycle(cycle_id):
+    """Fail closed when live Mongo cannot prove this cycle is new."""
+    latest_cycle = db.get_singleton_strict("latest_decision_cycle_v2")
+    latest_cycle_id = latest_cycle.get("cycleId") if isinstance(latest_cycle, dict) else None
+    if latest_cycle_id == cycle_id:
+        return {
+            "claimed": False,
+            "reason": "duplicate_cycle_already_persisted",
+            "latest_cycle_id": latest_cycle_id,
+        }
+
+    claimed = db.claim_once(
+        "decision_cycle_execution_locks",
+        cycle_id,
+        {
+            "cycleId": cycle_id,
+            "claimed_at": _utc_iso_now(),
+            "claimed_at_local": _local_iso_now(),
+            "version": VERSION,
+            "runId": f"run_{datetime.now().strftime('%Y%m%dT%H%M%S')}",
+        },
+    )
+    return {
+        "claimed": claimed,
+        "reason": "claimed" if claimed else "duplicate_cycle_lock_exists",
+        "latest_cycle_id": latest_cycle_id,
+    }
+
+
 def refresh_portfolio_state(sync_executor, current_eq=None):
     """Refresh live equity and positions before runtime rules consume portfolio_state."""
     if current_eq is None:
@@ -706,15 +734,33 @@ def main():
         # unless ENABLE_V2_EXECUTION is explicitly enabled.
         v2_result = None
         if success_data and ENABLE_V2_PIPELINE:
-            latest_cycle = db.get_data("latest_decision_cycle_v2", {})
-            latest_cycle_id = latest_cycle.get("cycleId") if isinstance(latest_cycle, dict) else None
-            if SKIP_DUPLICATE_DECISION_CYCLE and latest_cycle_id == run_entry["target_cycle_id"]:
-                print(f"⏭️  No new {DECISION_TIMEFRAME_HOURS}H decision bar yet. Skipping duplicate cycle {latest_cycle_id}.")
-                run_entry["v2_cycle_status"] = "skipped_duplicate_cycle"
-                run_entry["cycle_id"] = latest_cycle_id
+            try:
+                cycle_claim = _claim_live_decision_cycle(run_entry["target_cycle_id"])
+            except Exception as e:
+                cycle_claim = {
+                    "claimed": False,
+                    "reason": "live_cycle_check_failed",
+                    "error": str(e),
+                }
+
+            run_entry["decision_cycle_claim"] = cycle_claim
+            if not cycle_claim.get("claimed"):
+                reason = cycle_claim.get("reason")
+                if reason in {"duplicate_cycle_already_persisted", "duplicate_cycle_lock_exists"}:
+                    print(
+                        f"⏭️  No new {DECISION_TIMEFRAME_HOURS}H decision bar yet. "
+                        f"Skipping duplicate cycle {run_entry['target_cycle_id']} ({reason})."
+                    )
+                    run_entry["v2_cycle_status"] = "skipped_duplicate_cycle"
+                    run_entry["cycle_id"] = run_entry["target_cycle_id"]
+                else:
+                    print(
+                        "🛑 Live Mongo could not confirm a new decision cycle. "
+                        f"Blocking execution for safety: {cycle_claim.get('error') or reason}"
+                    )
+                    run_entry["v2_cycle_status"] = "blocked_live_cycle_check"
+                    run_entry["error"] = cycle_claim.get("error") or reason
             else:
-                if latest_cycle_id == run_entry["target_cycle_id"]:
-                    print(f"🔁 Refreshing existing {DECISION_TIMEFRAME_HOURS}H decision cycle {latest_cycle_id} with latest data.")
                 v2_result = run_v2_cycle()
                 run_entry["v2_cycle_status"] = "completed" if v2_result.get("success") else "failed"
                 if v2_result.get("success"):
