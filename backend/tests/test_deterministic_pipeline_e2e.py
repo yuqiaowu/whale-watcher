@@ -628,6 +628,57 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         )
         self.assertEqual("NEUTRAL", decision["verifier"]["risk_adjustment"])
 
+    def test_model_decision_normalizes_formatter_invalidation_rules(self):
+        formatter_decision = {
+            "action": "SELL",
+            "direction": "SHORT",
+            "confidence": 0.72,
+            "setup_type": "trend_breakdown",
+            "risk_level": "MEDIUM",
+            "horizon": "SWING",
+            "reason_codes": ["trend_breakdown"],
+            "invalid_if": ["price breaks upper band", "macro turns long"],
+            "invalidation_rules": [
+                {"field": "current_price", "op": ">=", "value": 76.5, "persistence": 2, "reason": "price breaks upper band"},
+                {"field": "macro_permission", "op": "==", "value_ref": "ALLOW_LONG", "persistence": 1, "reason": "macro turns long"},
+                {"field": "unknown_field", "op": ">=", "value": 1, "persistence": 1, "reason": "unsupported"},
+            ],
+            "summary": "short setup",
+        }
+        verifier_result = {
+            "veto": False,
+            "veto_reasons": [],
+            "missing_data": [],
+            "risk_notes": [],
+            "risk_adjustment": "NEUTRAL",
+            "adjustment_reason": "",
+        }
+        with (
+            patch.dict(os.environ, {"ENABLE_MODEL_DECISION_VERIFIER": "1"}, clear=False),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_text_with_audit",
+                return_value=("short evidence exists", {"status": "parsed"}),
+            ),
+            patch.object(
+                model_decision_agent,
+                "call_deepseek_json_with_audit",
+                side_effect=[
+                    (formatter_decision, {"status": "parsed"}),
+                    (verifier_result, {"status": "parsed"}),
+                ],
+            ),
+        ):
+            decision = model_decision_agent.build_model_decision({"symbol": "SOL-USDT"})
+
+        self.assertEqual(
+            [
+                {"field": "price", "op": ">=", "reason": "price breaks upper band", "value": 76.5, "persistence": 2},
+                {"field": "macro_permission", "op": "==", "reason": "macro turns long", "value": "ALLOW_LONG", "persistence": 1},
+            ],
+            decision["invalidation_rules"],
+        )
+
     def test_model_decision_verifier_veto_falls_back_to_wait_flat(self):
         formatter_decision = {
             "action": "BUY",

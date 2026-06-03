@@ -19,6 +19,41 @@ ALLOWED_SETUP_TYPES = {
 ALLOWED_RISK_LEVELS = {"LOW", "MEDIUM", "HIGH"}
 ALLOWED_HORIZONS = {"SHORT", "SWING", "MULTI_DAY"}
 ALLOWED_VERIFIER_RISK_ADJUSTMENTS = {"REDUCE_SIZE", "NEUTRAL", "INCREASE_SIZE"}
+ALLOWED_INVALIDATION_FIELDS = {
+    "price",
+    "macro_permission",
+    "macro_mode",
+    "p_up_8h",
+    "p_down_8h",
+    "p_flat_8h",
+    "qlib_data_fresh",
+    "relative_sma20_pct",
+    "price_vs_vwap_4h_pct",
+    "price_vs_vwap_16h_pct",
+}
+INVALIDATION_FIELD_ALIASES = {
+    "current_price": "price",
+}
+ALLOWED_INVALIDATION_VALUE_REFS = {
+    "model_stop_price",
+    "recent_swing_high",
+    "recent_swing_low",
+    "sma50_4h",
+    "sma200_1d",
+    "structure_resistance_12bar_volume_confirmed",
+    "structure_support_12bar_volume_confirmed",
+    "structure_resistance_stop_short",
+    "structure_support_stop_long",
+    *ALLOWED_INVALIDATION_FIELDS,
+}
+LITERAL_INVALIDATION_VALUE_REFS = {
+    "ALLOW_LONG",
+    "ALLOW_SHORT",
+    "ALLOW_BOTH",
+    "RISK_ON",
+    "RISK_OFF",
+    "STRONG_RISK_OFF",
+}
 
 OPTIONAL_ONCHAIN_MISSING_TERMS = (
     "onchain",
@@ -123,13 +158,24 @@ def _compact_rule_list(value: Any, limit: int = 8) -> List[Dict[str, Any]]:
     for item in value:
         if not isinstance(item, dict):
             continue
+        field = str(item.get("field") or "").strip()
+        field = INVALIDATION_FIELD_ALIASES.get(field, field)
+        if field not in ALLOWED_INVALIDATION_FIELDS:
+            continue
         rule = {
-            "field": str(item.get("field") or "").strip(),
+            "field": field,
             "op": str(item.get("op") or "").strip(),
             "reason": str(item.get("reason") or "").strip()[:160],
         }
         if item.get("value_ref") is not None:
-            rule["value_ref"] = str(item.get("value_ref") or "").strip()
+            value_ref = str(item.get("value_ref") or "").strip()
+            if value_ref in LITERAL_INVALIDATION_VALUE_REFS:
+                rule["value"] = value_ref
+            else:
+                value_ref = INVALIDATION_FIELD_ALIASES.get(value_ref, value_ref)
+                if value_ref not in ALLOWED_INVALIDATION_VALUE_REFS:
+                    continue
+                rule["value_ref"] = value_ref
         elif item.get("value") is not None:
             rule["value"] = item.get("value")
         try:
@@ -202,6 +248,7 @@ def build_market_state(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         "vwap_16h_zone": market.get("vwap_16h_zone"),
     }
 
+    has_onchain_flow_data = bool(onchain.get("flow_data_available"))
     data_availability = {
         "has_rsi14": technical["rsi14"] is not None,
         "has_williams_r14": technical["williams_r14"] is not None,
@@ -213,10 +260,10 @@ def build_market_state(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         "has_prior_120d_drawdown": technical["prior_120d_drawdown_pct"] is not None,
         "has_vwap_4h": technical["vwap_4h"] is not None,
         "has_vwap_16h": technical["vwap_16h"] is not None,
-        "has_onchain_flow_data": bool(onchain.get("flow_data_available")),
-        "has_token_net_flow": onchain.get("token_net_flow") is not None,
-        "has_stablecoin_net_flow": onchain.get("stablecoin_net_flow") is not None,
-        "has_flow_semantics": bool(onchain.get("flow_composite_semantic")),
+        "has_onchain_flow_data": has_onchain_flow_data,
+        "has_token_net_flow": has_onchain_flow_data and onchain.get("token_net_flow") is not None,
+        "has_stablecoin_net_flow": has_onchain_flow_data and onchain.get("stablecoin_net_flow") is not None,
+        "has_flow_semantics": has_onchain_flow_data and bool(onchain.get("flow_composite_semantic")) and str(onchain.get("flow_composite_semantic")).upper() != "UNAVAILABLE",
         "has_exchange_netflow_24h": onchain.get("exchange_netflow_24h") is not None,
         "has_large_transfer_count_24h": onchain.get("large_transfer_count_24h") is not None,
     }
@@ -332,7 +379,11 @@ def _model_decision_json_contract() -> Dict[str, Any]:
         "invalidation_rules": (
             "array of executable invalidation rule objects. Allowed shape: "
             "{\"field\": string, \"op\": one of >= <= > < == !=, \"value_ref\" or \"value\": string/number/bool, "
-            "\"persistence\": integer 1..6, \"reason\": short string}. Use only fields present in market_state."
+            "\"persistence\": integer 1..6, \"reason\": short string}. "
+            f"Allowed field values only: {sorted(ALLOWED_INVALIDATION_FIELDS)}. "
+            f"Allowed value_ref values only: {sorted(ALLOWED_INVALIDATION_VALUE_REFS)}. "
+            "For constants such as ALLOW_LONG or ALLOW_SHORT, use value, not value_ref. "
+            "Use field=price for current traded price; do not use current_price."
         ),
         "summary": "short human-readable evidence summary",
     }
@@ -553,10 +604,15 @@ def build_model_decision(market_state: Dict[str, Any]) -> Dict[str, Any]:
         "- The model controls only direction and confidence; program controls entry, stop_loss, take_profit, "
         "position_size, leverage, and execution.\n"
         "- For invalidation_rules, output only simple executable comparisons over observable fields. "
-        "Do not invent fields. Use value_ref when comparing price to a known reference such as recent_swing_high, "
-        "recent_swing_low, sma50_4h, sma200_1d, model_stop_price, p_up_8h, p_down_8h, p_flat_8h, macro_permission, or macro_mode. "
-        "VWAP invalidation may use price_vs_vwap_4h_pct or price_vs_vwap_16h_pct compared with 0.0.\n"
-        "- For macro invalidation, use macro_permission == ALLOW_SHORT to invalidate LONG, or macro_permission == ALLOW_LONG to invalidate SHORT.\n"
+        f"Do not invent fields. Allowed fields: {sorted(ALLOWED_INVALIDATION_FIELDS)}. "
+        f"Allowed value_ref values: {sorted(ALLOWED_INVALIDATION_VALUE_REFS)}. "
+        "Use field=price for current traded price; never output field=current_price. "
+        "Use value_ref only for dynamic references such as recent_swing_high, recent_swing_low, sma50_4h, "
+        "sma200_1d, model_stop_price, p_up_8h, p_down_8h, p_flat_8h, macro_permission, or macro_mode. "
+        "VWAP invalidation may use price_vs_vwap_4h_pct or price_vs_vwap_16h_pct compared with value 0.0.\n"
+        "- For macro invalidation, use {\"field\":\"macro_permission\",\"op\":\"==\",\"value\":\"ALLOW_SHORT\"} "
+        "to invalidate LONG, or {\"field\":\"macro_permission\",\"op\":\"==\",\"value\":\"ALLOW_LONG\"} to invalidate SHORT. "
+        "Do not put ALLOW_LONG or ALLOW_SHORT in value_ref.\n"
         "- If confidence is weak or data is missing, prefer WAIT/FLAT.\n\n"
         f"market_state={json.dumps(market_state, ensure_ascii=False, sort_keys=True)}\n\n"
         f"reasoning_brief={reasoning_draft[:3000]}"
