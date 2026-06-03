@@ -209,6 +209,55 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         )
         self.assertEqual([], candidate["reference_values"]["model_rejected_invalidation_rules"])
 
+    def test_model_decision_normalizes_common_invalidation_rule_shapes(self):
+        snapshot = {
+            "symbol": "SOL-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-06-03T08:00:00Z",
+            "market_snapshot": {"price": 75.1, "atr_14": 1.2, "relative_sma20_pct": -1.5},
+            "decision_ready_features": {"macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+            "position_snapshot": {"position_side": None},
+            "is_decision_eligible": True,
+        }
+        model_decision = {
+            "action": "SELL",
+            "direction": "SHORT",
+            "confidence": 0.8,
+            "setup_type": "trend_breakdown",
+            "risk_level": "MEDIUM",
+            "horizon": "SWING",
+            "reason_codes": ["bear_trend"],
+            "invalid_if": ["price breaks above level", "macro reversal"],
+            "invalidation_rules": [
+                {"field": "current_price", "op": ">=", "value": 76.5, "persistence": 2, "reason": "price breaks above upper band"},
+                {"field": "macro_permission", "op": "==", "value_ref": "ALLOW_LONG", "persistence": 1, "reason": "macro reversal invalidates short"},
+                {"field": "relative_sma20_pct", "op": ">=", "value": 0.0, "persistence": 2, "reason": "price reclaims SMA20"},
+            ],
+            "summary": "short setup",
+        }
+
+        batch = dp._build_model_decision_candidate_batch(
+            snapshot,
+            {"technical": {"current_price": 75.1, "atr14": 1.2}},
+            model_decision,
+        )
+
+        candidate = batch["candidate_proposals"][0]
+        self.assertIn(
+            {"field": "price", "op": ">=", "reason": "price breaks above upper band", "value": 76.5, "persistence": 2},
+            candidate["invalidation_conditions"]["rules"],
+        )
+        self.assertIn(
+            {"field": "macro_permission", "op": "==", "reason": "macro reversal invalidates short", "value": "ALLOW_LONG", "persistence": 1},
+            candidate["invalidation_conditions"]["rules"],
+        )
+        self.assertIn(
+            {"field": "relative_sma20_pct", "op": ">=", "reason": "price reclaims SMA20", "value": 0.0, "persistence": 2},
+            candidate["invalidation_conditions"]["rules"],
+        )
+        self.assertEqual([], candidate["reference_values"]["model_rejected_invalidation_rules"])
+
     def test_model_market_state_carries_qlib_and_macro_fields(self):
         snapshot = {
             "symbol": "ETH-USDT",
@@ -1731,6 +1780,41 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(2.0, risk_review["leverage"])
         self.assertEqual(1, risk_review["max_holding_bars"])
         self.assertIn("verifier recommended size reduction: valid but noisy evidence", risk_review["review_note"])
+
+    def test_risk_review_reduces_short_size_when_rsi_is_extremely_oversold(self):
+        snapshot = {
+            "symbol": "SOL-USDT",
+            "cycleId": "cycle_test",
+            "market_snapshot": {"rsi_4h": 21.5},
+            "decision_ready_features": {"macro_mode": "RISK_OFF", "macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "short setup",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 105,
+                    "proposed_tp_price": 90,
+                    "reference_values": {},
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertTrue(risk_review["approved"])
+        self.assertEqual(200.0, risk_review["approved_position_size_usd"])
+        self.assertEqual(2.0, risk_review["leverage"])
+        self.assertEqual(1, risk_review["max_holding_bars"])
+        self.assertIn("extreme oversold RSI 21.5 reduced short size and leverage", risk_review["review_note"])
 
     def test_risk_review_blocks_short_when_bull_regime_lacks_short_flow_support(self):
         snapshot = {

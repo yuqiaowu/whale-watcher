@@ -1997,8 +1997,20 @@ MODEL_INVALIDATION_ALLOWED_FIELDS = {
     "p_down_8h",
     "p_flat_8h",
     "qlib_data_fresh",
+    "relative_sma20_pct",
     "price_vs_vwap_4h_pct",
     "price_vs_vwap_16h_pct",
+}
+MODEL_INVALIDATION_FIELD_ALIASES = {
+    "current_price": "price",
+}
+MODEL_INVALIDATION_LITERAL_VALUE_REFS = {
+    "ALLOW_LONG",
+    "ALLOW_SHORT",
+    "ALLOW_BOTH",
+    "RISK_ON",
+    "RISK_OFF",
+    "STRONG_RISK_OFF",
 }
 MODEL_INVALIDATION_ALLOWED_VALUE_REFS = {
     "model_stop_price",
@@ -2046,6 +2058,7 @@ def _validate_model_invalidation_rules(
             rejected.append({"rule": raw_rule, "reason": "rule_not_object"})
             continue
         field = str(raw_rule.get("field") or "").strip()
+        field = MODEL_INVALIDATION_FIELD_ALIASES.get(field, field)
         op = str(raw_rule.get("op") or "").strip()
         reason = str(raw_rule.get("reason") or "model_invalidation_rule")[:160]
         if field not in MODEL_INVALIDATION_ALLOWED_FIELDS:
@@ -2057,18 +2070,31 @@ def _validate_model_invalidation_rules(
         rule: Dict[str, Any] = {"field": field, "op": op, "reason": reason}
         if raw_rule.get("value_ref") is not None:
             value_ref = str(raw_rule.get("value_ref") or "").strip()
+            if value_ref in MODEL_INVALIDATION_LITERAL_VALUE_REFS:
+                rule["value"] = value_ref
+            else:
+                value_ref = MODEL_INVALIDATION_FIELD_ALIASES.get(value_ref, value_ref)
+                if value_ref not in MODEL_INVALIDATION_ALLOWED_VALUE_REFS and value_ref not in MODEL_INVALIDATION_ALLOWED_FIELDS:
+                    rejected.append({"rule": raw_rule, "reason": "value_ref_not_allowed"})
+                    continue
+                if value_ref in MODEL_INVALIDATION_ALLOWED_VALUE_REFS and reference_values.get(value_ref) is None:
+                    rejected.append({"rule": raw_rule, "reason": "value_ref_unavailable"})
+                    continue
+                rule["value_ref"] = value_ref
+        elif raw_rule.get("value") is not None:
+            rule["value"] = raw_rule.get("value")
+        else:
+            rejected.append({"rule": raw_rule, "reason": "missing_value"})
+            continue
+
+        if "value_ref" in rule:
+            value_ref = str(rule.get("value_ref") or "").strip()
             if value_ref not in MODEL_INVALIDATION_ALLOWED_VALUE_REFS and value_ref not in MODEL_INVALIDATION_ALLOWED_FIELDS:
                 rejected.append({"rule": raw_rule, "reason": "value_ref_not_allowed"})
                 continue
             if value_ref in MODEL_INVALIDATION_ALLOWED_VALUE_REFS and reference_values.get(value_ref) is None:
                 rejected.append({"rule": raw_rule, "reason": "value_ref_unavailable"})
                 continue
-            rule["value_ref"] = value_ref
-        elif raw_rule.get("value") is not None:
-            rule["value"] = raw_rule.get("value")
-        else:
-            rejected.append({"rule": raw_rule, "reason": "missing_value"})
-            continue
 
         if intent == "LONG" and field == "price" and op not in {"<=", "<"}:
             rejected.append({"rule": raw_rule, "reason": "long_price_rule_wrong_direction"})
@@ -2078,7 +2104,7 @@ def _validate_model_invalidation_rules(
             continue
         if field == "macro_permission":
             opposite = "ALLOW_SHORT" if intent == "LONG" else "ALLOW_LONG"
-            if not (op == "==" and raw_rule.get("value") == opposite):
+            if not (op == "==" and rule.get("value") == opposite):
                 rejected.append({"rule": raw_rule, "reason": "macro_permission_rule_wrong_direction"})
                 continue
         if intent == "LONG" and field == "p_up_8h" and op not in {"<", "<="}:
@@ -2094,6 +2120,38 @@ def _validate_model_invalidation_rules(
             rule["persistence"] = 1
         approved.append(rule)
     return approved, rejected
+
+
+def _contrarian_extreme_rsi_adjustment(snapshot: Dict[str, Any], intent: str) -> Optional[Dict[str, Any]]:
+    market = snapshot.get("market_snapshot") or {}
+    features = snapshot.get("decision_ready_features") or {}
+    rsi = _optional_float(
+        market.get("rsi_4h")
+        if market.get("rsi_4h") is not None
+        else market.get("rsi_14")
+        if market.get("rsi_14") is not None
+        else features.get("rsi_4h")
+        if features.get("rsi_4h") is not None
+        else features.get("rsi_14")
+    )
+    if rsi is None:
+        return None
+
+    if intent == "SHORT" and rsi <= 25.0:
+        return {
+            "factor": 0.5,
+            "max_leverage": 2.0,
+            "max_holding_bars": 1,
+            "note": f"extreme oversold RSI {round(rsi, 2)} reduced short size and leverage",
+        }
+    if intent == "LONG" and rsi >= 75.0:
+        return {
+            "factor": 0.5,
+            "max_leverage": 2.0,
+            "max_holding_bars": 1,
+            "note": f"extreme overbought RSI {round(rsi, 2)} reduced long size and leverage",
+        }
+    return None
 
 
 def _build_model_decision_candidate_batch(
@@ -2886,6 +2944,13 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
         leverage = min(leverage, 2.5)
         max_holding_bars = min(max_holding_bars, 4)
         review_note = f"{review_note}; major trend conflict lightly reduced size and duration"
+
+    rsi_adjustment = _contrarian_extreme_rsi_adjustment(snapshot, str(intent or ""))
+    if not is_grid_candidate and rsi_adjustment:
+        approved_position_size_usd *= _safe_float(rsi_adjustment.get("factor"), 0.5)
+        leverage = min(leverage, _safe_float(rsi_adjustment.get("max_leverage"), 2.0))
+        max_holding_bars = min(max_holding_bars, int(rsi_adjustment.get("max_holding_bars") or 1))
+        review_note = f"{review_note}; {rsi_adjustment['note']}"
 
     verifier = candidate.get("reference_values", {}).get("model_verifier") or {}
     verifier_adjustment = str(verifier.get("risk_adjustment") or "NEUTRAL").upper()
