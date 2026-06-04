@@ -231,6 +231,16 @@ class DBClient:
             doc.pop("_id", None)
         return doc or {}
 
+    def get_list_strict(self, collection_name, sort_field=None, descending=False):
+        """Read live list state without falling back to local JSON."""
+        if not self.is_connected or self.db is None:
+            raise ConnectionFailure("MongoDB is unavailable for strict list read")
+
+        cursor = self.db[collection_name].find({}, {"_id": 0})
+        if sort_field:
+            cursor = cursor.sort(sort_field, -1 if descending else 1)
+        return list(cursor)
+
     def claim_once(self, collection_name, claim_id, payload=None):
         """Atomically claim a live-only operation. Returns False if already claimed."""
         if not self.is_connected or self.db is None:

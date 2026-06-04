@@ -5,6 +5,7 @@ import requests
 from datetime import datetime, timedelta
 import news_fetcher
 from macro_history import MacroHistory
+from db_client import db
 from dotenv import load_dotenv
 from moralis import evm_api
 
@@ -1192,7 +1193,7 @@ def main():
         data_dir_path = os.path.join(base_dir, "../frontend/data")
         mh = None
         try:
-             mh = MacroHistory(data_dir_path)
+             mh = MacroHistory(data_dir_path, db_client=db)
              mh.add_snapshot(
                  macro_data.get("fed_futures", {}), 
                  macro_data.get("japan_macro", {}), 
@@ -1242,7 +1243,7 @@ def main():
     try:
         if mh is None:
             data_dir_path = os.path.join(base_dir, "../frontend/data")
-            mh = MacroHistory(data_dir_path)
+            mh = MacroHistory(data_dir_path, db_client=db)
         fear_value = float(fear_greed.get("value"))
         mh.update_latest_snapshot({"fear_greed": fear_value})
         fear_change = mh.get_change_absolute("fear_greed", fear_value, days=5)
@@ -1363,7 +1364,7 @@ def main():
         try:
             if mh is None:
                 data_dir_path = os.path.join(base_dir, "../frontend/data")
-                mh = MacroHistory(data_dir_path)
+                mh = MacroHistory(data_dir_path, db_client=db)
             mh.update_latest_snapshot(stable_metrics)
             flow_std = mh.get_std("global_stable_flow", days=30)
             if flow_std is not None:

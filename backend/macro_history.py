@@ -1,14 +1,45 @@
 import json
 import os
 from statistics import pstdev
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+
+def _parse_timestamp(value):
+    text = str(value or "").strip()
+    if not text:
+        return None
+    if text.endswith("Z"):
+        text = f"{text[:-1]}+00:00"
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if parsed.tzinfo is not None:
+        parsed = parsed.astimezone(timezone.utc).replace(tzinfo=None)
+    return parsed
 
 class MacroHistory:
-    def __init__(self, data_dir):
+    def __init__(self, data_dir, db_client=None):
         self.filepath = os.path.join(data_dir, "macro_history.json")
+        self.db = db_client
         self.history = self._load()
+        if not self.history and self.db is not None:
+            self.history = self._backfill_from_decision_cycles()
+            if self.history:
+                self.save()
 
     def _load(self):
+        if self.db is not None and self.db.is_connected:
+            try:
+                data = self.db.get_list_strict("macro_history", sort_field="timestamp")
+                if data:
+                    return data
+                # An empty live collection should be backfilled from persisted
+                # decision cycles, not from potentially stale container files.
+                return []
+            except Exception as e:
+                print(f"⚠️ Failed to load live macro history: {e}")
+
         if os.path.exists(self.filepath):
             try:
                 with open(self.filepath, "r") as f:
@@ -22,11 +53,50 @@ class MacroHistory:
                 return []
         return []
 
+    def _backfill_from_decision_cycles(self):
+        if self.db is None or not self.db.is_connected or self.db.db is None:
+            return []
+        try:
+            pipeline = [
+                {"$sort": {"generated_at": -1}},
+                {"$limit": 500},
+                {"$project": {
+                    "_id": 0,
+                    "generated_at": 1,
+                    "facts": {"$arrayElemAt": ["$snapshots.macro_snapshot.event_facts", 0]},
+                }},
+            ]
+            snapshots = []
+            seen = set()
+            for item in self.db.db["decision_cycles_v2"].aggregate(pipeline):
+                facts = item.get("facts") or {}
+                timestamp = item.get("generated_at")
+                if not timestamp or timestamp in seen:
+                    continue
+                seen.add(timestamp)
+                snapshots.append({
+                    "timestamp": timestamp,
+                    "fed_rate": facts.get("fed_implied_rate"),
+                    "japan": facts.get("usdjpy_level"),
+                    "dxy": facts.get("dxy_level"),
+                    "vix": facts.get("vix_level"),
+                    "us10y": facts.get("us10y_level"),
+                    "global_stable_flow": facts.get("global_stable_flow"),
+                    "global_stable_market_cap": facts.get("global_stable_market_cap"),
+                    "fear_greed": facts.get("fear_greed_index"),
+                })
+            return sorted(snapshots, key=lambda row: str(row.get("timestamp") or ""))
+        except Exception as e:
+            print(f"⚠️ Failed to backfill macro history from decision cycles: {e}")
+            return []
+
     def save(self):
         try:
             os.makedirs(os.path.dirname(self.filepath), exist_ok=True)
             with open(self.filepath, "w") as f:
                 json.dump(self.history, f, indent=2)
+            if self.db is not None:
+                self.db.save_data("macro_history", self.history)
         except Exception as e:
             print(f"⚠️ Failed to save macro history: {e}")
 
@@ -76,7 +146,9 @@ class MacroHistory:
             filtered = []
             for item in self.history:
                 try:
-                    ts = datetime.fromisoformat(item["timestamp"])
+                    ts = _parse_timestamp(item["timestamp"])
+                    if ts is None:
+                        continue
                     if ts > cutoff:
                         filtered.append(item)
                 except:
@@ -103,7 +175,9 @@ class MacroHistory:
         
         for record in self.history:
             try:
-                ts = datetime.fromisoformat(record["timestamp"])
+                ts = _parse_timestamp(record["timestamp"])
+                if ts is None:
+                    continue
                 diff = abs(ts - target_time)
                 
                 # Check if it's within reasonable window (e.g. +/- 2 days) to be valid comparison
@@ -139,7 +213,9 @@ class MacroHistory:
         
         for record in self.history:
             try:
-                ts = datetime.fromisoformat(record["timestamp"])
+                ts = _parse_timestamp(record["timestamp"])
+                if ts is None:
+                    continue
                 diff = abs(ts - target_time)
                 if diff < timedelta(days=2):
                      if diff < min_diff:
@@ -164,7 +240,9 @@ class MacroHistory:
         values = []
         for record in self.history:
             try:
-                ts = datetime.fromisoformat(record["timestamp"])
+                ts = _parse_timestamp(record["timestamp"])
+                if ts is None:
+                    continue
                 if ts < cutoff:
                     continue
                 value = record.get(key)

@@ -54,6 +54,13 @@ class FakeCollection:
                 return deepcopy(doc)
         return None
 
+    def find(self, query, projection=None):
+        docs = deepcopy(self.docs)
+        if projection and projection.get("_id") == 0:
+            for doc in docs:
+                doc.pop("_id", None)
+        return FakeCursor(docs)
+
     def rename(self, *args, **kwargs):
         self.renamed = True
         raise AssertionError("renameCollection should not be used for list saves")
@@ -130,6 +137,15 @@ class FakeDB(dict):
         return super().__getitem__(name)
 
 
+class FakeCursor(list):
+    def sort(self, field, direction):
+        return FakeCursor(sorted(
+            self,
+            key=lambda item: str(item.get(field) or ""),
+            reverse=direction < 0,
+        ))
+
+
 class DBClientLiveSafetyTests(unittest.TestCase):
     def setUp(self):
         self.client = DBClient.__new__(DBClient)
@@ -164,6 +180,16 @@ class DBClientLiveSafetyTests(unittest.TestCase):
             "cycle_2026-06-03_2000",
             {"version": "second"},
         ))
+
+    def test_strict_list_read_uses_live_mongo_and_sorting(self):
+        self.client.db["macro_history"] = FakeCollection([
+            {"timestamp": "2026-06-04T00:00:00Z", "fear_greed": 12},
+            {"timestamp": "2026-05-30T00:00:00Z", "fear_greed": 23},
+        ])
+
+        result = self.client.get_list_strict("macro_history", sort_field="timestamp")
+
+        self.assertEqual([item["fear_greed"] for item in result], [23, 12])
 
 
 if __name__ == "__main__":
