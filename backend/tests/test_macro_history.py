@@ -3,6 +3,7 @@ import unittest
 from datetime import datetime, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
@@ -30,7 +31,7 @@ class FakeDB:
     def get_list_strict(self, collection_name, sort_field=None):
         return list(self.history)
 
-    def save_data(self, collection_name, data):
+    def upsert_list_strict(self, collection_name, data):
         self.saved.append((collection_name, list(data)))
 
 
@@ -139,6 +140,19 @@ class MacroHistoryTests(unittest.TestCase):
 
             self.assertEqual(history.get_change_absolute("fear_greed", 12, days=5), -11)
             self.assertNotIn(99, [item.get("fear_greed") for item in history.history])
+
+    def test_local_write_failure_does_not_block_mongo_persistence(self):
+        fake_db = FakeDB(history=[
+            {"timestamp": "2026-06-04T00:00:00Z", "fear_greed": 12},
+        ])
+
+        with TemporaryDirectory() as temp_dir:
+            history = MacroHistory(temp_dir, db_client=fake_db)
+            with patch("macro_history.os.makedirs", side_effect=PermissionError("read-only")):
+                history.update_latest_snapshot({"fear_greed": 11})
+
+        self.assertEqual(fake_db.saved[-1][0], "macro_history")
+        self.assertEqual(fake_db.saved[-1][1][-1]["fear_greed"], 11)
 
 
 if __name__ == "__main__":

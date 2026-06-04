@@ -77,6 +77,7 @@ class DBClient:
             self._ensure_collection_indexes("trade_decision_records", self.db["trade_decision_records"])
             self._ensure_collection_indexes("decision_cycles_v2", self.db["decision_cycles_v2"])
             self._ensure_collection_indexes("trade_audit_ledger", self.db["trade_audit_ledger"])
+            self._ensure_collection_indexes("macro_history", self.db["macro_history"])
         except Exception as e:
             print(f"⚠️ [MongoDB Index Error] {e}")
 
@@ -91,6 +92,8 @@ class DBClient:
             collection.create_index([("event_at", -1)], background=True)
             collection.create_index([("decisionId", 1), ("event_at", -1)], background=True)
             collection.create_index([("cycleId", 1), ("symbol", 1)], background=True)
+        elif collection_name == "macro_history":
+            collection.create_index([("timestamp", 1)], unique=True, background=True)
 
     def _get_local_path(self, collection_name):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -240,6 +243,42 @@ class DBClient:
         if sort_field:
             cursor = cursor.sort(sort_field, -1 if descending else 1)
         return list(cursor)
+
+    def save_list_strict(self, collection_name, data):
+        """Persist a complete live list to MongoDB without relying on local JSON."""
+        if not self.is_connected or self.db is None:
+            raise ConnectionFailure("MongoDB is unavailable for strict list save")
+        if not isinstance(data, list):
+            raise ValueError("Strict list save requires list data")
+
+        collection = self.db[collection_name]
+        self._save_identified_list_to_mongo(collection_name, collection, data)
+
+    def upsert_list_strict(self, collection_name, data):
+        """Upsert live list records without deleting records written by another instance."""
+        if not self.is_connected or self.db is None:
+            raise ConnectionFailure("MongoDB is unavailable for strict list upsert")
+        if not isinstance(data, list):
+            raise ValueError("Strict list upsert requires list data")
+
+        identity_field = self._list_identity_field(collection_name)
+        if not identity_field:
+            raise ValueError(f"{collection_name} has no configured list identity field")
+
+        operations = []
+        for item in self._safe_list_items(data):
+            identity_value = item.get(identity_field)
+            if identity_value is None or identity_value == "":
+                raise ValueError(f"{collection_name} item is missing {identity_field}")
+            operations.append(
+                ReplaceOne(
+                    {identity_field: identity_value},
+                    item,
+                    upsert=True,
+                )
+            )
+        if operations:
+            self.db[collection_name].bulk_write(operations, ordered=False)
 
     def claim_once(self, collection_name, claim_id, payload=None):
         """Atomically claim a live-only operation. Returns False if already claimed."""

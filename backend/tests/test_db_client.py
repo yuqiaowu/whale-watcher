@@ -191,6 +191,55 @@ class DBClientLiveSafetyTests(unittest.TestCase):
 
         self.assertEqual([item["fear_greed"] for item in result], [23, 12])
 
+    def test_strict_list_save_writes_mongo_without_local_storage(self):
+        collection = FakeCollection([
+            {"timestamp": "2026-05-30T00:00:00Z", "fear_greed": 23},
+        ])
+        self.client.db["macro_history"] = collection
+
+        self.client.save_list_strict("macro_history", [
+            {"timestamp": "2026-06-04T00:00:00Z", "fear_greed": 12},
+        ])
+
+        self.assertEqual(collection.docs, [
+            {"timestamp": "2026-06-04T00:00:00Z", "fear_greed": 12},
+        ])
+
+    def test_strict_list_save_fails_when_mongo_unavailable(self):
+        self.client.is_connected = False
+
+        with self.assertRaises(ConnectionFailure):
+            self.client.save_list_strict("macro_history", [])
+
+    def test_strict_list_upsert_preserves_records_from_other_instances(self):
+        collection = FakeCollection([
+            {"timestamp": "2026-05-30T00:00:00Z", "fear_greed": 23},
+            {"timestamp": "2026-06-04T00:00:00Z", "fear_greed": 12},
+        ])
+        self.client.db["macro_history"] = collection
+
+        self.client.upsert_list_strict("macro_history", [
+            {"timestamp": "2026-05-30T00:00:00Z", "fear_greed": 22},
+        ])
+
+        by_timestamp = {doc["timestamp"]: doc for doc in collection.docs}
+        self.assertEqual(by_timestamp, {
+            "2026-05-30T00:00:00Z": {
+                "timestamp": "2026-05-30T00:00:00Z",
+                "fear_greed": 22,
+            },
+            "2026-06-04T00:00:00Z": {
+                "timestamp": "2026-06-04T00:00:00Z",
+                "fear_greed": 12,
+            },
+        })
+
+    def test_strict_list_upsert_fails_when_mongo_unavailable(self):
+        self.client.is_connected = False
+
+        with self.assertRaises(ConnectionFailure):
+            self.client.upsert_list_strict("macro_history", [])
+
 
 if __name__ == "__main__":
     unittest.main()

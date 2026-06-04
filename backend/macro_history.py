@@ -91,14 +91,18 @@ class MacroHistory:
             return []
 
     def save(self):
+        if self.db is not None:
+            try:
+                self.db.upsert_list_strict("macro_history", self.history)
+            except Exception as e:
+                print(f"⚠️ Failed to persist macro history to MongoDB: {e}")
+
         try:
             os.makedirs(os.path.dirname(self.filepath), exist_ok=True)
             with open(self.filepath, "w") as f:
                 json.dump(self.history, f, indent=2)
-            if self.db is not None:
-                self.db.save_data("macro_history", self.history)
         except Exception as e:
-            print(f"⚠️ Failed to save macro history: {e}")
+            print(f"⚠️ Failed to write local macro history backup: {e}")
 
     def add_snapshot(self, fed_data, japan_data, liquidity_data, stable_data=None, fear_greed_data=None):
         """
