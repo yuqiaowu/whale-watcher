@@ -4497,7 +4497,7 @@
       "execution_action": "OPEN_SHORT"
     },
     "executed_at": "2026-06-05T00:10:01Z",
-    "sync_status": "FILLED",
+    "sync_status": "OPEN",
     "failure_reason": null,
     "protection_status": "OPEN",
     "history": [
@@ -4539,15 +4539,23 @@
           "add_allowed": true,
           "position_state": "approved"
         }
+      },
+      {
+        "type": "EXECUTION_OPEN_POSITION_SYNCED",
+        "at": "2026-06-05T00:13:54Z",
+        "payload": {
+          "symbol": "DOGE-USDT",
+          "protection_status": "OPEN"
+        }
       }
     ],
     "position_side": "SHORT",
     "live_position_detected_at": "2026-06-05T00:10:56Z",
     "filled_stop_loss": 0.09391,
     "filled_take_profit": 0.07746,
-    "protection_last_synced_at": "2026-06-05T00:10:56Z",
+    "protection_last_synced_at": "2026-06-05T02:06:38Z",
     "add_allowed": true,
-    "distance_to_liq": 0.4993,
+    "distance_to_liq": 0.4933,
     "invalidation_state": {}
   },
   "evaluation": {
@@ -4603,11 +4611,11 @@
       "execution_action": "OPEN_SHORT"
     },
     "feedback_packets": [],
-    "generated_at": "2026-06-05T00:11:13Z"
+    "generated_at": "2026-06-05T02:06:57Z"
   },
   "created_at": "2026-06-05T00:09:44Z",
   "created_at_local": "2026-06-05T08:09:44+0800",
-  "updated_at": "2026-06-05T00:11:13Z",
+  "updated_at": "2026-06-05T02:06:57Z",
   "updated_at_local": "2026-06-05T08:10:01+0800",
   "opening_thesis_snapshot": {
     "source": "pre_execution_decision_record",
