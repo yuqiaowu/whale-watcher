@@ -179,10 +179,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-13T14:08:47Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -354,10 +354,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-13T14:12:26Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -529,10 +529,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-13T20:10:21Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -704,185 +704,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-14T06:07:37Z",
-    "updated_at": "2026-06-05T12:11:36Z",
-    "provenance": {
-      "source": "execution_reconciliation",
-      "unmatched_closed_trade": true
-    }
-  },
-  {
-    "decisionId": "unmatched_closed_SOL_short_3564706969239691264",
-    "cycleId": "unmatched_closed_trade",
-    "symbol": "SOL-USDT",
-    "timeframe": "4h",
-    "snapshot_timestamp": null,
-    "positionState": "closed",
-    "snapshot": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "timeframe": "4h",
-      "market_snapshot": {
-        "price": 91.21
-      },
-      "position_snapshot": {
-        "position_side": "SHORT"
-      }
-    },
-    "candidate": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "timeframe": "4h",
-      "candidate_proposals": [
-        {
-          "strategy_family": "DIRECTIONAL",
-          "decision_intent": "SHORT",
-          "trigger_source": "UNMATCHED_CLOSED_TRADE",
-          "rationale": "OKX closed trade reconciled without a matching local decision record",
-          "entry_type": "MARKET",
-          "proposed_entry_price": 91.26,
-          "proposed_sl_price": null,
-          "proposed_tp_price": null,
-          "reference_values": {},
-          "invalidation_basis": "historical closed trade; original decision record unavailable",
-          "invalidation_conditions": {
-            "operator": "OR",
-            "rules": [],
-            "persistence": 1
-          }
-        }
-      ]
-    },
-    "ruleEvaluation": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "stage": "closed_trade_reconciliation",
-      "passed": true,
-      "reason_codes": [
-        "UNMATCHED_CLOSED_TRADE"
-      ],
-      "approved_candidates": [],
-      "rule_trace": [
-        {
-          "rule": "UNMATCHED_CLOSED_TRADE",
-          "passed": true
-        }
-      ]
-    },
-    "researchOutput": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "strategy_family": "DIRECTIONAL",
-      "selected_intent": "SHORT",
-      "selected_trigger_sources": [
-        "UNMATCHED_CLOSED_TRADE"
-      ],
-      "thesis_strength": "UNKNOWN",
-      "holding_horizon": "UNKNOWN",
-      "thesis_change": "UNKNOWN",
-      "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
-      "provenance": {
-        "generation_mode": "closed_trade_reconciliation",
-        "llm_enabled": false,
-        "llm_attempted": false,
-        "llm_applied": false
-      }
-    },
-    "riskReview": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "strategy_family": "DIRECTIONAL",
-      "approved": true,
-      "final_intent": "SHORT",
-      "approved_risk_fraction": 0.0,
-      "approved_position_size_usd": 47.46,
-      "leverage": 3.0,
-      "max_holding_bars": 0,
-      "execution_action": "OPEN_SHORT",
-      "next_position_state": "closed",
-      "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval"
-    },
-    "execution": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "strategy_family": "DIRECTIONAL",
-      "execution_action": "OPEN_SHORT",
-      "order_status": "CLOSED",
-      "sync_status": "CLOSED",
-      "closed_trade_id": "3564706969239691264",
-      "entry_type": "MARKET",
-      "proposed_entry_price": 91.26,
-      "avg_fill_price": 91.26,
-      "avg_exit_price": 91.21,
-      "filled_size": 0.52,
-      "requested_leverage": 3.0,
-      "executed_at": "2026-05-14T06:08:07Z",
-      "closed_at": "2026-05-14T06:09:06Z",
-      "realized_pnl": 0.03,
-      "realized_pnl_percent": 0.16,
-      "position_side": "SHORT",
-      "protection_status": "CLOSED",
-      "runtime_reason": "unmatched_okx_closed_trade",
-      "close_reason": "unmatched_okx_closed_trade",
-      "close_reason_source": "unmatched_trade_history",
-      "history": [
-        {
-          "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
-          "at": "2026-05-16T19:59:51Z",
-          "payload": {
-            "trade_id": "3564706969239691264",
-            "reason": "unmatched_okx_closed_trade",
-            "source": "OKX Real Trade",
-            "entry_time": "2026-05-14 06:08:07",
-            "exit_time": "2026-05-14 06:09:06",
-            "entry_price": 91.26,
-            "exit_price": 91.21,
-            "pnl": 0.03,
-            "pnl_percent": 0.16
-          }
-        }
-      ]
-    },
-    "evaluation": {
-      "result_label": "WIN",
-      "primary_cause": "THESIS_CONFIRMED",
-      "layer_attribution": {
-        "data": 0.1,
-        "candidate": 0.25,
-        "rule": 0.1,
-        "research": 0.25,
-        "risk": 0.15,
-        "execution": 0.15
-      },
-      "improvement_targets": [],
-      "improvement_note": "closed trade aligned with approved thesis and exited positive",
-      "pnl": 0.03,
-      "pnl_percent": 0.16,
-      "matched_trade_id": "3564706969239691264",
-      "matched_trade_exit_time": "2026-05-14 06:09:06",
-      "traceability": {
-        "strategy_family": "DIRECTIONAL",
-        "candidate_structure": {},
-        "proposed_trigger_sources": [
-          "UNMATCHED_CLOSED_TRADE"
-        ],
-        "approved_trigger_sources": [],
-        "selected_trigger_sources": [
-          "UNMATCHED_CLOSED_TRADE"
-        ],
-        "selected_intent": "SHORT",
-        "thesis_strength": "UNKNOWN",
-        "conflict_state": null,
-        "risk_review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
-        "execution_action": "OPEN_SHORT"
-      },
-      "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
-    },
-    "created_at": "2026-05-14T06:08:07Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -1033,10 +858,10 @@
       },
       "improvement_targets": [],
       "improvement_note": "closed trade aligned with approved thesis and exited positive",
-      "pnl": 0.02,
+      "pnl": 0.03,
       "pnl_percent": 0.16,
-      "matched_trade_id": "3564707046180003840",
-      "matched_trade_exit_time": "2026-05-14 06:09:08",
+      "matched_trade_id": "3564706969239691264",
+      "matched_trade_exit_time": "2026-05-14 06:09:06",
       "traceability": {
         "strategy_family": "DIRECTIONAL",
         "candidate_structure": {},
@@ -1054,10 +879,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-14T06:08:07Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -1208,6 +1033,181 @@
       },
       "improvement_targets": [],
       "improvement_note": "closed trade aligned with approved thesis and exited positive",
+      "pnl": 0.02,
+      "pnl_percent": 0.16,
+      "matched_trade_id": "3564707046180003840",
+      "matched_trade_exit_time": "2026-05-14 06:09:08",
+      "traceability": {
+        "strategy_family": "DIRECTIONAL",
+        "candidate_structure": {},
+        "proposed_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "approved_trigger_sources": [],
+        "selected_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "selected_intent": "SHORT",
+        "thesis_strength": "UNKNOWN",
+        "conflict_state": null,
+        "risk_review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
+        "execution_action": "OPEN_SHORT"
+      },
+      "feedback_packets": [],
+      "generated_at": "2026-06-05T14:07:22Z"
+    },
+    "created_at": "2026-05-14T06:08:07Z",
+    "updated_at": "2026-06-05T14:07:22Z",
+    "provenance": {
+      "source": "execution_reconciliation",
+      "unmatched_closed_trade": true
+    }
+  },
+  {
+    "decisionId": "unmatched_closed_SOL_short_3564706969239691264",
+    "cycleId": "unmatched_closed_trade",
+    "symbol": "SOL-USDT",
+    "timeframe": "4h",
+    "snapshot_timestamp": null,
+    "positionState": "closed",
+    "snapshot": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "market_snapshot": {
+        "price": 91.21
+      },
+      "position_snapshot": {
+        "position_side": "SHORT"
+      }
+    },
+    "candidate": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "candidate_proposals": [
+        {
+          "strategy_family": "DIRECTIONAL",
+          "decision_intent": "SHORT",
+          "trigger_source": "UNMATCHED_CLOSED_TRADE",
+          "rationale": "OKX closed trade reconciled without a matching local decision record",
+          "entry_type": "MARKET",
+          "proposed_entry_price": 91.26,
+          "proposed_sl_price": null,
+          "proposed_tp_price": null,
+          "reference_values": {},
+          "invalidation_basis": "historical closed trade; original decision record unavailable",
+          "invalidation_conditions": {
+            "operator": "OR",
+            "rules": [],
+            "persistence": 1
+          }
+        }
+      ]
+    },
+    "ruleEvaluation": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "stage": "closed_trade_reconciliation",
+      "passed": true,
+      "reason_codes": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "approved_candidates": [],
+      "rule_trace": [
+        {
+          "rule": "UNMATCHED_CLOSED_TRADE",
+          "passed": true
+        }
+      ]
+    },
+    "researchOutput": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "selected_intent": "SHORT",
+      "selected_trigger_sources": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "thesis_strength": "UNKNOWN",
+      "holding_horizon": "UNKNOWN",
+      "thesis_change": "UNKNOWN",
+      "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
+      "provenance": {
+        "generation_mode": "closed_trade_reconciliation",
+        "llm_enabled": false,
+        "llm_attempted": false,
+        "llm_applied": false
+      }
+    },
+    "riskReview": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "approved": true,
+      "final_intent": "SHORT",
+      "approved_risk_fraction": 0.0,
+      "approved_position_size_usd": 47.46,
+      "leverage": 3.0,
+      "max_holding_bars": 0,
+      "execution_action": "OPEN_SHORT",
+      "next_position_state": "closed",
+      "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval"
+    },
+    "execution": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "execution_action": "OPEN_SHORT",
+      "order_status": "CLOSED",
+      "sync_status": "CLOSED",
+      "closed_trade_id": "3564706969239691264",
+      "entry_type": "MARKET",
+      "proposed_entry_price": 91.26,
+      "avg_fill_price": 91.26,
+      "avg_exit_price": 91.21,
+      "filled_size": 0.52,
+      "requested_leverage": 3.0,
+      "executed_at": "2026-05-14T06:08:07Z",
+      "closed_at": "2026-05-14T06:09:06Z",
+      "realized_pnl": 0.03,
+      "realized_pnl_percent": 0.16,
+      "position_side": "SHORT",
+      "protection_status": "CLOSED",
+      "runtime_reason": "unmatched_okx_closed_trade",
+      "close_reason": "unmatched_okx_closed_trade",
+      "close_reason_source": "unmatched_trade_history",
+      "history": [
+        {
+          "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
+          "at": "2026-05-16T19:59:51Z",
+          "payload": {
+            "trade_id": "3564706969239691264",
+            "reason": "unmatched_okx_closed_trade",
+            "source": "OKX Real Trade",
+            "entry_time": "2026-05-14 06:08:07",
+            "exit_time": "2026-05-14 06:09:06",
+            "entry_price": 91.26,
+            "exit_price": 91.21,
+            "pnl": 0.03,
+            "pnl_percent": 0.16
+          }
+        }
+      ]
+    },
+    "evaluation": {
+      "result_label": "WIN",
+      "primary_cause": "THESIS_CONFIRMED",
+      "layer_attribution": {
+        "data": 0.1,
+        "candidate": 0.25,
+        "rule": 0.1,
+        "research": 0.25,
+        "risk": 0.15,
+        "execution": 0.15
+      },
+      "improvement_targets": [],
+      "improvement_note": "closed trade aligned with approved thesis and exited positive",
       "pnl": 0.01,
       "pnl_percent": 0.16,
       "matched_trade_id": "3564707070104313856",
@@ -1229,10 +1229,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-14T06:08:07Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -1418,10 +1418,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-14T06:08:07Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -1593,185 +1593,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-14T16:08:00Z",
-    "updated_at": "2026-06-05T12:11:36Z",
-    "provenance": {
-      "source": "execution_reconciliation",
-      "unmatched_closed_trade": true
-    }
-  },
-  {
-    "decisionId": "unmatched_closed_SOL_short_3567852587214708736",
-    "cycleId": "unmatched_closed_trade",
-    "symbol": "SOL-USDT",
-    "timeframe": "4h",
-    "snapshot_timestamp": null,
-    "positionState": "closed",
-    "snapshot": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "timeframe": "4h",
-      "market_snapshot": {
-        "price": 91.35
-      },
-      "position_snapshot": {
-        "position_side": "SHORT"
-      }
-    },
-    "candidate": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "timeframe": "4h",
-      "candidate_proposals": [
-        {
-          "strategy_family": "DIRECTIONAL",
-          "decision_intent": "SHORT",
-          "trigger_source": "UNMATCHED_CLOSED_TRADE",
-          "rationale": "OKX closed trade reconciled without a matching local decision record",
-          "entry_type": "MARKET",
-          "proposed_entry_price": 92.76,
-          "proposed_sl_price": null,
-          "proposed_tp_price": null,
-          "reference_values": {},
-          "invalidation_basis": "historical closed trade; original decision record unavailable",
-          "invalidation_conditions": {
-            "operator": "OR",
-            "rules": [],
-            "persistence": 1
-          }
-        }
-      ]
-    },
-    "ruleEvaluation": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "stage": "closed_trade_reconciliation",
-      "passed": true,
-      "reason_codes": [
-        "UNMATCHED_CLOSED_TRADE"
-      ],
-      "approved_candidates": [],
-      "rule_trace": [
-        {
-          "rule": "UNMATCHED_CLOSED_TRADE",
-          "passed": true
-        }
-      ]
-    },
-    "researchOutput": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "strategy_family": "DIRECTIONAL",
-      "selected_intent": "SHORT",
-      "selected_trigger_sources": [
-        "UNMATCHED_CLOSED_TRADE"
-      ],
-      "thesis_strength": "UNKNOWN",
-      "holding_horizon": "UNKNOWN",
-      "thesis_change": "UNKNOWN",
-      "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
-      "provenance": {
-        "generation_mode": "closed_trade_reconciliation",
-        "llm_enabled": false,
-        "llm_attempted": false,
-        "llm_applied": false
-      }
-    },
-    "riskReview": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "strategy_family": "DIRECTIONAL",
-      "approved": true,
-      "final_intent": "SHORT",
-      "approved_risk_fraction": 0.0,
-      "approved_position_size_usd": 94.62,
-      "leverage": 2.0,
-      "max_holding_bars": 0,
-      "execution_action": "OPEN_SHORT",
-      "next_position_state": "closed",
-      "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval"
-    },
-    "execution": {
-      "symbol": "SOL-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "strategy_family": "DIRECTIONAL",
-      "execution_action": "OPEN_SHORT",
-      "order_status": "CLOSED",
-      "sync_status": "CLOSED",
-      "closed_trade_id": "3567852587214708736",
-      "entry_type": "MARKET",
-      "proposed_entry_price": 92.76,
-      "avg_fill_price": 92.76,
-      "avg_exit_price": 91.35,
-      "filled_size": 1.02,
-      "requested_leverage": 2.0,
-      "executed_at": "2026-05-14T20:08:13Z",
-      "closed_at": "2026-05-15T08:11:33Z",
-      "realized_pnl": 1.44,
-      "realized_pnl_percent": 3.04,
-      "position_side": "SHORT",
-      "protection_status": "CLOSED",
-      "runtime_reason": "unmatched_okx_closed_trade",
-      "close_reason": "unmatched_okx_closed_trade",
-      "close_reason_source": "unmatched_trade_history",
-      "history": [
-        {
-          "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
-          "at": "2026-05-16T19:59:51Z",
-          "payload": {
-            "trade_id": "3567852587214708736",
-            "reason": "unmatched_okx_closed_trade",
-            "source": "OKX Real Trade",
-            "entry_time": "2026-05-14 20:08:13",
-            "exit_time": "2026-05-15 08:11:33",
-            "entry_price": 92.76,
-            "exit_price": 91.35,
-            "pnl": 1.44,
-            "pnl_percent": 3.04
-          }
-        }
-      ]
-    },
-    "evaluation": {
-      "result_label": "BREAKEVEN",
-      "primary_cause": "THESIS_CONFIRMED",
-      "layer_attribution": {
-        "data": 0.1,
-        "candidate": 0.25,
-        "rule": 0.1,
-        "research": 0.25,
-        "risk": 0.15,
-        "execution": 0.15
-      },
-      "improvement_targets": [],
-      "improvement_note": "closed trade aligned with approved thesis and exited positive",
-      "pnl": -0.0,
-      "pnl_percent": -0.02,
-      "matched_trade_id": "3566398594152144896",
-      "matched_trade_exit_time": "2026-05-14 20:09:20",
-      "traceability": {
-        "strategy_family": "DIRECTIONAL",
-        "candidate_structure": {},
-        "proposed_trigger_sources": [
-          "UNMATCHED_CLOSED_TRADE"
-        ],
-        "approved_trigger_sources": [],
-        "selected_trigger_sources": [
-          "UNMATCHED_CLOSED_TRADE"
-        ],
-        "selected_intent": "SHORT",
-        "thesis_strength": "UNKNOWN",
-        "conflict_state": null,
-        "risk_review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
-        "execution_action": "OPEN_SHORT"
-      },
-      "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
-    },
-    "created_at": "2026-05-14T20:08:13Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -1910,6 +1735,181 @@
       ]
     },
     "evaluation": {
+      "result_label": "BREAKEVEN",
+      "primary_cause": "THESIS_CONFIRMED",
+      "layer_attribution": {
+        "data": 0.1,
+        "candidate": 0.25,
+        "rule": 0.1,
+        "research": 0.25,
+        "risk": 0.15,
+        "execution": 0.15
+      },
+      "improvement_targets": [],
+      "improvement_note": "closed trade aligned with approved thesis and exited positive",
+      "pnl": -0.0,
+      "pnl_percent": -0.02,
+      "matched_trade_id": "3566398594152144896",
+      "matched_trade_exit_time": "2026-05-14 20:09:20",
+      "traceability": {
+        "strategy_family": "DIRECTIONAL",
+        "candidate_structure": {},
+        "proposed_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "approved_trigger_sources": [],
+        "selected_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "selected_intent": "SHORT",
+        "thesis_strength": "UNKNOWN",
+        "conflict_state": null,
+        "risk_review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
+        "execution_action": "OPEN_SHORT"
+      },
+      "feedback_packets": [],
+      "generated_at": "2026-06-05T14:07:22Z"
+    },
+    "created_at": "2026-05-14T20:08:13Z",
+    "updated_at": "2026-06-05T14:07:22Z",
+    "provenance": {
+      "source": "execution_reconciliation",
+      "unmatched_closed_trade": true
+    }
+  },
+  {
+    "decisionId": "unmatched_closed_SOL_short_3567852587214708736",
+    "cycleId": "unmatched_closed_trade",
+    "symbol": "SOL-USDT",
+    "timeframe": "4h",
+    "snapshot_timestamp": null,
+    "positionState": "closed",
+    "snapshot": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "market_snapshot": {
+        "price": 91.35
+      },
+      "position_snapshot": {
+        "position_side": "SHORT"
+      }
+    },
+    "candidate": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "candidate_proposals": [
+        {
+          "strategy_family": "DIRECTIONAL",
+          "decision_intent": "SHORT",
+          "trigger_source": "UNMATCHED_CLOSED_TRADE",
+          "rationale": "OKX closed trade reconciled without a matching local decision record",
+          "entry_type": "MARKET",
+          "proposed_entry_price": 92.76,
+          "proposed_sl_price": null,
+          "proposed_tp_price": null,
+          "reference_values": {},
+          "invalidation_basis": "historical closed trade; original decision record unavailable",
+          "invalidation_conditions": {
+            "operator": "OR",
+            "rules": [],
+            "persistence": 1
+          }
+        }
+      ]
+    },
+    "ruleEvaluation": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "stage": "closed_trade_reconciliation",
+      "passed": true,
+      "reason_codes": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "approved_candidates": [],
+      "rule_trace": [
+        {
+          "rule": "UNMATCHED_CLOSED_TRADE",
+          "passed": true
+        }
+      ]
+    },
+    "researchOutput": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "selected_intent": "SHORT",
+      "selected_trigger_sources": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "thesis_strength": "UNKNOWN",
+      "holding_horizon": "UNKNOWN",
+      "thesis_change": "UNKNOWN",
+      "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
+      "provenance": {
+        "generation_mode": "closed_trade_reconciliation",
+        "llm_enabled": false,
+        "llm_attempted": false,
+        "llm_applied": false
+      }
+    },
+    "riskReview": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "approved": true,
+      "final_intent": "SHORT",
+      "approved_risk_fraction": 0.0,
+      "approved_position_size_usd": 94.62,
+      "leverage": 2.0,
+      "max_holding_bars": 0,
+      "execution_action": "OPEN_SHORT",
+      "next_position_state": "closed",
+      "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval"
+    },
+    "execution": {
+      "symbol": "SOL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "execution_action": "OPEN_SHORT",
+      "order_status": "CLOSED",
+      "sync_status": "CLOSED",
+      "closed_trade_id": "3567852587214708736",
+      "entry_type": "MARKET",
+      "proposed_entry_price": 92.76,
+      "avg_fill_price": 92.76,
+      "avg_exit_price": 91.35,
+      "filled_size": 1.02,
+      "requested_leverage": 2.0,
+      "executed_at": "2026-05-14T20:08:13Z",
+      "closed_at": "2026-05-15T08:11:33Z",
+      "realized_pnl": 1.44,
+      "realized_pnl_percent": 3.04,
+      "position_side": "SHORT",
+      "protection_status": "CLOSED",
+      "runtime_reason": "unmatched_okx_closed_trade",
+      "close_reason": "unmatched_okx_closed_trade",
+      "close_reason_source": "unmatched_trade_history",
+      "history": [
+        {
+          "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
+          "at": "2026-05-16T19:59:51Z",
+          "payload": {
+            "trade_id": "3567852587214708736",
+            "reason": "unmatched_okx_closed_trade",
+            "source": "OKX Real Trade",
+            "entry_time": "2026-05-14 20:08:13",
+            "exit_time": "2026-05-15 08:11:33",
+            "entry_price": 92.76,
+            "exit_price": 91.35,
+            "pnl": 1.44,
+            "pnl_percent": 3.04
+          }
+        }
+      ]
+    },
+    "evaluation": {
       "result_label": "WIN",
       "primary_cause": "THESIS_CONFIRMED",
       "layer_attribution": {
@@ -1943,10 +1943,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-14T20:08:13Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -2118,10 +2118,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-15T00:07:28Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -2293,199 +2293,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-15T04:07:58Z",
-    "updated_at": "2026-06-05T12:11:36Z",
-    "provenance": {
-      "source": "execution_reconciliation",
-      "unmatched_closed_trade": true
-    }
-  },
-  {
-    "decisionId": "unmatched_closed_DOGE_long_3569302867311599616",
-    "cycleId": "unmatched_closed_trade",
-    "symbol": "DOGE-USDT",
-    "timeframe": "4h",
-    "snapshot_timestamp": null,
-    "positionState": "closed",
-    "snapshot": {
-      "symbol": "DOGE-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "timeframe": "4h",
-      "market_snapshot": {
-        "price": 0.11286
-      },
-      "position_snapshot": {
-        "position_side": "LONG"
-      }
-    },
-    "candidate": {
-      "symbol": "DOGE-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "timeframe": "4h",
-      "candidate_proposals": [
-        {
-          "strategy_family": "DIRECTIONAL",
-          "decision_intent": "LONG",
-          "trigger_source": "UNMATCHED_CLOSED_TRADE",
-          "rationale": "OKX closed trade reconciled without a matching local decision record",
-          "entry_type": "MARKET",
-          "proposed_entry_price": 0.12,
-          "proposed_sl_price": null,
-          "proposed_tp_price": null,
-          "reference_values": {},
-          "invalidation_basis": "historical closed trade; original decision record unavailable",
-          "invalidation_conditions": {
-            "operator": "OR",
-            "rules": [],
-            "persistence": 1
-          }
-        }
-      ]
-    },
-    "ruleEvaluation": {
-      "symbol": "DOGE-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "stage": "closed_trade_reconciliation",
-      "passed": true,
-      "reason_codes": [
-        "UNMATCHED_CLOSED_TRADE"
-      ],
-      "approved_candidates": [],
-      "rule_trace": [
-        {
-          "rule": "UNMATCHED_CLOSED_TRADE",
-          "passed": true
-        }
-      ]
-    },
-    "researchOutput": {
-      "symbol": "DOGE-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "strategy_family": "DIRECTIONAL",
-      "selected_intent": "LONG",
-      "selected_trigger_sources": [
-        "UNMATCHED_CLOSED_TRADE"
-      ],
-      "thesis_strength": "UNKNOWN",
-      "holding_horizon": "UNKNOWN",
-      "thesis_change": "UNKNOWN",
-      "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
-      "provenance": {
-        "generation_mode": "closed_trade_reconciliation",
-        "llm_enabled": false,
-        "llm_attempted": false,
-        "llm_applied": false
-      }
-    },
-    "riskReview": {
-      "symbol": "DOGE-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "strategy_family": "DIRECTIONAL",
-      "approved": true,
-      "final_intent": "LONG",
-      "approved_risk_fraction": 0.0,
-      "approved_position_size_usd": 0.11,
-      "leverage": 2.0,
-      "max_holding_bars": 0,
-      "execution_action": "OPEN_LONG",
-      "next_position_state": "closed",
-      "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval"
-    },
-    "execution": {
-      "symbol": "DOGE-USDT",
-      "cycleId": "unmatched_closed_trade",
-      "strategy_family": "DIRECTIONAL",
-      "execution_action": "OPEN_LONG",
-      "order_status": "CLOSED",
-      "sync_status": "CLOSED",
-      "closed_trade_id": "3569302867311599616",
-      "entry_type": "MARKET",
-      "proposed_entry_price": 0.12,
-      "avg_fill_price": 0.12,
-      "avg_exit_price": 0.11286,
-      "filled_size": 0.92,
-      "requested_leverage": 2.0,
-      "executed_at": "2026-05-15T04:09:40Z",
-      "closed_at": "2026-05-15T20:11:54Z",
-      "realized_pnl": -2.75,
-      "realized_pnl_percent": -5.16,
-      "position_side": "LONG",
-      "protection_status": "CLOSED",
-      "runtime_reason": "unmatched_okx_closed_trade",
-      "close_reason": "unmatched_okx_closed_trade",
-      "close_reason_source": "unmatched_trade_history",
-      "history": [
-        {
-          "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
-          "at": "2026-05-16T19:59:51Z",
-          "payload": {
-            "trade_id": "3569302867311599616",
-            "reason": "unmatched_okx_closed_trade",
-            "source": "OKX Real Trade",
-            "entry_time": "2026-05-15 04:09:40",
-            "exit_time": "2026-05-15 20:11:54",
-            "entry_price": 0.12,
-            "exit_price": 0.11286,
-            "pnl": -2.75,
-            "pnl_percent": -5.16
-          }
-        }
-      ]
-    },
-    "evaluation": {
-      "result_label": "LOSS",
-      "primary_cause": "CANDIDATE_OR_MARKET_MISS",
-      "layer_attribution": {
-        "data": 0.1,
-        "candidate": 0.35,
-        "rule": 0.1,
-        "research": 0.2,
-        "risk": 0.15,
-        "execution": 0.1
-      },
-      "improvement_targets": [
-        "candidate",
-        "research"
-      ],
-      "improvement_note": "closed trade finished negative; review thesis quality and setup quality",
-      "pnl": -0.34,
-      "pnl_percent": -1.9,
-      "matched_trade_id": "3567852539097653248",
-      "matched_trade_exit_time": "2026-05-15 08:11:31",
-      "traceability": {
-        "strategy_family": "DIRECTIONAL",
-        "candidate_structure": {},
-        "proposed_trigger_sources": [
-          "UNMATCHED_CLOSED_TRADE"
-        ],
-        "approved_trigger_sources": [],
-        "selected_trigger_sources": [
-          "UNMATCHED_CLOSED_TRADE"
-        ],
-        "selected_intent": "LONG",
-        "thesis_strength": "UNKNOWN",
-        "conflict_state": null,
-        "risk_review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
-        "execution_action": "OPEN_LONG"
-      },
-      "feedback_packets": [
-        {
-          "target_layer": "candidate",
-          "packet_type": "BLUEPRINT_REVIEW",
-          "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
-        },
-        {
-          "target_layer": "research",
-          "packet_type": "PROMPT_AND_CONFLICT_REVIEW",
-          "message": "review prompt constraints, conflict handling, and no-trade examples"
-        }
-      ],
-      "generated_at": "2026-06-05T12:11:36Z"
-    },
-    "created_at": "2026-05-15T04:09:40Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -2639,6 +2450,195 @@
         "research"
       ],
       "improvement_note": "closed trade finished negative; review thesis quality and setup quality",
+      "pnl": -0.34,
+      "pnl_percent": -1.9,
+      "matched_trade_id": "3567852539097653248",
+      "matched_trade_exit_time": "2026-05-15 08:11:31",
+      "traceability": {
+        "strategy_family": "DIRECTIONAL",
+        "candidate_structure": {},
+        "proposed_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "approved_trigger_sources": [],
+        "selected_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "selected_intent": "LONG",
+        "thesis_strength": "UNKNOWN",
+        "conflict_state": null,
+        "risk_review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
+        "execution_action": "OPEN_LONG"
+      },
+      "feedback_packets": [
+        {
+          "target_layer": "candidate",
+          "packet_type": "BLUEPRINT_REVIEW",
+          "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
+        },
+        {
+          "target_layer": "research",
+          "packet_type": "PROMPT_AND_CONFLICT_REVIEW",
+          "message": "review prompt constraints, conflict handling, and no-trade examples"
+        }
+      ],
+      "generated_at": "2026-06-05T14:07:22Z"
+    },
+    "created_at": "2026-05-15T04:09:40Z",
+    "updated_at": "2026-06-05T14:07:22Z",
+    "provenance": {
+      "source": "execution_reconciliation",
+      "unmatched_closed_trade": true
+    }
+  },
+  {
+    "decisionId": "unmatched_closed_DOGE_long_3569302867311599616",
+    "cycleId": "unmatched_closed_trade",
+    "symbol": "DOGE-USDT",
+    "timeframe": "4h",
+    "snapshot_timestamp": null,
+    "positionState": "closed",
+    "snapshot": {
+      "symbol": "DOGE-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "market_snapshot": {
+        "price": 0.11286
+      },
+      "position_snapshot": {
+        "position_side": "LONG"
+      }
+    },
+    "candidate": {
+      "symbol": "DOGE-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "candidate_proposals": [
+        {
+          "strategy_family": "DIRECTIONAL",
+          "decision_intent": "LONG",
+          "trigger_source": "UNMATCHED_CLOSED_TRADE",
+          "rationale": "OKX closed trade reconciled without a matching local decision record",
+          "entry_type": "MARKET",
+          "proposed_entry_price": 0.12,
+          "proposed_sl_price": null,
+          "proposed_tp_price": null,
+          "reference_values": {},
+          "invalidation_basis": "historical closed trade; original decision record unavailable",
+          "invalidation_conditions": {
+            "operator": "OR",
+            "rules": [],
+            "persistence": 1
+          }
+        }
+      ]
+    },
+    "ruleEvaluation": {
+      "symbol": "DOGE-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "stage": "closed_trade_reconciliation",
+      "passed": true,
+      "reason_codes": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "approved_candidates": [],
+      "rule_trace": [
+        {
+          "rule": "UNMATCHED_CLOSED_TRADE",
+          "passed": true
+        }
+      ]
+    },
+    "researchOutput": {
+      "symbol": "DOGE-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "selected_intent": "LONG",
+      "selected_trigger_sources": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "thesis_strength": "UNKNOWN",
+      "holding_horizon": "UNKNOWN",
+      "thesis_change": "UNKNOWN",
+      "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
+      "provenance": {
+        "generation_mode": "closed_trade_reconciliation",
+        "llm_enabled": false,
+        "llm_attempted": false,
+        "llm_applied": false
+      }
+    },
+    "riskReview": {
+      "symbol": "DOGE-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "approved": true,
+      "final_intent": "LONG",
+      "approved_risk_fraction": 0.0,
+      "approved_position_size_usd": 0.11,
+      "leverage": 2.0,
+      "max_holding_bars": 0,
+      "execution_action": "OPEN_LONG",
+      "next_position_state": "closed",
+      "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval"
+    },
+    "execution": {
+      "symbol": "DOGE-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "execution_action": "OPEN_LONG",
+      "order_status": "CLOSED",
+      "sync_status": "CLOSED",
+      "closed_trade_id": "3569302867311599616",
+      "entry_type": "MARKET",
+      "proposed_entry_price": 0.12,
+      "avg_fill_price": 0.12,
+      "avg_exit_price": 0.11286,
+      "filled_size": 0.92,
+      "requested_leverage": 2.0,
+      "executed_at": "2026-05-15T04:09:40Z",
+      "closed_at": "2026-05-15T20:11:54Z",
+      "realized_pnl": -2.75,
+      "realized_pnl_percent": -5.16,
+      "position_side": "LONG",
+      "protection_status": "CLOSED",
+      "runtime_reason": "unmatched_okx_closed_trade",
+      "close_reason": "unmatched_okx_closed_trade",
+      "close_reason_source": "unmatched_trade_history",
+      "history": [
+        {
+          "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
+          "at": "2026-05-16T19:59:51Z",
+          "payload": {
+            "trade_id": "3569302867311599616",
+            "reason": "unmatched_okx_closed_trade",
+            "source": "OKX Real Trade",
+            "entry_time": "2026-05-15 04:09:40",
+            "exit_time": "2026-05-15 20:11:54",
+            "entry_price": 0.12,
+            "exit_price": 0.11286,
+            "pnl": -2.75,
+            "pnl_percent": -5.16
+          }
+        }
+      ]
+    },
+    "evaluation": {
+      "result_label": "LOSS",
+      "primary_cause": "CANDIDATE_OR_MARKET_MISS",
+      "layer_attribution": {
+        "data": 0.1,
+        "candidate": 0.35,
+        "rule": 0.1,
+        "research": 0.2,
+        "risk": 0.15,
+        "execution": 0.1
+      },
+      "improvement_targets": [
+        "candidate",
+        "research"
+      ],
+      "improvement_note": "closed trade finished negative; review thesis quality and setup quality",
       "pnl": -2.75,
       "pnl_percent": -5.16,
       "matched_trade_id": "3569302867311599616",
@@ -2671,10 +2671,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-15T04:09:40Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -2846,10 +2846,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-15T10:07:36Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -3021,10 +3021,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-15T10:09:14Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -3210,10 +3210,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-15T14:08:04Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -3399,10 +3399,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-15T14:08:04Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -3574,10 +3574,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-15T15:10:02Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -3749,10 +3749,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-15T15:11:20Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -3924,10 +3924,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-15T19:40:44Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -4099,10 +4099,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-16T04:09:02Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -4274,10 +4274,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-16T06:08:31Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -4449,10 +4449,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-16T08:07:55Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -4638,10 +4638,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-16T10:09:18Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -6092,10 +6092,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-16T12:08:30Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "adopted_live_position": true,
@@ -6282,10 +6282,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-16T14:08:04Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -9505,11 +9505,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-16T14:34:22Z",
     "created_at_local": "2026-05-16T22:34:22+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-16T19:59:14Z",
     "provenance": {
       "source": "repair_trade_decision_records",
@@ -12424,11 +12424,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-16T14:35:03Z",
     "created_at_local": "2026-05-16T22:35:03+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-16T19:59:14Z",
     "provenance": {
       "source": "repair_trade_decision_records",
@@ -16080,11 +16080,11 @@
           "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-16T14:36:20Z",
     "created_at_local": "2026-05-16T22:35:41+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-16T19:59:14Z",
     "provenance": {
       "source": "repair_trade_decision_records",
@@ -18934,11 +18934,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-16T18:07:16Z",
     "created_at_local": "2026-05-17T02:07:16+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-16T19:59:14Z",
     "provenance": {
       "source": "repair_trade_decision_records",
@@ -19125,10 +19125,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-27T06:14:26Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -19314,10 +19314,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-27T14:15:01Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -19489,10 +19489,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-27T20:16:10Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -19664,10 +19664,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-28T00:13:27Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -19853,10 +19853,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-28T11:37:46Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -20818,11 +20818,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T00:36:10Z",
     "created_at_local": "2026-05-30T08:36:10+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T08:36:28+0800"
   },
   {
@@ -23012,11 +23012,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T02:10:56Z",
     "created_at_local": "2026-05-30T10:10:56+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T10:11:17+0800"
   },
   {
@@ -25210,11 +25210,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T02:11:54Z",
     "created_at_local": "2026-05-30T10:11:54+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T10:12:16+0800"
   },
   {
@@ -27762,11 +27762,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T02:12:57Z",
     "created_at_local": "2026-05-30T10:12:57+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T10:13:20+0800"
   },
   {
@@ -30324,11 +30324,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T02:13:56Z",
     "created_at_local": "2026-05-30T10:13:56+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T10:14:21+0800"
   },
   {
@@ -32553,11 +32553,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T04:15:13Z",
     "created_at_local": "2026-05-30T12:15:13+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T12:15:46+0800"
   },
   {
@@ -35156,11 +35156,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T06:10:34Z",
     "created_at_local": "2026-05-30T14:10:34+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T14:11:08+0800"
   },
   {
@@ -37343,11 +37343,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T06:11:53Z",
     "created_at_local": "2026-05-30T14:11:53+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T14:12:27+0800"
   },
   {
@@ -39935,11 +39935,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T06:13:21Z",
     "created_at_local": "2026-05-30T14:13:21+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T14:13:55+0800"
   },
   {
@@ -42495,11 +42495,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T06:14:55Z",
     "created_at_local": "2026-05-30T14:14:55+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T14:15:29+0800"
   },
   {
@@ -44666,11 +44666,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T08:10:18Z",
     "created_at_local": "2026-05-30T16:10:18+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T16:10:54+0800"
   },
   {
@@ -46854,11 +46854,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T10:12:48Z",
     "created_at_local": "2026-05-30T18:12:48+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T18:13:30+0800"
   },
   {
@@ -49411,11 +49411,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T10:14:34Z",
     "created_at_local": "2026-05-30T18:14:34+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T18:15:16+0800"
   },
   {
@@ -51671,11 +51671,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T10:16:10Z",
     "created_at_local": "2026-05-30T18:16:10+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-05-30T18:16:51+0800"
   },
   {
@@ -52862,10 +52862,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-05-30T22:59:58Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "adopted_live_position": true,
@@ -54350,10 +54350,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-01T22:11:41Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "adopted_live_position": true,
@@ -55838,10 +55838,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-01T22:15:48Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "adopted_live_position": true,
@@ -58830,11 +58830,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T02:08:21Z",
     "created_at_local": "2026-06-02T10:08:21+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T10:09:06+0800"
   },
   {
@@ -61754,11 +61754,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T02:10:06Z",
     "created_at_local": "2026-06-02T10:10:06+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T10:10:50+0800"
   },
   {
@@ -65027,11 +65027,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T02:11:55Z",
     "created_at_local": "2026-06-02T10:11:55+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T10:12:40+0800"
   },
   {
@@ -67943,11 +67943,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T02:13:42Z",
     "created_at_local": "2026-06-02T10:13:42+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T10:14:27+0800"
   },
   {
@@ -71467,11 +71467,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T02:15:32Z",
     "created_at_local": "2026-06-02T10:15:32+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T10:16:17+0800"
   },
   {
@@ -74548,11 +74548,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T06:08:41Z",
     "created_at_local": "2026-06-02T14:08:41+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T14:09:25+0800"
   },
   {
@@ -77468,11 +77468,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T06:10:25Z",
     "created_at_local": "2026-06-02T14:10:25+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T14:11:10+0800"
   },
   {
@@ -80457,11 +80457,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T06:12:09Z",
     "created_at_local": "2026-06-02T14:12:09+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T14:12:54+0800"
   },
   {
@@ -83373,11 +83373,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T06:13:51Z",
     "created_at_local": "2026-06-02T14:13:51+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T14:14:36+0800"
   },
   {
@@ -86798,11 +86798,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T06:15:35Z",
     "created_at_local": "2026-06-02T14:15:35+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T14:16:19+0800"
   },
   {
@@ -89854,11 +89854,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T10:08:48Z",
     "created_at_local": "2026-06-02T18:08:48+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T18:09:33+0800"
   },
   {
@@ -93503,11 +93503,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T10:10:35Z",
     "created_at_local": "2026-06-02T18:10:35+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T18:11:53+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -96715,11 +96715,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T10:13:00Z",
     "created_at_local": "2026-06-02T18:13:00+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T18:13:45+0800"
   },
   {
@@ -99614,11 +99614,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T10:14:47Z",
     "created_at_local": "2026-06-02T18:14:47+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T18:15:31+0800"
   },
   {
@@ -103114,11 +103114,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T10:16:30Z",
     "created_at_local": "2026-06-02T18:16:30+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T18:17:15+0800"
   },
   {
@@ -106034,11 +106034,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T14:09:05Z",
     "created_at_local": "2026-06-02T22:09:05+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T22:09:50+0800"
   },
   {
@@ -109023,11 +109023,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T14:10:55Z",
     "created_at_local": "2026-06-02T22:10:55+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T22:11:40+0800"
   },
   {
@@ -111947,11 +111947,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T14:12:41Z",
     "created_at_local": "2026-06-02T22:12:41+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T22:13:25+0800"
   },
   {
@@ -114939,11 +114939,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T14:14:21Z",
     "created_at_local": "2026-06-02T22:14:21+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T22:15:06+0800"
   },
   {
@@ -117859,11 +117859,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T14:16:05Z",
     "created_at_local": "2026-06-02T22:16:05+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-02T22:16:50+0800"
   },
   {
@@ -121609,11 +121609,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T16:11:13Z",
     "created_at_local": "2026-06-03T00:11:13+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T00:12:31+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -124658,11 +124658,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T18:09:18Z",
     "created_at_local": "2026-06-03T02:09:18+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T02:10:03+0800"
   },
   {
@@ -127557,11 +127557,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T18:12:58Z",
     "created_at_local": "2026-06-03T02:12:58+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T02:13:43+0800"
   },
   {
@@ -130460,11 +130460,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T18:14:43Z",
     "created_at_local": "2026-06-03T02:14:43+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T02:15:27+0800"
   },
   {
@@ -133363,11 +133363,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T18:16:26Z",
     "created_at_local": "2026-06-03T02:16:26+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T02:17:11+0800"
   },
   {
@@ -136276,11 +136276,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T22:09:37Z",
     "created_at_local": "2026-06-03T06:09:37+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T06:10:21+0800"
   },
   {
@@ -139189,11 +139189,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T22:11:21Z",
     "created_at_local": "2026-06-03T06:11:21+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T06:12:05+0800"
   },
   {
@@ -142106,11 +142106,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T22:13:01Z",
     "created_at_local": "2026-06-03T06:13:01+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T06:13:46+0800"
   },
   {
@@ -145612,11 +145612,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T22:14:46Z",
     "created_at_local": "2026-06-03T06:14:46+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T06:14:46+0800"
   },
   {
@@ -149127,11 +149127,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-02T22:16:29Z",
     "created_at_local": "2026-06-03T06:16:29+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T06:17:13+0800"
   },
   {
@@ -150608,10 +150608,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T00:16:56Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "adopted_live_position": true,
@@ -153552,11 +153552,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T02:08:27Z",
     "created_at_local": "2026-06-03T10:08:27+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T10:09:12+0800"
   },
   {
@@ -156554,11 +156554,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T02:10:12Z",
     "created_at_local": "2026-06-03T10:10:12+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T10:10:57+0800"
   },
   {
@@ -160359,11 +160359,11 @@
           "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T02:12:05Z",
     "created_at_local": "2026-06-03T10:12:05+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T10:13:23+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -163421,11 +163421,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T02:14:25Z",
     "created_at_local": "2026-06-03T10:14:25+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T10:15:10+0800"
   },
   {
@@ -166358,11 +166358,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T02:16:07Z",
     "created_at_local": "2026-06-03T10:16:07+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T10:16:52+0800"
   },
   {
@@ -170152,11 +170152,11 @@
           "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T04:08:38Z",
     "created_at_local": "2026-06-03T12:08:38+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T12:09:56+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -173372,11 +173372,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T06:10:29Z",
     "created_at_local": "2026-06-03T14:10:29+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T14:11:14+0800"
   },
   {
@@ -176374,11 +176374,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T06:12:15Z",
     "created_at_local": "2026-06-03T14:12:15+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T14:13:00+0800"
   },
   {
@@ -179383,11 +179383,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T06:14:03Z",
     "created_at_local": "2026-06-03T14:14:03+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T14:14:48+0800"
   },
   {
@@ -182912,11 +182912,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T06:15:56Z",
     "created_at_local": "2026-06-03T14:15:56+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T14:16:41+0800"
   },
   {
@@ -185862,11 +185862,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T10:08:53Z",
     "created_at_local": "2026-06-03T18:08:53+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T18:09:37+0800"
   },
   {
@@ -189204,11 +189204,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T10:10:59Z",
     "created_at_local": "2026-06-03T18:10:59+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T18:11:44+0800"
   },
   {
@@ -192761,11 +192761,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T10:12:53Z",
     "created_at_local": "2026-06-03T18:12:53+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T18:14:11+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -195826,11 +195826,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T10:15:10Z",
     "created_at_local": "2026-06-03T18:15:10+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T18:15:55+0800"
   },
   {
@@ -199292,11 +199292,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T10:17:08Z",
     "created_at_local": "2026-06-03T18:17:08+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T18:17:53+0800"
   },
   {
@@ -202234,11 +202234,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T14:09:34Z",
     "created_at_local": "2026-06-03T22:09:34+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T22:09:34+0800"
   },
   {
@@ -205258,11 +205258,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T14:11:17Z",
     "created_at_local": "2026-06-03T22:11:17+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T22:12:02+0800"
   },
   {
@@ -208274,11 +208274,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T14:13:03Z",
     "created_at_local": "2026-06-03T22:13:03+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T22:13:48+0800"
   },
   {
@@ -211229,11 +211229,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T14:14:50Z",
     "created_at_local": "2026-06-03T22:14:50+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T22:15:35+0800"
   },
   {
@@ -214798,11 +214798,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T14:16:37Z",
     "created_at_local": "2026-06-03T22:16:37+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-03T22:17:22+0800"
   },
   {
@@ -218437,11 +218437,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T16:10:00Z",
     "created_at_local": "2026-06-04T00:10:00+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T00:11:17+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -221516,11 +221516,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T18:11:31Z",
     "created_at_local": "2026-06-04T02:11:31+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T02:12:15+0800"
   },
   {
@@ -224462,11 +224462,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T18:13:20Z",
     "created_at_local": "2026-06-04T02:13:20+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T02:13:20+0800"
   },
   {
@@ -227952,11 +227952,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T18:15:14Z",
     "created_at_local": "2026-06-04T02:15:14+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T02:15:58+0800"
   },
   {
@@ -231490,11 +231490,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T18:16:59Z",
     "created_at_local": "2026-06-04T02:16:59+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T02:17:44+0800"
   },
   {
@@ -235275,11 +235275,11 @@
           "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T20:11:33Z",
     "created_at_local": "2026-06-04T04:11:33+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T04:12:52+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -238911,11 +238911,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T20:29:28Z",
     "created_at_local": "2026-06-04T04:29:28+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T04:30:45+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -242002,11 +242002,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T20:33:32Z",
     "created_at_local": "2026-06-04T04:33:32+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T04:34:16+0800"
   },
   {
@@ -245664,11 +245664,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T20:35:16Z",
     "created_at_local": "2026-06-04T04:35:16+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T04:36:33+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -245970,10 +245970,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T20:36:33Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -246141,10 +246141,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T20:36:33Z",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "provenance": {
       "source": "execution_reconciliation",
       "unmatched_closed_trade": true
@@ -249081,11 +249081,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-03T20:37:34Z",
     "created_at_local": "2026-06-04T04:37:34+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T04:38:17+0800"
   },
   {
@@ -252141,11 +252141,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T00:08:12Z",
     "created_at_local": "2026-06-04T08:08:12+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T08:08:55+0800"
   },
   {
@@ -255141,11 +255141,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T00:09:54Z",
     "created_at_local": "2026-06-04T08:09:54+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T08:10:37+0800"
   },
   {
@@ -258775,11 +258775,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T00:11:42Z",
     "created_at_local": "2026-06-04T08:11:42+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T08:12:59+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -262001,11 +262001,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T00:13:59Z",
     "created_at_local": "2026-06-04T08:13:59+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T08:14:43+0800"
   },
   {
@@ -265486,11 +265486,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T00:15:47Z",
     "created_at_local": "2026-06-04T08:15:47+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T08:16:31+0800"
   },
   {
@@ -268416,11 +268416,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T04:08:26Z",
     "created_at_local": "2026-06-04T12:08:26+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T12:09:10+0800"
   },
   {
@@ -271495,11 +271495,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T04:10:11Z",
     "created_at_local": "2026-06-04T12:10:11+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T12:10:55+0800"
   },
   {
@@ -274824,11 +274824,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T04:12:02Z",
     "created_at_local": "2026-06-04T12:12:02+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T12:12:45+0800"
   },
   {
@@ -277877,11 +277877,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T04:13:46Z",
     "created_at_local": "2026-06-04T12:13:46+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T12:14:29+0800"
   },
   {
@@ -281287,11 +281287,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T04:15:35Z",
     "created_at_local": "2026-06-04T12:15:35+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T12:16:18+0800"
   },
   {
@@ -284238,11 +284238,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T08:08:25Z",
     "created_at_local": "2026-06-04T16:08:25+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T16:09:08+0800"
   },
   {
@@ -287283,11 +287283,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T08:10:06Z",
     "created_at_local": "2026-06-04T16:10:06+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T16:10:49+0800"
   },
   {
@@ -290268,11 +290268,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T08:11:51Z",
     "created_at_local": "2026-06-04T16:11:51+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T16:12:35+0800"
   },
   {
@@ -293288,11 +293288,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T08:13:35Z",
     "created_at_local": "2026-06-04T16:13:35+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T16:14:18+0800"
   },
   {
@@ -296886,11 +296886,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T08:15:18Z",
     "created_at_local": "2026-06-04T16:15:18+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T16:16:01+0800"
   },
   {
@@ -296902,7 +296902,7 @@
     "snapshot_time": "2026-06-04T12:08:37Z",
     "snapshot_time_local": "2026-06-04T20:08:37+0800",
     "local_timezone": "Asia/Shanghai",
-    "positionState": "entered",
+    "positionState": "closed",
     "snapshot": {
       "decision_id": "cycle_2026-06-04_1200_BTC",
       "symbol": "BTC-USDT",
@@ -300281,7 +300281,7 @@
       "cycleId": "cycle_2026-06-04_1200",
       "strategy_family": "DIRECTIONAL",
       "execution_action": "OPEN_SHORT",
-      "order_status": "FILLED",
+      "order_status": "CLOSED",
       "requested_size_usd": 99.01,
       "requested_leverage": 2.0,
       "entry_type": "MARKET",
@@ -300307,9 +300307,9 @@
         "execution_action": "OPEN_SHORT"
       },
       "executed_at": "2026-06-04T12:10:12Z",
-      "sync_status": "OPEN",
+      "sync_status": "CLOSED",
       "failure_reason": null,
-      "protection_status": "OPEN",
+      "protection_status": "CLOSED",
       "history": [
         {
           "type": "EXECUTION_REQUEST_CREATED",
@@ -300407,34 +300407,72 @@
             "new_max_holding_bars": 1,
             "reason": "expiry_review_passed"
           }
+        },
+        {
+          "type": "MAX_HOLDING_PROFIT_TAKE_TRIGGERED",
+          "at": "2026-06-05T12:19:42Z",
+          "payload": {
+            "held_bars": 1,
+            "max_holding_bars": 1,
+            "pnl": 0.1700800000000046,
+            "pnlPercent": 0.34,
+            "entry_price": 62426.4,
+            "current_price": 62320.1,
+            "order_id": "3629233353458458624"
+          }
+        },
+        {
+          "type": "EXECUTION_CLOSED_RECONCILED",
+          "at": "2026-06-05T12:30:06Z",
+          "payload": {
+            "trade_id": "3629233353458458624",
+            "pnl": 0.18,
+            "pnl_percent": 0.37,
+            "reason": "max_holding_profit_take",
+            "reason_source": "position_runtime",
+            "runtime_action": "CLOSE_POSITION",
+            "okx_reason": "OKX Real Trade"
+          }
         }
       ],
       "position_side": "SHORT",
       "live_position_detected_at": "2026-06-04T12:17:33Z",
       "filled_stop_loss": 65717.6,
       "filled_take_profit": 55953.4,
-      "protection_last_synced_at": "2026-06-05T12:11:16Z",
+      "protection_last_synced_at": "2026-06-05T12:19:32Z",
       "add_allowed": true,
-      "distance_to_liq": 0.4968,
+      "distance_to_liq": 0.4983,
       "invalidation_state": {},
-      "runtime_action": "EXTEND_HOLDING",
-      "runtime_reason": "max_holding_review_passed",
+      "runtime_action": "CLOSE_POSITION",
+      "runtime_reason": "max_holding_profit_take",
       "holding_window_started_at": "2026-06-05T08:17:16Z",
-      "holding_review_count": 5
+      "holding_review_count": 5,
+      "last_runtime_order_id": "3629233353458458624",
+      "closed_trade_id": "3629233353458458624",
+      "closed_at": "2026-06-05 12:19:42",
+      "realized_pnl": 0.18,
+      "realized_pnl_percent": 0.37,
+      "avg_exit_price": 62311.9,
+      "close_reason": "max_holding_profit_take",
+      "close_reason_source": "position_runtime"
     },
     "evaluation": {
-      "result_label": "OPEN_MONITORING",
-      "primary_cause": "TRADE_STILL_OPEN",
+      "result_label": "WIN",
+      "primary_cause": "THESIS_CONFIRMED",
       "layer_attribution": {
-        "data": 0.0,
-        "candidate": 0.0,
-        "rule": 0.0,
-        "research": 0.0,
-        "risk": 0.0,
-        "execution": 0.0
+        "data": 0.1,
+        "candidate": 0.25,
+        "rule": 0.1,
+        "research": 0.25,
+        "risk": 0.15,
+        "execution": 0.15
       },
       "improvement_targets": [],
-      "improvement_note": "execution submitted or simulated; no closed trade matched yet",
+      "improvement_note": "closed trade aligned with approved thesis and exited positive",
+      "pnl": 0.18,
+      "pnl_percent": 0.37,
+      "matched_trade_id": "3629233353458458624",
+      "matched_trade_exit_time": "2026-06-05 12:19:42",
       "traceability": {
         "strategy_family": "DIRECTIONAL",
         "candidate_structure": {
@@ -300475,11 +300513,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T12:08:55Z",
     "created_at_local": "2026-06-04T20:08:55+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T20:10:12+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -303540,11 +303578,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T12:11:09Z",
     "created_at_local": "2026-06-04T20:11:09+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T20:11:53+0800"
   },
   {
@@ -306491,11 +306529,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T12:12:58Z",
     "created_at_local": "2026-06-04T20:12:58+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T20:13:41+0800"
   },
   {
@@ -309442,11 +309480,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T12:14:40Z",
     "created_at_local": "2026-06-04T20:14:40+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T20:15:24+0800"
   },
   {
@@ -312702,11 +312740,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T12:16:22Z",
     "created_at_local": "2026-06-04T20:16:22+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-04T20:17:06+0800"
   },
   {
@@ -315762,11 +315800,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T16:07:21Z",
     "created_at_local": "2026-06-05T00:07:21+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T00:07:28+0800"
   },
   {
@@ -318751,11 +318789,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T16:07:51Z",
     "created_at_local": "2026-06-05T00:07:51+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T00:07:59+0800"
   },
   {
@@ -321682,11 +321720,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T16:08:25Z",
     "created_at_local": "2026-06-05T00:08:25+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T00:08:33+0800"
   },
   {
@@ -324609,11 +324647,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T16:08:57Z",
     "created_at_local": "2026-06-05T00:08:57+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T00:09:05+0800"
   },
   {
@@ -327640,11 +327678,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T16:09:33Z",
     "created_at_local": "2026-06-05T00:09:33+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T00:09:40+0800"
   },
   {
@@ -331010,11 +331048,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T20:07:02Z",
     "created_at_local": "2026-06-05T04:07:02+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T04:07:10+0800"
   },
   {
@@ -333965,11 +334003,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T20:07:36Z",
     "created_at_local": "2026-06-05T04:07:36+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T04:07:44+0800"
   },
   {
@@ -336988,11 +337026,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T20:08:11Z",
     "created_at_local": "2026-06-05T04:08:11+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T04:08:19+0800"
   },
   {
@@ -339943,11 +339981,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T20:08:45Z",
     "created_at_local": "2026-06-05T04:08:45+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T04:08:53+0800"
   },
   {
@@ -342962,11 +343000,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-04T20:09:20Z",
     "created_at_local": "2026-06-05T04:09:20+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T04:09:29+0800"
   },
   {
@@ -347043,11 +347081,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T00:07:25Z",
     "created_at_local": "2026-06-05T08:07:25+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T08:07:33+0800"
   },
   {
@@ -351057,11 +351095,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T00:07:56Z",
     "created_at_local": "2026-06-05T08:07:56+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T08:08:04+0800"
   },
   {
@@ -355057,11 +355095,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T00:08:30Z",
     "created_at_local": "2026-06-05T08:08:30+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T08:08:38+0800"
   },
   {
@@ -359057,11 +359095,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T00:09:03Z",
     "created_at_local": "2026-06-05T08:09:03+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T08:09:11+0800"
   },
   {
@@ -363717,11 +363755,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T00:09:44Z",
     "created_at_local": "2026-06-05T08:09:44+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T08:10:01+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -367790,11 +367828,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T04:07:10Z",
     "created_at_local": "2026-06-05T12:07:10+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T12:07:18+0800"
   },
   {
@@ -371604,11 +371642,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T04:07:43Z",
     "created_at_local": "2026-06-05T12:07:43+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T12:07:51+0800"
   },
   {
@@ -375418,11 +375456,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T04:08:26Z",
     "created_at_local": "2026-06-05T12:08:26+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T12:08:34+0800"
   },
   {
@@ -379228,11 +379266,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T04:09:06Z",
     "created_at_local": "2026-06-05T12:09:06+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T12:09:14+0800"
   },
   {
@@ -383199,11 +383237,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T04:09:49Z",
     "created_at_local": "2026-06-05T12:09:49+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T12:09:58+0800"
   },
   {
@@ -387390,11 +387428,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T08:07:12Z",
     "created_at_local": "2026-06-05T16:07:12+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T16:07:21+0800"
   },
   {
@@ -392025,11 +392063,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T08:08:01Z",
     "created_at_local": "2026-06-05T16:08:01+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T16:08:18+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -396672,9 +396710,9 @@
       "live_position_detected_at": "2026-06-05T08:11:28Z",
       "filled_stop_loss": 70.76,
       "filled_take_profit": 55.56,
-      "protection_last_synced_at": "2026-06-05T12:11:16Z",
+      "protection_last_synced_at": "2026-06-05T14:07:04Z",
       "add_allowed": true,
-      "distance_to_liq": 0.4924,
+      "distance_to_liq": 0.4787,
       "invalidation_state": {},
       "runtime_action": "EXTEND_HOLDING",
       "runtime_reason": "max_holding_review_passed",
@@ -396734,11 +396772,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T08:08:55Z",
     "created_at_local": "2026-06-05T16:08:55+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T16:09:13+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -400973,11 +401011,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T08:09:45Z",
     "created_at_local": "2026-06-05T16:09:45+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T16:09:53+0800"
   },
   {
@@ -405037,11 +405075,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T08:10:18Z",
     "created_at_local": "2026-06-05T16:10:18+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T16:10:27+0800"
   },
   {
@@ -409442,11 +409480,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T12:07:23Z",
     "created_at_local": "2026-06-05T20:07:23+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T20:07:32+0800"
   },
   {
@@ -413597,11 +413635,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T12:07:59Z",
     "created_at_local": "2026-06-05T20:07:59+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T20:08:07+0800"
   },
   {
@@ -417675,11 +417713,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T12:08:38Z",
     "created_at_local": "2026-06-05T20:08:38+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T20:08:38+0800"
   },
   {
@@ -422240,9 +422278,9 @@
       "live_position_detected_at": "2026-06-05T12:11:17Z",
       "filled_stop_loss": 620.2,
       "filled_take_profit": 521.5,
-      "protection_last_synced_at": "2026-06-05T12:11:17Z",
+      "protection_last_synced_at": "2026-06-05T14:07:04Z",
       "add_allowed": true,
-      "distance_to_liq": 0.499,
+      "distance_to_liq": 0.4866,
       "invalidation_state": {}
     },
     "evaluation": {
@@ -422298,11 +422336,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T12:09:21Z",
     "created_at_local": "2026-06-05T20:09:21+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T20:09:38+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -426441,11 +426479,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-05T12:11:36Z"
+      "generated_at": "2026-06-05T14:07:22Z"
     },
     "created_at": "2026-06-05T12:10:07Z",
     "created_at_local": "2026-06-05T20:10:07+0800",
-    "updated_at": "2026-06-05T12:11:36Z",
+    "updated_at": "2026-06-05T14:07:22Z",
     "updated_at_local": "2026-06-05T20:10:16+0800"
   }
 ]
