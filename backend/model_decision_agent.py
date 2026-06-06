@@ -217,6 +217,21 @@ def build_market_state(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         "price_vs_vwap_lower_3_16h_pct": _safe_float(market.get("price_vs_vwap_lower_3_16h_pct")),
         "price_vwap_zscore_16h": _safe_float(market.get("price_vwap_zscore_16h")),
         "vwap_16h_zone": market.get("vwap_16h_zone"),
+        "options_gamma": {
+            "available": bool(market.get("options_gamma_available")),
+            "source": market.get("options_gamma_source"),
+            "coverage": market.get("options_gamma_coverage"),
+            "lookahead_days": market.get("options_gamma_lookahead_days"),
+            "put_wall": market.get("options_put_wall"),
+            "call_wall": market.get("options_call_wall"),
+            "iv": market.get("options_iv"),
+            "wall_distance": market.get("options_wall_distance"),
+            "total_gex_usd_per_1pct": _safe_float(market.get("options_total_gex_usd_per_1pct")),
+            "gamma_sign": market.get("options_gamma_sign"),
+            "gamma_semantic": market.get("options_gamma_semantic"),
+            "missing_reason": market.get("options_gamma_missing_reason"),
+            "calculation_note": market.get("options_gamma_calculation_note"),
+        },
     }
 
     has_onchain_flow_data = bool(onchain.get("flow_data_available"))
@@ -231,6 +246,7 @@ def build_market_state(snapshot: Dict[str, Any]) -> Dict[str, Any]:
         "has_prior_120d_drawdown": technical["prior_120d_drawdown_pct"] is not None,
         "has_vwap_4h": technical["vwap_4h"] is not None,
         "has_vwap_16h": technical["vwap_16h"] is not None,
+        "has_options_gamma_context": bool(technical["options_gamma"]["available"]),
         "has_onchain_flow_data": has_onchain_flow_data,
         "has_token_net_flow": has_onchain_flow_data and onchain.get("token_net_flow") is not None,
         "has_stablecoin_net_flow": has_onchain_flow_data and onchain.get("stablecoin_net_flow") is not None,

@@ -393,6 +393,108 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertTrue(state["data_availability"]["has_vwap_4h"])
         self.assertTrue(state["data_availability"]["has_vwap_16h"])
 
+    def test_model_market_state_carries_options_gamma_semantics(self):
+        snapshot = {
+            "symbol": "BTC-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-06-07T00:00:00Z",
+            "market_snapshot": {
+                "price": 60000.0,
+                "options_gamma_available": True,
+                "options_gamma_source": "deribit_public_options",
+                "options_gamma_coverage": "BTC/ETH Deribit options only",
+                "options_gamma_lookahead_days": 14,
+                "options_put_wall": {"strike": 58000.0, "expiry": "2026-06-14", "open_interest": 1200.0, "mark_iv": 58.5},
+                "options_call_wall": {"strike": 65000.0, "expiry": "2026-06-14", "open_interest": 1500.0, "mark_iv": 61.2},
+                "options_iv": {
+                    "atm_mark_iv": 59.8,
+                    "oi_weighted_mark_iv": 60.1,
+                    "put_wall_mark_iv": 58.5,
+                    "call_wall_mark_iv": 61.2,
+                    "unit": "annualized_percent",
+                },
+                "options_wall_distance": {
+                    "near_threshold_pct": 1.0,
+                    "put_wall_downside_pct": 3.3333,
+                    "call_wall_upside_pct": 8.3333,
+                    "put_wall_abs_distance_pct": 3.3333,
+                    "call_wall_abs_distance_pct": 8.3333,
+                    "near_put_wall": False,
+                    "near_call_wall": False,
+                    "semantic": "NOT_NEAR_MAJOR_WALL: price is not within the near-wall threshold.",
+                },
+                "options_total_gex_usd_per_1pct": -2450000.0,
+                "options_gamma_sign": "NEGATIVE",
+                "options_gamma_semantic": "NEGATIVE_GAMMA: dealer hedging is more likely to chase price moves.",
+                "options_gamma_calculation_note": "Public OI and greeks proxy.",
+            },
+            "onchain_snapshot": {},
+            "decision_ready_features": {},
+            "macro_snapshot": {},
+            "position_snapshot": {},
+        }
+
+        state = dp.build_market_state(snapshot)
+
+        options_gamma = state["technical"]["options_gamma"]
+        self.assertTrue(options_gamma["available"])
+        self.assertEqual(14, options_gamma["lookahead_days"])
+        self.assertEqual(58000.0, options_gamma["put_wall"]["strike"])
+        self.assertEqual(65000.0, options_gamma["call_wall"]["strike"])
+        self.assertEqual(59.8, options_gamma["iv"]["atm_mark_iv"])
+        self.assertEqual(60.1, options_gamma["iv"]["oi_weighted_mark_iv"])
+        self.assertEqual(3.3333, options_gamma["wall_distance"]["put_wall_downside_pct"])
+        self.assertEqual(8.3333, options_gamma["wall_distance"]["call_wall_upside_pct"])
+        self.assertFalse(options_gamma["wall_distance"]["near_put_wall"])
+        self.assertFalse(options_gamma["wall_distance"]["near_call_wall"])
+        self.assertEqual(-2450000.0, options_gamma["total_gex_usd_per_1pct"])
+        self.assertEqual("NEGATIVE", options_gamma["gamma_sign"])
+        self.assertIn("chase price moves", options_gamma["gamma_semantic"])
+        self.assertTrue(state["data_availability"]["has_options_gamma_context"])
+
+    def test_decision_snapshot_marks_non_deribit_options_context_unavailable(self):
+        snapshot = dp._build_decision_snapshot(
+            "SOL",
+            {
+                "fear_greed": {"value": 50, "value_classification": "Neutral"},
+                "sol": {"market": {"price": 80, "rsi_4h": 45, "volume_ratio": 1.0}},
+            },
+            {"symbol": "SOL", "p_up_8h": 0.2, "p_down_8h": 0.2, "p_flat_8h": 0.6, "market_data": {"close": 80}},
+            {"positions": [], "total_equity": 10000},
+            "cycle_model",
+            chart_context={
+                "options_gamma": {
+                    "available": False,
+                    "source": "deribit_public_options",
+                    "coverage": "BTC/ETH Deribit options only",
+                    "lookahead_days": 14,
+                    "gamma_sign": "UNAVAILABLE",
+                    "gamma_semantic": "UNAVAILABLE",
+                    "iv": {"atm_mark_iv": None, "unit": "annualized_percent"},
+                    "wall_distance": {"near_put_wall": False, "near_call_wall": False},
+                    "missing_reason": "unsupported_symbol_options_context_only_available_for_BTC_ETH",
+                }
+            },
+            macro_snapshot={
+                "macro_mode": "MIXED",
+                "macro_horizon": "NOISE",
+                "macro_permission": "ALLOW_BOTH",
+                "macro_event_window": False,
+                "key_events": [],
+            },
+            qlib_freshness={"fresh": True},
+        )
+
+        features = snapshot["decision_ready_features"]
+        self.assertFalse(features["options_gamma_available"])
+        self.assertEqual("BTC/ETH Deribit options only", features["options_gamma_coverage"])
+        self.assertEqual("UNAVAILABLE", features["options_gamma_sign"])
+        self.assertEqual(
+            "unsupported_symbol_options_context_only_available_for_BTC_ETH",
+            features["options_gamma_missing_reason"],
+        )
+
     def test_model_market_state_preserves_zero_values(self):
         snapshot = {
             "symbol": "BNB-USDT",
@@ -1331,6 +1433,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         with patch.object(dp, "db", fake_db), \
              patch.object(dp, "_load_qlib_payload", return_value=qlib_payload), \
              patch.object(dp, "_qlib_freshness_report", return_value=self._fresh_qlib_report()), \
+             patch.object(dp, "_load_options_gamma_context_map", return_value={}), \
              patch.object(dp, "run_post_trade_review", return_value={"evaluated_count": 0, "record_count": 0}), \
              patch.dict(os.environ, {"ENABLE_V2_EXECUTION": "1"}, clear=False):
             result = dp.run_deterministic_cycle(executor=FakeExecutor())
@@ -1390,6 +1493,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
              patch.object(dp, "_load_qlib_payload", return_value=qlib_payload), \
              patch.object(dp, "_qlib_freshness_report", return_value=self._fresh_qlib_report()), \
              patch.object(dp, "_build_macro_snapshot", return_value=macro_snapshot) as macro_mock, \
+             patch.object(dp, "_load_options_gamma_context_map", return_value={}), \
              patch.object(dp, "run_post_trade_review", return_value={"evaluated_count": 0, "record_count": 0}):
             result = dp.run_deterministic_cycle(executor=FakeExecutor())
 
@@ -2788,6 +2892,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         with patch.object(dp, "db", fake_db), \
              patch.object(dp, "_load_qlib_payload", return_value=qlib_payload), \
              patch.object(dp, "_qlib_freshness_report", return_value=self._fresh_qlib_report()), \
+             patch.object(dp, "_load_options_gamma_context_map", return_value={}), \
              patch.object(dp, "run_post_trade_review", return_value={"evaluated_count": 0, "record_count": 0}), \
              patch.dict(os.environ, {"ENABLE_V2_EXECUTION": "0"}, clear=False):
             result = dp.run_deterministic_cycle(executor=FakeExecutor())
@@ -3048,6 +3153,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
              patch.object(dp, "_qlib_coin_map", return_value={}), \
              patch.object(dp, "_load_chart_feature_context_map", return_value={}), \
              patch.object(dp, "_load_vwap_feature_context_map", return_value={}), \
+             patch.object(dp, "_load_options_gamma_context_map", return_value={}), \
              patch.object(dp, "_build_macro_snapshot", return_value={}), \
              patch.object(dp, "_aligned_cycle_id", return_value="cycle_test"), \
              patch.object(dp, "_build_decision_snapshot", return_value=snapshot), \

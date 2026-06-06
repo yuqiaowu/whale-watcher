@@ -25,6 +25,7 @@ from model_invalidation_schema import (
     normalize_invalidation_value_ref,
 )
 from okx_executor import OKXExecutor
+from options_gamma import load_options_gamma_context
 from post_trade_review import run_post_trade_review
 from research_agent import build_research_output
 from trade_audit import append_trade_audit_event
@@ -599,6 +600,10 @@ def _load_vwap_feature_context_map() -> Dict[str, Dict[str, Any]]:
     return load_vwap_feature_context(TRACKED_SYMBOLS)
 
 
+def _load_options_gamma_context_map() -> Dict[str, Dict[str, Any]]:
+    return load_options_gamma_context(TRACKED_SYMBOLS)
+
+
 def _symbol_position_snapshot(portfolio_state: Dict[str, Any], symbol: str) -> Dict[str, Any]:
     positions = portfolio_state.get("positions", []) or []
     symbol_positions = [p for p in positions if p.get("symbol", "").upper() == symbol.upper()]
@@ -850,6 +855,7 @@ def _build_decision_snapshot(
     market_data = qlib_coin.get("market_data", {})
     chart_context = chart_context or {}
     vwap_context = chart_context.get("vwap") if isinstance(chart_context.get("vwap"), dict) else {}
+    options_gamma_context = chart_context.get("options_gamma") if isinstance(chart_context.get("options_gamma"), dict) else {}
     qlib_freshness = deepcopy(qlib_freshness) if isinstance(qlib_freshness, dict) else {}
     qlib_data_fresh = qlib_freshness.get("fresh", True) is True
 
@@ -957,6 +963,19 @@ def _build_decision_snapshot(
         "price_vs_vwap_lower_3_16h_pct": _optional_float(vwap_context.get("price_vs_vwap_lower_3_16h_pct")),
         "price_vwap_zscore_16h": _optional_float(vwap_context.get("price_vwap_zscore_16h")),
         "vwap_16h_zone": vwap_context.get("vwap_16h_zone"),
+        "options_gamma_available": bool(options_gamma_context.get("available")),
+        "options_gamma_source": options_gamma_context.get("source"),
+        "options_gamma_coverage": options_gamma_context.get("coverage"),
+        "options_gamma_lookahead_days": options_gamma_context.get("lookahead_days"),
+        "options_put_wall": options_gamma_context.get("put_wall"),
+        "options_call_wall": options_gamma_context.get("call_wall"),
+        "options_iv": options_gamma_context.get("iv"),
+        "options_wall_distance": options_gamma_context.get("wall_distance"),
+        "options_total_gex_usd_per_1pct": _optional_float(options_gamma_context.get("total_gex_usd_per_1pct")),
+        "options_gamma_sign": options_gamma_context.get("gamma_sign"),
+        "options_gamma_semantic": options_gamma_context.get("gamma_semantic"),
+        "options_gamma_missing_reason": options_gamma_context.get("missing_reason"),
+        "options_gamma_calculation_note": options_gamma_context.get("calculation_note"),
     }
     onchain_snapshot = {
         "token_net_flow": token_flow,
@@ -1123,6 +1142,17 @@ def _build_decision_snapshot(
         "price_vs_vwap_16h_pct": _optional_float(market_snapshot.get("price_vs_vwap_16h_pct")),
         "price_vwap_zscore_16h": _optional_float(market_snapshot.get("price_vwap_zscore_16h")),
         "vwap_16h_zone": market_snapshot.get("vwap_16h_zone"),
+        "options_gamma_available": bool(market_snapshot.get("options_gamma_available")),
+        "options_gamma_coverage": market_snapshot.get("options_gamma_coverage"),
+        "options_gamma_lookahead_days": market_snapshot.get("options_gamma_lookahead_days"),
+        "options_put_wall": market_snapshot.get("options_put_wall"),
+        "options_call_wall": market_snapshot.get("options_call_wall"),
+        "options_iv": market_snapshot.get("options_iv"),
+        "options_wall_distance": market_snapshot.get("options_wall_distance"),
+        "options_total_gex_usd_per_1pct": _optional_float(market_snapshot.get("options_total_gex_usd_per_1pct")),
+        "options_gamma_sign": market_snapshot.get("options_gamma_sign"),
+        "options_gamma_semantic": market_snapshot.get("options_gamma_semantic"),
+        "options_gamma_missing_reason": market_snapshot.get("options_gamma_missing_reason"),
         "max_profitable_grid_count": grid_setup["max_profitable_grid_count"],
         "grid_review_after_hours": grid_setup["review_after_hours"],
         "grid_extension_step_hours": grid_setup["extension_step_hours"],
@@ -3516,6 +3546,9 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
     vwap_context_map = _load_vwap_feature_context_map()
     for symbol, vwap_context in vwap_context_map.items():
         chart_context_map.setdefault(symbol, {})["vwap"] = vwap_context
+    options_gamma_context_map = _load_options_gamma_context_map()
+    for symbol, options_gamma_context in options_gamma_context_map.items():
+        chart_context_map.setdefault(symbol, {})["options_gamma"] = options_gamma_context
     qlib_freshness = _qlib_freshness_report(qlib_payload, qlib_map, chart_context_map)
     qlib_map_for_decision = qlib_map if qlib_freshness.get("fresh") else {}
     macro_snapshot = _build_macro_snapshot(whale_analysis)
