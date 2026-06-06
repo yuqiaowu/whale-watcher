@@ -1732,11 +1732,12 @@
         }
       ],
       "add_allowed": true,
-      "distance_to_liq": 0.4921,
+      "distance_to_liq": 0.4911,
       "runtime_action": "EXTEND_HOLDING",
       "runtime_reason": "max_holding_review_passed",
       "holding_window_started_at": "2026-06-06T20:18:53Z",
-      "holding_review_count": 1
+      "holding_review_count": 1,
+      "protection_last_synced_at": "2026-06-06T20:57:01Z"
     },
     "evaluation": {
       "result_label": "OPEN_MONITORING",
@@ -1791,10 +1792,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-06T20:19:19Z"
+      "generated_at": "2026-06-06T20:58:19Z"
     },
     "created_at": "2026-06-06T04:09:11Z",
-    "updated_at": "2026-06-06T20:19:19Z",
+    "updated_at": "2026-06-06T20:58:19Z",
     "provenance": {
       "source": "execution_reconciliation",
       "adopted_live_position": true,
@@ -5723,11 +5724,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-06T20:19:19Z"
+      "generated_at": "2026-06-06T20:58:19Z"
     },
     "created_at": "2026-06-06T20:09:05Z",
     "created_at_local": "2026-06-07T04:09:05+0800",
-    "updated_at": "2026-06-06T20:19:19Z",
+    "updated_at": "2026-06-06T20:58:19Z",
     "updated_at_local": "2026-06-07T04:09:30+0800"
   },
   {
@@ -10217,7 +10218,7 @@
         "execution_action": "OPEN_SHORT"
       },
       "executed_at": "2026-06-06T20:10:51Z",
-      "sync_status": "FILLED",
+      "sync_status": "OPEN",
       "failure_reason": null,
       "protection_status": "OPEN",
       "history": [
@@ -10259,15 +10260,23 @@
             "add_allowed": true,
             "position_state": "approved"
           }
+        },
+        {
+          "type": "EXECUTION_OPEN_POSITION_SYNCED",
+          "at": "2026-06-06T20:20:32Z",
+          "payload": {
+            "symbol": "ETH-USDT",
+            "protection_status": "OPEN"
+          }
         }
       ],
       "position_side": "SHORT",
       "live_position_detected_at": "2026-06-06T20:17:33Z",
       "filled_stop_loss": 1666.42,
       "filled_take_profit": 1320.6,
-      "protection_last_synced_at": "2026-06-06T20:17:33Z",
+      "protection_last_synced_at": "2026-06-06T20:57:01Z",
       "add_allowed": true,
-      "distance_to_liq": 0.4992,
+      "distance_to_liq": 0.4978,
       "invalidation_state": {}
     },
     "evaluation": {
@@ -10323,11 +10332,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-06T20:19:19Z"
+      "generated_at": "2026-06-06T20:58:19Z"
     },
     "created_at": "2026-06-06T20:10:05Z",
     "created_at_local": "2026-06-07T04:10:05+0800",
-    "updated_at": "2026-06-06T20:19:19Z",
+    "updated_at": "2026-06-06T20:58:19Z",
     "updated_at_local": "2026-06-07T04:10:51+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -14935,9 +14944,9 @@
       "live_position_detected_at": "2026-06-06T20:17:34Z",
       "filled_stop_loss": 66.34,
       "filled_take_profit": 51.38,
-      "protection_last_synced_at": "2026-06-06T20:17:34Z",
+      "protection_last_synced_at": "2026-06-06T20:57:01Z",
       "add_allowed": true,
-      "distance_to_liq": 0.4989,
+      "distance_to_liq": 0.4968,
       "invalidation_state": {}
     },
     "evaluation": {
@@ -14993,11 +15002,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-06T20:19:19Z"
+      "generated_at": "2026-06-06T20:58:19Z"
     },
     "created_at": "2026-06-06T20:11:47Z",
     "created_at_local": "2026-06-07T04:11:47+0800",
-    "updated_at": "2026-06-06T20:19:19Z",
+    "updated_at": "2026-06-06T20:58:19Z",
     "updated_at_local": "2026-06-07T04:12:38+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -19166,11 +19175,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-06T20:19:19Z"
+      "generated_at": "2026-06-06T20:58:19Z"
     },
     "created_at": "2026-06-06T20:13:14Z",
     "created_at_local": "2026-06-07T04:13:14+0800",
-    "updated_at": "2026-06-06T20:19:19Z",
+    "updated_at": "2026-06-06T20:58:19Z",
     "updated_at_local": "2026-06-07T04:13:45+0800"
   },
   {
@@ -23145,11 +23154,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-06T20:19:19Z"
+      "generated_at": "2026-06-06T20:58:19Z"
     },
     "created_at": "2026-06-06T20:14:23Z",
     "created_at_local": "2026-06-07T04:14:23+0800",
-    "updated_at": "2026-06-06T20:19:19Z",
+    "updated_at": "2026-06-06T20:58:19Z",
     "updated_at_local": "2026-06-07T04:14:42+0800"
   }
 ]
