@@ -1012,6 +1012,211 @@ class PositionRuntimeTests(unittest.TestCase):
         self.assertEqual(event["payload"]["triggering_rules"][0]["rule_key"], "price_vs_vwap_16h_pct|>=|value:0.0")
         self.assertEqual(event["payload"]["triggering_rules"][0]["consecutive_hits"], 2)
 
+    def test_model_short_sma20_reclaim_uses_live_price_and_latest_sma20(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "m_sma20",
+                    "symbol": "BTC-USDT",
+                    "created_at": "2026-05-15T16:00:00Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "BTC-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "SHORT",
+                        "max_holding_bars": 3,
+                        "approved_candidate": {
+                            "trigger_source": "ModelDecision_LLM",
+                            "reference_values": {"model_stop_price": 110.0},
+                            "invalidation_conditions": {
+                                "operator": "OR",
+                                "rules": [
+                                    {"field": "relative_sma20_pct", "op": ">=", "value": 0.0, "persistence": 2}
+                                ],
+                                "persistence": 1,
+                            },
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "executed_at": "2026-05-15T16:00:00Z",
+                        "holding_window_started_at": "2026-05-15T20:00:00Z",
+                        "invalidation_state": {
+                            "relative_sma20_pct|>=|value:0.0": {
+                                "consecutive_hits": 1,
+                                "required_hits": 2,
+                                "matched": True,
+                            }
+                        },
+                        "history": [],
+                    },
+                    "researchOutput": {"thesis_change": "UNCHANGED", "thesis_strength": "HIGH"},
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "BTC",
+                        "type": "short",
+                        "entryPrice": 99.0,
+                        "currentPrice": 101.0,
+                        "amount": 1.0,
+                        "margin": 50.0,
+                        "leverage": 2.0,
+                    }
+                ]
+            },
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "BTC-USDT",
+                        "market_snapshot": {"sma20_4h": 100.0},
+                        "decision_ready_features": {"macro_permission": "ALLOW_SHORT"},
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db):
+            result = pr.run_in_position_runtime(executor=FakeExecutor())
+
+        self.assertEqual(result["actions"][0]["action"], "CLOSE_POSITION")
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["execution"]["runtime_reason"], "candidate_invalidation")
+        state = record["execution"]["invalidation_state"]
+        self.assertEqual(state["relative_sma20_pct|>=|value:0.0"]["consecutive_hits"], 2)
+
+    def test_persisted_price_vs_relative_sma20_rule_is_normalized_at_runtime(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "m_bad_sma20_rule",
+                    "symbol": "ETH-USDT",
+                    "created_at": "2026-05-15T16:00:00Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "ETH-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "SHORT",
+                        "max_holding_bars": 3,
+                        "approved_candidate": {
+                            "trigger_source": "ModelDecision_LLM",
+                            "reference_values": {"model_stop_price": 110.0},
+                            "invalidation_conditions": {
+                                "operator": "OR",
+                                "rules": [
+                                    {"field": "price", "op": ">=", "value_ref": "relative_sma20_pct", "persistence": 1}
+                                ],
+                                "persistence": 1,
+                            },
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "executed_at": "2026-05-15T16:00:00Z",
+                        "history": [],
+                    },
+                    "researchOutput": {"thesis_change": "UNCHANGED", "thesis_strength": "HIGH"},
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "ETH",
+                        "type": "short",
+                        "entryPrice": 99.0,
+                        "currentPrice": 101.0,
+                        "amount": 1.0,
+                        "margin": 50.0,
+                        "leverage": 2.0,
+                    }
+                ]
+            },
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "ETH-USDT",
+                        "market_snapshot": {"sma20_4h": 100.0},
+                        "decision_ready_features": {"macro_permission": "ALLOW_SHORT"},
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db):
+            result = pr.run_in_position_runtime(executor=FakeExecutor())
+
+        self.assertEqual(result["actions"][0]["action"], "CLOSE_POSITION")
+        record = fake_db.store["trade_decision_records"][0]
+        event = next(event for event in record["execution"]["history"] if event["type"] == "INVALIDATION_TRIGGERED")
+        self.assertEqual(event["payload"]["triggering_rules"][0]["rule_key"], "relative_sma20_pct|>=|value:0.0")
+
+    def test_expired_losing_short_reclaimed_sma20_rejects_extension(self):
+        store = {
+            "trade_decision_records": [
+                {
+                    "decisionId": "adopted_short",
+                    "symbol": "BNB-USDT",
+                    "created_at": "2026-05-15T16:00:00Z",
+                    "positionState": "entered",
+                    "snapshot": {"symbol": "BNB-USDT"},
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "SHORT",
+                        "max_holding_bars": 1,
+                        "approved_candidate": {
+                            "trigger_source": "ADOPTED_LIVE_POSITION",
+                            "reference_values": {},
+                            "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                        },
+                    },
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "executed_at": "2026-05-15T16:00:00Z",
+                        "history": [],
+                    },
+                    "researchOutput": {"thesis_change": "UNCHANGED", "thesis_strength": "HIGH"},
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "BNB",
+                        "type": "short",
+                        "entryPrice": 99.0,
+                        "currentPrice": 101.0,
+                        "amount": 1.0,
+                        "margin": 50.0,
+                        "leverage": 2.0,
+                    }
+                ]
+            },
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "BNB-USDT",
+                        "market_snapshot": {"sma20_4h": 100.0},
+                        "decision_ready_features": {"macro_permission": "ALLOW_SHORT"},
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(pr, "db", fake_db):
+            result = pr.run_in_position_runtime(executor=FakeExecutor())
+
+        self.assertEqual(result["actions"][0]["action"], "CLOSE_POSITION")
+        record = fake_db.store["trade_decision_records"][0]
+        self.assertEqual(record["execution"]["runtime_reason"], "max_holding_review_rejected")
+        event = next(event for event in record["execution"]["history"] if event["type"] == "MAX_HOLDING_REVIEW_REJECTED")
+        self.assertEqual(event["payload"]["reason"], "expired_losing_short_reclaimed_sma20")
+
     def test_model_stop_price_invalidation_closes_without_extra_persistence(self):
         store = {
             "trade_decision_records": [

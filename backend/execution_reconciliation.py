@@ -921,6 +921,52 @@ def _latest_snapshot_for_symbol(symbol: str) -> Dict[str, Any]:
     return {}
 
 
+def _origin_audit_record_for_position(symbol: str, side: str, entry_price: float, timestamp: Any) -> Dict[str, Any]:
+    ledger = db.get_data("trade_audit_ledger", [])
+    if not isinstance(ledger, list):
+        return {}
+    target_symbol = _normalize_symbol(symbol)
+    target_time = _parse_dt(timestamp)
+    best: Dict[str, Any] = {}
+    best_score = -1
+    for event in ledger:
+        if not isinstance(event, dict):
+            continue
+        if _normalize_symbol(event.get("symbol")) != target_symbol:
+            continue
+        risk_review = event.get("riskReview") or {}
+        if _normalize_side(risk_review.get("final_intent")) != side:
+            continue
+        candidate = risk_review.get("approved_candidate") or {}
+        if candidate.get("trigger_source") == "ADOPTED_LIVE_POSITION":
+            continue
+        execution = event.get("execution") or {}
+        event_entry = _safe_float(execution.get("avg_fill_price"), _safe_float(candidate.get("proposed_entry_price")))
+        if entry_price > 0 and event_entry > 0 and abs(event_entry - entry_price) / entry_price > 0.005:
+            continue
+        score = 0
+        event_type = str(event.get("event_type") or "")
+        if event_type == "TRADE_PROVENANCE_MATCHED":
+            score += 20
+        elif event_type == "TRADE_EXECUTION_RECORDED":
+            score += 10
+        if execution.get("order_status") == "FILLED":
+            score += 5
+        if candidate.get("invalidation_conditions"):
+            score += 3
+        event_time = _parse_dt(execution.get("executed_at") or event.get("created_at") or event.get("event_at"))
+        if target_time and event_time:
+            seconds = abs((event_time - target_time).total_seconds())
+            if seconds <= 300:
+                score += 5
+            elif seconds > 6 * 3600:
+                continue
+        if score > best_score:
+            best = event
+            best_score = score
+    return deepcopy(best) if best else {}
+
+
 def _adopt_live_position(position: Dict[str, Any]) -> Dict[str, Any]:
     symbol_base, side = _position_key(position)
     symbol = f"{symbol_base}-USDT"
@@ -949,6 +995,18 @@ def _adopt_live_position(position: Dict[str, Any]) -> Dict[str, Any]:
     execution_action = "OPEN_LONG" if side == "LONG" else "OPEN_SHORT"
     timestamp_key = str(timestamp).replace(":", "").replace("-", "").replace("T", "_").replace("Z", "")
     decision_id = f"adopted_{symbol_base}_{side.lower()}_{str(entry_price).replace('.', '_')}_{timestamp_key}"
+    origin_audit = _origin_audit_record_for_position(symbol, side, entry_price, timestamp)
+    origin_risk_review = origin_audit.get("riskReview") or {}
+    origin_candidate = origin_risk_review.get("approved_candidate") or {}
+    origin_reference_values = deepcopy(origin_candidate.get("reference_values") or {})
+    origin_invalidation = deepcopy(origin_candidate.get("invalidation_conditions") or {})
+    if not origin_invalidation:
+        origin_invalidation = {"operator": "OR", "rules": [], "persistence": 1}
+    invalidation_basis = (
+        f"recovered from audit ledger origin {origin_audit.get('decisionId')}"
+        if origin_candidate
+        else "manual or external live position; no original candidate invalidation available"
+    )
     approved_candidate = {
         "strategy_family": "DIRECTIONAL",
         "decision_intent": side,
@@ -958,9 +1016,9 @@ def _adopt_live_position(position: Dict[str, Any]) -> Dict[str, Any]:
         "proposed_entry_price": entry_price,
         "proposed_sl_price": stop_loss,
         "proposed_tp_price": take_profit,
-        "reference_values": {},
-        "invalidation_basis": "manual or external live position; no original candidate invalidation available",
-        "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+        "reference_values": origin_reference_values,
+        "invalidation_basis": invalidation_basis,
+        "invalidation_conditions": origin_invalidation,
     }
     return {
         "decisionId": decision_id,
@@ -1068,10 +1126,15 @@ def _adopt_live_position(position: Dict[str, Any]) -> Dict[str, Any]:
         "evaluation": None,
         "created_at": timestamp,
         "updated_at": now_iso,
+        "opening_thesis_snapshot": deepcopy(origin_audit.get("opening_thesis_snapshot"))
+        if origin_audit.get("opening_thesis_snapshot")
+        else None,
         "provenance": {
             "source": "execution_reconciliation",
             "adopted_live_position": True,
             "position_open_time_source": timestamp_source,
+            "recovered_origin_decision_id": origin_audit.get("decisionId") if origin_audit else None,
+            "recovered_origin_source": "trade_audit_ledger" if origin_audit else None,
         },
     }
 

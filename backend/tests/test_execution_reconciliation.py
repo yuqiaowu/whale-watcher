@@ -626,6 +626,91 @@ class ExecutionReconciliationTests(unittest.TestCase):
         self.assertEqual(old_record["execution"]["order_status"], "CLOSED")
         self.assertEqual(old_record["execution"]["history"], [])
 
+    def test_adopted_live_position_recovers_invalidation_from_audit_origin(self):
+        store = {
+            "trade_decision_records": [],
+            "trade_audit_ledger": [
+                {
+                    "event_type": "TRADE_PROVENANCE_MATCHED",
+                    "decisionId": "cycle_2026-06-06_0400_BNB",
+                    "cycleId": "cycle_2026-06-06_0400",
+                    "symbol": "BNB-USDT",
+                    "created_at": "2026-06-06T04:08:53Z",
+                    "execution": {
+                        "execution_action": "OPEN_SHORT",
+                        "order_status": "FILLED",
+                        "sync_status": "OPEN",
+                        "avg_fill_price": 568.4,
+                        "executed_at": "2026-06-06T04:09:11Z",
+                    },
+                    "riskReview": {
+                        "approved": True,
+                        "final_intent": "SHORT",
+                        "approved_candidate": {
+                            "trigger_source": "ModelDecision_LLM",
+                            "reference_values": {"model_stop_price": 607.9},
+                            "invalidation_conditions": {
+                                "operator": "OR",
+                                "rules": [
+                                    {"field": "price", "op": ">=", "value_ref": "model_stop_price"},
+                                    {"field": "macro_mode", "op": "==", "value": "RISK_ON", "persistence": 1},
+                                ],
+                                "persistence": 1,
+                            },
+                        },
+                    },
+                    "opening_thesis_snapshot": {
+                        "decisionId": "cycle_2026-06-06_0400_BNB",
+                        "invalidation_conditions": {
+                            "operator": "OR",
+                            "rules": [{"field": "price", "op": ">=", "value_ref": "model_stop_price"}],
+                        },
+                    },
+                }
+            ],
+            "portfolio_state": {
+                "positions": [
+                    {
+                        "symbol": "BNB",
+                        "type": "short",
+                        "entryPrice": 568.4,
+                        "currentPrice": 590.0,
+                        "amount": 0.14,
+                        "leverage": 2,
+                        "stopLoss": 607.9,
+                        "takeProfit": 497.4,
+                        "positionOpenedAt": "2026-06-06T04:09:11Z",
+                    }
+                ]
+            },
+            "trade_history": [],
+            "latest_decision_cycle_v2": {
+                "snapshots": [
+                    {
+                        "symbol": "BNB-USDT",
+                        "cycleId": "cycle_2026-06-06_2000",
+                        "market_snapshot": {"price": 590.0},
+                        "decision_ready_features": {"macro_mode": "RISK_OFF"},
+                    }
+                ]
+            },
+        }
+        fake_db = FakeDB(store)
+        with patch.object(er, "db", fake_db):
+            result = er.run_execution_reconciliation()
+
+        self.assertEqual(result["updated_count"], 1)
+        adopted = fake_db.store["trade_decision_records"][0]
+        candidate = adopted["riskReview"]["approved_candidate"]
+        self.assertEqual(candidate["reference_values"]["model_stop_price"], 607.9)
+        self.assertEqual(
+            candidate["invalidation_conditions"]["rules"][0],
+            {"field": "price", "op": ">=", "value_ref": "model_stop_price"},
+        )
+        self.assertIn("cycle_2026-06-06_0400_BNB", candidate["invalidation_basis"])
+        self.assertEqual(adopted["provenance"]["recovered_origin_decision_id"], "cycle_2026-06-06_0400_BNB")
+        self.assertEqual(adopted["opening_thesis_snapshot"]["decisionId"], "cycle_2026-06-06_0400_BNB")
+
     def test_new_same_side_live_position_does_not_reuse_closed_origin_record(self):
         store = {
             "trade_decision_records": [

@@ -209,6 +209,87 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         )
         self.assertEqual([], candidate["reference_values"]["model_rejected_invalidation_rules"])
 
+    def test_model_invalidation_rule_rejects_allowed_but_unavailable_field(self):
+        snapshot = {
+            "symbol": "BTC-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-06-08T00:00:00Z",
+            "market_snapshot": {"price": 62000.0, "atr_14": 800.0},
+            "decision_ready_features": {"macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+            "position_snapshot": {"position_side": None},
+            "is_decision_eligible": True,
+        }
+        model_decision = {
+            "action": "SELL",
+            "direction": "SHORT",
+            "confidence": 0.8,
+            "setup_type": "trend_breakdown",
+            "risk_level": "MEDIUM",
+            "horizon": "SWING",
+            "reason_codes": ["bear_trend"],
+            "invalid_if": ["price reclaims VWAP"],
+            "invalidation_rules": [
+                {"field": "price_vs_vwap_16h_pct", "op": ">=", "value": 0.0, "persistence": 2},
+            ],
+            "summary": "short setup",
+        }
+
+        batch = dp._build_model_decision_candidate_batch(
+            snapshot,
+            {"technical": {"current_price": 62000.0, "atr14": 800.0}},
+            model_decision,
+        )
+
+        candidate = batch["candidate_proposals"][0]
+        self.assertEqual(
+            "field_unavailable",
+            candidate["reference_values"]["model_rejected_invalidation_rules"][0]["reason"],
+        )
+        self.assertNotIn(
+            {"field": "price_vs_vwap_16h_pct", "op": ">=", "reason": "model_invalidation_rule", "value": 0.0, "persistence": 2},
+            candidate["invalidation_conditions"]["rules"],
+        )
+
+    def test_model_invalidation_rule_allows_runtime_computable_relative_sma20(self):
+        snapshot = {
+            "symbol": "BTC-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-06-08T00:00:00Z",
+            "market_snapshot": {"price": 62000.0, "atr_14": 800.0, "sma20_4h": 61800.0},
+            "decision_ready_features": {"macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+            "position_snapshot": {"position_side": None},
+            "is_decision_eligible": True,
+        }
+        model_decision = {
+            "action": "SELL",
+            "direction": "SHORT",
+            "confidence": 0.8,
+            "setup_type": "trend_breakdown",
+            "risk_level": "MEDIUM",
+            "horizon": "SWING",
+            "reason_codes": ["bear_trend"],
+            "invalid_if": ["price reclaims SMA20"],
+            "invalidation_rules": [
+                {"field": "relative_sma20_pct", "op": ">=", "value": 0.0, "persistence": 2, "reason": "price reclaims SMA20"},
+            ],
+            "summary": "short setup",
+        }
+
+        batch = dp._build_model_decision_candidate_batch(
+            snapshot,
+            {"technical": {"current_price": 62000.0, "atr14": 800.0}},
+            model_decision,
+        )
+
+        candidate = batch["candidate_proposals"][0]
+        self.assertIn(
+            {"field": "relative_sma20_pct", "op": ">=", "reason": "price reclaims SMA20", "value": 0.0, "persistence": 2},
+            candidate["invalidation_conditions"]["rules"],
+        )
+        self.assertEqual([], candidate["reference_values"]["model_rejected_invalidation_rules"])
+
     def test_model_decision_normalizes_common_invalidation_rule_shapes(self):
         snapshot = {
             "symbol": "SOL-USDT",

@@ -130,6 +130,15 @@ def _match_live_position(record: Dict[str, Any], positions: List[Dict[str, Any]]
 def _resolve_runtime_field(field: str, snapshot: Dict[str, Any], live_position: Dict[str, Any], reference_values: Dict[str, Any]) -> Any:
     if field == "price":
         return _safe_float(live_position.get("currentPrice"))
+    if field == "relative_sma20_pct":
+        current_price = _safe_float(live_position.get("currentPrice"))
+        sma20 = _safe_float(
+            reference_values.get("sma20_4h"),
+            _safe_float((snapshot.get("market_snapshot") or {}).get("sma20_4h")),
+        )
+        if current_price > 0 and sma20 > 0:
+            return (current_price - sma20) / sma20 * 100.0
+        return None
     if field in reference_values:
         return reference_values[field]
     for source in (
@@ -171,19 +180,28 @@ def _compare_runtime_rule(
 ) -> Dict[str, Any]:
     field = rule.get("field")
     op = rule.get("op")
+    value_ref_override = rule.get("value_ref")
+    value_override = rule.get("value")
+    # Some persisted LLM rules used `price >= relative_sma20_pct` to mean
+    # "price has reclaimed SMA20"; execute that as the intended normalized rule.
+    if str(field or "") == "price" and str(rule.get("value_ref") or "") == "relative_sma20_pct":
+        field = "relative_sma20_pct"
+        op = ">="
+        value_ref_override = None
+        value_override = 0.0
     left = _resolve_runtime_field(str(field or ""), snapshot, live_position, reference_values)
-    if "value_ref" in rule:
-        value_ref = str(rule.get("value_ref") or "")
+    if value_ref_override is not None:
+        value_ref = str(value_ref_override or "")
         right = reference_values.get(value_ref) if value_ref in reference_values else _resolve_runtime_field(value_ref, snapshot, live_position, reference_values)
     else:
-        right = rule.get("value")
+        right = value_override
 
     detail: Dict[str, Any] = {
-        "rule_key": _rule_key(rule),
+        "rule_key": _rule_key({"field": field, "op": op, "value_ref": value_ref_override} if value_ref_override is not None else {"field": field, "op": op, "value": value_override}),
         "field": field,
         "op": op,
-        "value_ref": rule.get("value_ref"),
-        "value": rule.get("value"),
+        "value_ref": value_ref_override,
+        "value": value_override,
         "reason": rule.get("reason"),
         "left": left,
         "right": right,
@@ -458,6 +476,29 @@ def _thesis_weakened(record: Dict[str, Any], snapshot: Dict[str, Any], live_posi
     return False, ""
 
 
+def _expired_losing_reversal_reason(snapshot: Dict[str, Any], live_position: Dict[str, Any], side: str) -> str:
+    if _position_is_profitable(live_position, side):
+        return ""
+    market = snapshot.get("market_snapshot", {}) or {}
+    features = snapshot.get("decision_ready_features", {}) or {}
+    current_price = _safe_float(live_position.get("currentPrice"))
+    sma20_4h = _safe_float(market.get("sma20_4h"), _safe_float(features.get("sma20_4h")))
+    price_vs_vwap_4h = _safe_float(market.get("price_vs_vwap_4h_pct"), _safe_float(features.get("price_vs_vwap_4h_pct")))
+    price_vs_vwap_16h = _safe_float(market.get("price_vs_vwap_16h_pct"), _safe_float(features.get("price_vs_vwap_16h_pct")))
+
+    if side == "SHORT":
+        if sma20_4h > 0 and current_price > 0 and current_price >= sma20_4h:
+            return "expired_losing_short_reclaimed_sma20"
+        if price_vs_vwap_4h > 0 and price_vs_vwap_16h > 0:
+            return "expired_losing_short_reclaimed_vwap"
+    if side == "LONG":
+        if sma20_4h > 0 and current_price > 0 and current_price <= sma20_4h:
+            return "expired_losing_long_lost_sma20"
+        if price_vs_vwap_4h < 0 and price_vs_vwap_16h < 0:
+            return "expired_losing_long_lost_vwap"
+    return ""
+
+
 def _reassessed_max_holding_bars(record: Dict[str, Any], snapshot: Dict[str, Any]) -> int:
     risk_review = record.get("riskReview") or {}
     del snapshot
@@ -479,6 +520,9 @@ def _review_expired_position(
         return False, 0, weakened_reason
     if _is_f_blueprint(record) and _f_runtime_exit(record, snapshot, live_position, side) is not None:
         return False, 0, "f_runtime_exit"
+    reversal_reason = _expired_losing_reversal_reason(snapshot, live_position, side)
+    if reversal_reason:
+        return False, 0, reversal_reason
 
     new_max_holding_bars = _reassessed_max_holding_bars(record, snapshot)
     if new_max_holding_bars <= 0:

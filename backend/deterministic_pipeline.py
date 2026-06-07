@@ -994,6 +994,14 @@ def _build_decision_snapshot(
         "options_gamma_calculation_note": options_gamma_context.get("calculation_note"),
         "market_options_gamma": deepcopy(market_options_gamma_context),
     }
+    if _safe_float(market_snapshot.get("price")) > 0 and _safe_float(market_snapshot.get("sma20_4h")) > 0:
+        market_snapshot["relative_sma20_pct"] = (
+            (_safe_float(market_snapshot["price"]) - _safe_float(market_snapshot["sma20_4h"]))
+            / _safe_float(market_snapshot["sma20_4h"])
+            * 100.0
+        )
+    else:
+        market_snapshot["relative_sma20_pct"] = None
     onchain_snapshot = {
         "token_net_flow": token_flow,
         "stablecoin_net_flow": stable_flow,
@@ -1115,6 +1123,7 @@ def _build_decision_snapshot(
         "qlib_data_fresh": qlib_data_fresh,
         "qlib_freshness_reasons": qlib_freshness.get("reasons") or [],
         "drawdown_120d_pct": market_snapshot["drawdown_120d_pct"],
+        "relative_sma20_pct": _optional_float(market_snapshot.get("relative_sma20_pct")),
         "qlib_top_bucket": bool((qlib_coin.get("rank") or 999) <= GLOBAL_CONFIG["qlib_rank_bucket_size"]),
         "qlib_bottom_bucket": bool((qlib_coin.get("rank") or 0) >= len(TRACKED_SYMBOLS) - GLOBAL_CONFIG["qlib_rank_bucket_size"] + 1),
         "range_regime": grid_setup["range_regime"],
@@ -2050,6 +2059,8 @@ def _model_rule_reference_values(snapshot: Dict[str, Any], sl: float) -> Dict[st
     features = snapshot.get("decision_ready_features") or {}
     return {
         "model_stop_price": round(sl, 8),
+        "current_price": _optional_float(market.get("price")),
+        "sma20_4h": _optional_float(market.get("sma20_4h")),
         "recent_swing_high": _optional_float(market.get("structure_resistance_12bar_volume_confirmed") or market.get("swing_high_4h")),
         "recent_swing_low": _optional_float(market.get("structure_support_12bar_volume_confirmed") or market.get("swing_low_4h")),
         "sma50_4h": _optional_float(market.get("sma50_4h")),
@@ -2059,6 +2070,26 @@ def _model_rule_reference_values(snapshot: Dict[str, Any], sl: float) -> Dict[st
         "structure_resistance_stop_short": _optional_float(market.get("structure_resistance_stop_short")),
         "structure_support_stop_long": _optional_float(market.get("structure_support_stop_long")),
     }
+
+
+def _invalidation_field_available(snapshot: Dict[str, Any], field: str, reference_values: Dict[str, Any]) -> bool:
+    if field == "price":
+        return _snapshot_raw_field_value(snapshot, "price") is not None or reference_values.get("current_price") is not None
+    if field == "relative_sma20_pct":
+        if _snapshot_raw_field_value(snapshot, "relative_sma20_pct") is not None:
+            return True
+        price = _optional_float(_snapshot_raw_field_value(snapshot, "price") or reference_values.get("current_price"))
+        sma20 = _optional_float(_snapshot_raw_field_value(snapshot, "sma20_4h") or reference_values.get("sma20_4h"))
+        return price is not None and price > 0 and sma20 is not None and sma20 > 0
+    return _snapshot_raw_field_value(snapshot, field) is not None
+
+
+def _invalidation_value_ref_available(snapshot: Dict[str, Any], value_ref: str, reference_values: Dict[str, Any]) -> bool:
+    if value_ref in ALLOWED_INVALIDATION_REFERENCE_VALUES:
+        return reference_values.get(value_ref) is not None
+    if value_ref in ALLOWED_INVALIDATION_FIELDS:
+        return _invalidation_field_available(snapshot, value_ref, reference_values)
+    return False
 
 
 def _validate_model_invalidation_rules(
@@ -2082,6 +2113,9 @@ def _validate_model_invalidation_rules(
         if field not in ALLOWED_INVALIDATION_FIELDS:
             rejected.append({"rule": raw_rule, "reason": "field_not_allowed"})
             continue
+        if not _invalidation_field_available(snapshot, field, reference_values):
+            rejected.append({"rule": raw_rule, "reason": "field_unavailable"})
+            continue
         if op not in ALLOWED_INVALIDATION_OPS:
             rejected.append({"rule": raw_rule, "reason": "op_not_allowed"})
             continue
@@ -2095,7 +2129,7 @@ def _validate_model_invalidation_rules(
                 if value_ref not in ALLOWED_INVALIDATION_REFERENCE_VALUES and value_ref not in ALLOWED_INVALIDATION_FIELDS:
                     rejected.append({"rule": raw_rule, "reason": "value_ref_not_allowed"})
                     continue
-                if value_ref in ALLOWED_INVALIDATION_REFERENCE_VALUES and reference_values.get(value_ref) is None:
+                if not _invalidation_value_ref_available(snapshot, value_ref, reference_values):
                     rejected.append({"rule": raw_rule, "reason": "value_ref_unavailable"})
                     continue
                 rule["value_ref"] = value_ref
@@ -2110,7 +2144,7 @@ def _validate_model_invalidation_rules(
             if value_ref not in ALLOWED_INVALIDATION_REFERENCE_VALUES and value_ref not in ALLOWED_INVALIDATION_FIELDS:
                 rejected.append({"rule": raw_rule, "reason": "value_ref_not_allowed"})
                 continue
-            if value_ref in ALLOWED_INVALIDATION_REFERENCE_VALUES and reference_values.get(value_ref) is None:
+            if not _invalidation_value_ref_available(snapshot, value_ref, reference_values):
                 rejected.append({"rule": raw_rule, "reason": "value_ref_unavailable"})
                 continue
 
