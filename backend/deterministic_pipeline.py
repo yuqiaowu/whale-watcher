@@ -604,6 +604,19 @@ def _load_options_gamma_context_map() -> Dict[str, Dict[str, Any]]:
     return load_options_gamma_context(TRACKED_SYMBOLS)
 
 
+def _build_market_options_gamma_context(options_gamma_context_map: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    anchors: Dict[str, Dict[str, Any]] = {}
+    for symbol in ("BTC", "ETH"):
+        context = options_gamma_context_map.get(symbol)
+        if isinstance(context, dict) and context.get("available"):
+            anchors[f"{symbol}-USDT"] = deepcopy(context)
+    return {
+        "available": bool(anchors),
+        "coverage": "BTC/ETH Deribit options used as market-wide reversal-risk anchors",
+        "anchors": anchors,
+    }
+
+
 def _symbol_position_snapshot(portfolio_state: Dict[str, Any], symbol: str) -> Dict[str, Any]:
     positions = portfolio_state.get("positions", []) or []
     symbol_positions = [p for p in positions if p.get("symbol", "").upper() == symbol.upper()]
@@ -856,6 +869,9 @@ def _build_decision_snapshot(
     chart_context = chart_context or {}
     vwap_context = chart_context.get("vwap") if isinstance(chart_context.get("vwap"), dict) else {}
     options_gamma_context = chart_context.get("options_gamma") if isinstance(chart_context.get("options_gamma"), dict) else {}
+    market_options_gamma_context = (
+        chart_context.get("market_options_gamma") if isinstance(chart_context.get("market_options_gamma"), dict) else {}
+    )
     qlib_freshness = deepcopy(qlib_freshness) if isinstance(qlib_freshness, dict) else {}
     qlib_data_fresh = qlib_freshness.get("fresh", True) is True
 
@@ -976,6 +992,7 @@ def _build_decision_snapshot(
         "options_gamma_semantic": options_gamma_context.get("gamma_semantic"),
         "options_gamma_missing_reason": options_gamma_context.get("missing_reason"),
         "options_gamma_calculation_note": options_gamma_context.get("calculation_note"),
+        "market_options_gamma": deepcopy(market_options_gamma_context),
     }
     onchain_snapshot = {
         "token_net_flow": token_flow,
@@ -1153,6 +1170,7 @@ def _build_decision_snapshot(
         "options_gamma_sign": market_snapshot.get("options_gamma_sign"),
         "options_gamma_semantic": market_snapshot.get("options_gamma_semantic"),
         "options_gamma_missing_reason": market_snapshot.get("options_gamma_missing_reason"),
+        "market_options_gamma_available": bool((market_snapshot.get("market_options_gamma") or {}).get("available")),
         "max_profitable_grid_count": grid_setup["max_profitable_grid_count"],
         "grid_review_after_hours": grid_setup["review_after_hours"],
         "grid_extension_step_hours": grid_setup["extension_step_hours"],
@@ -2154,6 +2172,121 @@ def _contrarian_extreme_rsi_adjustment(snapshot: Dict[str, Any], intent: str) ->
     return None
 
 
+def _market_options_anchor_contexts(snapshot: Dict[str, Any]) -> List[Tuple[str, Dict[str, Any]]]:
+    market = snapshot.get("market_snapshot") or {}
+    market_options = market.get("market_options_gamma") if isinstance(market.get("market_options_gamma"), dict) else {}
+    anchors = market_options.get("anchors") if isinstance(market_options.get("anchors"), dict) else {}
+    contexts: List[Tuple[str, Dict[str, Any]]] = []
+    for anchor_symbol, context in anchors.items():
+        if isinstance(context, dict) and context.get("available"):
+            contexts.append((str(anchor_symbol), context))
+
+    own_available = bool(market.get("options_gamma_available"))
+    if own_available:
+        own_symbol = str(snapshot.get("symbol") or "")
+        own_context = {
+            "available": True,
+            "wall_distance": market.get("options_wall_distance") or {},
+            "gamma_sign": market.get("options_gamma_sign"),
+        }
+        if own_symbol and all(symbol != own_symbol for symbol, _ in contexts):
+            contexts.append((own_symbol, own_context))
+    return contexts
+
+
+def _negative_gamma_wall_skew_contexts(snapshot: Dict[str, Any], intent: str) -> List[Dict[str, Any]]:
+    matches: List[Dict[str, Any]] = []
+    for anchor_symbol, context in _market_options_anchor_contexts(snapshot):
+        if str(context.get("gamma_sign") or "").upper() != "NEGATIVE":
+            continue
+        wall_distance = context.get("wall_distance") if isinstance(context.get("wall_distance"), dict) else {}
+        put_distance = _optional_float(wall_distance.get("put_wall_downside_pct"))
+        call_distance = _optional_float(wall_distance.get("call_wall_upside_pct"))
+        if put_distance is None or call_distance is None or put_distance <= 0 or call_distance <= 0:
+            continue
+        if intent == "SHORT" and put_distance <= call_distance * 0.5:
+            matches.append({
+                "symbol": anchor_symbol,
+                "put_distance_pct": put_distance,
+                "call_distance_pct": call_distance,
+            })
+        elif intent == "LONG" and call_distance <= put_distance * 0.5:
+            matches.append({
+                "symbol": anchor_symbol,
+                "put_distance_pct": put_distance,
+                "call_distance_pct": call_distance,
+            })
+    return matches
+
+
+def _directional_reversal_risk_adjustment(snapshot: Dict[str, Any], intent: str) -> Optional[Dict[str, Any]]:
+    if intent not in {"LONG", "SHORT"}:
+        return None
+    market = snapshot.get("market_snapshot") or {}
+    features = snapshot.get("decision_ready_features") or {}
+    rsi = _optional_float(
+        market.get("rsi_4h")
+        if market.get("rsi_4h") is not None
+        else features.get("rsi_4h")
+        if features.get("rsi_4h") is not None
+        else market.get("rsi_14")
+        if market.get("rsi_14") is not None
+        else features.get("rsi_14")
+    )
+    if rsi is None:
+        return None
+
+    skew_contexts = _negative_gamma_wall_skew_contexts(snapshot, intent)
+    if not skew_contexts:
+        return None
+
+    anchor_note = ", ".join(
+        f"{item['symbol']} put {round(item['put_distance_pct'], 2)}% / call {round(item['call_distance_pct'], 2)}%"
+        for item in skew_contexts[:2]
+    )
+    if intent == "SHORT":
+        if rsi <= 30.0:
+            return {
+                "action": "REJECT",
+                "note": (
+                    f"pre_entry_short_squeeze_reversal_risk: negative gamma wall skew with RSI {round(rsi, 2)}; "
+                    f"{anchor_note}"
+                ),
+            }
+        if rsi <= 35.0:
+            return {
+                "action": "TINY_SIZE",
+                "factor": 0.2,
+                "max_leverage": 1.0,
+                "max_holding_bars": 1,
+                "note": (
+                    f"short squeeze watch: negative gamma wall skew with RSI {round(rsi, 2)}; "
+                    f"{anchor_note}"
+                ),
+            }
+    if intent == "LONG":
+        if rsi >= 70.0:
+            return {
+                "action": "REJECT",
+                "note": (
+                    f"pre_entry_long_reversal_risk: negative gamma wall skew with RSI {round(rsi, 2)}; "
+                    f"{anchor_note}"
+                ),
+            }
+        if rsi >= 65.0:
+            return {
+                "action": "TINY_SIZE",
+                "factor": 0.2,
+                "max_leverage": 1.0,
+                "max_holding_bars": 1,
+                "note": (
+                    f"long exhaustion watch: negative gamma wall skew with RSI {round(rsi, 2)}; "
+                    f"{anchor_note}"
+                ),
+            }
+    return None
+
+
 def _build_model_decision_candidate_batch(
     snapshot: Dict[str, Any],
     market_state: Dict[str, Any],
@@ -2852,6 +2985,26 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
             "candidate_structure": rule_evaluation.get("candidate_structure", {}) or {},
         }
 
+    intent = candidate.get("decision_intent")
+    reversal_risk_adjustment = _directional_reversal_risk_adjustment(snapshot, str(intent or ""))
+    if reversal_risk_adjustment and reversal_risk_adjustment.get("action") == "REJECT":
+        return {
+            "symbol": snapshot["symbol"],
+            "cycleId": snapshot["cycleId"],
+            "strategy_family": _strategy_family_for_intent(candidate["decision_intent"]),
+            "approved": False,
+            "final_intent": "NO_TRADE",
+            "approved_risk_fraction": 0.0,
+            "approved_position_size_usd": 0.0,
+            "leverage": 1.0,
+            "max_holding_bars": 0,
+            "execution_action": "DO_NOTHING",
+            "next_position_state": "candidate",
+            "review_note": str(reversal_risk_adjustment.get("note") or "pre-entry reversal risk blocked trade"),
+            "approved_candidate": candidate,
+            "candidate_structure": rule_evaluation.get("candidate_structure", {}) or {},
+        }
+
     portfolio_state = _load_portfolio_state()
     account_equity = _safe_float(portfolio_state.get("total_equity"), 0.0)
     if account_equity <= 0:
@@ -2917,7 +3070,6 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
             max_holding_bars = min(max_holding_bars, 3)
 
     macro_permission = snapshot["decision_ready_features"].get("macro_permission", "ALLOW_BOTH")
-    intent = candidate.get("decision_intent")
     macro_conflict = (
         not is_grid_candidate
         and (
@@ -2951,6 +3103,12 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
         leverage = min(leverage, _safe_float(rsi_adjustment.get("max_leverage"), 2.0))
         max_holding_bars = min(max_holding_bars, int(rsi_adjustment.get("max_holding_bars") or 1))
         review_note = f"{review_note}; {rsi_adjustment['note']}"
+
+    if not is_grid_candidate and reversal_risk_adjustment and reversal_risk_adjustment.get("action") == "TINY_SIZE":
+        approved_position_size_usd *= _safe_float(reversal_risk_adjustment.get("factor"), 0.2)
+        leverage = min(leverage, _safe_float(reversal_risk_adjustment.get("max_leverage"), 1.0))
+        max_holding_bars = min(max_holding_bars, int(reversal_risk_adjustment.get("max_holding_bars") or 1))
+        review_note = f"{review_note}; {reversal_risk_adjustment['note']}"
 
     verifier = candidate.get("reference_values", {}).get("model_verifier") or {}
     verifier_adjustment = str(verifier.get("risk_adjustment") or "NEUTRAL").upper()
@@ -3547,8 +3705,11 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
     for symbol, vwap_context in vwap_context_map.items():
         chart_context_map.setdefault(symbol, {})["vwap"] = vwap_context
     options_gamma_context_map = _load_options_gamma_context_map()
+    market_options_gamma_context = _build_market_options_gamma_context(options_gamma_context_map)
     for symbol, options_gamma_context in options_gamma_context_map.items():
         chart_context_map.setdefault(symbol, {})["options_gamma"] = options_gamma_context
+    for symbol in TRACKED_SYMBOLS:
+        chart_context_map.setdefault(symbol, {})["market_options_gamma"] = market_options_gamma_context
     qlib_freshness = _qlib_freshness_report(qlib_payload, qlib_map, chart_context_map)
     qlib_map_for_decision = qlib_map if qlib_freshness.get("fresh") else {}
     macro_snapshot = _build_macro_snapshot(whale_analysis)

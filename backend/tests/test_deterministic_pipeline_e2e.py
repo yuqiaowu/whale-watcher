@@ -1971,6 +1971,111 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(1, risk_review["max_holding_bars"])
         self.assertIn("extreme oversold RSI 21.5 reduced short size and leverage", risk_review["review_note"])
 
+    def test_risk_review_blocks_short_squeeze_risk_from_market_options_context(self):
+        snapshot = {
+            "symbol": "BTC-USDT",
+            "cycleId": "cycle_test",
+            "market_snapshot": {
+                "rsi_4h": 29.8,
+                "market_options_gamma": {
+                    "available": True,
+                    "anchors": {
+                        "BTC-USDT": {
+                            "available": True,
+                            "gamma_sign": "NEGATIVE",
+                            "wall_distance": {
+                                "put_wall_downside_pct": 9.55,
+                                "call_wall_upside_pct": 28.27,
+                            },
+                        },
+                    },
+                },
+            },
+            "decision_ready_features": {"macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "short setup",
+                    "proposed_entry_price": 60800,
+                    "proposed_sl_price": 63800,
+                    "proposed_tp_price": 55000,
+                    "reference_values": {
+                        "model_verifier": {
+                            "risk_adjustment": "INCREASE_SIZE",
+                            "adjustment_reason": "trend looks aligned",
+                        }
+                    },
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}) as load_portfolio:
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        load_portfolio.assert_not_called()
+        self.assertFalse(risk_review["approved"])
+        self.assertEqual("NO_TRADE", risk_review["final_intent"])
+        self.assertEqual("DO_NOTHING", risk_review["execution_action"])
+        self.assertIn("pre_entry_short_squeeze_reversal_risk", risk_review["review_note"])
+        self.assertIn("BTC-USDT put 9.55% / call 28.27%", risk_review["review_note"])
+
+    def test_risk_review_blocks_long_reversal_risk_from_market_options_context(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "market_snapshot": {
+                "rsi_4h": 72.0,
+                "market_options_gamma": {
+                    "available": True,
+                    "anchors": {
+                        "ETH-USDT": {
+                            "available": True,
+                            "gamma_sign": "NEGATIVE",
+                            "wall_distance": {
+                                "put_wall_downside_pct": 18.0,
+                                "call_wall_upside_pct": 6.0,
+                            },
+                        },
+                    },
+                },
+            },
+            "decision_ready_features": {"macro_permission": "ALLOW_LONG", "major_trend_1d": "BULL"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "LONG",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "long setup",
+                    "proposed_entry_price": 2000,
+                    "proposed_sl_price": 1900,
+                    "proposed_tp_price": 2300,
+                    "reference_values": {},
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}) as load_portfolio:
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        load_portfolio.assert_not_called()
+        self.assertFalse(risk_review["approved"])
+        self.assertEqual("NO_TRADE", risk_review["final_intent"])
+        self.assertIn("pre_entry_long_reversal_risk", risk_review["review_note"])
+
     def test_risk_review_blocks_short_when_bull_regime_lacks_short_flow_support(self):
         snapshot = {
             "symbol": "BTC-USDT",
