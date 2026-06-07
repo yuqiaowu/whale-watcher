@@ -1742,12 +1742,12 @@
         }
       ],
       "add_allowed": true,
-      "distance_to_liq": 0.4897,
+      "distance_to_liq": 0.4808,
       "runtime_action": "EXTEND_HOLDING",
       "runtime_reason": "max_holding_review_passed",
       "holding_window_started_at": "2026-06-07T00:18:57Z",
       "holding_review_count": 2,
-      "protection_last_synced_at": "2026-06-07T00:17:52Z"
+      "protection_last_synced_at": "2026-06-07T02:07:01Z"
     },
     "evaluation": {
       "result_label": "OPEN_MONITORING",
@@ -1802,10 +1802,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-07T00:19:32Z"
+      "generated_at": "2026-06-07T02:08:40Z"
     },
     "created_at": "2026-06-06T04:09:11Z",
-    "updated_at": "2026-06-07T00:19:32Z",
+    "updated_at": "2026-06-07T02:08:40Z",
     "provenance": {
       "source": "execution_reconciliation",
       "adopted_live_position": true,
@@ -5734,11 +5734,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-07T00:19:32Z"
+      "generated_at": "2026-06-07T02:08:40Z"
     },
     "created_at": "2026-06-06T20:09:05Z",
     "created_at_local": "2026-06-07T04:09:05+0800",
-    "updated_at": "2026-06-07T00:19:32Z",
+    "updated_at": "2026-06-07T02:08:40Z",
     "updated_at_local": "2026-06-07T04:09:30+0800"
   },
   {
@@ -5750,7 +5750,7 @@
     "snapshot_time": "2026-06-06T20:09:36Z",
     "snapshot_time_local": "2026-06-07T04:09:36+0800",
     "local_timezone": "Asia/Shanghai",
-    "positionState": "entered",
+    "positionState": "closed",
     "snapshot": {
       "decision_id": "cycle_2026-06-06_2000_ETH",
       "symbol": "ETH-USDT",
@@ -10202,7 +10202,7 @@
       "cycleId": "cycle_2026-06-06_2000",
       "strategy_family": "DIRECTIONAL",
       "execution_action": "OPEN_SHORT",
-      "order_status": "FILLED",
+      "order_status": "CLOSED",
       "requested_size_usd": 70.16,
       "requested_leverage": 2.0,
       "entry_type": "MARKET",
@@ -10228,9 +10228,9 @@
         "execution_action": "OPEN_SHORT"
       },
       "executed_at": "2026-06-06T20:10:51Z",
-      "sync_status": "OPEN",
+      "sync_status": "CLOSED",
       "failure_reason": null,
-      "protection_status": "OPEN",
+      "protection_status": "CLOSED",
       "history": [
         {
           "type": "EXECUTION_REQUEST_CREATED",
@@ -10363,22 +10363,144 @@
             ],
             "triggering_rules": []
           }
+        },
+        {
+          "type": "INVALIDATION_TRIGGERED",
+          "at": "2026-06-07T00:28:30Z",
+          "payload": {
+            "current_price": 1564.35,
+            "order_id": "3633599730893987840",
+            "operator": "OR",
+            "rules": [
+              {
+                "rule_key": "price|>=|value_ref:model_stop_price",
+                "field": "price",
+                "op": ">=",
+                "value_ref": "model_stop_price",
+                "value": null,
+                "reason": null,
+                "left": 1564.35,
+                "right": 1666.42428571,
+                "matched": false,
+                "required_hits": 1,
+                "consecutive_hits": 0,
+                "first_matched_at": null,
+                "last_matched_at": null,
+                "persistence_satisfied": false
+              },
+              {
+                "rule_key": "macro_permission|==|value:\"ALLOW_LONG\"",
+                "field": "macro_permission",
+                "op": "==",
+                "value_ref": null,
+                "value": "ALLOW_LONG",
+                "reason": "macro permission flips to allow long",
+                "left": "ALLOW_SHORT",
+                "right": "ALLOW_LONG",
+                "matched": false,
+                "required_hits": 2,
+                "consecutive_hits": 0,
+                "first_matched_at": null,
+                "last_matched_at": null,
+                "persistence_satisfied": false
+              },
+              {
+                "rule_key": "price_vs_vwap_4h_pct|>=|value:0.0",
+                "field": "price_vs_vwap_4h_pct",
+                "op": ">=",
+                "value_ref": null,
+                "value": 0.0,
+                "reason": "price reclaims VWAP 4h",
+                "left": 0.4168,
+                "right": 0.0,
+                "matched": true,
+                "required_hits": 2,
+                "consecutive_hits": 2,
+                "first_matched_at": "2026-06-07T00:18:57Z",
+                "last_matched_at": "2026-06-07T00:28:29Z",
+                "persistence_satisfied": true
+              },
+              {
+                "rule_key": "price_vs_vwap_16h_pct|>=|value:0.0",
+                "field": "price_vs_vwap_16h_pct",
+                "op": ">=",
+                "value_ref": null,
+                "value": 0.0,
+                "reason": "price reclaims VWAP 16h",
+                "left": 0.3587,
+                "right": 0.0,
+                "matched": true,
+                "required_hits": 2,
+                "consecutive_hits": 2,
+                "first_matched_at": "2026-06-07T00:18:57Z",
+                "last_matched_at": "2026-06-07T00:28:29Z",
+                "persistence_satisfied": true
+              }
+            ],
+            "triggering_rules": [
+              {
+                "rule_key": "price_vs_vwap_4h_pct|>=|value:0.0",
+                "field": "price_vs_vwap_4h_pct",
+                "op": ">=",
+                "value_ref": null,
+                "value": 0.0,
+                "reason": "price reclaims VWAP 4h",
+                "left": 0.4168,
+                "right": 0.0,
+                "matched": true,
+                "required_hits": 2,
+                "consecutive_hits": 2,
+                "first_matched_at": "2026-06-07T00:18:57Z",
+                "last_matched_at": "2026-06-07T00:28:29Z",
+                "persistence_satisfied": true
+              },
+              {
+                "rule_key": "price_vs_vwap_16h_pct|>=|value:0.0",
+                "field": "price_vs_vwap_16h_pct",
+                "op": ">=",
+                "value_ref": null,
+                "value": 0.0,
+                "reason": "price reclaims VWAP 16h",
+                "left": 0.3587,
+                "right": 0.0,
+                "matched": true,
+                "required_hits": 2,
+                "consecutive_hits": 2,
+                "first_matched_at": "2026-06-07T00:18:57Z",
+                "last_matched_at": "2026-06-07T00:28:29Z",
+                "persistence_satisfied": true
+              }
+            ]
+          }
+        },
+        {
+          "type": "EXECUTION_CLOSED_RECONCILED",
+          "at": "2026-06-07T00:39:47Z",
+          "payload": {
+            "trade_id": "3633599730893987840",
+            "pnl": -0.52,
+            "pnl_percent": -1.5,
+            "reason": "candidate_invalidation",
+            "reason_source": "position_runtime",
+            "runtime_action": "CLOSE_POSITION",
+            "okx_reason": "OKX Real Trade"
+          }
         }
       ],
       "position_side": "SHORT",
       "live_position_detected_at": "2026-06-06T20:17:33Z",
       "filled_stop_loss": 1666.42,
       "filled_take_profit": 1320.6,
-      "protection_last_synced_at": "2026-06-07T00:17:52Z",
+      "protection_last_synced_at": "2026-06-07T00:27:24Z",
       "add_allowed": true,
-      "distance_to_liq": 0.4905,
+      "distance_to_liq": 0.4923,
       "invalidation_state": {
         "price_vs_vwap_4h_pct|>=|value:0.0": {
-          "consecutive_hits": 1,
+          "consecutive_hits": 2,
           "required_hits": 2,
           "first_matched_at": "2026-06-07T00:18:57Z",
-          "last_checked_at": "2026-06-07T00:18:57Z",
-          "last_matched_at": "2026-06-07T00:18:57Z",
+          "last_checked_at": "2026-06-07T00:28:29Z",
+          "last_matched_at": "2026-06-07T00:28:29Z",
           "last_left": 0.4168,
           "last_right": 0.0,
           "matched": true,
@@ -10389,11 +10511,11 @@
           "reason": "price reclaims VWAP 4h"
         },
         "price_vs_vwap_16h_pct|>=|value:0.0": {
-          "consecutive_hits": 1,
+          "consecutive_hits": 2,
           "required_hits": 2,
           "first_matched_at": "2026-06-07T00:18:57Z",
-          "last_checked_at": "2026-06-07T00:18:57Z",
-          "last_matched_at": "2026-06-07T00:18:57Z",
+          "last_checked_at": "2026-06-07T00:28:29Z",
+          "last_matched_at": "2026-06-07T00:28:29Z",
           "last_left": 0.3587,
           "last_right": 0.0,
           "matched": true,
@@ -10404,24 +10526,39 @@
           "reason": "price reclaims VWAP 16h"
         }
       },
-      "runtime_action": "EXTEND_HOLDING",
-      "runtime_reason": "max_holding_review_passed",
+      "runtime_action": "CLOSE_POSITION",
+      "runtime_reason": "candidate_invalidation",
       "holding_window_started_at": "2026-06-07T00:16:12Z",
-      "holding_review_count": 1
+      "holding_review_count": 1,
+      "last_runtime_order_id": "3633599730893987840",
+      "closed_trade_id": "3633599730893987840",
+      "closed_at": "2026-06-07 00:28:30",
+      "realized_pnl": -0.52,
+      "realized_pnl_percent": -1.5,
+      "avg_exit_price": 1563.94,
+      "close_reason": "candidate_invalidation",
+      "close_reason_source": "position_runtime"
     },
     "evaluation": {
-      "result_label": "OPEN_MONITORING",
-      "primary_cause": "TRADE_STILL_OPEN",
+      "result_label": "LOSS",
+      "primary_cause": "RESEARCH_WEAK_THESIS",
       "layer_attribution": {
-        "data": 0.0,
-        "candidate": 0.0,
-        "rule": 0.0,
-        "research": 0.0,
-        "risk": 0.0,
-        "execution": 0.0
+        "data": 0.1,
+        "candidate": 0.15,
+        "rule": 0.1,
+        "research": 0.45,
+        "risk": 0.15,
+        "execution": 0.05
       },
-      "improvement_targets": [],
-      "improvement_note": "execution submitted or simulated; no closed trade matched yet",
+      "improvement_targets": [
+        "research",
+        "candidate"
+      ],
+      "improvement_note": "closed trade finished negative; review thesis quality and setup quality",
+      "pnl": -0.52,
+      "pnl_percent": -1.5,
+      "matched_trade_id": "3633599730893987840",
+      "matched_trade_exit_time": "2026-06-07 00:28:30",
       "traceability": {
         "strategy_family": "DIRECTIONAL",
         "candidate_structure": {
@@ -10461,12 +10598,23 @@
         "risk_review_note": "research flagged low thesis strength; reduced size and leverage; extreme oversold RSI 18.03 reduced short size and leverage",
         "execution_action": "OPEN_SHORT"
       },
-      "feedback_packets": [],
-      "generated_at": "2026-06-07T00:19:32Z"
+      "feedback_packets": [
+        {
+          "target_layer": "research",
+          "packet_type": "PROMPT_AND_CONFLICT_REVIEW",
+          "message": "review prompt constraints, conflict handling, and no-trade examples"
+        },
+        {
+          "target_layer": "candidate",
+          "packet_type": "BLUEPRINT_REVIEW",
+          "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
+        }
+      ],
+      "generated_at": "2026-06-07T02:08:40Z"
     },
     "created_at": "2026-06-06T20:10:05Z",
     "created_at_local": "2026-06-07T04:10:05+0800",
-    "updated_at": "2026-06-07T00:19:32Z",
+    "updated_at": "2026-06-07T02:08:40Z",
     "updated_at_local": "2026-06-07T04:10:51+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -10612,7 +10760,7 @@
     "snapshot_time": "2026-06-06T20:11:08Z",
     "snapshot_time_local": "2026-06-07T04:11:08+0800",
     "local_timezone": "Asia/Shanghai",
-    "positionState": "entered",
+    "positionState": "closed",
     "snapshot": {
       "decision_id": "cycle_2026-06-06_2000_SOL",
       "symbol": "SOL-USDT",
@@ -14998,7 +15146,7 @@
       "cycleId": "cycle_2026-06-06_2000",
       "strategy_family": "DIRECTIONAL",
       "execution_action": "OPEN_SHORT",
-      "order_status": "FILLED",
+      "order_status": "CLOSED",
       "requested_size_usd": 32.07,
       "requested_leverage": 2.0,
       "entry_type": "MARKET",
@@ -15024,9 +15172,9 @@
         "execution_action": "OPEN_SHORT"
       },
       "executed_at": "2026-06-06T20:12:37Z",
-      "sync_status": "OPEN",
+      "sync_status": "CLOSED",
       "failure_reason": null,
-      "protection_status": "OPEN",
+      "protection_status": "CLOSED",
       "history": [
         {
           "type": "EXECUTION_REQUEST_CREATED",
@@ -15137,22 +15285,112 @@
             ],
             "triggering_rules": []
           }
+        },
+        {
+          "type": "INVALIDATION_TRIGGERED",
+          "at": "2026-06-07T00:28:29Z",
+          "payload": {
+            "current_price": 62.11,
+            "order_id": "3633599705426173952",
+            "operator": "OR",
+            "rules": [
+              {
+                "rule_key": "price|>=|value_ref:model_stop_price",
+                "field": "price",
+                "op": ">=",
+                "value_ref": "model_stop_price",
+                "value": null,
+                "reason": null,
+                "left": 62.11,
+                "right": 66.33714286,
+                "matched": false,
+                "required_hits": 1,
+                "consecutive_hits": 0,
+                "first_matched_at": null,
+                "last_matched_at": null,
+                "persistence_satisfied": false
+              },
+              {
+                "rule_key": "macro_permission|==|value:\"ALLOW_LONG\"",
+                "field": "macro_permission",
+                "op": "==",
+                "value_ref": null,
+                "value": "ALLOW_LONG",
+                "reason": "macro permission flips to allow long",
+                "left": "ALLOW_SHORT",
+                "right": "ALLOW_LONG",
+                "matched": false,
+                "required_hits": 2,
+                "consecutive_hits": 0,
+                "first_matched_at": null,
+                "last_matched_at": null,
+                "persistence_satisfied": false
+              },
+              {
+                "rule_key": "price_vs_vwap_4h_pct|>=|value:0.0",
+                "field": "price_vs_vwap_4h_pct",
+                "op": ">=",
+                "value_ref": null,
+                "value": 0.0,
+                "reason": "price above 4h VWAP",
+                "left": 0.2866,
+                "right": 0.0,
+                "matched": true,
+                "required_hits": 2,
+                "consecutive_hits": 2,
+                "first_matched_at": "2026-06-07T00:18:57Z",
+                "last_matched_at": "2026-06-07T00:28:29Z",
+                "persistence_satisfied": true
+              }
+            ],
+            "triggering_rules": [
+              {
+                "rule_key": "price_vs_vwap_4h_pct|>=|value:0.0",
+                "field": "price_vs_vwap_4h_pct",
+                "op": ">=",
+                "value_ref": null,
+                "value": 0.0,
+                "reason": "price above 4h VWAP",
+                "left": 0.2866,
+                "right": 0.0,
+                "matched": true,
+                "required_hits": 2,
+                "consecutive_hits": 2,
+                "first_matched_at": "2026-06-07T00:18:57Z",
+                "last_matched_at": "2026-06-07T00:28:29Z",
+                "persistence_satisfied": true
+              }
+            ]
+          }
+        },
+        {
+          "type": "EXECUTION_CLOSED_RECONCILED",
+          "at": "2026-06-07T00:39:47Z",
+          "payload": {
+            "trade_id": "3633599705426173952",
+            "pnl": -0.28,
+            "pnl_percent": -1.75,
+            "reason": "candidate_invalidation",
+            "reason_source": "position_runtime",
+            "runtime_action": "CLOSE_POSITION",
+            "okx_reason": "OKX Real Trade"
+          }
         }
       ],
       "position_side": "SHORT",
       "live_position_detected_at": "2026-06-06T20:17:34Z",
       "filled_stop_loss": 66.34,
       "filled_take_profit": 51.38,
-      "protection_last_synced_at": "2026-06-07T00:17:52Z",
+      "protection_last_synced_at": "2026-06-07T00:27:24Z",
       "add_allowed": true,
       "distance_to_liq": 0.4911,
       "invalidation_state": {
         "price_vs_vwap_4h_pct|>=|value:0.0": {
-          "consecutive_hits": 1,
+          "consecutive_hits": 2,
           "required_hits": 2,
           "first_matched_at": "2026-06-07T00:18:57Z",
-          "last_checked_at": "2026-06-07T00:18:57Z",
-          "last_matched_at": "2026-06-07T00:18:57Z",
+          "last_checked_at": "2026-06-07T00:28:29Z",
+          "last_matched_at": "2026-06-07T00:28:29Z",
           "last_left": 0.2866,
           "last_right": 0.0,
           "matched": true,
@@ -15163,24 +15401,39 @@
           "reason": "price above 4h VWAP"
         }
       },
-      "runtime_action": "EXTEND_HOLDING",
-      "runtime_reason": "max_holding_review_passed",
+      "runtime_action": "CLOSE_POSITION",
+      "runtime_reason": "candidate_invalidation",
       "holding_window_started_at": "2026-06-07T00:16:12Z",
-      "holding_review_count": 1
+      "holding_review_count": 1,
+      "last_runtime_order_id": "3633599705426173952",
+      "closed_trade_id": "3633599705426173952",
+      "closed_at": "2026-06-07 00:28:29",
+      "realized_pnl": -0.28,
+      "realized_pnl_percent": -1.75,
+      "avg_exit_price": 62.1,
+      "close_reason": "candidate_invalidation",
+      "close_reason_source": "position_runtime"
     },
     "evaluation": {
-      "result_label": "OPEN_MONITORING",
-      "primary_cause": "TRADE_STILL_OPEN",
+      "result_label": "LOSS",
+      "primary_cause": "RESEARCH_WEAK_THESIS",
       "layer_attribution": {
-        "data": 0.0,
-        "candidate": 0.0,
-        "rule": 0.0,
-        "research": 0.0,
-        "risk": 0.0,
-        "execution": 0.0
+        "data": 0.1,
+        "candidate": 0.15,
+        "rule": 0.1,
+        "research": 0.45,
+        "risk": 0.15,
+        "execution": 0.05
       },
-      "improvement_targets": [],
-      "improvement_note": "execution submitted or simulated; no closed trade matched yet",
+      "improvement_targets": [
+        "research",
+        "candidate"
+      ],
+      "improvement_note": "closed trade finished negative; review thesis quality and setup quality",
+      "pnl": -0.28,
+      "pnl_percent": -1.75,
+      "matched_trade_id": "3633599705426173952",
+      "matched_trade_exit_time": "2026-06-07 00:28:29",
       "traceability": {
         "strategy_family": "DIRECTIONAL",
         "candidate_structure": {
@@ -15220,12 +15473,23 @@
         "risk_review_note": "research flagged low thesis strength; reduced size and leverage; extreme oversold RSI 14.55 reduced short size and leverage; verifier recommended size reduction: Oversold RSI (14.5) and Williams %R (-85) suggest potential for a bounce, conflicting with bearish macro and technicals.",
         "execution_action": "OPEN_SHORT"
       },
-      "feedback_packets": [],
-      "generated_at": "2026-06-07T00:19:32Z"
+      "feedback_packets": [
+        {
+          "target_layer": "research",
+          "packet_type": "PROMPT_AND_CONFLICT_REVIEW",
+          "message": "review prompt constraints, conflict handling, and no-trade examples"
+        },
+        {
+          "target_layer": "candidate",
+          "packet_type": "BLUEPRINT_REVIEW",
+          "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
+        }
+      ],
+      "generated_at": "2026-06-07T02:08:40Z"
     },
     "created_at": "2026-06-06T20:11:47Z",
     "created_at_local": "2026-06-07T04:11:47+0800",
-    "updated_at": "2026-06-07T00:19:32Z",
+    "updated_at": "2026-06-07T02:08:40Z",
     "updated_at_local": "2026-06-07T04:12:38+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -19394,11 +19658,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-07T00:19:32Z"
+      "generated_at": "2026-06-07T02:08:40Z"
     },
     "created_at": "2026-06-06T20:13:14Z",
     "created_at_local": "2026-06-07T04:13:14+0800",
-    "updated_at": "2026-06-07T00:19:32Z",
+    "updated_at": "2026-06-07T02:08:40Z",
     "updated_at_local": "2026-06-07T04:13:45+0800"
   },
   {
@@ -23373,11 +23637,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-07T00:19:32Z"
+      "generated_at": "2026-06-07T02:08:40Z"
     },
     "created_at": "2026-06-06T20:14:23Z",
     "created_at_local": "2026-06-07T04:14:23+0800",
-    "updated_at": "2026-06-07T00:19:32Z",
+    "updated_at": "2026-06-07T02:08:40Z",
     "updated_at_local": "2026-06-07T04:14:42+0800"
   },
   {
@@ -27007,9 +27271,9 @@
       "live_position_detected_at": "2026-06-07T00:15:04Z",
       "filled_stop_loss": 63804.9,
       "filled_take_profit": 54919.2,
-      "protection_last_synced_at": "2026-06-07T00:17:51Z",
+      "protection_last_synced_at": "2026-06-07T02:07:01Z",
       "add_allowed": true,
-      "distance_to_liq": 0.4998,
+      "distance_to_liq": 0.4896,
       "invalidation_state": {}
     },
     "evaluation": {
@@ -27065,11 +27329,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-07T00:19:32Z"
+      "generated_at": "2026-06-07T02:08:40Z"
     },
     "created_at": "2026-06-07T00:08:39Z",
     "created_at_local": "2026-06-07T08:08:39+0800",
-    "updated_at": "2026-06-07T00:19:32Z",
+    "updated_at": "2026-06-07T02:08:40Z",
     "updated_at_local": "2026-06-07T08:09:39+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -30647,11 +30911,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-07T00:19:32Z"
+      "generated_at": "2026-06-07T02:08:40Z"
     },
     "created_at": "2026-06-07T00:10:25Z",
     "created_at_local": "2026-06-07T08:10:25+0800",
-    "updated_at": "2026-06-07T00:19:32Z",
+    "updated_at": "2026-06-07T02:08:40Z",
     "updated_at_local": "2026-06-07T08:10:50+0800"
   },
   {
@@ -33787,11 +34051,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-07T00:19:32Z"
+      "generated_at": "2026-06-07T02:08:40Z"
     },
     "created_at": "2026-06-07T00:11:31Z",
     "created_at_local": "2026-06-07T08:11:31+0800",
-    "updated_at": "2026-06-07T00:19:32Z",
+    "updated_at": "2026-06-07T02:08:40Z",
     "updated_at_local": "2026-06-07T08:12:04+0800"
   },
   {
@@ -36985,11 +37249,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-07T00:19:32Z"
+      "generated_at": "2026-06-07T02:08:40Z"
     },
     "created_at": "2026-06-07T00:12:52Z",
     "created_at_local": "2026-06-07T08:12:52+0800",
-    "updated_at": "2026-06-07T00:19:32Z",
+    "updated_at": "2026-06-07T02:08:40Z",
     "updated_at_local": "2026-06-07T08:13:22+0800"
   },
   {
@@ -40404,11 +40668,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-07T00:19:32Z"
+      "generated_at": "2026-06-07T02:08:40Z"
     },
     "created_at": "2026-06-07T00:14:07Z",
     "created_at_local": "2026-06-07T08:14:07+0800",
-    "updated_at": "2026-06-07T00:19:32Z",
+    "updated_at": "2026-06-07T02:08:40Z",
     "updated_at_local": "2026-06-07T08:14:07+0800"
   }
 ]
