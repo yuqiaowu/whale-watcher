@@ -290,6 +290,48 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         )
         self.assertEqual([], candidate["reference_values"]["model_rejected_invalidation_rules"])
 
+    def test_model_invalidation_rule_rejects_price_compared_to_percent_field(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_model",
+            "timeframe": "4h",
+            "snapshot_timestamp": "2026-06-08T00:00:00Z",
+            "market_snapshot": {"price": 1671.15, "atr_14": 47.2, "price_vs_vwap_4h_pct": -1.2675},
+            "decision_ready_features": {"macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+            "position_snapshot": {"position_side": None},
+            "is_decision_eligible": True,
+        }
+        model_decision = {
+            "action": "SELL",
+            "direction": "SHORT",
+            "confidence": 0.8,
+            "setup_type": "trend_breakdown",
+            "risk_level": "MEDIUM",
+            "horizon": "SWING",
+            "reason_codes": ["bear_trend"],
+            "invalid_if": ["price reclaims 4h vwap"],
+            "invalidation_rules": [
+                {"field": "price", "op": ">=", "value_ref": "price_vs_vwap_4h_pct", "persistence": 2},
+            ],
+            "summary": "short setup",
+        }
+
+        batch = dp._build_model_decision_candidate_batch(
+            snapshot,
+            {"technical": {"current_price": 1671.15, "atr14": 47.2}},
+            model_decision,
+        )
+
+        candidate = batch["candidate_proposals"][0]
+        self.assertEqual(
+            "value_ref_incompatible",
+            candidate["reference_values"]["model_rejected_invalidation_rules"][0]["reason"],
+        )
+        self.assertNotIn(
+            {"field": "price", "op": ">=", "reason": "model_invalidation_rule", "value_ref": "price_vs_vwap_4h_pct", "persistence": 2},
+            candidate["invalidation_conditions"]["rules"],
+        )
+
     def test_model_decision_normalizes_common_invalidation_rule_shapes(self):
         snapshot = {
             "symbol": "SOL-USDT",

@@ -2092,6 +2092,17 @@ def _invalidation_value_ref_available(snapshot: Dict[str, Any], value_ref: str, 
     return False
 
 
+def _invalidation_value_ref_compatible(field: str, value_ref: str) -> bool:
+    probability_fields = {"p_up_8h", "p_down_8h", "p_flat_8h"}
+    if value_ref in ALLOWED_INVALIDATION_REFERENCE_VALUES:
+        return field == "price"
+    if value_ref in probability_fields:
+        return field in probability_fields
+    if value_ref in ALLOWED_INVALIDATION_FIELDS:
+        return value_ref == field
+    return False
+
+
 def _validate_model_invalidation_rules(
     snapshot: Dict[str, Any],
     intent: str,
@@ -2132,6 +2143,9 @@ def _validate_model_invalidation_rules(
                 if not _invalidation_value_ref_available(snapshot, value_ref, reference_values):
                     rejected.append({"rule": raw_rule, "reason": "value_ref_unavailable"})
                     continue
+                if not _invalidation_value_ref_compatible(field, value_ref):
+                    rejected.append({"rule": raw_rule, "reason": "value_ref_incompatible"})
+                    continue
                 rule["value_ref"] = value_ref
         elif raw_rule.get("value") is not None:
             rule["value"] = raw_rule.get("value")
@@ -2146,6 +2160,9 @@ def _validate_model_invalidation_rules(
                 continue
             if not _invalidation_value_ref_available(snapshot, value_ref, reference_values):
                 rejected.append({"rule": raw_rule, "reason": "value_ref_unavailable"})
+                continue
+            if not _invalidation_value_ref_compatible(field, value_ref):
+                rejected.append({"rule": raw_rule, "reason": "value_ref_incompatible"})
                 continue
 
         if intent == "LONG" and field == "price" and op not in {"<=", "<"}:
