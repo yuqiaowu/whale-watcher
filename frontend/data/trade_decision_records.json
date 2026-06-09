@@ -5,7 +5,7 @@
     "symbol": "BTC-USDT",
     "timeframe": "4h",
     "snapshot_timestamp": 1780992527,
-    "positionState": "exit_pending",
+    "positionState": "closed",
     "snapshot": {
       "decision_id": "cycle_2026-06-09_0800_BTC",
       "symbol": "BTC-USDT",
@@ -2061,7 +2061,7 @@
       "cycleId": "cycle_2026-06-09_0800",
       "strategy_family": "DIRECTIONAL",
       "execution_action": "OPEN_SHORT",
-      "order_status": "FILLED",
+      "order_status": "CLOSED",
       "requested_size_usd": 207.17,
       "requested_leverage": 2.0,
       "entry_type": "MARKET",
@@ -2072,11 +2072,11 @@
       "filled_size": 0.0033000000000000004,
       "exchange_order_id": null,
       "executed_at": "2026-06-09T08:10:36Z",
-      "sync_status": "OPEN",
+      "sync_status": "CLOSED",
       "failure_reason": null,
       "position_side": "SHORT",
       "live_position_detected_at": "2026-06-09T12:18:48Z",
-      "protection_status": "OPEN",
+      "protection_status": "CLOSED",
       "filled_stop_loss": 65241.8,
       "filled_take_profit": 58404.7,
       "history": [
@@ -2267,6 +2267,19 @@
               }
             ]
           }
+        },
+        {
+          "type": "EXECUTION_CLOSED_RECONCILED",
+          "at": "2026-06-09T12:30:35Z",
+          "payload": {
+            "trade_id": "3640835307074756608",
+            "pnl": 0.26,
+            "pnl_percent": 0.25,
+            "reason": "candidate_invalidation",
+            "reason_source": "position_runtime",
+            "runtime_action": "CLOSE_POSITION",
+            "okx_reason": "OKX Real Trade"
+          }
         }
       ],
       "add_allowed": true,
@@ -2291,21 +2304,32 @@
       "protection_last_synced_at": "2026-06-09T12:21:45Z",
       "runtime_action": "CLOSE_POSITION",
       "last_runtime_order_id": "3640835307074756608",
-      "runtime_reason": "candidate_invalidation"
+      "runtime_reason": "candidate_invalidation",
+      "closed_trade_id": "3640835307074756608",
+      "closed_at": "2026-06-09 12:22:27",
+      "realized_pnl": 0.26,
+      "realized_pnl_percent": 0.25,
+      "avg_exit_price": 62700.1,
+      "close_reason": "candidate_invalidation",
+      "close_reason_source": "position_runtime"
     },
     "evaluation": {
-      "result_label": "OPEN_MONITORING",
-      "primary_cause": "TRADE_STILL_OPEN",
+      "result_label": "WIN",
+      "primary_cause": "THESIS_CONFIRMED",
       "layer_attribution": {
-        "data": 0.0,
-        "candidate": 0.0,
-        "rule": 0.0,
-        "research": 0.0,
-        "risk": 0.0,
-        "execution": 0.0
+        "data": 0.1,
+        "candidate": 0.25,
+        "rule": 0.1,
+        "research": 0.25,
+        "risk": 0.15,
+        "execution": 0.15
       },
       "improvement_targets": [],
-      "improvement_note": "execution submitted or simulated; no closed trade matched yet",
+      "improvement_note": "closed trade aligned with approved thesis and exited positive",
+      "pnl": 0.26,
+      "pnl_percent": 0.25,
+      "matched_trade_id": "3640835307074756608",
+      "matched_trade_exit_time": "2026-06-09 12:22:27",
       "traceability": {
         "strategy_family": "DIRECTIONAL",
         "candidate_structure": {
@@ -2346,10 +2370,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-09T12:22:35Z"
+      "generated_at": "2026-06-09T14:07:57Z"
     },
     "created_at": "2026-06-09T08:10:36Z",
-    "updated_at": "2026-06-09T12:22:35Z",
+    "updated_at": "2026-06-09T14:07:57Z",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
       "frozen_at": "2026-06-09T08:09:15Z",
@@ -4534,9 +4558,9 @@
         }
       ],
       "add_allowed": true,
-      "distance_to_liq": 0.333,
+      "distance_to_liq": 0.3231,
       "invalidation_state": {},
-      "protection_last_synced_at": "2026-06-09T12:21:45Z"
+      "protection_last_synced_at": "2026-06-09T14:07:08Z"
     },
     "evaluation": {
       "result_label": "OPEN_MONITORING",
@@ -4591,10 +4615,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-09T12:22:35Z"
+      "generated_at": "2026-06-09T14:07:57Z"
     },
     "created_at": "2026-06-09T12:14:11Z",
-    "updated_at": "2026-06-09T12:22:35Z",
+    "updated_at": "2026-06-09T14:07:57Z",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
       "frozen_at": "2026-06-09T12:12:44Z",
