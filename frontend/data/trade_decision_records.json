@@ -2370,10 +2370,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T08:10:36Z",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
       "frozen_at": "2026-06-09T08:09:15Z",
@@ -2518,7 +2518,7 @@
     "symbol": "SOL-USDT",
     "timeframe": "4h",
     "snapshot_timestamp": 1780992797,
-    "positionState": "exit_pending",
+    "positionState": "closed",
     "snapshot": {
       "decision_id": "cycle_2026-06-09_0800_SOL",
       "symbol": "SOL-USDT",
@@ -4517,7 +4517,7 @@
       "cycleId": "cycle_2026-06-09_0800",
       "strategy_family": "DIRECTIONAL",
       "execution_action": "OPEN_SHORT",
-      "order_status": "FILLED",
+      "order_status": "CLOSED",
       "requested_size_usd": 283.68,
       "requested_leverage": 3.0,
       "entry_type": "MARKET",
@@ -4528,11 +4528,11 @@
       "filled_size": 4.28,
       "exchange_order_id": null,
       "executed_at": "2026-06-09T12:14:11Z",
-      "sync_status": "OPEN",
+      "sync_status": "CLOSED",
       "failure_reason": null,
       "position_side": "SHORT",
       "live_position_detected_at": "2026-06-09T12:18:11Z",
-      "protection_status": "OPEN",
+      "protection_status": "CLOSED",
       "filled_stop_loss": 69.93,
       "filled_take_profit": 59.13,
       "history": [
@@ -4576,6 +4576,19 @@
             "add_allowed": false,
             "position_state": "exit_pending"
           }
+        },
+        {
+          "type": "EXECUTION_CLOSED_RECONCILED",
+          "at": "2026-06-10T00:32:49Z",
+          "payload": {
+            "trade_id": "3642282241190797312",
+            "pnl": 6.21,
+            "pnl_percent": 6.56,
+            "reason": "max_holding_profit_take",
+            "reason_source": "position_runtime",
+            "runtime_action": "CLOSE_POSITION",
+            "okx_reason": "OKX Real Trade"
+          }
         }
       ],
       "add_allowed": false,
@@ -4584,21 +4597,32 @@
       "protection_last_synced_at": "2026-06-10T00:21:29Z",
       "runtime_action": "CLOSE_POSITION",
       "last_runtime_order_id": "3642282241190797312",
-      "runtime_reason": "max_holding_profit_take"
+      "runtime_reason": "max_holding_profit_take",
+      "closed_trade_id": "3642282241190797312",
+      "closed_at": "2026-06-10 00:21:09",
+      "realized_pnl": 6.21,
+      "realized_pnl_percent": 6.56,
+      "avg_exit_price": 64.83,
+      "close_reason": "max_holding_profit_take",
+      "close_reason_source": "position_runtime"
     },
     "evaluation": {
-      "result_label": "OPEN_MONITORING",
-      "primary_cause": "TRADE_STILL_OPEN",
+      "result_label": "WIN",
+      "primary_cause": "THESIS_CONFIRMED",
       "layer_attribution": {
-        "data": 0.0,
-        "candidate": 0.0,
-        "rule": 0.0,
-        "research": 0.0,
-        "risk": 0.0,
-        "execution": 0.0
+        "data": 0.1,
+        "candidate": 0.25,
+        "rule": 0.1,
+        "research": 0.25,
+        "risk": 0.15,
+        "execution": 0.15
       },
       "improvement_targets": [],
-      "improvement_note": "execution submitted or simulated; no closed trade matched yet",
+      "improvement_note": "closed trade aligned with approved thesis and exited positive",
+      "pnl": 6.21,
+      "pnl_percent": 6.56,
+      "matched_trade_id": "3642282241190797312",
+      "matched_trade_exit_time": "2026-06-10 00:21:09",
       "traceability": {
         "strategy_family": "DIRECTIONAL",
         "candidate_structure": {
@@ -4639,10 +4663,10 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T12:14:11Z",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
       "frozen_at": "2026-06-09T12:12:44Z",
@@ -8874,11 +8898,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T16:08:52Z",
     "created_at_local": "2026-06-10T00:08:52+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T00:09:01+0800"
   },
   {
@@ -12989,11 +13013,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T16:09:29Z",
     "created_at_local": "2026-06-10T00:09:29+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T00:09:41+0800"
   },
   {
@@ -17185,11 +17209,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T16:10:12Z",
     "created_at_local": "2026-06-10T00:10:12+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T00:10:27+0800"
   },
   {
@@ -21244,11 +21268,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T16:11:03Z",
     "created_at_local": "2026-06-10T00:11:03+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T00:11:21+0800"
   },
   {
@@ -25307,11 +25331,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T16:11:54Z",
     "created_at_local": "2026-06-10T00:11:54+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T00:12:14+0800"
   },
   {
@@ -29539,11 +29563,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T20:09:06Z",
     "created_at_local": "2026-06-10T04:09:06+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T04:09:30+0800"
   },
   {
@@ -33793,11 +33817,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T20:10:15Z",
     "created_at_local": "2026-06-10T04:10:15+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T04:10:42+0800"
   },
   {
@@ -38030,11 +38054,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T20:11:27Z",
     "created_at_local": "2026-06-10T04:11:27+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T04:11:58+0800"
   },
   {
@@ -42748,11 +42772,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T20:12:58Z",
     "created_at_local": "2026-06-10T04:12:58+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T04:13:32+0800"
   },
   {
@@ -46858,11 +46882,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-09T20:14:26Z",
     "created_at_local": "2026-06-10T04:14:26+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T04:15:02+0800"
   },
   {
@@ -51046,11 +51070,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-10T00:09:05Z",
     "created_at_local": "2026-06-10T08:09:05+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T08:09:46+0800"
   },
   {
@@ -55890,9 +55914,9 @@
       "live_position_detected_at": "2026-06-10T00:19:47Z",
       "filled_stop_loss": 1728.66,
       "filled_take_profit": 1473.46,
-      "protection_last_synced_at": "2026-06-10T00:21:29Z",
+      "protection_last_synced_at": "2026-06-10T02:07:24Z",
       "add_allowed": true,
-      "distance_to_liq": 0.4985,
+      "distance_to_liq": 0.4977,
       "invalidation_state": {}
     },
     "evaluation": {
@@ -55948,11 +55972,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-10T00:10:47Z",
     "created_at_local": "2026-06-10T08:10:47+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T08:12:06+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -60355,11 +60379,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-10T00:13:12Z",
     "created_at_local": "2026-06-10T08:13:12+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T08:13:55+0800"
   },
   {
@@ -65064,11 +65088,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-10T00:15:01Z",
     "created_at_local": "2026-06-10T08:15:01+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T08:15:44+0800"
   },
   {
@@ -69204,11 +69228,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-10T00:23:36Z"
+      "generated_at": "2026-06-10T02:09:31Z"
     },
     "created_at": "2026-06-10T00:16:46Z",
     "created_at_local": "2026-06-10T08:16:46+0800",
-    "updated_at": "2026-06-10T00:23:36Z",
+    "updated_at": "2026-06-10T02:09:31Z",
     "updated_at_local": "2026-06-10T08:17:29+0800"
   }
 ]
