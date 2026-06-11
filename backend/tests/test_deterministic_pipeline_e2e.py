@@ -2059,7 +2059,7 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual(1, risk_review["max_holding_bars"])
         self.assertIn("verifier recommended size reduction: valid but noisy evidence", risk_review["review_note"])
 
-    def test_risk_review_reduces_short_size_when_rsi_is_extremely_oversold(self):
+    def test_risk_review_blocks_short_when_rsi_is_extremely_oversold(self):
         snapshot = {
             "symbol": "SOL-USDT",
             "cycleId": "cycle_test",
@@ -2088,11 +2088,105 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
             risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
 
+        self.assertFalse(risk_review["approved"])
+        self.assertEqual("NO_TRADE", risk_review["final_intent"])
+        self.assertEqual("DO_NOTHING", risk_review["execution_action"])
+        self.assertIn("pre_entry_short_squeeze_reversal_risk", risk_review["review_note"])
+
+    def test_risk_review_counts_same_cycle_simulated_exposure(self):
+        snapshot = {
+            "symbol": "SOL-USDT",
+            "cycleId": "cycle_test",
+            "market_snapshot": {"rsi_4h": 45.0},
+            "decision_ready_features": {"macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "short setup",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 105,
+                    "proposed_tp_price": 90,
+                    "reference_values": {},
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+        cycle_portfolio = {
+            "total_equity": 1000.0,
+            "positions": [{"symbol": "ETH-USDT", "notionalUsd": 500.0}],
+        }
+
+        risk_review = dp._build_risk_review_with_research(
+            snapshot,
+            rule_evaluation,
+            None,
+            portfolio_state_override=cycle_portfolio,
+        )
+
+        self.assertTrue(risk_review["approved"])
+        self.assertEqual(250.0, risk_review["approved_position_size_usd"])
+        self.assertIn("capped by portfolio total exposure limit", risk_review["review_note"])
+
+        dp._append_simulated_cycle_exposure(cycle_portfolio, snapshot, risk_review)
+        next_review = dp._build_risk_review_with_research(
+            snapshot,
+            rule_evaluation,
+            None,
+            portfolio_state_override=cycle_portfolio,
+        )
+        self.assertFalse(next_review["approved"])
+        self.assertIn("portfolio total exposure cap reached", next_review["review_note"])
+
+    def test_neutral_verifier_reversal_caution_reduces_short_size(self):
+        snapshot = {
+            "symbol": "BNB-USDT",
+            "cycleId": "cycle_test",
+            "market_snapshot": {"rsi_4h": 45.0},
+            "decision_ready_features": {"macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "short setup",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 105,
+                    "proposed_tp_price": 90,
+                    "reference_values": {
+                        "model_verifier": {
+                            "risk_adjustment": "NEUTRAL",
+                            "adjustment_reason": "NEUTRAL",
+                            "risk_notes": [
+                                "Williams %R suggests oversold conditions, potential for bounce",
+                                "Qlib model flat with low confidence",
+                            ],
+                        }
+                    },
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
         self.assertTrue(risk_review["approved"])
         self.assertEqual(200.0, risk_review["approved_position_size_usd"])
         self.assertEqual(2.0, risk_review["leverage"])
         self.assertEqual(1, risk_review["max_holding_bars"])
-        self.assertIn("extreme oversold RSI 21.5 reduced short size and leverage", risk_review["review_note"])
+        self.assertIn("verifier reversal caution reduced short size and leverage", risk_review["review_note"])
 
     def test_risk_review_blocks_short_squeeze_risk_from_market_options_context(self):
         snapshot = {
@@ -2149,6 +2243,92 @@ class DeterministicPipelineE2ETests(unittest.TestCase):
         self.assertEqual("DO_NOTHING", risk_review["execution_action"])
         self.assertIn("pre_entry_short_squeeze_reversal_risk", risk_review["review_note"])
         self.assertIn("BTC-USDT put 9.55% / call 28.27%", risk_review["review_note"])
+
+    def test_risk_review_blocks_short_when_rsi_oversold_without_options_context(self):
+        snapshot = {
+            "symbol": "SOL-USDT",
+            "cycleId": "cycle_test",
+            "market_snapshot": {"rsi_4h": 29.8},
+            "decision_ready_features": {"macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "short setup",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 105,
+                    "proposed_tp_price": 90,
+                    "reference_values": {},
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}) as load_portfolio:
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        load_portfolio.assert_not_called()
+        self.assertFalse(risk_review["approved"])
+        self.assertEqual("NO_TRADE", risk_review["final_intent"])
+        self.assertIn("pre_entry_short_squeeze_reversal_risk", risk_review["review_note"])
+        self.assertIn("no negative gamma wall skew", risk_review["review_note"])
+
+    def test_risk_review_tiny_sizes_short_when_options_skew_without_oversold_rsi(self):
+        snapshot = {
+            "symbol": "ETH-USDT",
+            "cycleId": "cycle_test",
+            "market_snapshot": {
+                "rsi_4h": 45.0,
+                "market_options_gamma": {
+                    "available": True,
+                    "anchors": {
+                        "ETH-USDT": {
+                            "available": True,
+                            "gamma_sign": "NEGATIVE",
+                            "wall_distance": {
+                                "put_wall_downside_pct": 1.7,
+                                "call_wall_upside_pct": 22.9,
+                            },
+                        },
+                    },
+                },
+            },
+            "decision_ready_features": {"macro_permission": "ALLOW_SHORT", "major_trend_1d": "BEAR"},
+        }
+        rule_evaluation = {
+            "passed": True,
+            "candidate_structure": {"overall_state": "single_signal"},
+            "approved_candidates": [
+                {
+                    "decision_intent": "SHORT",
+                    "trigger_source": "ModelDecision_LLM",
+                    "entry_type": "MARKET",
+                    "rationale": "short setup",
+                    "proposed_entry_price": 100,
+                    "proposed_sl_price": 105,
+                    "proposed_tp_price": 90,
+                    "reference_values": {},
+                    "invalidation_basis": "model",
+                    "invalidation_conditions": {"operator": "OR", "rules": [], "persistence": 1},
+                }
+            ],
+        }
+
+        with patch.object(dp, "_load_portfolio_state", return_value={"total_equity": 1000.0}):
+            risk_review = dp._build_risk_review_with_research(snapshot, rule_evaluation, None)
+
+        self.assertTrue(risk_review["approved"])
+        self.assertEqual(80.0, risk_review["approved_position_size_usd"])
+        self.assertEqual(1.0, risk_review["leverage"])
+        self.assertEqual(1, risk_review["max_holding_bars"])
+        self.assertIn("short squeeze watch", risk_review["review_note"])
+        self.assertIn("ETH-USDT put 1.7% / call 22.9%", risk_review["review_note"])
 
     def test_risk_review_blocks_long_reversal_risk_from_market_options_context(self):
         snapshot = {

@@ -688,6 +688,40 @@ def _cap_position_size_by_total_exposure(
     return min(requested_size_usd, remaining_exposure), current_exposure, max_total_exposure
 
 
+def _append_simulated_cycle_exposure(
+    portfolio_state: Dict[str, Any],
+    snapshot: Dict[str, Any],
+    risk_review: Dict[str, Any],
+) -> None:
+    if not risk_review.get("approved"):
+        return
+    if risk_review.get("execution_action") not in {"OPEN_LONG", "OPEN_SHORT", "START_GRID_BOT"}:
+        return
+
+    requested_notional = _safe_float(risk_review.get("approved_position_size_usd"), 0.0)
+    if requested_notional <= 0:
+        return
+
+    positions = portfolio_state.setdefault("positions", [])
+    if not isinstance(positions, list):
+        positions = []
+        portfolio_state["positions"] = positions
+
+    candidate = risk_review.get("approved_candidate") or {}
+    entry_price = _safe_float(candidate.get("proposed_entry_price"), 0.0)
+    amount = requested_notional / entry_price if entry_price > 0 else requested_notional
+    positions.append({
+        "symbol": snapshot.get("symbol"),
+        "type": str(risk_review.get("final_intent") or "").lower(),
+        "entryPrice": entry_price,
+        "currentPrice": entry_price,
+        "amount": amount,
+        "notionalUsd": requested_notional,
+        "leverage": risk_review.get("leverage"),
+        "source": "same_cycle_simulated_exposure",
+    })
+
+
 def _estimate_distance_to_liq(position: Dict[str, Any]) -> Optional[float]:
     current = _safe_float(position.get("currentPrice"))
     entry = _safe_float(position.get("entryPrice"))
@@ -2284,57 +2318,121 @@ def _directional_reversal_risk_adjustment(snapshot: Dict[str, Any], intent: str)
         if market.get("rsi_14") is not None
         else features.get("rsi_14")
     )
-    if rsi is None:
-        return None
-
     skew_contexts = _negative_gamma_wall_skew_contexts(snapshot, intent)
-    if not skew_contexts:
+    if rsi is None and not skew_contexts:
         return None
 
     anchor_note = ", ".join(
         f"{item['symbol']} put {round(item['put_distance_pct'], 2)}% / call {round(item['call_distance_pct'], 2)}%"
         for item in skew_contexts[:2]
-    )
+    ) or "no negative gamma wall skew"
     if intent == "SHORT":
-        if rsi <= 30.0:
+        if rsi is not None and rsi <= 30.0:
             return {
                 "action": "REJECT",
                 "note": (
-                    f"pre_entry_short_squeeze_reversal_risk: negative gamma wall skew with RSI {round(rsi, 2)}; "
+                    f"pre_entry_short_squeeze_reversal_risk: RSI {round(rsi, 2)}; "
                     f"{anchor_note}"
                 ),
             }
-        if rsi <= 35.0:
+        if skew_contexts or (rsi is not None and rsi <= 35.0):
+            note_rsi = f"RSI {round(rsi, 2)}" if rsi is not None else "RSI unavailable"
             return {
                 "action": "TINY_SIZE",
                 "factor": 0.2,
                 "max_leverage": 1.0,
                 "max_holding_bars": 1,
                 "note": (
-                    f"short squeeze watch: negative gamma wall skew with RSI {round(rsi, 2)}; "
+                    f"short squeeze watch: negative gamma wall skew or oversold {note_rsi}; "
                     f"{anchor_note}"
                 ),
             }
     if intent == "LONG":
-        if rsi >= 70.0:
+        if rsi is not None and rsi >= 70.0:
             return {
                 "action": "REJECT",
                 "note": (
-                    f"pre_entry_long_reversal_risk: negative gamma wall skew with RSI {round(rsi, 2)}; "
+                    f"pre_entry_long_reversal_risk: RSI {round(rsi, 2)}; "
                     f"{anchor_note}"
                 ),
             }
-        if rsi >= 65.0:
+        if skew_contexts or (rsi is not None and rsi >= 65.0):
+            note_rsi = f"RSI {round(rsi, 2)}" if rsi is not None else "RSI unavailable"
             return {
                 "action": "TINY_SIZE",
                 "factor": 0.2,
                 "max_leverage": 1.0,
                 "max_holding_bars": 1,
                 "note": (
-                    f"long exhaustion watch: negative gamma wall skew with RSI {round(rsi, 2)}; "
+                    f"long exhaustion watch: negative gamma wall skew or overbought {note_rsi}; "
                     f"{anchor_note}"
                 ),
             }
+    return None
+
+
+def _verifier_reversal_caution_adjustment(verifier: Dict[str, Any], intent: str) -> Optional[Dict[str, Any]]:
+    if intent not in {"LONG", "SHORT"} or not isinstance(verifier, dict):
+        return None
+
+    texts: List[str] = []
+    for key in ("adjustment_reason", "reason"):
+        value = verifier.get(key)
+        if isinstance(value, str):
+            texts.append(value)
+    risk_notes = verifier.get("risk_notes")
+    if isinstance(risk_notes, list):
+        texts.extend(str(note) for note in risk_notes if note is not None)
+
+    combined = " | ".join(texts).lower()
+    if not combined:
+        return None
+
+    caution_terms = (
+        "oversold",
+        "overbought",
+        "bounce risk",
+        "potential for bounce",
+        "mean reversion",
+        "squeeze",
+        "short-covering",
+        "short covering",
+        "exhaustion",
+        "low participation",
+        "relative volume",
+        "qlib direction is flat",
+        "qlib model flat",
+        "p_flat",
+    )
+    if not any(term in combined for term in caution_terms):
+        return None
+
+    if intent == "SHORT" and any(
+        term in combined for term in ("oversold", "bounce", "squeeze", "mean reversion", "short-covering", "short covering")
+    ):
+        return {
+            "factor": 0.5,
+            "max_leverage": 2.0,
+            "max_holding_bars": 1,
+            "note": "verifier reversal caution reduced short size and leverage",
+        }
+    if intent == "LONG" and any(term in combined for term in ("overbought", "exhaustion", "mean reversion")):
+        return {
+            "factor": 0.5,
+            "max_leverage": 2.0,
+            "max_holding_bars": 1,
+            "note": "verifier reversal caution reduced long size and leverage",
+        }
+    if any(
+        term in combined
+        for term in ("low participation", "relative volume", "qlib direction is flat", "qlib model flat", "p_flat")
+    ):
+        return {
+            "factor": 0.75,
+            "max_leverage": 2.5,
+            "max_holding_bars": 2,
+            "note": "verifier low-conviction caution reduced size",
+        }
     return None
 
 
@@ -2977,7 +3075,12 @@ def _high_qlib_flat_directional_block_reason(snapshot: Dict[str, Any], intent: s
     return ""
 
 
-def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: Dict[str, Any], research_output: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+def _build_risk_review_with_research(
+    snapshot: Dict[str, Any],
+    rule_evaluation: Dict[str, Any],
+    research_output: Optional[Dict[str, Any]],
+    portfolio_state_override: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     if not rule_evaluation.get("passed") or not rule_evaluation.get("approved_candidates"):
         return {
             "symbol": snapshot["symbol"],
@@ -3056,7 +3159,7 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
             "candidate_structure": rule_evaluation.get("candidate_structure", {}) or {},
         }
 
-    portfolio_state = _load_portfolio_state()
+    portfolio_state = portfolio_state_override if portfolio_state_override is not None else _load_portfolio_state()
     account_equity = _safe_float(portfolio_state.get("total_equity"), 0.0)
     if account_equity <= 0:
         account_equity = 1000.0
@@ -3164,6 +3267,15 @@ def _build_risk_review_with_research(snapshot: Dict[str, Any], rule_evaluation: 
     verifier = candidate.get("reference_values", {}).get("model_verifier") or {}
     verifier_adjustment = str(verifier.get("risk_adjustment") or "NEUTRAL").upper()
     verifier_reason = str(verifier.get("adjustment_reason") or "").strip()
+    verifier_caution = _verifier_reversal_caution_adjustment(verifier, str(intent or ""))
+    if not is_grid_candidate and verifier_adjustment != "REDUCE_SIZE" and verifier_caution:
+        approved_position_size_usd *= _safe_float(verifier_caution.get("factor"), 0.75)
+        leverage = min(leverage, _safe_float(verifier_caution.get("max_leverage"), 2.5))
+        max_holding_bars = min(max_holding_bars, int(verifier_caution.get("max_holding_bars") or 2))
+        review_note = f"{review_note}; {verifier_caution['note']}"
+        if verifier_adjustment == "INCREASE_SIZE":
+            review_note = f"{review_note}; verifier increase ignored due to reversal caution"
+            verifier_adjustment = "NEUTRAL"
     if not is_grid_candidate and verifier_adjustment == "REDUCE_SIZE":
         approved_position_size_usd *= 0.5
         leverage = min(leverage, 2.0)
@@ -3749,6 +3861,7 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
     whale_analysis = _load_whale_analysis()
     qlib_payload = _load_qlib_payload()
     portfolio_state = _load_portfolio_state()
+    cycle_portfolio_state = deepcopy(portfolio_state)
     cycle_id = _aligned_cycle_id()
     qlib_map = _qlib_coin_map(qlib_payload)
     chart_context_map = _load_chart_feature_context_map()
@@ -3798,7 +3911,13 @@ def run_deterministic_cycle(executor: Optional[OKXExecutor] = None) -> Dict[str,
             research_output = _research_output_from_model_decision(snapshot, rule_evaluation, model_decision or {})
         else:
             research_output = build_research_output(snapshot, candidate_batch, rule_evaluation)
-        risk_review = _build_risk_review_with_research(snapshot, rule_evaluation, research_output)
+        risk_review = _build_risk_review_with_research(
+            snapshot,
+            rule_evaluation,
+            research_output,
+            portfolio_state_override=cycle_portfolio_state,
+        )
+        _append_simulated_cycle_exposure(cycle_portfolio_state, snapshot, risk_review)
         execution = _build_execution_request(snapshot, risk_review)
         record = _make_trade_record(
             snapshot,
