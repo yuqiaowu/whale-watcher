@@ -515,6 +515,8 @@ def _market_impact(tags: List[str]) -> str:
 
 
 def _macro_bias_tier(score: int, market_impact: str) -> str:
+    if market_impact in {"MIXED", "NO_CLEAR_IMPACT"}:
+        return "NO_CLEAR_EDGE"
     if score <= -6:
         return "STRONG_RISK_OFF"
     if score <= -3 or (market_impact == "RISK_OFF" and score < 0):

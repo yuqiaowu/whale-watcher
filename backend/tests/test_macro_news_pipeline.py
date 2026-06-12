@@ -559,6 +559,53 @@ class MacroNewsPipelineTests(unittest.TestCase):
         self.assertEqual(result["final_macro_decision"]["llm_view"]["market_impact"], "MIXED")
         self.assertEqual(result["final_macro_decision"]["deterministic_view"]["market_impact"], "MIXED")
 
+    def test_mixed_final_macro_conclusion_forces_neutral_permission_even_with_risk_off_tags(self):
+        whale_analysis = {
+            "fear_greed": {"value": 12, "value_classification": "Extreme Fear"},
+            "macro": {
+                "fed_futures": {"change_5d_bps": 2.0, "trend": "restrictive"},
+                "japan_macro": {"price": 156.0, "change_5d_pct": -1.5},
+                "liquidity_monitor": {
+                    "dxy": {"price": 105.2, "change_5d_pct": 0.8},
+                    "vix": {"price": 24.8, "change_1d_pct": 9.0, "change_5d_pct": 10.0},
+                    "us10y": {"price": 4.45, "change_5d_pct": 0.2},
+                },
+                "global_stable_flow": -150000000,
+            },
+            "news": {"macro": {"items": [{"title": "Powell says policy must stay restrictive"}]}},
+        }
+        first_pass_llm = {
+            "news_summary": "mixed crypto resilience against macro headwinds",
+            "brief_rationale": "mixed",
+            "market_impact": "MIXED",
+            "impact_horizon": "SWING",
+            "crypto_relevance": "HIGH",
+            "key_tags": ["FED_HAWKISH", "RISK_OFF_NEWS", "USD_STRENGTH"],
+        }
+        adjudication = {
+            "selected_view": "blended",
+            "final_market_impact": "MIXED",
+            "final_impact_horizon": "SWING",
+            "final_crypto_relevance": "HIGH",
+            "final_key_tags": ["FED_HAWKISH", "RISK_OFF_NEWS", "USD_STRENGTH"],
+            "confidence": "MEDIUM",
+            "reason": "Risk-off macro is offset by crypto-specific resilience, so this is mixed.",
+        }
+
+        with patch(
+            "macro_news_pipeline.call_llm_json_with_audit",
+            side_effect=[
+                (first_pass_llm, {"status": "parsed", "parsed_response": first_pass_llm}),
+                (adjudication, {"status": "parsed", "parsed_response": adjudication}),
+            ],
+        ), patch.dict("os.environ", {"ENABLE_MACRO_NEWS_LLM": "1"}, clear=False):
+            result = build_macro_news_snapshot(whale_analysis)
+
+        self.assertEqual(result["market_impact"], "MIXED")
+        self.assertEqual(result["macro_bias_tier"], "NO_CLEAR_EDGE")
+        self.assertEqual(result["macro_mode"], "MIXED")
+        self.assertEqual(result["macro_permission"], "ALLOW_BOTH")
+
     def test_llm_adjudication_invalid_result_falls_back_to_deterministic(self):
         whale_analysis = {
             "fear_greed": {"value": 29, "value_classification": "Fear"},
