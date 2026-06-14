@@ -28,6 +28,10 @@ LIST_IDENTITY_FIELDS = {
     "macro_history": "timestamp",
 }
 
+PRESERVE_IDENTIFIED_LIST_SAVE_RECORDS = {
+    "trade_decision_records",
+}
+
 class DBClient:
     def __init__(self):
         self.uri = os.getenv("MONGODB_URI")
@@ -167,9 +171,12 @@ class DBClient:
         if operations:
             collection.bulk_write(operations, ordered=False)
 
-        # Keep bounded history semantics for collections that are saved as a
-        # complete list by callers, without using renameCollection privileges.
-        if incoming_ids:
+        # Keep bounded history semantics for collections that callers save as a
+        # complete list, without using renameCollection privileges. Trade
+        # decision records are audit/replay evidence and may be written by
+        # multiple runtime steps, so saving a partial list must never delete
+        # unrelated decisions.
+        if incoming_ids and collection_name not in PRESERVE_IDENTIFIED_LIST_SAVE_RECORDS:
             collection.delete_many({identity_field: {"$nin": incoming_ids}})
         elif fallback_items:
             collection.delete_many({})

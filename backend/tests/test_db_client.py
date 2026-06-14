@@ -70,7 +70,7 @@ class DBClientListSaveTests(unittest.TestCase):
     def setUp(self):
         self.client = DBClient.__new__(DBClient)
 
-    def test_trade_decision_records_use_upsert_not_rename(self):
+    def test_trade_decision_records_preserve_unrelated_records_on_save(self):
         collection = FakeCollection([
             {"decisionId": "old", "symbol": "ETH-USDT"},
             {"decisionId": "keep", "symbol": "BTC-USDT", "updated_at": "old"},
@@ -86,7 +86,7 @@ class DBClientListSaveTests(unittest.TestCase):
         )
 
         by_id = {doc["decisionId"]: doc for doc in collection.docs}
-        self.assertEqual(set(by_id), {"keep", "new"})
+        self.assertEqual(set(by_id), {"old", "keep", "new"})
         self.assertEqual(by_id["keep"]["updated_at"], "new")
         self.assertFalse(collection.renamed)
 
