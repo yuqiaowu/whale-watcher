@@ -2127,12 +2127,67 @@
       }
     ],
     "add_allowed": true,
-    "distance_to_liq": 0.7958,
-    "invalidation_state": {}
+    "distance_to_liq": 0.7888,
+    "invalidation_state": {},
+    "protection_last_synced_at": "2026-06-25T22:07:28Z"
   },
-  "evaluation": null,
+  "evaluation": {
+    "result_label": "OPEN_MONITORING",
+    "primary_cause": "TRADE_STILL_OPEN",
+    "layer_attribution": {
+      "data": 0.0,
+      "candidate": 0.0,
+      "rule": 0.0,
+      "research": 0.0,
+      "risk": 0.0,
+      "execution": 0.0
+    },
+    "improvement_targets": [],
+    "improvement_note": "execution submitted or simulated; no closed trade matched yet",
+    "traceability": {
+      "strategy_family": "DIRECTIONAL",
+      "candidate_structure": {
+        "overall_state": "single_signal",
+        "has_directional_conflict": false,
+        "long_count": 0,
+        "short_count": 1,
+        "grid_count": 0,
+        "resonance_groups": {
+          "LONG": [],
+          "SHORT": [
+            "ADOPTED_LIVE_POSITION"
+          ],
+          "GRID_NEUTRAL": []
+        },
+        "approved_groups": {
+          "LONG": [],
+          "SHORT": [
+            "ADOPTED_LIVE_POSITION"
+          ],
+          "GRID_NEUTRAL": []
+        },
+        "approved_resonance_strength": 1
+      },
+      "proposed_trigger_sources": [
+        "ADOPTED_LIVE_POSITION"
+      ],
+      "approved_trigger_sources": [
+        "ADOPTED_LIVE_POSITION"
+      ],
+      "selected_trigger_sources": [
+        "ADOPTED_LIVE_POSITION"
+      ],
+      "selected_intent": "SHORT",
+      "thesis_strength": "MEDIUM",
+      "conflict_state": null,
+      "risk_review_note": "adopted existing live position for runtime management; not a new model approval",
+      "execution_action": "OPEN_SHORT"
+    },
+    "feedback_packets": [],
+    "generated_at": "2026-06-25T22:09:06Z"
+  },
   "created_at": "2026-06-25T20:14:39Z",
-  "updated_at": "2026-06-25T20:26:07Z",
+  "updated_at": "2026-06-25T22:09:06Z",
   "opening_thesis_snapshot": {
     "source": "pre_execution_decision_record",
     "frozen_at": "2026-06-25T20:13:09Z",
