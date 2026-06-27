@@ -1,5 +1,530 @@
 [
   {
+    "decisionId": "unmatched_closed_ETH_short_3686256903062822912",
+    "cycleId": "unmatched_closed_trade",
+    "symbol": "ETH-USDT",
+    "timeframe": "4h",
+    "snapshot_timestamp": null,
+    "positionState": "closed",
+    "snapshot": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "market_snapshot": {
+        "price": 1619.47
+      },
+      "position_snapshot": {
+        "position_side": "SHORT"
+      }
+    },
+    "candidate": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "candidate_proposals": [
+        {
+          "strategy_family": "DIRECTIONAL",
+          "decision_intent": "SHORT",
+          "trigger_source": "UNMATCHED_CLOSED_TRADE",
+          "rationale": "OKX closed trade reconciled without a matching local decision record",
+          "entry_type": "MARKET",
+          "proposed_entry_price": 1624.76,
+          "proposed_sl_price": null,
+          "proposed_tp_price": null,
+          "reference_values": {},
+          "invalidation_basis": "historical closed trade; original decision record unavailable",
+          "invalidation_conditions": {
+            "operator": "OR",
+            "rules": [],
+            "persistence": 1
+          }
+        }
+      ]
+    },
+    "ruleEvaluation": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "stage": "closed_trade_reconciliation",
+      "passed": true,
+      "reason_codes": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "approved_candidates": [],
+      "rule_trace": [
+        {
+          "rule": "UNMATCHED_CLOSED_TRADE",
+          "passed": true
+        }
+      ]
+    },
+    "researchOutput": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "selected_intent": "SHORT",
+      "selected_trigger_sources": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "thesis_strength": "UNKNOWN",
+      "holding_horizon": "UNKNOWN",
+      "thesis_change": "UNKNOWN",
+      "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
+      "provenance": {
+        "generation_mode": "closed_trade_reconciliation",
+        "llm_enabled": false,
+        "llm_attempted": false,
+        "llm_applied": false
+      }
+    },
+    "riskReview": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "approved": true,
+      "final_intent": "SHORT",
+      "approved_risk_fraction": 0.0,
+      "approved_position_size_usd": 194.97,
+      "leverage": 1.0,
+      "max_holding_bars": 0,
+      "execution_action": "OPEN_SHORT",
+      "next_position_state": "closed",
+      "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval"
+    },
+    "execution": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "execution_action": "OPEN_SHORT",
+      "order_status": "CLOSED",
+      "sync_status": "CLOSED",
+      "closed_trade_id": "3686256903062822912",
+      "entry_type": "MARKET",
+      "proposed_entry_price": 1624.76,
+      "avg_fill_price": 1624.76,
+      "avg_exit_price": 1619.47,
+      "filled_size": 0.12,
+      "requested_leverage": 1.0,
+      "executed_at": "2026-06-25T00:13:24Z",
+      "closed_at": "2026-06-25T04:23:36Z",
+      "realized_pnl": 0.06,
+      "realized_pnl_percent": 0.33,
+      "position_side": "SHORT",
+      "protection_status": "CLOSED",
+      "runtime_reason": "unmatched_okx_closed_trade",
+      "close_reason": "unmatched_okx_closed_trade",
+      "close_reason_source": "unmatched_trade_history",
+      "history": [
+        {
+          "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
+          "at": "2026-06-27T01:06:59Z",
+          "payload": {
+            "trade_id": "3686256903062822912",
+            "reason": "unmatched_okx_closed_trade",
+            "source": "OKX Real Trade",
+            "entry_time": "2026-06-25 00:13:24",
+            "exit_time": "2026-06-25 04:23:36",
+            "entry_price": 1624.76,
+            "exit_price": 1619.47,
+            "pnl": 0.06,
+            "pnl_percent": 0.33
+          }
+        }
+      ]
+    },
+    "evaluation": {
+      "result_label": "WIN",
+      "primary_cause": "THESIS_CONFIRMED",
+      "layer_attribution": {
+        "data": 0.1,
+        "candidate": 0.25,
+        "rule": 0.1,
+        "research": 0.25,
+        "risk": 0.15,
+        "execution": 0.15
+      },
+      "improvement_targets": [],
+      "improvement_note": "closed trade aligned with approved thesis and exited positive",
+      "pnl": 0.06,
+      "pnl_percent": 0.33,
+      "matched_trade_id": "3686256903062822912",
+      "matched_trade_exit_time": "2026-06-25 04:23:36",
+      "traceability": {
+        "strategy_family": "DIRECTIONAL",
+        "candidate_structure": {},
+        "proposed_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "approved_trigger_sources": [],
+        "selected_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "selected_intent": "SHORT",
+        "thesis_strength": "UNKNOWN",
+        "conflict_state": null,
+        "risk_review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
+        "execution_action": "OPEN_SHORT"
+      },
+      "feedback_packets": [],
+      "generated_at": "2026-06-27T01:12:14Z"
+    },
+    "created_at": "2026-06-25T00:13:24Z",
+    "updated_at": "2026-06-27T01:12:14Z",
+    "provenance": {
+      "source": "execution_reconciliation",
+      "unmatched_closed_trade": true
+    }
+  },
+  {
+    "decisionId": "unmatched_closed_BTC_short_3687681793863196672",
+    "cycleId": "unmatched_closed_trade",
+    "symbol": "BTC-USDT",
+    "timeframe": "4h",
+    "snapshot_timestamp": null,
+    "positionState": "closed",
+    "snapshot": {
+      "symbol": "BTC-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "market_snapshot": {
+        "price": 59848.4
+      },
+      "position_snapshot": {
+        "position_side": "SHORT"
+      }
+    },
+    "candidate": {
+      "symbol": "BTC-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "candidate_proposals": [
+        {
+          "strategy_family": "DIRECTIONAL",
+          "decision_intent": "SHORT",
+          "trigger_source": "UNMATCHED_CLOSED_TRADE",
+          "rationale": "OKX closed trade reconciled without a matching local decision record",
+          "entry_type": "MARKET",
+          "proposed_entry_price": 61217.8,
+          "proposed_sl_price": null,
+          "proposed_tp_price": null,
+          "reference_values": {},
+          "invalidation_basis": "historical closed trade; original decision record unavailable",
+          "invalidation_conditions": {
+            "operator": "OR",
+            "rules": [],
+            "persistence": 1
+          }
+        }
+      ]
+    },
+    "ruleEvaluation": {
+      "symbol": "BTC-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "stage": "closed_trade_reconciliation",
+      "passed": true,
+      "reason_codes": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "approved_candidates": [],
+      "rule_trace": [
+        {
+          "rule": "UNMATCHED_CLOSED_TRADE",
+          "passed": true
+        }
+      ]
+    },
+    "researchOutput": {
+      "symbol": "BTC-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "selected_intent": "SHORT",
+      "selected_trigger_sources": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "thesis_strength": "UNKNOWN",
+      "holding_horizon": "UNKNOWN",
+      "thesis_change": "UNKNOWN",
+      "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
+      "provenance": {
+        "generation_mode": "closed_trade_reconciliation",
+        "llm_enabled": false,
+        "llm_attempted": false,
+        "llm_applied": false
+      }
+    },
+    "riskReview": {
+      "symbol": "BTC-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "approved": true,
+      "final_intent": "SHORT",
+      "approved_risk_fraction": 0.0,
+      "approved_position_size_usd": 1836.53,
+      "leverage": 1.0,
+      "max_holding_bars": 0,
+      "execution_action": "OPEN_SHORT",
+      "next_position_state": "closed",
+      "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval"
+    },
+    "execution": {
+      "symbol": "BTC-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "execution_action": "OPEN_SHORT",
+      "order_status": "CLOSED",
+      "sync_status": "CLOSED",
+      "closed_trade_id": "3687681793863196672",
+      "entry_type": "MARKET",
+      "proposed_entry_price": 61217.8,
+      "avg_fill_price": 61217.8,
+      "avg_exit_price": 59848.4,
+      "filled_size": 0.03,
+      "requested_leverage": 1.0,
+      "executed_at": "2026-06-25T12:10:51Z",
+      "closed_at": "2026-06-25T16:11:21Z",
+      "realized_pnl": 0.41,
+      "realized_pnl_percent": 2.24,
+      "position_side": "SHORT",
+      "protection_status": "CLOSED",
+      "runtime_reason": "unmatched_okx_closed_trade",
+      "close_reason": "unmatched_okx_closed_trade",
+      "close_reason_source": "unmatched_trade_history",
+      "history": [
+        {
+          "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
+          "at": "2026-06-27T01:07:00Z",
+          "payload": {
+            "trade_id": "3687681793863196672",
+            "reason": "unmatched_okx_closed_trade",
+            "source": "OKX Real Trade",
+            "entry_time": "2026-06-25 12:10:51",
+            "exit_time": "2026-06-25 16:11:21",
+            "entry_price": 61217.8,
+            "exit_price": 59848.4,
+            "pnl": 0.41,
+            "pnl_percent": 2.24
+          }
+        }
+      ]
+    },
+    "evaluation": {
+      "result_label": "WIN",
+      "primary_cause": "THESIS_CONFIRMED",
+      "layer_attribution": {
+        "data": 0.1,
+        "candidate": 0.25,
+        "rule": 0.1,
+        "research": 0.25,
+        "risk": 0.15,
+        "execution": 0.15
+      },
+      "improvement_targets": [],
+      "improvement_note": "closed trade aligned with approved thesis and exited positive",
+      "pnl": 0.41,
+      "pnl_percent": 2.24,
+      "matched_trade_id": "3687681793863196672",
+      "matched_trade_exit_time": "2026-06-25 16:11:21",
+      "traceability": {
+        "strategy_family": "DIRECTIONAL",
+        "candidate_structure": {},
+        "proposed_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "approved_trigger_sources": [],
+        "selected_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "selected_intent": "SHORT",
+        "thesis_strength": "UNKNOWN",
+        "conflict_state": null,
+        "risk_review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
+        "execution_action": "OPEN_SHORT"
+      },
+      "feedback_packets": [],
+      "generated_at": "2026-06-27T01:12:14Z"
+    },
+    "created_at": "2026-06-25T12:10:51Z",
+    "updated_at": "2026-06-27T01:12:14Z",
+    "provenance": {
+      "source": "execution_reconciliation",
+      "unmatched_closed_trade": true
+    }
+  },
+  {
+    "decisionId": "unmatched_closed_ETH_short_3687706159850201088",
+    "cycleId": "unmatched_closed_trade",
+    "symbol": "ETH-USDT",
+    "timeframe": "4h",
+    "snapshot_timestamp": null,
+    "positionState": "closed",
+    "snapshot": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "market_snapshot": {
+        "price": 1575.3
+      },
+      "position_snapshot": {
+        "position_side": "SHORT"
+      }
+    },
+    "candidate": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "candidate_proposals": [
+        {
+          "strategy_family": "DIRECTIONAL",
+          "decision_intent": "SHORT",
+          "trigger_source": "UNMATCHED_CLOSED_TRADE",
+          "rationale": "OKX closed trade reconciled without a matching local decision record",
+          "entry_type": "MARKET",
+          "proposed_entry_price": 1630.72,
+          "proposed_sl_price": null,
+          "proposed_tp_price": null,
+          "reference_values": {},
+          "invalidation_basis": "historical closed trade; original decision record unavailable",
+          "invalidation_conditions": {
+            "operator": "OR",
+            "rules": [],
+            "persistence": 1
+          }
+        }
+      ]
+    },
+    "ruleEvaluation": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "stage": "closed_trade_reconciliation",
+      "passed": true,
+      "reason_codes": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "approved_candidates": [],
+      "rule_trace": [
+        {
+          "rule": "UNMATCHED_CLOSED_TRADE",
+          "passed": true
+        }
+      ]
+    },
+    "researchOutput": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "selected_intent": "SHORT",
+      "selected_trigger_sources": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "thesis_strength": "UNKNOWN",
+      "holding_horizon": "UNKNOWN",
+      "thesis_change": "UNKNOWN",
+      "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
+      "provenance": {
+        "generation_mode": "closed_trade_reconciliation",
+        "llm_enabled": false,
+        "llm_attempted": false,
+        "llm_applied": false
+      }
+    },
+    "riskReview": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "approved": true,
+      "final_intent": "SHORT",
+      "approved_risk_fraction": 0.0,
+      "approved_position_size_usd": 195.69,
+      "leverage": 1.0,
+      "max_holding_bars": 0,
+      "execution_action": "OPEN_SHORT",
+      "next_position_state": "closed",
+      "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval"
+    },
+    "execution": {
+      "symbol": "ETH-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "execution_action": "OPEN_SHORT",
+      "order_status": "CLOSED",
+      "sync_status": "CLOSED",
+      "closed_trade_id": "3687706159850201088",
+      "entry_type": "MARKET",
+      "proposed_entry_price": 1630.72,
+      "avg_fill_price": 1630.72,
+      "avg_exit_price": 1575.3,
+      "filled_size": 0.12,
+      "requested_leverage": 1.0,
+      "executed_at": "2026-06-25T12:13:15Z",
+      "closed_at": "2026-06-25T16:23:27Z",
+      "realized_pnl": 0.67,
+      "realized_pnl_percent": 3.4,
+      "position_side": "SHORT",
+      "protection_status": "CLOSED",
+      "runtime_reason": "unmatched_okx_closed_trade",
+      "close_reason": "unmatched_okx_closed_trade",
+      "close_reason_source": "unmatched_trade_history",
+      "history": [
+        {
+          "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
+          "at": "2026-06-27T01:07:00Z",
+          "payload": {
+            "trade_id": "3687706159850201088",
+            "reason": "unmatched_okx_closed_trade",
+            "source": "OKX Real Trade",
+            "entry_time": "2026-06-25 12:13:15",
+            "exit_time": "2026-06-25 16:23:27",
+            "entry_price": 1630.72,
+            "exit_price": 1575.3,
+            "pnl": 0.67,
+            "pnl_percent": 3.4
+          }
+        }
+      ]
+    },
+    "evaluation": {
+      "result_label": "WIN",
+      "primary_cause": "THESIS_CONFIRMED",
+      "layer_attribution": {
+        "data": 0.1,
+        "candidate": 0.25,
+        "rule": 0.1,
+        "research": 0.25,
+        "risk": 0.15,
+        "execution": 0.15
+      },
+      "improvement_targets": [],
+      "improvement_note": "closed trade aligned with approved thesis and exited positive",
+      "pnl": 0.67,
+      "pnl_percent": 3.4,
+      "matched_trade_id": "3687706159850201088",
+      "matched_trade_exit_time": "2026-06-25 16:23:27",
+      "traceability": {
+        "strategy_family": "DIRECTIONAL",
+        "candidate_structure": {},
+        "proposed_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "approved_trigger_sources": [],
+        "selected_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "selected_intent": "SHORT",
+        "thesis_strength": "UNKNOWN",
+        "conflict_state": null,
+        "risk_review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
+        "execution_action": "OPEN_SHORT"
+      },
+      "feedback_packets": [],
+      "generated_at": "2026-06-27T01:12:14Z"
+    },
+    "created_at": "2026-06-25T12:13:15Z",
+    "updated_at": "2026-06-27T01:12:14Z",
+    "provenance": {
+      "source": "execution_reconciliation",
+      "unmatched_closed_trade": true
+    }
+  },
+  {
     "decisionId": "adopted_BNB_short_555_3_20260625_161559",
     "cycleId": "cycle_2026-06-25_2000",
     "symbol": "BNB-USDT",
@@ -2175,10 +2700,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-25T16:15:59Z",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
       "frozen_at": "2026-06-25T16:14:36Z",
@@ -4699,10 +5224,10 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-25T20:14:39Z",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
       "frozen_at": "2026-06-25T20:13:09Z",
@@ -9772,11 +10297,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T00:09:45Z",
     "created_at_local": "2026-06-26T08:09:45+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T08:10:13+0800"
   },
   {
@@ -14718,11 +15243,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T00:11:06Z",
     "created_at_local": "2026-06-26T08:11:06+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T08:12:14+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -19207,11 +19732,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T00:13:00Z",
     "created_at_local": "2026-06-26T08:13:00+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T08:13:31+0800"
   },
   {
@@ -23902,11 +24427,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T00:14:35Z",
     "created_at_local": "2026-06-26T08:14:35+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T08:15:15+0800"
   },
   {
@@ -28835,11 +29360,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T00:16:12Z",
     "created_at_local": "2026-06-26T08:16:12+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T08:16:12+0800"
   },
   {
@@ -33791,11 +34316,11 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T04:09:19Z",
     "created_at_local": "2026-06-26T12:09:19+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T12:10:41+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -38607,11 +39132,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T04:11:47Z",
     "created_at_local": "2026-06-26T12:11:47+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T12:12:26+0800"
   },
   {
@@ -42889,11 +43414,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T04:13:32Z",
     "created_at_local": "2026-06-26T12:13:32+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T12:14:12+0800"
   },
   {
@@ -47240,11 +47765,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T04:15:12Z",
     "created_at_local": "2026-06-26T12:15:12+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T12:15:53+0800"
   },
   {
@@ -52119,11 +52644,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T04:16:55Z",
     "created_at_local": "2026-06-26T12:16:55+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T12:17:39+0800"
   },
   {
@@ -56599,11 +57124,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T08:09:11Z",
     "created_at_local": "2026-06-26T16:09:11+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T16:09:54+0800"
   },
   {
@@ -61660,11 +62185,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T08:11:01Z",
     "created_at_local": "2026-06-26T16:11:01+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T16:12:23+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -66181,11 +66706,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T08:13:20Z",
     "created_at_local": "2026-06-26T16:13:20+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:14Z",
     "updated_at_local": "2026-06-26T16:14:04+0800"
   },
   {
@@ -71113,11 +71638,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:14Z"
     },
     "created_at": "2026-06-26T08:15:17Z",
     "created_at_local": "2026-06-26T16:15:17+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-26T16:15:17+0800"
   },
   {
@@ -75885,11 +76410,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T08:17:17Z",
     "created_at_local": "2026-06-26T16:17:17+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-26T16:18:07+0800"
   },
   {
@@ -75901,7 +76426,7 @@
     "snapshot_time": "2026-06-26T12:08:57Z",
     "snapshot_time_local": "2026-06-26T20:08:57+0800",
     "local_timezone": "Asia/Shanghai",
-    "positionState": "entered",
+    "positionState": "closed",
     "snapshot": {
       "decision_id": "cycle_2026-06-26_1200_BTC",
       "symbol": "BTC-USDT",
@@ -81278,7 +81803,7 @@
       "cycleId": "cycle_2026-06-26_1200",
       "strategy_family": "DIRECTIONAL",
       "execution_action": "OPEN_SHORT",
-      "order_status": "FILLED",
+      "order_status": "CLOSED",
       "requested_size_usd": 20.17,
       "requested_leverage": 1.0,
       "entry_type": "MARKET",
@@ -81304,9 +81829,9 @@
         "execution_action": "OPEN_SHORT"
       },
       "executed_at": "2026-06-26T12:10:38Z",
-      "sync_status": "OPEN",
+      "sync_status": "CLOSED",
       "failure_reason": null,
-      "protection_status": "OPEN",
+      "protection_status": "CLOSED",
       "history": [
         {
           "type": "EXECUTION_REQUEST_CREATED",
@@ -81374,6 +81899,19 @@
             "new_max_holding_bars": 1,
             "reason": "expiry_review_passed"
           }
+        },
+        {
+          "type": "EXECUTION_CLOSED_RECONCILED",
+          "at": "2026-06-27T01:06:28Z",
+          "payload": {
+            "trade_id": "3691587987162013696",
+            "pnl": -0.17,
+            "pnl_percent": -0.98,
+            "reason": "max_holding_review_passed",
+            "reason_source": "position_runtime",
+            "runtime_action": "EXTEND_HOLDING",
+            "okx_reason": "OKX Real Trade"
+          }
         }
       ],
       "position_side": "SHORT",
@@ -81387,21 +81925,35 @@
       "runtime_action": "EXTEND_HOLDING",
       "runtime_reason": "max_holding_review_passed",
       "holding_window_started_at": "2026-06-26T20:24:05Z",
-      "holding_review_count": 2
+      "holding_review_count": 2,
+      "closed_trade_id": "3691587987162013696",
+      "closed_at": "2026-06-27 00:31:35",
+      "realized_pnl": -0.17,
+      "realized_pnl_percent": -0.98,
+      "avg_exit_price": 59940.2,
+      "close_reason": "max_holding_review_passed",
+      "close_reason_source": "position_runtime"
     },
     "evaluation": {
-      "result_label": "OPEN_MONITORING",
-      "primary_cause": "TRADE_STILL_OPEN",
+      "result_label": "LOSS",
+      "primary_cause": "RESEARCH_WEAK_THESIS",
       "layer_attribution": {
-        "data": 0.0,
-        "candidate": 0.0,
-        "rule": 0.0,
-        "research": 0.0,
-        "risk": 0.0,
-        "execution": 0.0
+        "data": 0.1,
+        "candidate": 0.15,
+        "rule": 0.1,
+        "research": 0.45,
+        "risk": 0.15,
+        "execution": 0.05
       },
-      "improvement_targets": [],
-      "improvement_note": "execution submitted or simulated; no closed trade matched yet",
+      "improvement_targets": [
+        "research",
+        "candidate"
+      ],
+      "improvement_note": "closed trade finished negative; review thesis quality and setup quality",
+      "pnl": -0.17,
+      "pnl_percent": -0.98,
+      "matched_trade_id": "3691587987162013696",
+      "matched_trade_exit_time": "2026-06-27 00:31:35",
       "traceability": {
         "strategy_family": "DIRECTIONAL",
         "candidate_structure": {
@@ -81441,12 +81993,23 @@
         "risk_review_note": "research flagged low thesis strength; reduced size and leverage; short squeeze watch: negative gamma wall skew or oversold RSI 35.84; BTC-USDT put 2.33% / call 7.78%, ETH-USDT put 2.91% / call 22.99%; verifier recommended size reduction: Strong bearish alignment but RSI near oversold and missing onchain flow data reduce conviction",
         "execution_action": "OPEN_SHORT"
       },
-      "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "feedback_packets": [
+        {
+          "target_layer": "research",
+          "packet_type": "PROMPT_AND_CONFLICT_REVIEW",
+          "message": "review prompt constraints, conflict handling, and no-trade examples"
+        },
+        {
+          "target_layer": "candidate",
+          "packet_type": "BLUEPRINT_REVIEW",
+          "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
+        }
+      ],
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T12:09:15Z",
     "created_at_local": "2026-06-26T20:09:15+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-26T20:10:38+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -86498,11 +87061,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T12:11:42Z",
     "created_at_local": "2026-06-26T20:11:42+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-26T20:12:26+0800"
   },
   {
@@ -91353,11 +91916,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T12:13:35Z",
     "created_at_local": "2026-06-26T20:13:35+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-26T20:14:18+0800"
   },
   {
@@ -96788,11 +97351,11 @@
           "message": "review prompt constraints, conflict handling, and no-trade examples"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T12:15:28Z",
     "created_at_local": "2026-06-26T20:15:28+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-26T20:16:55+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -102169,11 +102732,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T12:18:00Z",
     "created_at_local": "2026-06-26T20:18:00+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-26T20:18:43+0800"
   },
   {
@@ -106910,11 +107473,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T16:09:19Z",
     "created_at_local": "2026-06-27T00:09:19+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T00:10:03+0800"
   },
   {
@@ -112297,11 +112860,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T16:11:10Z",
     "created_at_local": "2026-06-27T00:11:10+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T00:12:34+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -117434,11 +117997,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T16:13:43Z",
     "created_at_local": "2026-06-27T00:13:43+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T00:14:27+0800"
   },
   {
@@ -122189,11 +122752,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T16:15:35Z",
     "created_at_local": "2026-06-27T00:15:35+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T00:16:19+0800"
   },
   {
@@ -126859,11 +127422,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T16:17:27Z",
     "created_at_local": "2026-06-27T00:17:27+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T00:18:24+0800"
   },
   {
@@ -131941,11 +132504,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T20:09:26Z",
     "created_at_local": "2026-06-27T04:09:26+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T04:10:10+0800"
   },
   {
@@ -137021,11 +137584,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T20:11:17Z",
     "created_at_local": "2026-06-27T04:11:17+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T04:12:01+0800"
   },
   {
@@ -142022,11 +142585,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T20:13:16Z",
     "created_at_local": "2026-06-27T04:13:16+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T04:14:07+0800"
   },
   {
@@ -147042,11 +147605,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T20:15:25Z",
     "created_at_local": "2026-06-27T04:15:25+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T04:15:25+0800"
   },
   {
@@ -152285,11 +152848,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-26T20:17:24Z",
     "created_at_local": "2026-06-27T04:17:24+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T04:18:13+0800"
   },
   {
@@ -156777,11 +157340,11 @@
           "message": "review pre-trade or in-position threshold sensitivity"
         }
       ],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-27T00:09:34Z",
     "created_at_local": "2026-06-27T08:09:34+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T08:10:18+0800"
   },
   {
@@ -161418,11 +161981,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-27T00:11:20Z",
     "created_at_local": "2026-06-27T08:11:20+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T08:12:04+0800"
   },
   {
@@ -166048,7 +166611,7 @@
         "execution_action": "OPEN_SHORT"
       },
       "executed_at": "2026-06-27T00:14:32Z",
-      "sync_status": "OPEN",
+      "sync_status": "PENDING_CLOSE_SYNC",
       "failure_reason": null,
       "protection_status": "OPEN",
       "history": [
@@ -166156,11 +166719,11 @@
         "execution_action": "OPEN_SHORT"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-27T00:13:09Z",
     "created_at_local": "2026-06-27T08:13:09+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T08:14:32+0800",
     "opening_thesis_snapshot": {
       "source": "pre_execution_decision_record",
@@ -170452,11 +171015,11 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-27T00:15:31Z",
     "created_at_local": "2026-06-27T08:15:31+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T08:16:15+0800"
   },
   {
@@ -175162,11 +175725,375 @@
         "execution_action": "DO_NOTHING"
       },
       "feedback_packets": [],
-      "generated_at": "2026-06-27T00:24:49Z"
+      "generated_at": "2026-06-27T01:12:15Z"
     },
     "created_at": "2026-06-27T00:17:22Z",
     "created_at_local": "2026-06-27T08:17:22+0800",
-    "updated_at": "2026-06-27T00:24:49Z",
+    "updated_at": "2026-06-27T01:12:15Z",
     "updated_at_local": "2026-06-27T08:18:11+0800"
+  },
+  {
+    "decisionId": "unmatched_closed_SOXL_long_3691587962600169472",
+    "cycleId": "unmatched_closed_trade",
+    "symbol": "SOXL-USDT",
+    "timeframe": "4h",
+    "snapshot_timestamp": null,
+    "positionState": "closed",
+    "snapshot": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "market_snapshot": {
+        "price": 211.66
+      },
+      "position_snapshot": {
+        "position_side": "LONG"
+      }
+    },
+    "candidate": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "candidate_proposals": [
+        {
+          "strategy_family": "DIRECTIONAL",
+          "decision_intent": "LONG",
+          "trigger_source": "UNMATCHED_CLOSED_TRADE",
+          "rationale": "OKX closed trade reconciled without a matching local decision record",
+          "entry_type": "MARKET",
+          "proposed_entry_price": 212.98,
+          "proposed_sl_price": null,
+          "proposed_tp_price": null,
+          "reference_values": {},
+          "invalidation_basis": "historical closed trade; original decision record unavailable",
+          "invalidation_conditions": {
+            "operator": "OR",
+            "rules": [],
+            "persistence": 1
+          }
+        }
+      ]
+    },
+    "ruleEvaluation": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "stage": "closed_trade_reconciliation",
+      "passed": true,
+      "reason_codes": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "approved_candidates": [],
+      "rule_trace": [
+        {
+          "rule": "UNMATCHED_CLOSED_TRADE",
+          "passed": true
+        }
+      ]
+    },
+    "researchOutput": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "selected_intent": "LONG",
+      "selected_trigger_sources": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "thesis_strength": "UNKNOWN",
+      "holding_horizon": "UNKNOWN",
+      "thesis_change": "UNKNOWN",
+      "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
+      "provenance": {
+        "generation_mode": "closed_trade_reconciliation",
+        "llm_enabled": false,
+        "llm_attempted": false,
+        "llm_applied": false
+      }
+    },
+    "riskReview": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "approved": true,
+      "final_intent": "LONG",
+      "approved_risk_fraction": 0.0,
+      "approved_position_size_usd": 532.45,
+      "leverage": 10.0,
+      "max_holding_bars": 0,
+      "execution_action": "OPEN_LONG",
+      "next_position_state": "closed",
+      "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval"
+    },
+    "execution": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "execution_action": "OPEN_LONG",
+      "order_status": "CLOSED",
+      "sync_status": "CLOSED",
+      "closed_trade_id": "3691587962600169472",
+      "entry_type": "MARKET",
+      "proposed_entry_price": 212.98,
+      "avg_fill_price": 212.98,
+      "avg_exit_price": 211.66,
+      "filled_size": 2.5,
+      "requested_leverage": 10.0,
+      "executed_at": "2026-06-27T00:27:06Z",
+      "closed_at": "2026-06-27T00:31:34Z",
+      "realized_pnl": -3.3,
+      "realized_pnl_percent": -6.2,
+      "position_side": "LONG",
+      "protection_status": "CLOSED",
+      "runtime_reason": "unmatched_okx_closed_trade",
+      "close_reason": "unmatched_okx_closed_trade",
+      "close_reason_source": "unmatched_trade_history",
+      "history": [
+        {
+          "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
+          "at": "2026-06-27T01:07:01Z",
+          "payload": {
+            "trade_id": "3691587962600169472",
+            "reason": "unmatched_okx_closed_trade",
+            "source": "OKX Real Trade",
+            "entry_time": "2026-06-27 00:27:06",
+            "exit_time": "2026-06-27 00:31:34",
+            "entry_price": 212.98,
+            "exit_price": 211.66,
+            "pnl": -3.3,
+            "pnl_percent": -6.2
+          }
+        }
+      ]
+    },
+    "evaluation": {
+      "result_label": "LOSS",
+      "primary_cause": "CANDIDATE_OR_MARKET_MISS",
+      "layer_attribution": {
+        "data": 0.1,
+        "candidate": 0.35,
+        "rule": 0.1,
+        "research": 0.2,
+        "risk": 0.15,
+        "execution": 0.1
+      },
+      "improvement_targets": [
+        "candidate",
+        "research"
+      ],
+      "improvement_note": "closed trade finished negative; review thesis quality and setup quality",
+      "pnl": -3.3,
+      "pnl_percent": -6.2,
+      "matched_trade_id": "3691587962600169472",
+      "matched_trade_exit_time": "2026-06-27 00:31:34",
+      "traceability": {
+        "strategy_family": "DIRECTIONAL",
+        "candidate_structure": {},
+        "proposed_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "approved_trigger_sources": [],
+        "selected_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "selected_intent": "LONG",
+        "thesis_strength": "UNKNOWN",
+        "conflict_state": null,
+        "risk_review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
+        "execution_action": "OPEN_LONG"
+      },
+      "feedback_packets": [
+        {
+          "target_layer": "candidate",
+          "packet_type": "BLUEPRINT_REVIEW",
+          "message": "review setup quality, invalidation template, and entry/SL/TP formulation"
+        },
+        {
+          "target_layer": "research",
+          "packet_type": "PROMPT_AND_CONFLICT_REVIEW",
+          "message": "review prompt constraints, conflict handling, and no-trade examples"
+        }
+      ],
+      "generated_at": "2026-06-27T01:12:15Z"
+    },
+    "created_at": "2026-06-27T00:27:06Z",
+    "updated_at": "2026-06-27T01:12:15Z",
+    "provenance": {
+      "source": "execution_reconciliation",
+      "unmatched_closed_trade": true
+    }
+  },
+  {
+    "decisionId": "unmatched_closed_SOXL_long_3691614475064188928",
+    "cycleId": "unmatched_closed_trade",
+    "symbol": "SOXL-USDT",
+    "timeframe": "4h",
+    "snapshot_timestamp": null,
+    "positionState": "closed",
+    "snapshot": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "market_snapshot": {
+        "price": 213.2
+      },
+      "position_snapshot": {
+        "position_side": "LONG"
+      }
+    },
+    "candidate": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "timeframe": "4h",
+      "candidate_proposals": [
+        {
+          "strategy_family": "DIRECTIONAL",
+          "decision_intent": "LONG",
+          "trigger_source": "UNMATCHED_CLOSED_TRADE",
+          "rationale": "OKX closed trade reconciled without a matching local decision record",
+          "entry_type": "MARKET",
+          "proposed_entry_price": 213.2,
+          "proposed_sl_price": null,
+          "proposed_tp_price": null,
+          "reference_values": {},
+          "invalidation_basis": "historical closed trade; original decision record unavailable",
+          "invalidation_conditions": {
+            "operator": "OR",
+            "rules": [],
+            "persistence": 1
+          }
+        }
+      ]
+    },
+    "ruleEvaluation": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "stage": "closed_trade_reconciliation",
+      "passed": true,
+      "reason_codes": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "approved_candidates": [],
+      "rule_trace": [
+        {
+          "rule": "UNMATCHED_CLOSED_TRADE",
+          "passed": true
+        }
+      ]
+    },
+    "researchOutput": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "selected_intent": "LONG",
+      "selected_trigger_sources": [
+        "UNMATCHED_CLOSED_TRADE"
+      ],
+      "thesis_strength": "UNKNOWN",
+      "holding_horizon": "UNKNOWN",
+      "thesis_change": "UNKNOWN",
+      "summary": "Closed OKX trade was found, but the matching local decision record was unavailable.",
+      "provenance": {
+        "generation_mode": "closed_trade_reconciliation",
+        "llm_enabled": false,
+        "llm_attempted": false,
+        "llm_applied": false
+      }
+    },
+    "riskReview": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "approved": true,
+      "final_intent": "LONG",
+      "approved_risk_fraction": 0.0,
+      "approved_position_size_usd": 799.5,
+      "leverage": 10.0,
+      "max_holding_bars": 0,
+      "execution_action": "OPEN_LONG",
+      "next_position_state": "closed",
+      "review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval"
+    },
+    "execution": {
+      "symbol": "SOXL-USDT",
+      "cycleId": "unmatched_closed_trade",
+      "strategy_family": "DIRECTIONAL",
+      "execution_action": "OPEN_LONG",
+      "order_status": "CLOSED",
+      "sync_status": "CLOSED",
+      "closed_trade_id": "3691614475064188928",
+      "entry_type": "MARKET",
+      "proposed_entry_price": 213.2,
+      "avg_fill_price": 213.2,
+      "avg_exit_price": 213.2,
+      "filled_size": 3.75,
+      "requested_leverage": 10.0,
+      "executed_at": "2026-06-27T00:42:21Z",
+      "closed_at": "2026-06-27T00:44:44Z",
+      "realized_pnl": -0.0,
+      "realized_pnl_percent": -0.0,
+      "position_side": "LONG",
+      "protection_status": "CLOSED",
+      "runtime_reason": "unmatched_okx_closed_trade",
+      "close_reason": "unmatched_okx_closed_trade",
+      "close_reason_source": "unmatched_trade_history",
+      "history": [
+        {
+          "type": "EXECUTION_CLOSED_UNMATCHED_RECONCILED",
+          "at": "2026-06-27T01:07:01Z",
+          "payload": {
+            "trade_id": "3691614475064188928",
+            "reason": "unmatched_okx_closed_trade",
+            "source": "OKX Real Trade",
+            "entry_time": "2026-06-27 00:42:21",
+            "exit_time": "2026-06-27 00:44:44",
+            "entry_price": 213.2,
+            "exit_price": 213.2,
+            "pnl": -0.0,
+            "pnl_percent": -0.0
+          }
+        }
+      ]
+    },
+    "evaluation": {
+      "result_label": "BREAKEVEN",
+      "primary_cause": "THESIS_CONFIRMED",
+      "layer_attribution": {
+        "data": 0.1,
+        "candidate": 0.25,
+        "rule": 0.1,
+        "research": 0.25,
+        "risk": 0.15,
+        "execution": 0.15
+      },
+      "improvement_targets": [],
+      "improvement_note": "closed trade aligned with approved thesis and exited positive",
+      "pnl": -0.0,
+      "pnl_percent": -0.0,
+      "matched_trade_id": "3691614475064188928",
+      "matched_trade_exit_time": "2026-06-27 00:44:44",
+      "traceability": {
+        "strategy_family": "DIRECTIONAL",
+        "candidate_structure": {},
+        "proposed_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "approved_trigger_sources": [],
+        "selected_trigger_sources": [
+          "UNMATCHED_CLOSED_TRADE"
+        ],
+        "selected_intent": "LONG",
+        "thesis_strength": "UNKNOWN",
+        "conflict_state": null,
+        "risk_review_note": "closed OKX trade reconciled without matching local decision record; not a new model approval",
+        "execution_action": "OPEN_LONG"
+      },
+      "feedback_packets": [],
+      "generated_at": "2026-06-27T01:12:15Z"
+    },
+    "created_at": "2026-06-27T00:42:21Z",
+    "updated_at": "2026-06-27T01:12:15Z",
+    "provenance": {
+      "source": "execution_reconciliation",
+      "unmatched_closed_trade": true
+    }
   }
 ]
